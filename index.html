@@ -7,1080 +7,557 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --navy: #0C1D52;
-      --navy-dark: #07122E;
-      --navy-mid: #162464;
-      --red: #CC1212;
-      --red-dark: #a50e0e;
-      --blue-pale: #EEF3FB;
-      --white: #ffffff;
-      --text-muted: rgba(255,255,255,0.65);
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #fff;
-      color: #1a1a2e;
-      overflow-x: hidden;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 48px;
-      height: 68px;
-      background: rgba(7,18,46,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .nav-logo img {
-      height: 36px;
-      width: auto;
-      display: block;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 36px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: rgba(255,255,255,0.75);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active { color: #fff; }
-
-    .nav-cta {
-      background: var(--red);
-      color: #fff !important;
-      padding: 9px 22px;
-      border-radius: 6px;
-      font-weight: 600 !important;
-      transition: background 0.2s !important;
-    }
-
-    .nav-cta:hover { background: var(--red-dark) !important; }
-
-    /* ── HERO ── */
-    #hero {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #07122E 0%, #0C1D52 55%, #1a2e7a 100%);
-      display: flex;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
-      padding-top: 68px;
-    }
-
-    #hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-    }
-
-    #hero::after {
-      content: '';
-      position: absolute;
-      right: -200px;
-      top: -200px;
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(204,18,18,0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 80px 48px;
-      display: grid;
-      grid-template-columns: 1fr 480px;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .hero-left {}
-
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(204,18,18,0.15);
-      border: 1px solid rgba(204,18,18,0.3);
-      color: #ff6b6b;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 6px 14px;
-      border-radius: 100px;
-      margin-bottom: 28px;
-    }
-
-    .hero-tag-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--red);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.8); }
-    }
-
-    .hero-h1 {
-      font-size: clamp(38px, 5vw, 64px);
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: 24px;
-    }
-
-    .hero-h1 span { color: var(--red); }
-
-    .hero-sub {
-      font-size: 18px;
-      color: var(--text-muted);
-      line-height: 1.65;
-      max-width: 520px;
-      margin-bottom: 40px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      background: var(--red);
-      color: #fff;
-      padding: 15px 32px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 15px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-primary:hover { background: var(--red-dark); transform: translateY(-1px); }
-
-    .btn-outline {
-      background: transparent;
-      color: #fff;
-      padding: 15px 32px;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 15px;
-      text-decoration: none;
-      border: 1px solid rgba(255,255,255,0.25);
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-    }
-
-    .btn-outline:hover { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.05); }
-
-    .hero-trust {
-      margin-top: 48px;
-      display: flex;
-      gap: 32px;
-      flex-wrap: wrap;
-    }
-
-    .trust-item {
-      color: var(--text-muted);
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .trust-item::before {
-      content: '';
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: rgba(204,18,18,0.2);
-      border: 1px solid var(--red);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    /* ── QUIZ CARD ── */
-    .quiz-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      overflow: hidden;
-      backdrop-filter: blur(20px);
-    }
-
-    .quiz-card-header {
-      background: var(--navy-mid);
-      padding: 20px 28px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .quiz-card-header p {
-      color: rgba(255,255,255,0.5);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 4px;
-    }
-
-    .quiz-card-header h3 {
-      color: #fff;
-      font-size: 17px;
-      font-weight: 700;
-    }
-
-    .quiz-progress {
-      display: flex;
-      gap: 6px;
-      padding: 20px 28px 0;
-    }
-
-    .qp-dot {
-      flex: 1;
-      height: 3px;
-      border-radius: 2px;
-      background: rgba(255,255,255,0.12);
-      transition: background 0.3s;
-    }
-
-    .qp-dot.done { background: var(--red); }
-
-    .quiz-body { padding: 24px 28px 28px; }
-
-    .quiz-step { display: none; }
-    .quiz-step.active { display: block; }
-
-    .quiz-q {
-      color: #fff;
-      font-size: 18px;
-      font-weight: 700;
-      line-height: 1.4;
-      margin-bottom: 20px;
-    }
-
-    .quiz-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .quiz-opt {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 14px 16px;
-      color: rgba(255,255,255,0.85);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-align: center;
-      line-height: 1.3;
-    }
-
-    .quiz-opt:hover {
-      border-color: var(--red);
-      background: rgba(204,18,18,0.1);
-      color: #fff;
-    }
-
-    .quiz-opt.selected {
-      border-color: var(--red);
-      background: rgba(204,18,18,0.15);
-      color: #fff;
-    }
-
-    /* QUIZ STEP 4 — CALCULATOR */
-    .calc-mini {}
-
-    .calc-row {
-      margin-bottom: 16px;
-    }
-
-    .calc-row label {
-      display: flex;
-      justify-content: space-between;
-      color: rgba(255,255,255,0.75);
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    .calc-row label span {
-      color: #fff;
-      font-weight: 600;
-    }
-
-    input[type=range] {
-      width: 100%;
-      accent-color: var(--red);
-      height: 4px;
-      cursor: pointer;
-    }
-
-    .calc-result {
-      background: rgba(204,18,18,0.12);
-      border: 1px solid rgba(204,18,18,0.25);
-      border-radius: 10px;
-      padding: 16px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 4px;
-    }
-
-    .calc-result p { color: rgba(255,255,255,0.65); font-size: 13px; }
-    .calc-result strong { color: #fff; font-size: 26px; font-weight: 800; }
-
-    .quiz-btn-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    .q-btn {
-      flex: 1;
-      padding: 13px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-    }
-
-    .q-btn-next {
-      background: var(--red);
-      color: #fff;
-    }
-
-    .q-btn-next:hover { background: var(--red-dark); }
-
-    .q-btn-back {
-      background: rgba(255,255,255,0.07);
-      color: rgba(255,255,255,0.7);
-    }
-
-    .q-btn-back:hover { background: rgba(255,255,255,0.12); }
-
-    /* QUIZ LEAD */
-    .quiz-lead { display: none; }
-    .quiz-lead.active { display: block; }
-
-    .quiz-lead h3 {
-      color: #fff;
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .quiz-lead p {
-      color: rgba(255,255,255,0.6);
-      font-size: 13px;
-      margin-bottom: 20px;
-    }
-
-    .ql-field {
-      width: 100%;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 8px;
-      padding: 12px 16px;
-      color: #fff;
-      font-size: 14px;
-      font-family: inherit;
-      margin-bottom: 12px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .ql-field::placeholder { color: rgba(255,255,255,0.35); }
-    .ql-field:focus { border-color: var(--red); }
-
-    /* ── STATS STRIP ── */
-    .stats-strip {
-      background: var(--navy);
-      padding: 48px;
-    }
-
-    .stats-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: rgba(255,255,255,0.08);
-    }
-
-    .stat-item {
-      background: var(--navy);
-      padding: 36px 40px;
-      text-align: center;
-    }
-
-    .stat-num {
-      font-size: 48px;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-
-    .stat-num span { color: var(--red); }
-
-    .stat-label {
-      font-size: 13px;
-      color: rgba(255,255,255,0.5);
-      margin-top: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    /* ── SECTIONS SHARED ── */
-    section { padding: 100px 48px; }
-
-    .section-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .section-label {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--red);
-      margin-bottom: 14px;
-    }
-
-    .section-h2 {
-      font-size: clamp(30px, 4vw, 48px);
-      font-weight: 800;
-      color: var(--navy-dark);
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-      margin-bottom: 20px;
-    }
-
-    .section-h2-light {
-      color: #fff;
-    }
-
-    .section-sub {
-      font-size: 17px;
-      color: #5a6480;
-      line-height: 1.65;
-      max-width: 580px;
-    }
-
-    .section-sub-light { color: rgba(255,255,255,0.6); }
-
-    /* ── PRODUCT SECTION ── */
-    #produkt {
-      background: var(--blue-pale);
-    }
-
-    .produkt-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .produkt-img-wrap {
-      position: relative;
-      border-radius: 16px;
-      overflow: visible;
-    }
-
-    .produkt-img-wrap img {
-      width: 100%;
-      border-radius: 16px;
-      display: block;
-      box-shadow: 0 30px 80px rgba(12,29,82,0.18);
-    }
-
-    /* hotspots */
-    .hs {
-      position: absolute;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: var(--red);
-      border: 3px solid #fff;
-      box-shadow: 0 0 0 4px rgba(204,18,18,0.3);
-      cursor: pointer;
-      transform: translate(-50%,-50%);
-      z-index: 5;
-      animation: hsring 2.5s infinite;
-    }
-
-    @keyframes hsring {
-      0%, 100% { box-shadow: 0 0 0 4px rgba(204,18,18,0.3); }
-      50% { box-shadow: 0 0 0 8px rgba(204,18,18,0.1); }
-    }
-
-    .hs::after {
-      content: attr(d);
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .tip {
-      position: absolute;
-      background: var(--navy-dark);
-      color: #fff;
-      border-radius: 10px;
-      padding: 14px 18px;
-      font-size: 13px;
-      line-height: 1.5;
-      width: 220px;
-      pointer-events: none;
-      opacity: 0;
-      transform: translateY(-6px);
-      transition: opacity 0.2s, transform 0.2s;
-      z-index: 10;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-      left: 44px;
-    }
-
-    .tip.vis { opacity: 1; transform: translateY(0); }
-    .tip.left { left: auto; right: 44px; }
-
-    .tip strong {
-      display: block;
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 4px;
-      color: #fff;
-    }
-
-    .tip p { color: rgba(255,255,255,0.7); }
-
-    .produkt-right h2 { margin-bottom: 20px; }
-
-    .produkt-right .section-sub { margin-bottom: 40px; }
-
-    .feature-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .feature-list li {
-      display: flex;
-      gap: 14px;
-      align-items: flex-start;
-    }
-
-    .feat-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      background: rgba(12,29,82,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      font-size: 18px;
-    }
-
-    .feat-text strong {
-      display: block;
-      font-weight: 700;
-      color: var(--navy-dark);
-      margin-bottom: 2px;
-      font-size: 15px;
-    }
-
-    .feat-text p { color: #6b7280; font-size: 14px; line-height: 1.5; }
-
-    /* ── VORTEILE ── */
-    #vorteile {
-      background: #fff;
-    }
-
-    .vorteile-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: #e5e9f5;
-      margin-top: 60px;
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .vorteil-tile {
-      background: #fff;
-      padding: 40px 36px;
-    }
-
-    .vt-num {
-      font-size: 48px;
-      font-weight: 900;
-      color: #e8eaf2;
-      line-height: 1;
-      margin-bottom: 16px;
-      letter-spacing: -0.02em;
-    }
-
-    .vt-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--navy-dark);
-      margin-bottom: 10px;
-    }
-
-    .vt-body { color: #6b7280; font-size: 14px; line-height: 1.65; }
-
-    /* ── EINBAU ── */
-    #einbau {
-      background: var(--navy-dark);
-    }
-
-    .einbau-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .einbau-img {
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.4);
-    }
-
-    .einbau-img img {
-      width: 100%;
-      display: block;
-    }
-
-    .einbau-steps {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-
-    .einbau-step {
-      display: flex;
-      gap: 20px;
-      padding: 24px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .einbau-step:last-child { border-bottom: none; }
-
-    .step-num {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--red);
-      color: #fff;
-      font-weight: 800;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .step-content strong {
-      display: block;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .step-content p { color: rgba(255,255,255,0.55); font-size: 14px; line-height: 1.5; }
-
-    /* ── RECHNER ── */
-    #kalkulator {
-      background: var(--navy);
-      color: #fff;
-    }
-
-    .rechner-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .rechner-img img {
-      width: 100%;
-      border-radius: 16px;
-      display: block;
-    }
-
-    .rechner-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 40px;
-    }
-
-    .r-slider-row {
-      margin-bottom: 24px;
-    }
-
-    .r-slider-row label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 8px;
-    }
-
-    .r-slider-row label strong { color: #fff; font-weight: 700; }
-
-    .rechner-result {
-      background: rgba(204,18,18,0.12);
-      border: 1px solid rgba(204,18,18,0.25);
-      border-radius: 12px;
-      padding: 24px 28px;
-      margin-top: 8px;
-    }
-
-    .rechner-result-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 10px;
-    }
-
-    .rechner-result-row:last-child { margin-bottom: 0; }
-
-    .rechner-result-row span { color: rgba(255,255,255,0.6); font-size: 14px; }
-    .rechner-result-row strong { color: #fff; font-size: 20px; font-weight: 800; }
-
-    .rechner-result-big {
-      padding-top: 10px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      margin-top: 10px;
-    }
-
-    .rechner-result-big span { font-size: 13px; }
-    .rechner-result-big strong { color: #fff; font-size: 32px; }
-
-    /* ── TESTIMONIALS ── */
-    #testimonials {
-      background: var(--blue-pale);
-    }
-
-    .testi-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 60px;
-    }
-
-    .testi-card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 32px;
-      box-shadow: 0 4px 24px rgba(12,29,82,0.07);
-    }
-
-    .testi-stars {
-      color: #f59e0b;
-      font-size: 16px;
-      letter-spacing: 2px;
-      margin-bottom: 16px;
-    }
-
-    .testi-text {
-      font-size: 15px;
-      line-height: 1.65;
-      color: #374151;
-      margin-bottom: 20px;
-    }
-
-    .testi-author {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .testi-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--navy);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-weight: 700;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-
-    .testi-name { font-weight: 700; color: var(--navy-dark); font-size: 14px; }
-    .testi-loc { color: #9ca3af; font-size: 13px; }
-
-    /* ── KONTAKT ── */
-    #kontakt {
-      background: #fff;
-    }
-
-    .kontakt-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: start;
-    }
-
-    .kontakt-form-card {
-      background: var(--blue-pale);
-      border-radius: 16px;
-      padding: 48px;
-    }
-
-    .k-field {
-      width: 100%;
-      background: #fff;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      padding: 13px 16px;
-      font-size: 15px;
-      font-family: inherit;
-      color: var(--navy-dark);
-      margin-bottom: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .k-field:focus { border-color: var(--navy); }
-
-    .k-field::placeholder { color: #9ca3af; }
-
-    .k-info {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      margin-top: 12px;
-    }
-
-    .k-info-item {
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-    }
-
-    .k-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: var(--blue-pale);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
-    }
-
-    .k-info-text strong {
-      display: block;
-      font-weight: 700;
-      color: var(--navy-dark);
-      margin-bottom: 2px;
-    }
-
-    .k-info-text p { color: #6b7280; font-size: 14px; }
-
-    .cal-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--navy);
-      color: #fff;
-      padding: 15px 32px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 15px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 32px;
-      width: 100%;
-      justify-content: center;
-    }
-
-    .cal-btn:hover { background: var(--navy-mid); }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--navy-dark);
-      padding: 40px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid rgba(255,255,255,0.06);
-    }
-
-    .footer-logo img {
-      height: 28px;
-      filter: brightness(0) invert(1);
-    }
-
-    .footer-copy {
-      color: rgba(255,255,255,0.35);
-      font-size: 13px;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 24px;
-    }
-
-    .footer-links a {
-      color: rgba(255,255,255,0.35);
-      font-size: 13px;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: rgba(255,255,255,0.7); }
-
-    /* ── MODAL ── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 999;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-overlay.open { display: flex; }
-
-    .modal-box {
-      background: var(--navy-dark);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 48px;
-      width: 100%;
-      max-width: 480px;
-      position: relative;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.4);
-      font-size: 22px;
-      cursor: pointer;
-      line-height: 1;
-    }
-
-    .modal-close:hover { color: #fff; }
-
-    .modal-box h2 {
-      color: #fff;
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .modal-box p {
-      color: rgba(255,255,255,0.55);
-      font-size: 14px;
-      margin-bottom: 28px;
-      line-height: 1.6;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      nav { padding: 0 24px; }
-      .nav-links { display: none; }
-
-      .hero-inner,
-      .produkt-inner,
-      .einbau-inner,
-      .rechner-inner,
-      .kontakt-inner { grid-template-columns: 1fr; gap: 48px; }
-
-      .hero-inner { padding: 60px 24px; }
-
-      section { padding: 72px 24px; }
-
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-
-      .vorteile-grid,
-      .testi-grid { grid-template-columns: 1fr; }
-
-      footer { flex-direction: column; gap: 20px; text-align: center; }
-    }
-  </style>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Inter',sans-serif;background:#fff;color:#0a0a14;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* TOKENS */
+:root{
+  --ink:#07122E;
+  --ink2:#0C1D52;
+  --mid:#1a2e7a;
+  --accent:#CC1212;
+  --white:#ffffff;
+  --off:#f4f6fb;
+  --border:rgba(12,29,82,0.1);
+  --glass:rgba(255,255,255,0.06);
+  --glassborder:rgba(255,255,255,0.12);
+}
+
+/* ── NAV ─────────────────────────────── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:72px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 56px;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:box-shadow .3s;
+}
+#nav.scrolled{box-shadow:0 2px 32px rgba(7,18,46,0.08)}
+.nav-logo img{height:38px;width:auto;display:block}
+.nav-links{display:flex;align-items:center;gap:40px;list-style:none}
+.nav-links a{
+  color:var(--ink);font-size:14px;font-weight:500;
+  text-decoration:none;letter-spacing:.01em;
+  position:relative;padding-bottom:2px;
+  transition:color .2s;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-2px;left:0;right:0;
+  height:2px;background:var(--ink2);border-radius:2px;
+  transform:scaleX(0);transform-origin:left;transition:transform .25s;
+}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-cta{
+  background:var(--ink) !important;color:#fff !important;
+  padding:10px 24px;border-radius:8px;font-weight:600 !important;
+}
+.nav-cta::after{display:none !important}
+.nav-cta:hover{background:var(--mid) !important;color:#fff !important}
+
+/* ── HERO ────────────────────────────── */
+#hero{
+  min-height:100vh;
+  background:var(--ink);
+  display:flex;align-items:center;
+  padding-top:72px;
+  position:relative;overflow:hidden;
+}
+/* subtle radial glow */
+#hero::before{
+  content:'';position:absolute;
+  width:900px;height:900px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(26,46,122,0.6) 0%,transparent 70%);
+  right:-200px;top:-150px;pointer-events:none;
+}
+/* grid lines */
+#hero::after{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  background-size:72px 72px;
+  pointer-events:none;
+}
+.hero-wrap{
+  position:relative;z-index:1;
+  width:100%;max-width:1240px;
+  margin:0 auto;padding:100px 56px;
+  display:grid;grid-template-columns:1fr 500px;
+  gap:72px;align-items:center;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:11px;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(255,255,255,0.5);
+  margin-bottom:28px;
+}
+.hero-eyebrow span{
+  width:24px;height:1px;background:rgba(255,255,255,0.3);
+}
+.hero-h1{
+  font-size:clamp(44px,5.5vw,72px);
+  font-weight:800;color:#fff;
+  line-height:1.05;letter-spacing:-.03em;
+  margin-bottom:24px;
+}
+.hero-h1 em{font-style:normal;color:rgba(255,255,255,0.35)}
+.hero-p{
+  font-size:17px;color:rgba(255,255,255,0.55);
+  line-height:1.7;max-width:480px;margin-bottom:44px;
+}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 28px;border-radius:10px;font-weight:600;
+  font-size:14px;text-decoration:none;border:none;cursor:pointer;
+  transition:all .2s;font-family:inherit;
+}
+.btn-white{background:#fff;color:var(--ink)}
+.btn-white:hover{background:rgba(255,255,255,0.9);transform:translateY(-1px)}
+.btn-ghost{
+  background:transparent;color:rgba(255,255,255,0.75);
+  border:1px solid rgba(255,255,255,0.18);
+}
+.btn-ghost:hover{background:rgba(255,255,255,0.07);color:#fff}
+.btn-navy{background:var(--ink);color:#fff}
+.btn-navy:hover{background:var(--mid)}
+.btn-full{width:100%;justify-content:center}
+
+.hero-kpi{
+  display:flex;gap:40px;margin-top:52px;padding-top:44px;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+.kpi-item{}
+.kpi-num{font-size:32px;font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1}
+.kpi-num sup{font-size:16px;font-weight:600;vertical-align:super}
+.kpi-label{font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;text-transform:uppercase;letter-spacing:.06em}
+
+/* QUIZ GLASS */
+.quiz-glass{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;
+  backdrop-filter:blur(24px);
+  overflow:hidden;
+}
+.quiz-glass-top{
+  padding:26px 32px;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.quiz-glass-top h3{font-size:16px;font-weight:700;color:#fff}
+.quiz-glass-top p{font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px}
+.q-progress{display:flex;gap:5px}
+.q-prog-pip{
+  width:28px;height:3px;border-radius:2px;
+  background:rgba(255,255,255,0.12);transition:background .3s;
+}
+.q-prog-pip.on{background:#fff}
+.quiz-body{padding:32px}
+.quiz-step{display:none}
+.quiz-step.show{display:block}
+.quiz-q{color:#fff;font-size:18px;font-weight:700;line-height:1.4;margin-bottom:20px}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quiz-opt{
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;padding:16px 14px;
+  color:rgba(255,255,255,0.8);font-size:13px;font-weight:500;
+  cursor:pointer;text-align:center;line-height:1.35;
+  transition:all .2s;font-family:inherit;
+}
+.quiz-opt:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.3);color:#fff}
+.quiz-opt.sel{background:rgba(255,255,255,0.12);border-color:#fff;color:#fff}
+.quiz-actions{display:flex;gap:10px;margin-top:22px}
+.q-btn{
+  flex:1;padding:14px;border-radius:10px;
+  font-family:inherit;font-weight:600;font-size:14px;
+  cursor:pointer;border:none;transition:all .2s;
+}
+.q-next{background:#fff;color:var(--ink)}
+.q-next:hover{background:rgba(255,255,255,0.9)}
+.q-back{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.6)}
+.q-back:hover{background:rgba(255,255,255,0.12)}
+
+/* mini calc in quiz */
+.m-slider{margin-bottom:18px}
+.m-slider label{
+  display:flex;justify-content:space-between;
+  font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:7px;
+}
+.m-slider label b{color:#fff;font-weight:600}
+input[type=range]{
+  width:100%;accent-color:#fff;cursor:pointer;
+  height:3px;background:rgba(255,255,255,0.15);
+  border-radius:2px;
+}
+.m-result{
+  background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:12px;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:6px;
+}
+.m-result p{color:rgba(255,255,255,0.5);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.m-result b{color:#fff;font-size:28px;font-weight:800;letter-spacing:-.02em}
+
+/* lead / success */
+.q-lead{display:none}
+.q-lead.show{display:block}
+.q-success{display:none;text-align:center;padding:48px 32px}
+.q-success.show{display:block}
+.q-check{
+  width:64px;height:64px;border-radius:50%;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;margin:0 auto 24px;color:#fff;
+}
+.ql-input{
+  width:100%;background:rgba(255,255,255,0.07);
+  border:1px solid rgba(255,255,255,0.12);border-radius:10px;
+  padding:13px 16px;color:#fff;font-size:14px;
+  font-family:inherit;margin-bottom:12px;outline:none;
+  transition:border-color .2s;
+}
+.ql-input::placeholder{color:rgba(255,255,255,0.3)}
+.ql-input:focus{border-color:rgba(255,255,255,0.4)}
+
+/* ── BAND ────────────────────────────── */
+.band{
+  background:var(--ink2);
+  padding:0 56px;
+}
+.band-inner{
+  max-width:1240px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-left:1px solid rgba(255,255,255,0.06);
+}
+.band-item{
+  padding:44px 40px;
+  border-right:1px solid rgba(255,255,255,0.06);
+}
+.band-num{font-size:42px;font-weight:900;color:#fff;letter-spacing:-.02em;line-height:1}
+.band-num sup{font-size:20px;font-weight:700;vertical-align:super}
+.band-label{font-size:12px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
+
+/* ── SECTIONS ────────────────────────── */
+section{padding:120px 56px}
+.sec-inner{max-width:1240px;margin:0 auto}
+.sec-tag{
+  font-size:11px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink2);opacity:.5;
+  margin-bottom:16px;display:block;
+}
+.sec-tag-light{color:rgba(255,255,255,.4);opacity:1}
+.sec-h2{
+  font-size:clamp(32px,4vw,52px);font-weight:800;
+  color:var(--ink);line-height:1.1;letter-spacing:-.025em;
+  margin-bottom:18px;
+}
+.sec-h2-light{color:#fff}
+.sec-p{font-size:17px;color:#5f6b8a;line-height:1.7;max-width:540px}
+.sec-p-light{color:rgba(255,255,255,.5)}
+
+/* ── PRODUKT ─────────────────────────── */
+#produkt{background:var(--off);padding:120px 56px}
+.prod-inner{
+  max-width:1240px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;
+}
+.prod-img-col{position:relative}
+
+/* product image with glass frame */
+.prod-frame{
+  position:relative;border-radius:24px;overflow:visible;
+}
+.prod-frame img{
+  width:100%;border-radius:24px;display:block;
+  box-shadow:0 40px 100px rgba(7,18,46,0.15);
+}
+
+/* HOTSPOT */
+.hs-dot{
+  position:absolute;
+  width:36px;height:36px;border-radius:50%;
+  background:var(--ink2);
+  border:2px solid rgba(255,255,255,0.9);
+  box-shadow:0 4px 20px rgba(7,18,46,0.4);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:12px;font-weight:700;
+  transition:transform .2s,background .2s;
+  z-index:5;
+}
+.hs-dot:hover{transform:scale(1.15);background:var(--mid)}
+/* pulse ring */
+.hs-dot::before{
+  content:'';position:absolute;
+  width:52px;height:52px;border-radius:50%;
+  border:1px solid rgba(12,29,82,0.3);
+  animation:ring 2s infinite;
+}
+@keyframes ring{
+  0%{opacity:.8;transform:scale(.7)}
+  100%{opacity:0;transform:scale(1.4)}
+}
+
+/* TOOLTIP */
+.hs-tip{
+  position:absolute;
+  background:var(--ink);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;padding:18px 20px;
+  width:240px;z-index:10;
+  pointer-events:none;
+  opacity:0;transform:translateY(6px);
+  transition:opacity .22s,transform .22s;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+  left:52px;
+}
+.hs-tip.vis{opacity:1;transform:translateY(0)}
+.hs-tip.left-tip{left:auto;right:52px}
+.hs-tip strong{display:block;color:#fff;font-size:14px;font-weight:700;margin-bottom:5px}
+.hs-tip p{color:rgba(255,255,255,.6);font-size:13px;line-height:1.55}
+.hs-tip::before{
+  content:'';position:absolute;top:14px;
+  width:8px;height:8px;background:var(--ink);
+  border-top:1px solid rgba(255,255,255,0.1);
+  border-left:1px solid rgba(255,255,255,0.1);
+}
+.hs-tip:not(.left-tip)::before{left:-5px;transform:rotate(-45deg)}
+.hs-tip.left-tip::before{right:-5px;transform:rotate(135deg);border:none;border-bottom:1px solid rgba(255,255,255,.1);border-right:1px solid rgba(255,255,255,.1)}
+
+.prod-feats{display:flex;flex-direction:column;gap:0}
+.prod-feat{
+  display:flex;gap:20px;align-items:flex-start;
+  padding:26px 0;
+  border-bottom:1px solid var(--border);
+}
+.prod-feat:first-child{padding-top:0}
+.prod-feat:last-child{border-bottom:none}
+.feat-num{
+  font-size:11px;font-weight:700;color:rgba(12,29,82,.3);
+  letter-spacing:.08em;padding-top:4px;min-width:24px;
+}
+.feat-content strong{display:block;font-weight:700;color:var(--ink);margin-bottom:4px;font-size:15px}
+.feat-content p{color:#6b7a9e;font-size:14px;line-height:1.6}
+
+/* ── VORTEILE ────────────────────────── */
+#vorteile{background:#fff}
+.vort-hd{max-width:1240px;margin:0 auto 72px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px}
+.vort-grid{
+  max-width:1240px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:2px;background:rgba(12,29,82,0.06);
+  border-radius:20px;overflow:hidden;
+}
+.vort-card{
+  background:#fff;padding:44px 40px;
+  transition:background .25s;
+  cursor:default;
+}
+.vort-card:hover{background:var(--ink)}
+.vort-idx{font-size:11px;font-weight:700;color:rgba(12,29,82,.2);letter-spacing:.1em;margin-bottom:20px;transition:color .25s}
+.vort-title{font-size:19px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:10px;transition:color .25s}
+.vort-body{font-size:14px;color:#6b7a9e;line-height:1.65;transition:color .25s}
+.vort-card:hover .vort-idx{color:rgba(255,255,255,.3)}
+.vort-card:hover .vort-title{color:#fff}
+.vort-card:hover .vort-body{color:rgba(255,255,255,.55)}
+
+/* ── EINBAU ──────────────────────────── */
+#einbau{background:var(--ink);padding:120px 56px}
+.einbau-wrap{
+  max-width:1240px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;
+}
+.einbau-img-col img{
+  width:100%;border-radius:24px;display:block;
+  box-shadow:0 40px 100px rgba(0,0,0,.5);
+}
+.einbau-steps{display:flex;flex-direction:column;gap:0;margin-top:48px}
+.e-step{
+  display:flex;gap:22px;
+  padding:26px 0;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.e-step:last-child{border-bottom:none}
+.e-n{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:#fff;
+}
+.e-content strong{display:block;color:#fff;font-weight:700;font-size:15px;margin-bottom:4px}
+.e-content p{color:rgba(255,255,255,.45);font-size:14px;line-height:1.6}
+
+/* ── KALKULATOR ──────────────────────── */
+#kalkulator{background:var(--off);padding:120px 56px}
+.kalk-wrap{
+  max-width:1240px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center;
+}
+.kalk-img img{width:100%;border-radius:24px;display:block;box-shadow:0 30px 80px rgba(12,29,82,.12)}
+.kalk-card{
+  background:#fff;border-radius:24px;
+  padding:48px;
+  box-shadow:0 2px 40px rgba(12,29,82,.06);
+  border:1px solid var(--border);
+}
+.kalk-card h3{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:32px;letter-spacing:-.02em}
+.r-row{margin-bottom:24px}
+.r-row label{
+  display:flex;justify-content:space-between;
+  font-size:13px;color:#6b7a9e;margin-bottom:8px;
+}
+.r-row label b{color:var(--ink);font-weight:700}
+input[type=range].dark{
+  accent-color:var(--ink2);
+  background:rgba(12,29,82,0.1);
+}
+.kalk-result{
+  background:var(--off);border-radius:14px;
+  padding:24px 28px;margin-top:8px;
+  border:1px solid var(--border);
+}
+.kalk-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.kalk-row:last-child{margin-bottom:0}
+.kalk-row span{color:#6b7a9e;font-size:13px}
+.kalk-row b{color:var(--ink);font-size:18px;font-weight:800}
+.kalk-big{
+  padding-top:14px;margin-top:8px;
+  border-top:1px solid var(--border);
+}
+.kalk-big span{font-size:12px}
+.kalk-big b{font-size:34px;letter-spacing:-.02em}
+
+/* ── TESTIMONIALS ────────────────────── */
+#testimonials{background:#fff}
+.testi-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:24px;margin-top:64px;
+}
+.testi-card{
+  background:var(--off);border-radius:18px;
+  padding:36px;border:1px solid var(--border);
+  transition:box-shadow .25s,transform .25s;
+}
+.testi-card:hover{box-shadow:0 20px 60px rgba(12,29,82,.1);transform:translateY(-4px)}
+.t-stars{color:#f59e0b;font-size:14px;letter-spacing:3px;margin-bottom:18px}
+.t-text{font-size:15px;line-height:1.7;color:#374151;margin-bottom:24px}
+.t-author{display:flex;align-items:center;gap:14px}
+.t-av{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--ink2);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:15px;flex-shrink:0;
+}
+.t-name{font-weight:700;color:var(--ink);font-size:14px}
+.t-loc{color:#9ca3af;font-size:13px}
+
+/* ── KONTAKT ─────────────────────────── */
+#kontakt{background:var(--ink);padding:120px 56px}
+.kont-wrap{
+  max-width:1240px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:start;
+}
+.kont-info{padding-top:8px}
+.kont-list{display:flex;flex-direction:column;gap:28px;margin-top:48px}
+.kont-item{display:flex;gap:18px;align-items:flex-start}
+.kont-ico{
+  width:48px;height:48px;border-radius:12px;flex-shrink:0;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.kont-txt strong{display:block;color:#fff;font-weight:600;margin-bottom:3px;font-size:15px}
+.kont-txt p{color:rgba(255,255,255,.45);font-size:14px}
+.kont-form{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.09);
+  border-radius:20px;padding:48px;
+  backdrop-filter:blur(10px);
+}
+.kont-form h3{color:#fff;font-size:20px;font-weight:700;margin-bottom:6px}
+.kont-form p{color:rgba(255,255,255,.4);font-size:14px;margin-bottom:28px}
+.k-inp{
+  width:100%;background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);border-radius:10px;
+  padding:13px 16px;color:#fff;font-size:14px;
+  font-family:inherit;margin-bottom:12px;outline:none;
+  transition:border-color .2s;
+}
+.k-inp::placeholder{color:rgba(255,255,255,.3)}
+.k-inp:focus{border-color:rgba(255,255,255,.35)}
+textarea.k-inp{resize:vertical;min-height:110px}
+
+/* ── FOOTER ──────────────────────────── */
+footer{
+  background:var(--ink);
+  border-top:1px solid rgba(255,255,255,0.06);
+  padding:32px 56px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.ft-logo img{height:28px;filter:brightness(0) invert(1);opacity:.6}
+.ft-copy{color:rgba(255,255,255,.25);font-size:13px}
+.ft-links{display:flex;gap:28px}
+.ft-links a{color:rgba(255,255,255,.25);font-size:13px;text-decoration:none;transition:color .2s}
+.ft-links a:hover{color:rgba(255,255,255,.6)}
+
+/* ── MODALS ──────────────────────────── */
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(5,10,30,0.75);z-index:900;
+  align-items:center;justify-content:center;
+  backdrop-filter:blur(6px);
+}
+.overlay.open{display:flex}
+.modal{
+  background:var(--ink);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;padding:52px;
+  width:100%;max-width:480px;position:relative;
+  box-shadow:0 40px 120px rgba(0,0,0,.6);
+}
+.m-close{
+  position:absolute;top:18px;right:18px;
+  background:rgba(255,255,255,0.06);border:none;
+  width:34px;height:34px;border-radius:50%;
+  color:rgba(255,255,255,.5);font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.m-close:hover{background:rgba(255,255,255,.12);color:#fff}
+.modal h2{color:#fff;font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em}
+.modal > p{color:rgba(255,255,255,.45);font-size:14px;margin-bottom:30px;line-height:1.6}
+.cal-placeholder{
+  background:rgba(255,255,255,0.04);
+  border:1px dashed rgba(255,255,255,0.15);
+  border-radius:12px;padding:48px 24px;
+  text-align:center;color:rgba(255,255,255,.3);font-size:14px;
+}
+
+/* ── RESPONSIVE ──────────────────────── */
+@media(max-width:960px){
+  #nav{padding:0 24px}
+  .nav-links{display:none}
+  .hero-wrap,.prod-inner,.einbau-wrap,.kalk-wrap,.kont-wrap{grid-template-columns:1fr;gap:56px}
+  .hero-wrap{padding:72px 24px}
+  section,#einbau,#kalkulator,#kontakt{padding:80px 24px}
+  .band{padding:0 24px}
+  .band-inner{grid-template-columns:repeat(2,1fr)}
+  .vort-grid,.testi-grid{grid-template-columns:1fr}
+  .vort-hd{flex-direction:column;align-items:flex-start}
+  footer{flex-direction:column;gap:16px;text-align:center;padding:28px 24px}
+}
+</style>
 </head>
 <body>
 
-<!-- NAV -->
+<!-- ── NAV ── -->
 <nav id="nav">
   <a href="#hero" class="nav-logo">
     <img src="images/Logo_provitec_2023-01.webp" alt="PROVITEC" />
@@ -1094,309 +571,329 @@
   </ul>
 </nav>
 
-<!-- HERO -->
+<!-- ── HERO ── -->
 <section id="hero">
-  <div class="hero-inner">
+  <div class="hero-wrap">
     <div class="hero-left">
-      <div class="hero-tag">
-        <div class="hero-tag-dot"></div>
-        Deutschlands fuehrendes Filtersystem
-      </div>
+      <div class="hero-eyebrow"><span></span>Professionelle Wasseraufbereitung</div>
       <h1 class="hero-h1">
-        Nie wieder<br><span>Flaschenwasser</span><br>kaufen.
+        Nie wieder<br>
+        Flaschenwasser<br>
+        <em>kaufen.</em>
       </h1>
-      <p class="hero-sub">
-        PROVITEC® filtert Ihr Leitungswasser auf Trinkwasserqualitaet – direkt unter der Spuele. Sauber, nachhaltig, kostenguenstig.
-      </p>
-      <div class="hero-actions">
-        <button class="btn-primary" onclick="document.querySelector('#quiz-1').scrollIntoView({behavior:'smooth'})">Jetzt Analyse starten</button>
-        <a href="#produkt" class="btn-outline">Mehr erfahren</a>
+      <p class="hero-p">PROVITEC filtert Ihr Leitungswasser auf hoechste Trinkwasserqualitaet — direkt unter der Spuele, leise, wartungsarm und nachhaltig.</p>
+      <div class="hero-btns">
+        <button class="btn btn-white" onclick="scrollTo('#quiz-wrap')">Analyse starten</button>
+        <a href="#produkt" class="btn btn-ghost">Mehr erfahren</a>
       </div>
-      <div class="hero-trust">
-        <div class="trust-item">5 Filterstufen</div>
-        <div class="trust-item">TUV-zertifiziert</div>
-        <div class="trust-item">Made in Germany</div>
-        <div class="trust-item">10 Jahre Garantie</div>
+      <div class="hero-kpi">
+        <div class="kpi-item">
+          <div class="kpi-num">99<sup>%</sup></div>
+          <div class="kpi-label">Keimreduktion</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-num">5</div>
+          <div class="kpi-label">Filterstufen</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-num">10<sup>J</sup></div>
+          <div class="kpi-label">Garantie</div>
+        </div>
+        <div class="kpi-item">
+          <div class="kpi-num">2k<sup>+</sup></div>
+          <div class="kpi-label">Installationen</div>
+        </div>
       </div>
     </div>
 
     <!-- QUIZ -->
-    <div class="quiz-card" id="quiz-card">
-      <!-- Steps 1-4 -->
-      <div id="quiz-steps">
-        <div class="quiz-card-header">
-          <p>Kostenlose Analyse</p>
-          <h3>Wie viel koennen Sie sparen?</h3>
+    <div id="quiz-wrap">
+      <div class="quiz-glass" id="qCard">
+        <!-- header -->
+        <div class="quiz-glass-top">
+          <div>
+            <h3>Kostenlose Potenzialanalyse</h3>
+            <p>Erfahren Sie, wie viel Sie jaehrlich sparen</p>
+          </div>
+          <div class="q-progress">
+            <div class="q-prog-pip on" id="pp0"></div>
+            <div class="q-prog-pip" id="pp1"></div>
+            <div class="q-prog-pip" id="pp2"></div>
+            <div class="q-prog-pip" id="pp3"></div>
+          </div>
         </div>
-        <div class="quiz-progress" id="qprog">
-          <div class="qp-dot done" id="qd0"></div>
-          <div class="qp-dot" id="qd1"></div>
-          <div class="qp-dot" id="qd2"></div>
-          <div class="qp-dot" id="qd3"></div>
-        </div>
-        <div class="quiz-body">
-          <!-- Q1 -->
-          <div class="quiz-step active" id="quiz-1" data-q="0">
-            <p class="quiz-q">Wie viele Flaschen Wasser kaufen Sie pro Monat?</p>
-            <div class="quiz-options">
-              <div class="quiz-opt" onclick="pick(this,0)">1–20 Flaschen</div>
-              <div class="quiz-opt" onclick="pick(this,0)">20–50 Flaschen</div>
-              <div class="quiz-opt" onclick="pick(this,0)">50–100 Flaschen</div>
-              <div class="quiz-opt" onclick="pick(this,0)">Ueber 100</div>
-            </div>
-            <div class="quiz-btn-row">
-              <button class="q-btn q-btn-next" onclick="qgo(1)">Weiter</button>
-            </div>
-          </div>
-          <!-- Q2 -->
-          <div class="quiz-step" id="quiz-2" data-q="1">
-            <p class="quiz-q">Warum kaufen Sie Flaschenwasser?</p>
-            <div class="quiz-options">
-              <div class="quiz-opt" onclick="pick(this,1)">Geschmack des Leitungswassers</div>
-              <div class="quiz-opt" onclick="pick(this,1)">Hygiene / Sicherheit</div>
-              <div class="quiz-opt" onclick="pick(this,1)">Kalkgehalt</div>
-              <div class="quiz-opt" onclick="pick(this,1)">Gewohnheit</div>
-            </div>
-            <div class="quiz-btn-row">
-              <button class="q-btn q-btn-back" onclick="qgo(0)">Zurueck</button>
-              <button class="q-btn q-btn-next" onclick="qgo(2)">Weiter</button>
-            </div>
-          </div>
-          <!-- Q3 -->
-          <div class="quiz-step" id="quiz-3" data-q="2">
-            <p class="quiz-q">Wie wichtig ist Ihnen Nachhaltigkeit?</p>
-            <div class="quiz-options">
-              <div class="quiz-opt" onclick="pick(this,2)">Sehr wichtig</div>
-              <div class="quiz-opt" onclick="pick(this,2)">Wichtig</div>
-              <div class="quiz-opt" onclick="pick(this,2)">Weniger wichtig</div>
-              <div class="quiz-opt" onclick="pick(this,2)">Egal</div>
-            </div>
-            <div class="quiz-btn-row">
-              <button class="q-btn q-btn-back" onclick="qgo(1)">Zurueck</button>
-              <button class="q-btn q-btn-next" onclick="qgo(3)">Weiter</button>
-            </div>
-          </div>
-          <!-- Q4 CALC -->
-          <div class="quiz-step" id="quiz-4" data-q="3">
-            <p class="quiz-q">Ihr persoenliches Sparpotenzial:</p>
-            <div class="calc-mini">
-              <div class="calc-row">
-                <label>Personen im Haushalt <span id="qcP">2</span></label>
-                <input type="range" min="1" max="6" value="2" oninput="qcalc(this,'qcP')">
+
+        <!-- steps -->
+        <div id="qSteps">
+          <div class="quiz-body">
+            <!-- Step 1 -->
+            <div class="quiz-step show" id="qs0">
+              <p class="quiz-q">Wie viele Flaschen kaufen Sie pro Monat?</p>
+              <div class="quiz-opts">
+                <button class="quiz-opt" onclick="pick(this,0)">1–20 Flaschen</button>
+                <button class="quiz-opt" onclick="pick(this,0)">20–50 Flaschen</button>
+                <button class="quiz-opt" onclick="pick(this,0)">50–100 Flaschen</button>
+                <button class="quiz-opt" onclick="pick(this,0)">Ueber 100</button>
               </div>
-              <div class="calc-row">
-                <label>Flaschen / Woche <span id="qcB">8</span></label>
-                <input type="range" min="1" max="50" value="8" oninput="qcalc(this,'qcB')">
+              <div class="quiz-actions">
+                <button class="q-btn q-next" onclick="qgo(1)">Weiter</button>
               </div>
-              <div class="calc-row">
-                <label>Preis / Flasche <span id="qcPr">0.50</span> Euro</label>
-                <input type="range" min="30" max="200" value="50" oninput="document.getElementById('qcPr').textContent=(this.value/100).toFixed(2);qres()">
+            </div>
+            <!-- Step 2 -->
+            <div class="quiz-step" id="qs1">
+              <p class="quiz-q">Warum kaufen Sie Flaschenwasser?</p>
+              <div class="quiz-opts">
+                <button class="quiz-opt" onclick="pick(this,1)">Geschmack</button>
+                <button class="quiz-opt" onclick="pick(this,1)">Hygiene</button>
+                <button class="quiz-opt" onclick="pick(this,1)">Kalkgehalt</button>
+                <button class="quiz-opt" onclick="pick(this,1)">Gewohnheit</button>
               </div>
-              <div class="calc-result">
+              <div class="quiz-actions">
+                <button class="q-btn q-back" onclick="qgo(0)">Zurueck</button>
+                <button class="q-btn q-next" onclick="qgo(2)">Weiter</button>
+              </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="quiz-step" id="qs2">
+              <p class="quiz-q">Wie wichtig ist Nachhaltigkeit fuer Sie?</p>
+              <div class="quiz-opts">
+                <button class="quiz-opt" onclick="pick(this,2)">Sehr wichtig</button>
+                <button class="quiz-opt" onclick="pick(this,2)">Wichtig</button>
+                <button class="quiz-opt" onclick="pick(this,2)">Weniger</button>
+                <button class="quiz-opt" onclick="pick(this,2)">Egal</button>
+              </div>
+              <div class="quiz-actions">
+                <button class="q-btn q-back" onclick="qgo(1)">Zurueck</button>
+                <button class="q-btn q-next" onclick="qgo(3)">Weiter</button>
+              </div>
+            </div>
+            <!-- Step 4 CALC -->
+            <div class="quiz-step" id="qs3">
+              <p class="quiz-q">Ihr Sparpotenzial:</p>
+              <div class="m-slider">
+                <label>Personen <b id="qcPers">2</b></label>
+                <input type="range" min="1" max="6" value="2" oninput="id('qcPers').textContent=this.value;qres()">
+              </div>
+              <div class="m-slider">
+                <label>Flaschen / Woche <b id="qcBot">8</b></label>
+                <input type="range" min="1" max="50" value="8" oninput="id('qcBot').textContent=this.value;qres()">
+              </div>
+              <div class="m-slider">
+                <label>Preis / Flasche <b id="qcPri">0.50</b> &#8364;</label>
+                <input type="range" min="30" max="200" value="50" oninput="id('qcPri').textContent=(this.value/100).toFixed(2);qres()">
+              </div>
+              <div class="m-result">
                 <p>Ersparnis / Jahr</p>
-                <strong id="qrResult">208 Euro</strong>
+                <b id="qcRes">208 &#8364;</b>
               </div>
-            </div>
-            <div class="quiz-btn-row">
-              <button class="q-btn q-btn-back" onclick="qgo(2)">Zurueck</button>
-              <button class="q-btn q-btn-next" onclick="qLead()">Ergebnis senden</button>
+              <div class="quiz-actions">
+                <button class="q-btn q-back" onclick="qgo(2)">Zurueck</button>
+                <button class="q-btn q-next" onclick="showLead()">Ergebnis anfordern</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <!-- LEAD CAPTURE -->
-      <div class="quiz-lead" id="quiz-lead-form">
-        <div class="quiz-card-header">
-          <p>Fast geschafft!</p>
-          <h3>Ihr Ergebnis wird berechnet</h3>
+
+        <!-- Lead -->
+        <div class="q-lead" id="qLead">
+          <div class="quiz-glass-top">
+            <div>
+              <h3>Fast geschafft</h3>
+              <p>Wohin sollen wir Ihr Ergebnis senden?</p>
+            </div>
+          </div>
+          <div class="quiz-body">
+            <input class="ql-input" id="lName" type="text" placeholder="Ihr Name" />
+            <input class="ql-input" id="lMail" type="email" placeholder="E-Mail-Adresse" />
+            <input class="ql-input" id="lTel" type="tel" placeholder="Telefon (optional)" />
+            <button class="q-btn q-next" style="width:100%;margin-top:4px" onclick="qsub()">Ergebnis erhalten</button>
+            <p style="color:rgba(255,255,255,.25);font-size:11px;text-align:center;margin-top:14px">Mit dem Absenden stimmen Sie der Datenschutzerklaerung zu.</p>
+          </div>
         </div>
-        <div class="quiz-body">
-          <h3 class="quiz-lead" style="display:block;color:#fff;font-size:19px;font-weight:800;margin-bottom:6px;">Wo sollen wir Ihr Ergebnis hinsenden?</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:13px;margin-bottom:20px;">100% kostenlos und unverbindlich. Kein Spam.</p>
-          <input class="ql-field" type="text" placeholder="Ihr Name" id="lName" />
-          <input class="ql-field" type="email" placeholder="Ihre E-Mail" id="lEmail" />
-          <input class="ql-field" type="tel" placeholder="Telefonnummer (optional)" id="lPhone" />
-          <button class="q-btn q-btn-next" style="width:100%;margin-top:4px;" onclick="qsub()">Ergebnis erhalten</button>
-          <p style="color:rgba(255,255,255,0.35);font-size:11px;text-align:center;margin-top:12px;">Mit dem Absenden stimmen Sie unserer Datenschutzerklaerung zu.</p>
-        </div>
-      </div>
-      <!-- SUCCESS -->
-      <div id="quiz-success" style="display:none;">
-        <div class="quiz-body" style="padding:48px 28px;text-align:center;">
-          <div style="width:64px;height:64px;border-radius:50%;background:rgba(34,197,94,0.15);border:2px solid #22c55e;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 24px;">&#10003;</div>
-          <h3 style="color:#fff;font-size:22px;font-weight:800;margin-bottom:10px;">Vielen Dank!</h3>
-          <p style="color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:28px;">Wir melden uns innerhalb von 24 Stunden. Jetzt direkt Termin buchen:</p>
-          <button class="btn-primary" style="width:100%;justify-content:center;" onclick="openCal()">Beratungsgespraech vereinbaren</button>
+
+        <!-- Success -->
+        <div class="q-success" id="qSuccess">
+          <div class="q-check">&#10003;</div>
+          <h3 style="color:#fff;font-size:22px;font-weight:800;margin-bottom:10px">Vielen Dank!</h3>
+          <p style="color:rgba(255,255,255,.5);font-size:15px;max-width:300px;margin:0 auto 28px;line-height:1.6">Wir melden uns innerhalb von 24 Stunden. Jetzt direkt Termin buchen:</p>
+          <button class="btn btn-white btn-full" onclick="openCal()">Beratungsgespraech vereinbaren</button>
         </div>
       </div>
     </div>
-    <!-- END QUIZ -->
 
   </div>
 </section>
 
-<!-- STATS STRIP -->
-<div class="stats-strip">
-  <div class="stats-grid">
-    <div class="stat-item">
-      <div class="stat-num">5<span>x</span></div>
-      <div class="stat-label">Filterstufen</div>
+<!-- ── BAND ── -->
+<div class="band">
+  <div class="band-inner">
+    <div class="band-item">
+      <div class="band-num">99<sup>%</sup></div>
+      <div class="band-label">Keimreduktion</div>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">99<span>%</span></div>
-      <div class="stat-label">Keimreduktion</div>
+    <div class="band-item">
+      <div class="band-num">5</div>
+      <div class="band-label">Filterstufen</div>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">2<span>k+</span></div>
-      <div class="stat-label">Installationen</div>
+    <div class="band-item">
+      <div class="band-num">2000<sup>+</sup></div>
+      <div class="band-label">Installationen</div>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">10<span>J</span></div>
-      <div class="stat-label">Garantie</div>
+    <div class="band-item">
+      <div class="band-num">10<sup>J</sup></div>
+      <div class="band-label">Garantie</div>
     </div>
   </div>
 </div>
 
-<!-- PRODUKT -->
+<!-- ── PRODUKT ── -->
 <section id="produkt">
-  <div class="produkt-inner">
-    <div class="produkt-img-wrap">
-      <img src="images/PROaqua_4700.webp" alt="PROVITEC PROaqua 4700" />
-      <!-- Hotspots -->
-      <div class="hs" d="1" style="left:52%;top:10%;" onmouseenter="st(1)" onmouseleave="ht(1)" onclick="st(1)">
-        <div class="tip" id="tip1"><strong>Sedimentfilter</strong><p>Entfernt Rost, Sand und Schwebstoffe ab 5 Mikrometer.</p></div>
-      </div>
-      <div class="hs" d="2" style="left:52%;top:25%;" onmouseenter="st(2)" onmouseleave="ht(2)" onclick="st(2)">
-        <div class="tip" id="tip2"><strong>Aktivkohle-Block</strong><p>Bindet Chlor, Pestizide und organische Verbindungen.</p></div>
-      </div>
-      <div class="hs" d="3" style="left:52%;top:40%;" onmouseenter="st(3)" onmouseleave="ht(3)" onclick="st(3)">
-        <div class="tip left" id="tip3"><strong>UF-Membran</strong><p>Ultrafiltration auf 0.02 Mikrometer – haelt Bakterien zurueck.</p></div>
-      </div>
-      <div class="hs" d="4" style="left:52%;top:55%;" onmouseenter="st(4)" onmouseleave="ht(4)" onclick="st(4)">
-        <div class="tip left" id="tip4"><strong>Mineralisierung</strong><p>Fuegt lebenswichtige Mineralien wie Calcium und Magnesium hinzu.</p></div>
-      </div>
-      <div class="hs" d="5" style="left:52%;top:70%;" onmouseenter="st(5)" onmouseleave="ht(5)" onclick="st(5)">
-        <div class="tip left" id="tip5"><strong>Aktivkohle-Granulat</strong><p>Finalpolitur fuer optimalen Geschmack und Geruch.</p></div>
-      </div>
-      <div class="hs" d="6" style="left:52%;top:85%;" onmouseenter="st(6)" onmouseleave="ht(6)" onclick="st(6)">
-        <div class="tip left" id="tip6"><strong>Hochdruckgehaeuse</strong><p>Druckstabil bis 10 bar, TUV-geprueft und lebensmittelecht.</p></div>
+  <div class="prod-inner">
+    <div class="prod-img-col">
+      <div class="prod-frame">
+        <img src="images/PROaqua_4700.webp" alt="PROVITEC PROaqua 4700" />
+        <!-- HOTSPOTS — right side -->
+        <div class="hs-dot" style="left:68%;top:12%" onmouseenter="ht(1)" onmouseleave="hh(1)">1
+          <div class="hs-tip" id="ht1"><strong>Sedimentfilter</strong><p>Entfernt Rost, Sand und Schwebstoffe ab 5 Mikrometer zuverlaessig.</p></div>
+        </div>
+        <div class="hs-dot" style="left:68%;top:27%" onmouseenter="ht(2)" onmouseleave="hh(2)">2
+          <div class="hs-tip" id="ht2"><strong>Aktivkohle-Block</strong><p>Bindet Chlor, Pestizide und organische Verbindungen.</p></div>
+        </div>
+        <div class="hs-dot" style="left:68%;top:43%" onmouseenter="ht(3)" onmouseleave="hh(3)">3
+          <div class="hs-tip" id="ht3"><strong>UF-Membran</strong><p>Ultrafiltration auf 0,02 Mikrometer – Bakterien und Mikroplastik bleiben zurueck.</p></div>
+        </div>
+        <div class="hs-dot" style="left:68%;top:58%" onmouseenter="ht(4)" onmouseleave="hh(4)">4
+          <div class="hs-tip" id="ht4"><strong>Mineralisierung</strong><p>Gibt Calcium und Magnesium in optimaler Dosierung zurueck ins Wasser.</p></div>
+        </div>
+        <div class="hs-dot" style="left:68%;top:73%" onmouseenter="ht(5)" onmouseleave="hh(5)">5
+          <div class="hs-tip" id="ht5"><strong>Aktivkohle-Granulat</strong><p>Finalpolitur fuer optimalen Geschmack und Geruchsneutralitaet.</p></div>
+        </div>
+        <div class="hs-dot" style="left:68%;top:87%" onmouseenter="ht(6)" onmouseleave="hh(6)">6
+          <div class="hs-tip" id="ht6"><strong>Hochdruckgehaeuse</strong><p>Druckstabil bis 10 bar, lebensmittelecht, TUV-geprueft.</p></div>
+        </div>
       </div>
     </div>
-    <div class="produkt-right">
-      <div class="section-label">Das System</div>
-      <h2 class="section-h2">5-Stufen-Filtration<br>auf hoechstem Niveau</h2>
-      <p class="section-sub">Das PROVITEC PROaqua 4700 vereint fuenf Filterstufen in einem kompakten Gehaeuse. Hover ueber die Punkte links, um jede Stufe zu erkunden.</p>
-      <ul class="feature-list" style="margin-top:32px;">
-        <li>
-          <div class="feat-icon">&#128167;</div>
-          <div class="feat-text">
+    <div>
+      <span class="sec-tag">Das System</span>
+      <h2 class="sec-h2">PROVITEC<br>PROaqua 4700</h2>
+      <p class="sec-p" style="margin-bottom:52px">Fuenf Filterstufen in einem kompakten Gehaeuse. Hover ueber die nummerierten Punkte, um jede Stufe zu erkunden.</p>
+      <div class="prod-feats">
+        <div class="prod-feat">
+          <span class="feat-num">01</span>
+          <div class="feat-content">
             <strong>Kristallklares Trinkwasser</strong>
-            <p>Direktanschluss am Wasserhahn – stilles oder gespritztes Wasser auf Knopfdruck.</p>
+            <p>Direktanschluss — stilles oder gespritztes Wasser auf Knopfdruck, ohne Flaschenschleppen.</p>
           </div>
-        </li>
-        <li>
-          <div class="feat-icon">&#9211;</div>
-          <div class="feat-text">
-            <strong>Keine Schlepperei mehr</strong>
-            <p>Bis zu 3.000 Liter Filterkapazitaet pro Kartusche – das sind rund 6.000 Flaschen.</p>
+        </div>
+        <div class="prod-feat">
+          <span class="feat-num">02</span>
+          <div class="feat-content">
+            <strong>3.000 Liter Filterkapazitaet</strong>
+            <p>Eine Kartusche entspricht 6.000 Einliterflaschen. Kartuschen-Wechsel in unter 2 Minuten.</p>
           </div>
-        </li>
-        <li>
-          <div class="feat-icon">&#9889;</div>
-          <div class="feat-text">
-            <strong>Einfache Wartung</strong>
-            <p>Kartuschen-Wechsel in unter 2 Minuten, kein Werkzeug noetig.</p>
+        </div>
+        <div class="prod-feat">
+          <span class="feat-num">03</span>
+          <div class="feat-content">
+            <strong>TUV-zertifiziert, Made in Germany</strong>
+            <p>Jede Charge wird im akkreditierten Labor getestet und entspricht der deutschen Trinkwasserverordnung.</p>
           </div>
-        </li>
-      </ul>
+        </div>
+      </div>
+      <button class="btn btn-navy" style="margin-top:36px" onclick="openAngebot()">Angebot anfragen</button>
     </div>
   </div>
 </section>
 
-<!-- VORTEILE -->
+<!-- ── VORTEILE ── -->
 <section id="vorteile">
-  <div class="section-inner">
-    <div class="section-label">Warum PROVITEC?</div>
-    <h2 class="section-h2">Ueberzeugend in<br>jeder Hinsicht</h2>
-    <div class="vorteile-grid">
-      <div class="vorteil-tile">
-        <div class="vt-num">01</div>
-        <div class="vt-title">Bis zu 70% guenstiger</div>
-        <div class="vt-body">Im Vergleich zu gekaeutem Flaschenwasser amortisiert sich das System bereits im ersten Jahr.</div>
+  <div class="sec-inner">
+    <div class="vort-hd">
+      <div>
+        <span class="sec-tag">Warum PROVITEC</span>
+        <h2 class="sec-h2" style="margin-bottom:0">Ueberzeugende<br>Argumente.</h2>
       </div>
-      <div class="vorteil-tile">
-        <div class="vt-num">02</div>
-        <div class="vt-title">Zero Plastic Waste</div>
-        <div class="vt-body">Eine Familie spart durchschnittlich 1.200 Plastikflaschen pro Jahr – ein echter Beitrag zum Klimaschutz.</div>
+      <p class="sec-p" style="max-width:380px;text-align:right">Sechsmal besser — in jedem Punkt, der fuer Ihre Familie zaehlt.</p>
+    </div>
+    <div class="vort-grid">
+      <div class="vort-card">
+        <div class="vort-idx">01</div>
+        <div class="vort-title">Bis zu 70 % guenstiger</div>
+        <div class="vort-body">Im Vergleich zu gekaeutem Flaschenwasser amortisiert sich das System im ersten Jahr. Danach sparen Sie jedes Jahr weiter.</div>
       </div>
-      <div class="vorteil-tile">
-        <div class="vt-num">03</div>
-        <div class="vt-title">Laborgetestete Qualitaet</div>
-        <div class="vt-body">Jede Charge wird im akkreditierten Labor analysiert und entspricht der deutschen Trinkwasserverordnung.</div>
+      <div class="vort-card">
+        <div class="vort-idx">02</div>
+        <div class="vort-title">Zero Plastic Waste</div>
+        <div class="vort-body">Eine Familie spart bis zu 1.200 Plastikflaschen pro Jahr. Ein echter, messbarer Beitrag zum Klimaschutz.</div>
       </div>
-      <div class="vorteil-tile">
-        <div class="vt-num">04</div>
-        <div class="vt-title">Hygienisch sicher</div>
-        <div class="vt-body">Die UF-Membran haelt Bakterien, Viren und Mikroplastik sicher zurueck – ohne Chemie.</div>
+      <div class="vort-card">
+        <div class="vort-idx">03</div>
+        <div class="vort-title">Laborgetestete Reinheit</div>
+        <div class="vort-body">Jede Charge wird im akkreditierten Labor analysiert und entspricht der deutschen Trinkwasserverordnung.</div>
       </div>
-      <div class="vorteil-tile">
-        <div class="vt-num">05</div>
-        <div class="vt-title">Platzsparend</div>
-        <div class="vt-body">Kompaktes Design fuer den Einbau unter jede Standardspuele. Keine Bauznahmen noetig.</div>
+      <div class="vort-card">
+        <div class="vort-idx">04</div>
+        <div class="vort-title">Hygienisch sicher</div>
+        <div class="vort-body">Die UF-Membran haelt Bakterien, Viren und Mikroplastik zurueck — ganz ohne Chemie oder Zusatzstoffe.</div>
       </div>
-      <div class="vorteil-tile">
-        <div class="vt-num">06</div>
-        <div class="vt-title">10 Jahre Garantie</div>
-        <div class="vt-body">PROVITEC steht mit 10 Jahren Herstellergarantie und deutschem Support hinter jedem Geraet.</div>
+      <div class="vort-card">
+        <div class="vort-idx">05</div>
+        <div class="vort-title">Platzsparend kompakt</div>
+        <div class="vort-body">Passt unter jede Standardspuele. Kein Umbau, keine Bauarbeiten — Installation in 30 Minuten moglich.</div>
+      </div>
+      <div class="vort-card">
+        <div class="vort-idx">06</div>
+        <div class="vort-title">10 Jahre Garantie</div>
+        <div class="vort-body">PROVITEC steht mit 10 Jahren Herstellergarantie und deutschem Kundendienst hinter jedem Geraet.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- EINBAU -->
+<!-- ── EINBAU ── -->
 <section id="einbau">
-  <div class="einbau-inner">
-    <div class="einbau-img">
+  <div class="einbau-wrap">
+    <div class="einbau-img-col">
       <img src="images/einbau.png" alt="PROVITEC Einbau unter der Spuele" />
     </div>
     <div>
-      <div class="section-label" style="color:rgba(255,255,255,0.5);">Installation</div>
-      <h2 class="section-h2 section-h2-light">In 30 Minuten<br>eingebaut.</h2>
-      <p class="section-sub section-sub-light" style="margin-bottom:40px;">Keine Fachkraft noetig. Unser System ist so konzipiert, dass Sie es selbst installieren koennen – oder unser Service-Team kommt zu Ihnen.</p>
+      <span class="sec-tag sec-tag-light">Installation</span>
+      <h2 class="sec-h2 sec-h2-light">In 30 Minuten<br>eingebaut.</h2>
+      <p class="sec-p sec-p-light">Keine Fachkraft noetig. Unser System ist so konstruiert, dass Sie es selbst installieren koennen.</p>
       <div class="einbau-steps">
-        <div class="einbau-step">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <strong>Wasser abstellen</strong>
-            <p>Den Kalt-Wasserhahn unter der Spuele zudrehen – fertig.</p>
+        <div class="e-step">
+          <div class="e-n">1</div>
+          <div class="e-content">
+            <strong>Wasserzufuhr absperren</strong>
+            <p>Den Kaltwasserhahn unter der Spuele schliessen — dauert 10 Sekunden.</p>
           </div>
         </div>
-        <div class="einbau-step">
-          <div class="step-num">2</div>
-          <div class="step-content">
+        <div class="e-step">
+          <div class="e-n">2</div>
+          <div class="e-content">
             <strong>T-Stueck einsetzen</strong>
-            <p>Das mitgelieferte T-Stueck wird einfach in die Zuleitung geschraubt.</p>
+            <p>Mitgeliefertes T-Stueck in die Kaltwasserzuleitung schrauben.</p>
           </div>
         </div>
-        <div class="einbau-step">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <strong>Filtereinheit montieren</strong>
-            <p>Das Filtergehaeuse wird am Schrankboden oder der Wand befestigt.</p>
+        <div class="e-step">
+          <div class="e-n">3</div>
+          <div class="e-content">
+            <strong>Filtergehaeuse montieren</strong>
+            <p>Befestigung am Schrankboden oder der Wand — zwei Schrauben genuegen.</p>
           </div>
         </div>
-        <div class="einbau-step">
-          <div class="step-num">4</div>
-          <div class="step-content">
+        <div class="e-step">
+          <div class="e-n">4</div>
+          <div class="e-content">
             <strong>Filterhahn einbauen</strong>
-            <p>Nur ein kleines Loch in der Spuele – passt zu allen gaengigen Modellen.</p>
+            <p>Ein kleines Loch in der Spuele, passend fuer alle gaengigen Modelle.</p>
           </div>
         </div>
-        <div class="einbau-step">
-          <div class="step-num">5</div>
-          <div class="step-content">
-            <strong>Wasser aufdrehen &amp; geniessen</strong>
-            <p>System spiuelen, Qualitaet pruefen, fertig. Kristallklares Wasser direkt aus dem Hahn.</p>
+        <div class="e-step">
+          <div class="e-n">5</div>
+          <div class="e-content">
+            <strong>Wasser aufdrehen und geniessen</strong>
+            <p>System einmal spiulen, Qualitaet pruefen — fertig. Reines Wasser direkt aus dem Hahn.</p>
           </div>
         </div>
       </div>
@@ -1404,276 +901,225 @@
   </div>
 </section>
 
-<!-- KALKULATOR -->
+<!-- ── KALKULATOR ── -->
 <section id="kalkulator">
-  <div class="rechner-inner">
+  <div class="kalk-wrap">
     <div>
-      <div class="section-label" style="color:rgba(255,255,255,0.4);">Sparrechner</div>
-      <h2 class="section-h2 section-h2-light">Was kostet Sie<br>Flaschenwasser wirklich?</h2>
-      <p class="section-sub section-sub-light" style="margin-bottom:40px;">Die meisten unterschaetzen ihre jaehrlichen Ausgaben massiv. Unser Rechner zeigt Ihnen das volle Bild.</p>
-      <div class="rechner-img">
+      <span class="sec-tag">Sparrechner</span>
+      <h2 class="sec-h2">Was kostet Sie<br>Flaschenwasser?</h2>
+      <p class="sec-p" style="margin-bottom:40px">Die meisten unterschaetzen ihre jaehrlichen Ausgaben. Rechnen Sie selbst.</p>
+      <div class="kalk-img">
         <img src="images/Provitec-Einsparung.webp" alt="PROVITEC Einsparungsvergleich" />
       </div>
     </div>
-    <div class="rechner-card">
-      <h3 style="color:#fff;font-size:20px;font-weight:800;margin-bottom:28px;">Ihr Sparpotenzial</h3>
-      <div class="r-slider-row">
-        <label>Personen im Haushalt <strong id="rP">2</strong></label>
-        <input type="range" min="1" max="6" value="2" oninput="document.getElementById('rP').textContent=this.value;fcalc()">
+    <div class="kalk-card">
+      <h3>Ihr Sparpotenzial</h3>
+      <div class="r-row">
+        <label>Personen im Haushalt <b id="rPers">2</b></label>
+        <input type="range" class="dark" min="1" max="6" value="2" oninput="id('rPers').textContent=this.value;fcalc()">
       </div>
-      <div class="r-slider-row">
-        <label>Flaschen pro Woche <strong id="rB">10</strong></label>
-        <input type="range" min="1" max="60" value="10" oninput="document.getElementById('rB').textContent=this.value;fcalc()">
+      <div class="r-row">
+        <label>Flaschen pro Woche <b id="rBot">10</b></label>
+        <input type="range" class="dark" min="1" max="60" value="10" oninput="id('rBot').textContent=this.value;fcalc()">
       </div>
-      <div class="r-slider-row">
-        <label>Preis pro Flasche <strong id="rPr">0.50</strong> Euro</label>
-        <input type="range" min="30" max="250" value="50" oninput="document.getElementById('rPr').textContent=(this.value/100).toFixed(2);fcalc()">
+      <div class="r-row">
+        <label>Preis pro Flasche <b id="rPri">0.50</b> &#8364;</label>
+        <input type="range" class="dark" min="30" max="250" value="50" oninput="id('rPri').textContent=(this.value/100).toFixed(2);fcalc()">
       </div>
-      <div class="r-slider-row">
-        <label>Schleppaufwand pro Monat <strong id="rC">60</strong> Min.</label>
-        <input type="range" min="0" max="300" value="60" oninput="document.getElementById('rC').textContent=this.value;fcalc()">
+      <div class="r-row">
+        <label>Schleppaufwand/Monat <b id="rMin">60</b> Min.</label>
+        <input type="range" class="dark" min="0" max="300" value="60" oninput="id('rMin').textContent=this.value;fcalc()">
       </div>
-      <div class="rechner-result">
-        <div class="rechner-result-row">
+      <div class="kalk-result">
+        <div class="kalk-row">
           <span>Kosten Flaschenwasser / Jahr</span>
-          <strong id="rCost">260 Euro</strong>
+          <b id="rCost">260 &#8364;</b>
         </div>
-        <div class="rechner-result-row rechner-result-big">
-          <span>Mit PROVITEC sparen Sie / Jahr</span>
-          <strong id="rSave">195 Euro</strong>
+        <div class="kalk-row kalk-big">
+          <span>Ersparnis mit PROVITEC / Jahr</span>
+          <b id="rSave">195 &#8364;</b>
         </div>
       </div>
-      <button class="btn-primary" style="width:100%;margin-top:24px;justify-content:center;" onclick="openModal()">Jetzt Angebot anfragen</button>
+      <button class="btn btn-navy btn-full" style="margin-top:24px" onclick="openAngebot()">Angebot anfragen</button>
     </div>
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
+<!-- ── TESTIMONIALS ── -->
 <section id="testimonials">
-  <div class="section-inner">
-    <div class="section-label">Kundenstimmen</div>
-    <h2 class="section-h2">Das sagen unsere Kunden</h2>
+  <div class="sec-inner">
+    <span class="sec-tag">Kundenstimmen</span>
+    <h2 class="sec-h2">Das sagen unsere Kunden</h2>
     <div class="testi-grid">
       <div class="testi-card">
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">"Seit der Installation trinken wir nur noch unser eigenes Leitungswasser. Der Geschmack ist besser als jedes Flaschenwasser, das wir je hatten."</p>
-        <div class="testi-author">
-          <div class="testi-avatar">MK</div>
-          <div>
-            <div class="testi-name">Michael K.</div>
-            <div class="testi-loc">Muenchen, Familie mit 3 Kindern</div>
-          </div>
+        <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="t-text">"Seit der Installation trinken wir nur noch unser eigenes Wasser. Geschmack besser als jedes Flaschenwasser — und wir sparen 45 Euro im Monat."</p>
+        <div class="t-author">
+          <div class="t-av">MK</div>
+          <div><div class="t-name">Michael K.</div><div class="t-loc">Muenchen, Familie mit 3 Kindern</div></div>
         </div>
       </div>
       <div class="testi-card">
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">"Die Installation war in 25 Minuten erledigt. PROVITEC hat sofort geholfen – keine Schlepperei mehr, keine Plastikflaschen, reines Gewissen."</p>
-        <div class="testi-author">
-          <div class="testi-avatar">SB</div>
-          <div>
-            <div class="testi-name">Sandra B.</div>
-            <div class="testi-loc">Hamburg, 2-Personen-Haushalt</div>
-          </div>
+        <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="t-text">"Installation in 25 Minuten, kein Handwerker noetig. PROVITEC hat unser Leitungswasser komplett transformiert. Kein Kalk, kein Chlorgeschmack."</p>
+        <div class="t-author">
+          <div class="t-av">SB</div>
+          <div><div class="t-name">Sandra B.</div><div class="t-loc">Hamburg, 2-Personen-Haushalt</div></div>
         </div>
       </div>
       <div class="testi-card">
-        <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="testi-text">"Wir sparen rund 40 Euro pro Monat und haben ausgerechnet, dass sich das System bereits nach 8 Monaten amortisiert hat. Absolut zu empfehlen."</p>
-        <div class="testi-author">
-          <div class="testi-avatar">TF</div>
-          <div>
-            <div class="testi-name">Thomas F.</div>
-            <div class="testi-loc">Frankfurt, Ehepaar</div>
-          </div>
+        <div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="t-text">"System amortisiert nach 8 Monaten. Seitdem reine Ersparnis — und kein einziger Plastikmuell. Beste Investition des Jahres."</p>
+        <div class="t-author">
+          <div class="t-av">TF</div>
+          <div><div class="t-name">Thomas F.</div><div class="t-loc">Frankfurt, Ehepaar</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- KONTAKT -->
+<!-- ── KONTAKT ── -->
 <section id="kontakt">
-  <div class="kontakt-inner">
-    <div>
-      <div class="section-label">Jetzt starten</div>
-      <h2 class="section-h2">Bereit fuer sauberes<br>Wasser aus dem Hahn?</h2>
-      <p class="section-sub" style="margin-bottom:48px;">Unser Team beraet Sie kostenlos und unverbindlich. Vereinbaren Sie ein Gespraech oder schreiben Sie uns direkt.</p>
-      <ul class="k-info">
-        <li class="k-info-item">
-          <div class="k-icon">&#128222;</div>
-          <div class="k-info-text">
-            <strong>Telefon</strong>
-            <p>+49 (0) 800 123 456 7</p>
-          </div>
+  <div class="kont-wrap">
+    <div class="kont-info">
+      <span class="sec-tag sec-tag-light">Kontakt</span>
+      <h2 class="sec-h2 sec-h2-light">Bereit fuer<br>sauberes Wasser?</h2>
+      <p class="sec-p sec-p-light">Kostenlos und unverbindlich beraten lassen — oder direkt Termin buchen.</p>
+      <ul class="kont-list">
+        <li class="kont-item">
+          <div class="kont-ico">&#128222;</div>
+          <div class="kont-txt"><strong>Telefon</strong><p>+49 (0) 800 123 456 7</p></div>
         </li>
-        <li class="k-info-item">
-          <div class="k-icon">&#128140;</div>
-          <div class="k-info-text">
-            <strong>E-Mail</strong>
-            <p>info@provitec.de</p>
-          </div>
+        <li class="kont-item">
+          <div class="kont-ico">&#128140;</div>
+          <div class="kont-txt"><strong>E-Mail</strong><p>info@provitec.de</p></div>
         </li>
-        <li class="k-info-item">
-          <div class="k-icon">&#128337;</div>
-          <div class="k-info-text">
-            <strong>Oeffnungszeiten</strong>
-            <p>Mo–Fr 8:00–18:00 Uhr</p>
-          </div>
+        <li class="kont-item">
+          <div class="kont-ico">&#128337;</div>
+          <div class="kont-txt"><strong>Erreichbar</strong><p>Mo–Fr, 8:00–18:00 Uhr</p></div>
         </li>
       </ul>
-      <button class="cal-btn" onclick="openCal()">Beratungsgespraech vereinbaren</button>
+      <button class="btn btn-white" style="margin-top:44px" onclick="openCal()">Beratungsgespraech vereinbaren</button>
     </div>
-    <div class="kontakt-form-card">
-      <h3 style="font-size:20px;font-weight:800;color:var(--navy-dark);margin-bottom:6px;">Nachricht senden</h3>
-      <p style="color:#6b7280;font-size:14px;margin-bottom:24px;">Wir antworten innerhalb von 24 Stunden.</p>
-      <input class="k-field" type="text" placeholder="Ihr Name" id="kName" />
-      <input class="k-field" type="email" placeholder="Ihre E-Mail" id="kEmail" />
-      <input class="k-field" type="tel" placeholder="Telefonnummer (optional)" id="kPhone" />
-      <textarea class="k-field" rows="4" placeholder="Ihre Nachricht..." id="kMsg" style="resize:vertical;"></textarea>
-      <button class="btn-primary" style="width:100%;justify-content:center;" onclick="ksub()">Nachricht senden</button>
+    <div class="kont-form">
+      <h3>Nachricht senden</h3>
+      <p>Wir antworten innerhalb von 24 Stunden.</p>
+      <input class="k-inp" id="kName" type="text" placeholder="Ihr Name" />
+      <input class="k-inp" id="kMail" type="email" placeholder="E-Mail-Adresse" />
+      <input class="k-inp" id="kTel" type="tel" placeholder="Telefonnummer (optional)" />
+      <textarea class="k-inp" id="kMsg" rows="4" placeholder="Ihre Nachricht..."></textarea>
+      <button class="btn btn-white btn-full" onclick="ksub()">Nachricht senden</button>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ── FOOTER ── -->
 <footer>
-  <div class="footer-logo">
-    <img src="images/Logo_provitec_2023-01.webp" alt="PROVITEC" />
-  </div>
-  <div class="footer-copy">© 2024 PROVITEC® – Alle Rechte vorbehalten</div>
-  <div class="footer-links">
+  <div class="ft-logo"><img src="images/Logo_provitec_2023-01.webp" alt="PROVITEC" /></div>
+  <div class="ft-copy">&#169; 2024 PROVITEC&#174; &#8211; Alle Rechte vorbehalten</div>
+  <div class="ft-links">
     <a href="#">Impressum</a>
     <a href="#">Datenschutz</a>
     <a href="#">AGB</a>
   </div>
 </footer>
 
-<!-- MODAL ANGEBOT -->
-<div class="modal-overlay" id="modal-angebot">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeModal()">&#215;</button>
+<!-- ── MODAL ANGEBOT ── -->
+<div class="overlay" id="ovAngebot">
+  <div class="modal">
+    <button class="m-close" onclick="closeAngebot()">&#215;</button>
     <h2>Angebot anfragen</h2>
-    <p>Wir erstellen Ihnen ein individuelles Angebot. Kostenlos und unverbindlich.</p>
-    <input class="ql-field" type="text" placeholder="Ihr Name" id="mName" />
-    <input class="ql-field" type="email" placeholder="Ihre E-Mail" id="mEmail" />
-    <input class="ql-field" type="tel" placeholder="Telefonnummer" id="mPhone" />
-    <button class="q-btn q-btn-next" style="width:100%;margin-top:8px;" onclick="msub()">Angebot anfordern</button>
+    <p>Individuelles Angebot kostenlos und unverbindlich erhalten.</p>
+    <input class="ql-input" id="mName" type="text" placeholder="Ihr Name" />
+    <input class="ql-input" id="mMail" type="email" placeholder="E-Mail-Adresse" />
+    <input class="ql-input" id="mTel" type="tel" placeholder="Telefonnummer" />
+    <button class="q-btn q-next" style="width:100%;margin-top:8px" onclick="msub()">Angebot anfordern</button>
   </div>
 </div>
 
-<!-- MODAL CALENDAR -->
-<div class="modal-overlay" id="modal-cal">
-  <div class="modal-box">
-    <button class="modal-close" onclick="closeCal()">&#215;</button>
+<!-- ── MODAL CALENDAR ── -->
+<div class="overlay" id="ovCal">
+  <div class="modal">
+    <button class="m-close" onclick="closeCal()">&#215;</button>
     <h2>Termin vereinbaren</h2>
-    <p>Waehlen Sie einen Termin fuer Ihr kostenloses Beratungsgespraech. Unser Experte meldet sich bei Ihnen.</p>
-    <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:40px;text-align:center;color:rgba(255,255,255,0.4);font-size:14px;">
-      Kalender-Integration folgt<br><small>(Calendly / Cal.com)</small>
-    </div>
-    <button class="q-btn q-btn-next" style="width:100%;margin-top:16px;" onclick="closeCal()">Schliessen</button>
+    <p>Waehlen Sie einen Termin fuer Ihr kostenloses Beratungsgespraech.</p>
+    <div class="cal-placeholder">Kalender-Integration folgt<br><small style="opacity:.5">(Calendly / Cal.com)</small></div>
+    <button class="q-btn q-back" style="width:100%;margin-top:16px" onclick="closeCal()">Schliessen</button>
   </div>
 </div>
 
 <script>
-  // NAV HIGHLIGHT
-  const navLinks = document.querySelectorAll('.nav-links a');
-  const sections = document.querySelectorAll('section[id], div[id]');
+// utils
+function id(x){return document.getElementById(x)}
+function scrollTo(sel){document.querySelector(sel).scrollIntoView({behavior:'smooth'})}
 
-  window.addEventListener('scroll', () => {
-    let cur = '';
-    sections.forEach(s => {
-      if (window.scrollY >= s.offsetTop - 90) cur = s.id;
-    });
-    navLinks.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
-    });
-  });
+// NAV
+window.addEventListener('scroll',()=>{
+  id('nav').classList.toggle('scrolled',window.scrollY>20);
+  const links=document.querySelectorAll('.nav-links a');
+  const secs=document.querySelectorAll('section[id]');
+  let cur='';
+  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id});
+  links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+});
 
-  // QUIZ STATE
-  let qStep = 0;
-  const qDots = [document.getElementById('qd0'), document.getElementById('qd1'), document.getElementById('qd2'), document.getElementById('qd3')];
+// QUIZ
+let step=0;
+function qgo(n){
+  document.querySelectorAll('.quiz-step').forEach(s=>s.classList.remove('show'));
+  id('qs'+n).classList.add('show');
+  step=n;
+  [0,1,2,3].forEach(i=>id('pp'+i).classList.toggle('on',i<=n));
+}
+function pick(el,q){
+  el.closest('.quiz-opts').querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function showLead(){
+  id('qSteps').style.display='none';
+  id('qLead').classList.add('show');
+}
+function qsub(){
+  const n=id('lName').value.trim(),m=id('lMail').value.trim();
+  if(!n||!m){alert('Bitte Name und E-Mail angeben.');return}
+  id('qLead').classList.remove('show');
+  id('qSuccess').classList.add('show');
+}
+function qres(){
+  const b=parseInt(id('qcBot').textContent)||8;
+  const p=parseFloat(id('qcPri').textContent)||0.5;
+  id('qcRes').innerHTML=Math.round(b*52*p*.75)+' &#8364;';
+}
 
-  function qgo(n) {
-    document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
-    const next = document.getElementById('quiz-' + (n + 1));
-    if (next) { next.classList.add('active'); qStep = n; }
-    qDots.forEach((d, i) => d.classList.toggle('done', i <= n));
-  }
+// FULL CALC
+function fcalc(){
+  const b=parseInt(id('rBot').textContent)||10;
+  const p=parseFloat(id('rPri').textContent)||0.5;
+  const cost=Math.round(b*52*p);
+  id('rCost').innerHTML=cost+' &#8364;';
+  id('rSave').innerHTML=Math.round(cost*.75)+' &#8364;';
+}
 
-  function pick(el, q) {
-    el.closest('.quiz-options').querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-  }
+// HOTSPOTS
+function ht(n){id('ht'+n).classList.add('vis')}
+function hh(n){id('ht'+n).classList.remove('vis')}
 
-  function qLead() {
-    document.getElementById('quiz-steps').style.display = 'none';
-    const lf = document.getElementById('quiz-lead-form');
-    lf.style.display = 'block';
-    lf.classList.add('active');
-  }
-
-  function qsub() {
-    const name = document.getElementById('lName').value.trim();
-    const email = document.getElementById('lEmail').value.trim();
-    if (!name || !email) { alert('Bitte Name und E-Mail eingeben.'); return; }
-    document.getElementById('quiz-lead-form').style.display = 'none';
-    document.getElementById('quiz-success').style.display = 'block';
-  }
-
-  // QUIZ MINI CALC
-  function qcalc(el, spanId) {
-    document.getElementById(spanId).textContent = el.value;
-    qres();
-  }
-
-  function qres() {
-    const b = parseInt(document.getElementById('qcB').textContent) || 8;
-    const pr = parseFloat(document.getElementById('qcPr').textContent) || 0.5;
-    const save = Math.round(b * 52 * pr * 0.75);
-    document.getElementById('qrResult').textContent = save + ' Euro';
-  }
-
-  // FULL RECHNER
-  function fcalc() {
-    const b = parseInt(document.getElementById('rB').textContent) || 10;
-    const pr = parseFloat(document.getElementById('rPr').textContent) || 0.5;
-    const cost = Math.round(b * 52 * pr);
-    const save = Math.round(cost * 0.75);
-    document.getElementById('rCost').textContent = cost + ' Euro';
-    document.getElementById('rSave').textContent = save + ' Euro';
-  }
-
-  // HOTSPOTS
-  function st(n) {
-    document.getElementById('tip' + n).classList.add('vis');
-  }
-  function ht(n) {
-    document.getElementById('tip' + n).classList.remove('vis');
-  }
-
-  // MODAL
-  function openModal() { document.getElementById('modal-angebot').classList.add('open'); }
-  function closeModal() { document.getElementById('modal-angebot').classList.remove('open'); }
-  function openCal() {
-    closeModal();
-    document.getElementById('modal-cal').classList.add('open');
-  }
-  function closeCal() { document.getElementById('modal-cal').classList.remove('open'); }
-
-  function msub() {
-    const name = document.getElementById('mName').value.trim();
-    const email = document.getElementById('mEmail').value.trim();
-    if (!name || !email) { alert('Bitte Name und E-Mail eingeben.'); return; }
-    closeModal();
-    alert('Vielen Dank! Wir melden uns bei Ihnen.');
-  }
-
-  function ksub() {
-    const name = document.getElementById('kName').value.trim();
-    const email = document.getElementById('kEmail').value.trim();
-    if (!name || !email) { alert('Bitte Name und E-Mail eingeben.'); return; }
-    alert('Nachricht gesendet. Wir melden uns innerhalb von 24 Stunden!');
-  }
+// MODALS
+function openAngebot(){id('ovAngebot').classList.add('open')}
+function closeAngebot(){id('ovAngebot').classList.remove('open')}
+function openCal(){closeAngebot();id('ovCal').classList.add('open')}
+function closeCal(){id('ovCal').classList.remove('open')}
+function msub(){
+  const n=id('mName').value.trim(),m=id('mMail').value.trim();
+  if(!n||!m){alert('Bitte Name und E-Mail angeben.');return}
+  closeAngebot();alert('Danke! Wir melden uns bei Ihnen.');
+}
+function ksub(){
+  const n=id('kName').value.trim(),m=id('kMail').value.trim();
+  if(!n||!m){alert('Bitte Name und E-Mail angeben.');return}
+  alert('Nachricht gesendet. Wir antworten innerhalb von 24 Stunden.');
+}
 </script>
 </body>
 </html>
