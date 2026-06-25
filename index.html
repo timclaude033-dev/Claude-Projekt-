@@ -60,6 +60,12 @@ nav{
 }
 .page.show{opacity:1;pointer-events:all}
 
+/* ── CANVAS BG ── */
+#waterCanvas{
+  position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;opacity:.85;
+}
+
 /* ── BUTTONS (all centered) ── */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
@@ -467,7 +473,8 @@ textarea.k-inp{resize:vertical;min-height:110px}
      PAGE: HOME
 ══════════════════════════════════════ -->
 <div class="page show" id="pg-home">
-  <div style="display:grid;grid-template-columns:1fr 520px;min-height:calc(100vh - 68px)">
+  <canvas id="waterCanvas"></canvas>
+  <div style="display:grid;grid-template-columns:1fr 520px;min-height:calc(100vh - 68px);position:relative;z-index:1">
 
     <!-- LEFT -->
     <div class="home-left">
@@ -820,6 +827,141 @@ textarea.k-inp{resize:vertical;min-height:110px}
 </div>
 
 <script>
+// ── WATER CANVAS ANIMATION ──
+(function(){
+  const cv=document.getElementById('waterCanvas');
+  const cx=cv.getContext('2d');
+  let W,H,t=0,glints=[];
+
+  function resize(){
+    W=cv.width=cv.offsetWidth;
+    H=cv.height=cv.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  // spawn glints (light sparkles)
+  function spawnGlint(){
+    glints.push({
+      x:Math.random()*W,
+      y:Math.random()*H,
+      r:Math.random()*2.5+0.5,
+      life:0,
+      maxLife:60+Math.random()*80,
+      speed:Math.random()*.4+.1
+    });
+  }
+  for(let i=0;i<60;i++) spawnGlint();
+
+  function drawWaves(){
+    // layer 1 — deep slow wave
+    cx.beginPath();
+    cx.moveTo(0,H*.5);
+    for(let x=0;x<=W;x+=4){
+      const y = H*.52
+        + Math.sin(x*.008 + t*.4)  * H*.06
+        + Math.sin(x*.015 + t*.25) * H*.03;
+      cx.lineTo(x,y);
+    }
+    cx.lineTo(W,H); cx.lineTo(0,H); cx.closePath();
+    const g1=cx.createLinearGradient(0,H*.4,0,H);
+    g1.addColorStop(0,'rgba(26,46,122,0.18)');
+    g1.addColorStop(1,'rgba(7,18,46,0.0)');
+    cx.fillStyle=g1; cx.fill();
+
+    // layer 2 — mid wave
+    cx.beginPath();
+    cx.moveTo(0,H*.35);
+    for(let x=0;x<=W;x+=4){
+      const y = H*.38
+        + Math.sin(x*.012 + t*.55 + 1) * H*.05
+        + Math.sin(x*.022 + t*.3  + 2) * H*.025;
+      cx.lineTo(x,y);
+    }
+    cx.lineTo(W,H); cx.lineTo(0,H); cx.closePath();
+    const g2=cx.createLinearGradient(0,H*.3,0,H);
+    g2.addColorStop(0,'rgba(30,60,150,0.12)');
+    g2.addColorStop(1,'rgba(7,18,46,0.0)');
+    cx.fillStyle=g2; cx.fill();
+
+    // layer 3 — fast surface ripple
+    cx.beginPath();
+    cx.moveTo(0,H*.65);
+    for(let x=0;x<=W;x+=3){
+      const y = H*.68
+        + Math.sin(x*.02  + t*.9 + 3) * H*.025
+        + Math.sin(x*.035 + t*.6 + 1) * H*.012;
+      cx.lineTo(x,y);
+    }
+    cx.lineTo(W,H); cx.lineTo(0,H); cx.closePath();
+    const g3=cx.createLinearGradient(0,H*.62,0,H);
+    g3.addColorStop(0,'rgba(80,140,255,0.07)');
+    g3.addColorStop(1,'rgba(7,18,46,0.0)');
+    cx.fillStyle=g3; cx.fill();
+  }
+
+  function drawGlints(){
+    glints.forEach((gl,i)=>{
+      gl.life++;
+      gl.x -= gl.speed * .3;
+      gl.y += Math.sin(gl.life*.05)*.3;
+
+      const prog = gl.life/gl.maxLife;
+      // bell-curve opacity: fade in then out
+      const alpha = Math.sin(prog*Math.PI) * .9;
+
+      // cross / star sparkle
+      const s = gl.r * (1 + Math.sin(prog*Math.PI)*.5);
+      cx.save();
+      cx.translate(gl.x,gl.y);
+      cx.globalAlpha = alpha;
+
+      // outer glow
+      const grd=cx.createRadialGradient(0,0,0,0,0,s*8);
+      grd.addColorStop(0,'rgba(180,220,255,0.35)');
+      grd.addColorStop(1,'rgba(180,220,255,0)');
+      cx.fillStyle=grd;
+      cx.beginPath(); cx.arc(0,0,s*8,0,Math.PI*2); cx.fill();
+
+      // bright center cross
+      cx.strokeStyle=`rgba(220,240,255,${alpha})`;
+      cx.lineWidth=s*.5;
+      cx.lineCap='round';
+      // horizontal arm
+      cx.beginPath(); cx.moveTo(-s*4,0); cx.lineTo(s*4,0); cx.stroke();
+      // vertical arm
+      cx.beginPath(); cx.moveTo(0,-s*4); cx.lineTo(0,s*4); cx.stroke();
+      // diagonal arms (dimmer)
+      cx.globalAlpha=alpha*.35;
+      cx.beginPath(); cx.moveTo(-s*2.5,-s*2.5); cx.lineTo(s*2.5,s*2.5); cx.stroke();
+      cx.beginPath(); cx.moveTo(s*2.5,-s*2.5); cx.lineTo(-s*2.5,s*2.5); cx.stroke();
+
+      cx.restore();
+
+      // respawn when dead
+      if(gl.life>=gl.maxLife){
+        glints[i]={
+          x:Math.random()*W,
+          y:Math.random()*H,
+          r:Math.random()*2.5+0.5,
+          life:0,
+          maxLife:60+Math.random()*80,
+          speed:Math.random()*.4+.1
+        };
+      }
+    });
+  }
+
+  function draw(){
+    cx.clearRect(0,0,W,H);
+    t+=0.016;
+    drawWaves();
+    drawGlints();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
 // utils
 const g=x=>document.getElementById(x);
 
