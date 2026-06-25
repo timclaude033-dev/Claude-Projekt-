@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnAI Pro – Deine smarte Lernapp</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div id="bg-particles"></div>
+  <div class="gradient-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <div class="splash-logo">
+      <div class="logo-brain">🧠</div>
+      <h1 class="splash-title">LearnAI <span>Pro</span></h1>
+      <p class="splash-sub">Deine KI-gestützte Lernapp</p>
+      <div class="splash-bar"><div class="splash-bar-inner"></div></div>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="hidden">
+
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">🧠 <span>LearnAI</span></div>
+        <button id="sidebar-toggle" class="icon-btn">☰</button>
+      </div>
+
+      <div class="user-card">
+        <div class="user-avatar" id="user-avatar">🎓</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name-display">Lernender</div>
+          <div class="user-level" id="user-level-display">⭐ Level 1</div>
+        </div>
+      </div>
+
+      <div class="xp-bar-container">
+        <div class="xp-bar"><div class="xp-fill" id="xp-fill"></div></div>
+        <div class="xp-text" id="xp-text">0 / 100 XP</div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#" class="nav-link active" data-page="dashboard">
+          <span class="nav-icon">🏠</span><span class="nav-label">Dashboard</span>
+        </a>
+        <a href="#" class="nav-link" data-page="math">
+          <span class="nav-icon">🔢</span><span class="nav-label">Mathematik</span>
+        </a>
+        <a href="#" class="nav-link" data-page="deutsch">
+          <span class="nav-icon">📝</span><span class="nav-label">Deutsch</span>
+        </a>
+        <a href="#" class="nav-link" data-page="english">
+          <span class="nav-icon">🇬🇧</span><span class="nav-label">Englisch</span>
+        </a>
+        <a href="#" class="nav-link" data-page="chat">
+          <span class="nav-icon">🤖</span><span class="nav-label">KI-Chat</span>
+          <span class="nav-badge" id="chat-badge">NEU</span>
+        </a>
+        <a href="#" class="nav-link" data-page="flashcards">
+          <span class="nav-icon">🗂️</span><span class="nav-label">Lernkarten</span>
+        </a>
+        <a href="#" class="nav-link" data-page="notes">
+          <span class="nav-icon">📋</span><span class="nav-label">Lernzettel</span>
+        </a>
+        <a href="#" class="nav-link" data-page="brain">
+          <span class="nav-icon">🧬</span><span class="nav-label">Gehirn</span>
+        </a>
+        <a href="#" class="nav-link" data-page="progress">
+          <span class="nav-icon">📊</span><span class="nav-label">Fortschritt</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="streak-display">
+          🔥 <span id="streak-count">0</span> Tage Streak
+        </div>
+        <div class="today-points">
+          ⚡ <span id="today-points">0</span> Heute
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+
+      <!-- Top Bar -->
+      <header id="topbar">
+        <div class="topbar-left">
+          <h1 id="page-title">Dashboard</h1>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" id="voice-btn" title="Spracheingabe">🎤</button>
+          <button class="icon-btn" id="notifications-btn" title="Benachrichtigungen">🔔</button>
+          <div class="points-badge">
+            <span>💎</span>
+            <span id="total-points-display">0</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Pages -->
+      <div id="pages">
+
+        <!-- DASHBOARD PAGE -->
+        <div class="page active" id="page-dashboard">
+          <div class="dashboard-grid">
+
+            <!-- Welcome Card -->
+            <div class="card welcome-card span-full">
+              <div class="welcome-text">
+                <h2>Willkommen zurück, <span id="welcome-name">Lernender</span>! 👋</h2>
+                <p id="motivational-quote">Heute ist ein guter Tag zum Lernen!</p>
+              </div>
+              <div class="welcome-stats">
+                <div class="stat-pill">🔥 <strong id="dash-streak">0</strong> Tage</div>
+                <div class="stat-pill">⭐ Level <strong id="dash-level">1</strong></div>
+                <div class="stat-pill">💎 <strong id="dash-points">0</strong> Punkte</div>
+              </div>
+            </div>
+
+            <!-- Daily Progress -->
+            <div class="card">
+              <h3>📅 Heute</h3>
+              <div class="daily-ring-container">
+                <svg class="ring-svg" viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10"/>
+                  <circle id="daily-ring" cx="60" cy="60" r="50" fill="none" stroke="url(#ringGrad)" stroke-width="10"
+                    stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                  <defs>
+                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#6366f1"/>
+                      <stop offset="100%" stop-color="#a855f7"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <div class="ring-center">
+                  <div class="ring-value" id="daily-exercises-count">0</div>
+                  <div class="ring-label">Aufgaben</div>
+                </div>
+              </div>
+              <div class="daily-goal">Tagesziel: <strong id="daily-goal-text">10 Aufgaben</strong></div>
+            </div>
+
+            <!-- Quick Start -->
+            <div class="card">
+              <h3>🚀 Schnellstart</h3>
+              <div class="quick-btns">
+                <button class="quick-btn math-btn" onclick="App.navigate('math')">
+                  <span>🔢</span><span>Mathe</span>
+                </button>
+                <button class="quick-btn deutsch-btn" onclick="App.navigate('deutsch')">
+                  <span>📝</span><span>Deutsch</span>
+                </button>
+                <button class="quick-btn english-btn" onclick="App.navigate('english')">
+                  <span>🇬🇧</span><span>Englisch</span>
+                </button>
+                <button class="quick-btn chat-btn" onclick="App.navigate('chat')">
+                  <span>🤖</span><span>KI fragen</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Subject Progress -->
+            <div class="card">
+              <h3>📊 Fächer</h3>
+              <div class="subject-bars">
+                <div class="subject-bar-item">
+                  <span>🔢 Mathe</span>
+                  <div class="bar-wrap"><div class="bar-inner math-color" id="math-progress-bar" style="width:0%"></div></div>
+                  <span id="math-progress-pct">0%</span>
+                </div>
+                <div class="subject-bar-item">
+                  <span>📝 Deutsch</span>
+                  <div class="bar-wrap"><div class="bar-inner deutsch-color" id="deutsch-progress-bar" style="width:0%"></div></div>
+                  <span id="deutsch-progress-pct">0%</span>
+                </div>
+                <div class="subject-bar-item">
+                  <span>🇬🇧 Englisch</span>
+                  <div class="bar-wrap"><div class="bar-inner english-color" id="english-progress-bar" style="width:0%"></div></div>
+                  <span id="english-progress-pct">0%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card span-2">
+              <h3>⚡ Letzte Aktivitäten</h3>
+              <div id="recent-activity" class="activity-list">
+                <p class="empty-state">Noch keine Aktivitäten. Fang an zu lernen!</p>
+              </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="card">
+              <h3>🏆 Erfolge</h3>
+              <div id="achievements-grid" class="achievements-grid"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- MATH PAGE -->
+        <div class="page" id="page-math">
+          <div class="subject-header math-gradient">
+            <h2>🔢 Mathematik</h2>
+            <p>Übe Rechnen, Algebra, Geometrie & mehr</p>
+          </div>
+          <div class="subject-layout">
+            <div class="topic-sidebar">
+              <h3>Themen</h3>
+              <div id="math-topics" class="topic-list"></div>
+            </div>
+            <div class="exercise-area">
+              <div id="math-exercise-card" class="exercise-card">
+                <div class="exercise-header">
+                  <span id="math-topic-label" class="topic-badge">Wähle ein Thema</span>
+                  <span id="math-difficulty" class="difficulty-badge">⭐</span>
+                </div>
+                <div id="math-question" class="question-text">Wähle links ein Thema aus, um zu beginnen!</div>
+                <div id="math-hint" class="hint-box hidden"></div>
+                <div class="answer-area">
+                  <input type="text" id="math-answer" class="answer-input" placeholder="Deine Antwort..." autocomplete="off">
+                  <div class="answer-btns">
+                    <button class="btn btn-secondary" id="math-hint-btn">💡 Tipp</button>
+                    <button class="btn btn-primary" id="math-check-btn">✓ Prüfen</button>
+                    <button class="btn btn-ghost" id="math-next-btn">→ Weiter</button>
+                  </div>
+                </div>
+                <div id="math-feedback" class="feedback-area hidden"></div>
+                <div id="math-solution-steps" class="solution-steps hidden"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEUTSCH PAGE -->
+        <div class="page" id="page-deutsch">
+          <div class="subject-header deutsch-gradient">
+            <h2>📝 Deutsch</h2>
+            <p>Grammatik, Rechtschreibung, Aufsatz & Literatur</p>
+          </div>
+          <div class="subject-layout">
+            <div class="topic-sidebar">
+              <h3>Themen</h3>
+              <div id="deutsch-topics" class="topic-list"></div>
+            </div>
+            <div class="exercise-area">
+              <div id="deutsch-exercise-card" class="exercise-card">
+                <div class="exercise-header">
+                  <span id="deutsch-topic-label" class="topic-badge">Wähle ein Thema</span>
+                  <span id="deutsch-difficulty" class="difficulty-badge">⭐</span>
+                </div>
+                <div id="deutsch-question" class="question-text">Wähle links ein Thema aus, um zu beginnen!</div>
+                <div id="deutsch-hint" class="hint-box hidden"></div>
+                <div class="answer-area">
+                  <textarea id="deutsch-answer" class="answer-input answer-textarea" placeholder="Deine Antwort..." rows="3"></textarea>
+                  <div class="answer-btns">
+                    <button class="btn btn-secondary" id="deutsch-hint-btn">💡 Tipp</button>
+                    <button class="btn btn-primary" id="deutsch-check-btn">✓ Prüfen</button>
+                    <button class="btn btn-ghost" id="deutsch-next-btn">→ Weiter</button>
+                  </div>
+                </div>
+                <div id="deutsch-feedback" class="feedback-area hidden"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ENGLISH PAGE -->
+        <div class="page" id="page-english">
+          <div class="subject-header english-gradient">
+            <h2>🇬🇧 English</h2>
+            <p>Grammar, Vocabulary, Reading & Writing</p>
+          </div>
+          <div class="subject-layout">
+            <div class="topic-sidebar">
+              <h3>Topics</h3>
+              <div id="english-topics" class="topic-list"></div>
+            </div>
+            <div class="exercise-area">
+              <div id="english-exercise-card" class="exercise-card">
+                <div class="exercise-header">
+                  <span id="english-topic-label" class="topic-badge">Choose a topic</span>
+                  <span id="english-difficulty" class="difficulty-badge">⭐</span>
+                </div>
+                <div id="english-question" class="question-text">Choose a topic on the left to begin!</div>
+                <div id="english-hint" class="hint-box hidden"></div>
+                <div class="answer-area">
+                  <input type="text" id="english-answer" class="answer-input" placeholder="Your answer..." autocomplete="off">
+                  <div class="answer-btns">
+                    <button class="btn btn-secondary" id="english-hint-btn">💡 Hint</button>
+                    <button class="btn btn-primary" id="english-check-btn">✓ Check</button>
+                    <button class="btn btn-ghost" id="english-next-btn">→ Next</button>
+                  </div>
+                </div>
+                <div id="english-feedback" class="feedback-area hidden"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI CHAT PAGE -->
+        <div class="page" id="page-chat">
+          <div class="chat-layout">
+            <div class="chat-sidebar">
+              <h3>🤖 KI-Assistent</h3>
+              <p class="chat-info">Stelle Fragen zu Mathe, Deutsch oder Englisch. Die KI erklärt, hilft und generiert Lernzettel!</p>
+              <div class="chat-tools">
+                <button class="tool-btn" id="chat-voice-btn">🎤 Sprechen</button>
+                <button class="tool-btn" id="chat-upload-btn">📷 Bild hochladen</button>
+                <button class="tool-btn" id="chat-note-btn">📋 Lernzettel erstellen</button>
+                <button class="tool-btn" id="chat-flash-btn">🗂️ Lernkarte erstellen</button>
+              </div>
+              <input type="file" id="image-upload" accept="image/*" class="hidden">
+              <div id="uploaded-image-preview" class="image-preview hidden"></div>
+              <div class="voice-status hidden" id="voice-status">
+                <div class="voice-wave">
+                  <span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <p>Höre zu...</p>
+              </div>
+            </div>
+            <div class="chat-main">
+              <div id="chat-messages" class="chat-messages">
+                <div class="chat-msg ai">
+                  <div class="msg-avatar">🤖</div>
+                  <div class="msg-bubble">
+                    <p>Hallo! Ich bin dein KI-Lernassistent. Ich helfe dir bei <strong>Mathematik</strong>, <strong>Deutsch</strong> und <strong>Englisch</strong>.</p>
+                    <p>Du kannst mir Fragen stellen, Aufgaben zeigen, oder ich kann dir Aufgaben generieren. Außerdem kann ich automatisch <strong>Lernzettel</strong> und <strong>Spickzettel</strong> für dich erstellen!</p>
+                    <p>Womit soll ich beginnen? 🚀</p>
+                    <div class="quick-suggestions">
+                      <button class="suggestion-chip" onclick="ChatAI.sendSuggestion('Erkläre mir Bruchrechnung')">Bruchrechnung</button>
+                      <button class="suggestion-chip" onclick="ChatAI.sendSuggestion('Was ist ein Relativsatz?')">Relativsatz</button>
+                      <button class="suggestion-chip" onclick="ChatAI.sendSuggestion('Erkläre Present Perfect')">Present Perfect</button>
+                      <button class="suggestion-chip" onclick="ChatAI.sendSuggestion('Erstelle mir einen Lernzettel über Pythagoras')">Lernzettel Pythagoras</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="chat-input-area">
+                <div class="chat-input-wrapper">
+                  <textarea id="chat-input" class="chat-input" placeholder="Frage die KI... (Enter = Senden, Shift+Enter = Neue Zeile)" rows="1"></textarea>
+                  <button id="chat-send-btn" class="chat-send-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="22" y1="2" x2="11" y2="13"></line>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FLASHCARDS PAGE -->
+        <div class="page" id="page-flashcards">
+          <div class="flashcard-layout">
+            <div class="flashcard-header">
+              <h2>🗂️ Lernkarten</h2>
+              <div class="fc-controls">
+                <select id="fc-filter" class="select-input">
+                  <option value="all">Alle Fächer</option>
+                  <option value="math">Mathematik</option>
+                  <option value="deutsch">Deutsch</option>
+                  <option value="english">Englisch</option>
+                </select>
+                <button class="btn btn-primary" id="fc-add-btn">+ Neue Karte</button>
+              </div>
+            </div>
+
+            <div id="fc-review-mode" class="fc-review hidden">
+              <div class="fc-card-container">
+                <div class="fc-card" id="fc-current-card">
+                  <div class="fc-card-inner">
+                    <div class="fc-card-front">
+                      <div class="fc-subject-tag" id="fc-card-subject"></div>
+                      <div class="fc-question" id="fc-card-question"></div>
+                      <p class="fc-flip-hint">Klicke zum Umdrehen</p>
+                    </div>
+                    <div class="fc-card-back">
+                      <div class="fc-answer" id="fc-card-answer"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="fc-review-btns">
+                <button class="btn btn-danger" id="fc-wrong-btn">✗ Falsch</button>
+                <button class="btn btn-secondary" id="fc-ok-btn">~ OK</button>
+                <button class="btn btn-success" id="fc-correct-btn">✓ Richtig</button>
+              </div>
+              <div class="fc-stats">
+                <span id="fc-remaining">0 verbleibend</span>
+                <span id="fc-score">✓ 0 / ✗ 0</span>
+              </div>
+            </div>
+
+            <div id="fc-grid-view">
+              <div id="fc-empty" class="empty-state">
+                <p>🗂️ Noch keine Lernkarten! Lerne Themen und die KI erstellt automatisch Karten, oder füge manuell welche hinzu.</p>
+              </div>
+              <div id="fc-grid" class="fc-grid"></div>
+            </div>
+
+            <!-- Add Card Modal -->
+            <div id="fc-modal" class="modal hidden">
+              <div class="modal-content">
+                <h3>Neue Lernkarte</h3>
+                <select id="fc-new-subject" class="select-input">
+                  <option value="math">Mathematik</option>
+                  <option value="deutsch">Deutsch</option>
+                  <option value="english">Englisch</option>
+                </select>
+                <input type="text" id="fc-new-question" class="answer-input" placeholder="Frage / Begriff">
+                <textarea id="fc-new-answer" class="answer-input answer-textarea" placeholder="Antwort / Erklärung" rows="3"></textarea>
+                <div class="modal-btns">
+                  <button class="btn btn-ghost" id="fc-modal-cancel">Abbrechen</button>
+                  <button class="btn btn-primary" id="fc-modal-save">Speichern</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTES PAGE -->
+        <div class="page" id="page-notes">
+          <div class="notes-layout">
+            <div class="notes-sidebar">
+              <h3>📋 Lern- & Spickzettel</h3>
+              <button class="btn btn-primary" id="create-note-btn" style="width:100%;margin-bottom:1rem">+ Neuer Zettel</button>
+              <div id="notes-list" class="notes-list"></div>
+            </div>
+            <div class="notes-editor">
+              <div id="note-empty" class="empty-state">
+                <p>📋 Wähle einen Lernzettel aus oder erstelle einen neuen.<br><br>Die KI kann automatisch Zusammenfassungen aus deinen heutigen Lernsessions erstellen!</p>
+                <button class="btn btn-primary" id="auto-gen-note-btn">✨ Auto-Lernzettel generieren</button>
+              </div>
+              <div id="note-editor" class="hidden">
+                <div class="note-editor-header">
+                  <input type="text" id="note-title" class="note-title-input" placeholder="Titel des Lernzettels">
+                  <div class="note-editor-actions">
+                    <select id="note-subject" class="select-input small">
+                      <option value="general">Allgemein</option>
+                      <option value="math">Mathe</option>
+                      <option value="deutsch">Deutsch</option>
+                      <option value="english">Englisch</option>
+                    </select>
+                    <button class="btn btn-secondary" id="note-speak-btn">🔊 Vorlesen</button>
+                    <button class="btn btn-primary" id="note-save-btn">💾 Speichern</button>
+                    <button class="btn btn-danger small" id="note-delete-btn">🗑️</button>
+                  </div>
+                </div>
+                <textarea id="note-content" class="note-content-area" placeholder="Schreibe deinen Lernzettel hier..."></textarea>
+                <div class="note-editor-footer">
+                  <button class="btn btn-ghost" id="note-ai-enhance-btn">✨ KI verbessern</button>
+                  <button class="btn btn-ghost" id="note-ai-summary-btn">📄 Zusammenfassen</button>
+                  <button class="btn btn-ghost" id="note-to-flash-btn">🗂️ Als Lernkarten</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BRAIN PAGE -->
+        <div class="page" id="page-brain">
+          <div class="brain-layout">
+            <div class="brain-header">
+              <h2>🧬 Dein Lerngehirn</h2>
+              <p>Hier siehst du alles, was dein KI-Gehirn gespeichert hat</p>
+            </div>
+            <div class="brain-stats">
+              <div class="brain-stat-card">
+                <div class="bsc-icon">💾</div>
+                <div class="bsc-value" id="brain-concepts">0</div>
+                <div class="bsc-label">Konzepte</div>
+              </div>
+              <div class="brain-stat-card">
+                <div class="bsc-icon">✅</div>
+                <div class="bsc-value" id="brain-correct">0</div>
+                <div class="bsc-label">Richtige Antworten</div>
+              </div>
+              <div class="brain-stat-card">
+                <div class="bsc-icon">📚</div>
+                <div class="bsc-value" id="brain-sessions">0</div>
+                <div class="bsc-label">Lernsessions</div>
+              </div>
+              <div class="brain-stat-card">
+                <div class="bsc-icon">🎯</div>
+                <div class="bsc-value" id="brain-accuracy">0%</div>
+                <div class="bsc-label">Genauigkeit</div>
+              </div>
+            </div>
+            <div class="brain-knowledge">
+              <h3>📖 Gespeichertes Wissen</h3>
+              <div class="brain-filter">
+                <button class="filter-btn active" data-filter="all">Alles</button>
+                <button class="filter-btn" data-filter="math">Mathe</button>
+                <button class="filter-btn" data-filter="deutsch">Deutsch</button>
+                <button class="filter-btn" data-filter="english">Englisch</button>
+              </div>
+              <div id="brain-knowledge-list" class="knowledge-list"></div>
+            </div>
+            <div class="brain-weak-spots">
+              <h3>⚠️ Schwächen (Üben empfohlen!)</h3>
+              <div id="brain-weak-list" class="weak-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PROGRESS PAGE -->
+        <div class="page" id="page-progress">
+          <div class="progress-layout">
+            <h2>📊 Dein Fortschritt</h2>
+            <div class="progress-grid">
+
+              <div class="card">
+                <h3>🏆 Gesamt-Statistik</h3>
+                <div class="total-stats">
+                  <div class="ts-item"><span>💎 Gesamtpunkte</span><strong id="ps-total-points">0</strong></div>
+                  <div class="ts-item"><span>✅ Richtige Antworten</span><strong id="ps-correct">0</strong></div>
+                  <div class="ts-item"><span>📚 Aufgaben gelöst</span><strong id="ps-exercises">0</strong></div>
+                  <div class="ts-item"><span>🔥 Längster Streak</span><strong id="ps-best-streak">0</strong></div>
+                  <div class="ts-item"><span>⭐ Level</span><strong id="ps-level">1</strong></div>
+                </div>
+              </div>
+
+              <div class="card">
+                <h3>📅 Wöchentliche Aktivität</h3>
+                <div id="weekly-chart" class="weekly-chart"></div>
+              </div>
+
+              <div class="card span-2">
+                <h3>🏅 Errungenschaften</h3>
+                <div id="progress-achievements" class="achievements-full"></div>
+              </div>
+
+              <div class="card span-full">
+                <h3>📈 Verlauf (letzte 7 Tage)</h3>
+                <canvas id="progress-canvas" class="progress-canvas"></canvas>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /pages -->
+    </main>
+  </div><!-- /app -->
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Celebration Overlay -->
+  <div id="celebration" class="hidden">
+    <div class="celebration-content">
+      <div class="celebration-emoji" id="celebration-emoji">🎉</div>
+      <div class="celebration-text" id="celebration-text">Super!</div>
+    </div>
+  </div>
+
+  <!-- First Run Dialog -->
+  <div id="first-run-modal" class="modal hidden">
+    <div class="modal-content first-run">
+      <div class="first-run-emoji">🧠</div>
+      <h2>Willkommen bei LearnAI Pro!</h2>
+      <p>Wie soll ich dich nennen?</p>
+      <input type="text" id="first-run-name" class="answer-input" placeholder="Dein Name..." maxlength="30">
+      <div class="age-select">
+        <label>Klassenstufe:</label>
+        <select id="first-run-grade" class="select-input">
+          <option value="5">Klasse 5</option>
+          <option value="6">Klasse 6</option>
+          <option value="7">Klasse 7</option>
+          <option value="8" selected>Klasse 8</option>
+          <option value="9">Klasse 9</option>
+          <option value="10">Klasse 10</option>
+          <option value="11">Klasse 11</option>
+          <option value="12">Klasse 12</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="first-run-start" style="width:100%">Los geht's! 🚀</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/brain.js"></script>
+  <script src="js/math-engine.js"></script>
+  <script src="js/deutsch-engine.js"></script>
+  <script src="js/english-engine.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/flashcards.js"></script>
+  <script src="js/notes.js"></script>
+  <script src="js/chat-ai.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
