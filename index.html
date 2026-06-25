@@ -8,441 +8,361 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
+/* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;font-family:'Inter',sans-serif;background:#fff;color:#07122E;-webkit-font-smoothing:antialiased;overflow:hidden}
+html,body{width:100%;height:100%;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;background:#fff}
 
+/* ── TOKENS ── */
 :root{
-  --navy:#07122E;
-  --navy2:#0C1D52;
-  --mid:#1a2e7a;
-  --off:#f5f7fc;
-  --border:rgba(12,29,82,0.09);
-  --muted:#6b7a9e;
+  --ink:    #07122E;
+  --ink2:   #0C1D52;
+  --mid:    #1a2e7a;
+  --soft:   #f4f7fc;
+  --border: rgba(12,29,82,0.08);
+  --muted:  #6b7a9e;
+  --accent: #07122E;
+  --white:  #ffffff;
 }
 
 /* ── NAV ── */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  height:68px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 56px;
-  background:rgba(255,255,255,0.96);
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;
+  background:rgba(255,255,255,0.97);
   backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
 }
-.nav-logo img{height:36px;width:auto;display:block}
-.nav-tabs{display:flex;align-items:center;gap:4px}
-.nav-tab{
-  padding:9px 20px;border-radius:8px;
-  font-size:14px;font-weight:500;color:var(--muted);
-  background:none;border:none;cursor:pointer;
-  transition:color .2s,background .2s;
-  font-family:inherit;
-  text-align:center;
+.nav-logo img{height:32px;display:block}
+.nav-tabs{display:flex;align-items:center;gap:2px}
+.nt{
+  padding:8px 16px;border-radius:7px;border:none;
+  font-family:inherit;font-size:13.5px;font-weight:500;
+  color:var(--muted);background:none;cursor:pointer;
+  transition:color .18s,background .18s;text-align:center;
 }
-.nav-tab:hover{color:var(--navy);background:var(--off)}
-.nav-tab.active{color:var(--navy);font-weight:600;background:var(--off)}
-.nav-tab-cta{
-  background:var(--navy);color:#fff !important;
-  padding:9px 22px;border-radius:8px;
-  font-size:14px;font-weight:600;
-  border:none;cursor:pointer;font-family:inherit;
-  transition:background .2s;
-  text-align:center;
+.nt:hover{color:var(--ink);background:var(--soft)}
+.nt.on{color:var(--ink);font-weight:600;background:var(--soft)}
+.nt-cta{
+  margin-left:8px;
+  padding:8px 20px;border-radius:7px;border:none;
+  font-family:inherit;font-size:13.5px;font-weight:600;
+  background:var(--ink);color:#fff;cursor:pointer;
+  transition:background .18s;text-align:center;
 }
-.nav-tab-cta:hover{background:var(--mid)}
+.nt-cta:hover{background:var(--mid)}
 
 /* ── PAGES ── */
 .page{
-  position:fixed;inset:0;top:68px;
+  position:fixed;inset:0;top:64px;
   overflow-y:auto;overflow-x:hidden;
   opacity:0;pointer-events:none;
-  transition:opacity .35s ease;
+  transition:opacity .3s ease;
 }
-.page.show{opacity:1;pointer-events:all}
+.page.on{opacity:1;pointer-events:all}
 
-/* ── BUTTONS (all centered) ── */
+/* ── SHARED LAYOUT ── */
+.wrap{
+  max-width:1160px;margin:0 auto;
+  padding:72px 48px;
+}
+.two-col{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:88px;align-items:center;
+  min-height:calc(100vh - 64px);
+}
+
+/* ── TYPOGRAPHY ── */
+.tag{
+  display:inline-block;
+  font-size:11px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);
+  margin-bottom:16px;
+}
+.tag-light{color:rgba(255,255,255,.4)}
+h2{font-size:clamp(30px,3.8vw,48px);font-weight:800;line-height:1.1;letter-spacing:-.025em;margin-bottom:16px}
+h2.dark{color:var(--ink)}
+h2.light{color:#fff}
+.lead{font-size:16px;line-height:1.75;margin-bottom:0}
+.lead.dark{color:var(--muted)}
+.lead.light{color:rgba(255,255,255,.5)}
+
+/* ── BUTTONS ── */
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:14px 32px;border-radius:10px;
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:8px;padding:13px 28px;border-radius:9px;
   font-family:inherit;font-size:14px;font-weight:600;
   border:none;cursor:pointer;text-decoration:none;
-  transition:all .2s;
-  text-align:center;
+  transition:all .18s;text-align:center;
 }
-.btn-white{background:#fff;color:var(--navy)}
-.btn-white:hover{background:rgba(255,255,255,.88)}
-.btn-ghost{background:rgba(255,255,255,0);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2)}
-.btn-ghost:hover{background:rgba(255,255,255,.07);color:#fff;border-color:rgba(255,255,255,.45)}
-.btn-navy{background:var(--navy);color:#fff}
-.btn-navy:hover{background:var(--mid)}
-.btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--border)}
-.btn-outline:hover{border-color:var(--navy);background:var(--off)}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-dark:hover{background:var(--mid);transform:translateY(-1px)}
+.btn-light{background:#fff;color:var(--ink)}
+.btn-light:hover{background:rgba(255,255,255,.9);transform:translateY(-1px)}
+.btn-ghost-dark{background:transparent;color:var(--ink);border:1.5px solid var(--border)}
+.btn-ghost-dark:hover{border-color:var(--ink);background:var(--soft)}
+.btn-ghost-light{background:transparent;color:rgba(255,255,255,.75);border:1.5px solid rgba(255,255,255,.18)}
+.btn-ghost-light:hover{color:#fff;border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.06)}
 .btn-full{width:100%}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
 
-/* ═══════════════════════════════════════
-   PAGE 0 — HOME / HERO
-═══════════════════════════════════════ */
-#pg-home{
-  background:var(--navy);
-  display:grid;
-  grid-template-columns:1fr 520px;
-  min-height:calc(100vh - 68px);
-  align-items:stretch;
+/* ── FEAT LIST ── */
+.feat-list{display:flex;flex-direction:column;gap:0;margin-top:40px}
+.feat-item{
+  display:flex;gap:18px;align-items:flex-start;
+  padding:20px 0;border-bottom:1px solid var(--border);
 }
-.home-left{
-  display:flex;flex-direction:column;justify-content:center;
-  padding:80px 72px;
-  position:relative;overflow:hidden;
-}
-/* grid overlay */
-.home-left::before{
-  content:'';position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
-  background-size:72px 72px;pointer-events:none;
-}
-/* glow */
-.home-left::after{
-  content:'';position:absolute;
-  width:600px;height:600px;border-radius:50%;
-  background:radial-gradient(circle,rgba(26,46,122,.55) 0%,transparent 70%);
-  right:-100px;bottom:-100px;pointer-events:none;
-}
-.home-eyebrow{
-  display:flex;align-items:center;gap:12px;
-  font-size:11px;font-weight:600;letter-spacing:.14em;
-  text-transform:uppercase;color:rgba(255,255,255,.4);
-  margin-bottom:32px;position:relative;z-index:1;
-}
-.home-eyebrow span{width:28px;height:1px;background:rgba(255,255,255,.25)}
-.home-h1{
-  font-size:clamp(52px,6vw,84px);font-weight:800;
-  color:#fff;line-height:1.0;letter-spacing:-.035em;
-  margin-bottom:28px;position:relative;z-index:1;
-}
-.home-h1 .dim{color:rgba(255,255,255,.22)}
-.home-p{
-  font-size:18px;color:rgba(255,255,255,.5);
-  line-height:1.7;max-width:460px;
-  margin-bottom:48px;position:relative;z-index:1;
-}
-.home-btns{display:flex;gap:14px;position:relative;z-index:1}
-.home-kpi{
-  display:flex;gap:0;margin-top:72px;padding-top:48px;
-  border-top:1px solid rgba(255,255,255,.07);
-  position:relative;z-index:1;
-}
-.kpi{padding:0 40px 0 0}
-.kpi:first-child{padding-left:0}
-.kpi-n{font-size:36px;font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1}
-.kpi-n sup{font-size:16px;vertical-align:super}
-.kpi-l{font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.08em;margin-top:5px}
+.feat-item:first-child{padding-top:0}
+.feat-item:last-child{border:none}
+.feat-n{font-size:10px;font-weight:700;color:rgba(12,29,82,.2);letter-spacing:.1em;min-width:20px;padding-top:3px}
+.feat-n.light{color:rgba(255,255,255,.18)}
+.feat-text strong{display:block;font-weight:700;color:var(--ink);font-size:14.5px;margin-bottom:3px}
+.feat-text strong.light{color:#fff}
+.feat-text p{color:var(--muted);font-size:13.5px;line-height:1.6}
+.feat-text p.light{color:rgba(255,255,255,.42)}
 
-/* quiz panel */
-.home-right{
-  background:rgba(255,255,255,.04);
-  border-left:1px solid rgba(255,255,255,.07);
-  display:flex;flex-direction:column;
-  overflow:hidden;
+/* ── STEPS ── */
+.steps{display:flex;flex-direction:column;gap:0;margin-top:40px}
+.step-item{
+  display:flex;gap:18px;align-items:flex-start;
+  padding:20px 0;border-bottom:1px solid rgba(255,255,255,.06);
 }
-.quiz-top{
-  padding:32px 40px;
-  border-bottom:1px solid rgba(255,255,255,.07);
-  display:flex;align-items:center;justify-content:space-between;
-}
-.quiz-top h3{color:#fff;font-size:17px;font-weight:700}
-.quiz-top p{color:rgba(255,255,255,.4);font-size:13px;margin-top:3px}
-.q-pips{display:flex;gap:6px}
-.q-pip{width:32px;height:2px;border-radius:2px;background:rgba(255,255,255,.12);transition:background .3s}
-.q-pip.on{background:#fff}
-.quiz-body{padding:40px;flex:1}
-.quiz-step{display:none}
-.quiz-step.show{display:block}
-.quiz-q{color:#fff;font-size:19px;font-weight:700;line-height:1.4;margin-bottom:24px}
-.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px}
-.quiz-opt{
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:12px;padding:18px 14px;
-  color:rgba(255,255,255,.75);font-size:14px;font-weight:500;
-  cursor:pointer;font-family:inherit;
-  text-align:center;line-height:1.35;
-  transition:all .2s;
-}
-.quiz-opt:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28);color:#fff}
-.quiz-opt.sel{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.5);color:#fff}
-.q-actions{display:flex;gap:10px}
-.q-btn{
-  flex:1;padding:15px;border-radius:10px;
-  font-family:inherit;font-weight:600;font-size:14px;
-  cursor:pointer;border:none;transition:all .2s;
-  text-align:center;
-}
-.q-next{background:#fff;color:var(--navy)}
-.q-next:hover{background:rgba(255,255,255,.9)}
-.q-back{background:rgba(255,255,255,.07);color:rgba(255,255,255,.6)}
-.q-back:hover{background:rgba(255,255,255,.12)}
-/* quiz mini calc */
-.m-sl{margin-bottom:20px}
-.m-sl label{display:flex;justify-content:space-between;font-size:13px;color:rgba(255,255,255,.55);margin-bottom:8px}
-.m-sl label b{color:#fff;font-weight:600}
-input[type=range]{width:100%;accent-color:#fff;cursor:pointer}
-.m-res{
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  border-radius:12px;padding:20px 24px;
-  display:flex;justify-content:space-between;align-items:center;
-  margin:4px 0 24px;
-}
-.m-res p{color:rgba(255,255,255,.45);font-size:12px;text-transform:uppercase;letter-spacing:.07em}
-.m-res b{color:#fff;font-size:30px;font-weight:800;letter-spacing:-.02em}
-/* lead / success */
-.q-lead{display:none}
-.q-lead.show{display:block}
-.q-success{display:none;text-align:center;padding:40px}
-.q-success.show{display:block}
-.q-check{
-  width:60px;height:60px;border-radius:50%;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
+.step-item:last-child{border:none}
+.step-n{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
   display:flex;align-items:center;justify-content:center;
-  font-size:24px;color:#fff;margin:0 auto 20px;
+  font-size:13px;font-weight:700;color:#fff;
 }
-.ql-inp{
-  width:100%;background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.1);border-radius:10px;
-  padding:13px 16px;color:#fff;font-size:14px;
-  font-family:inherit;margin-bottom:12px;outline:none;
-  transition:border-color .2s;
-}
-.ql-inp::placeholder{color:rgba(255,255,255,.28)}
-.ql-inp:focus{border-color:rgba(255,255,255,.38)}
+.step-text strong{display:block;color:#fff;font-weight:700;font-size:14.5px;margin-bottom:3px}
+.step-text p{color:rgba(255,255,255,.42);font-size:13.5px;line-height:1.6}
 
-/* ═══════════════════════════════════════
-   PAGE 1 — PRODUKT
-═══════════════════════════════════════ */
-#pg-produkt{background:var(--off)}
-.prod-wrap{
-  max-width:1240px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:100px;align-items:center;
-  min-height:calc(100vh - 68px);
-  padding:80px 56px;
+/* ── STATS ROW ── */
+.stats-row{
+  display:flex;gap:0;
+  padding-top:40px;margin-top:48px;
+  border-top:1px solid rgba(255,255,255,.08);
 }
-.prod-img{position:relative}
-.prod-img img{
-  width:100%;border-radius:20px;display:block;
-  box-shadow:0 40px 100px rgba(7,18,46,.13);
-}
-/* hotspot */
-.hs{
-  position:absolute;
-  width:34px;height:34px;border-radius:50%;
-  background:var(--navy2);
-  border:2.5px solid #fff;
-  box-shadow:0 4px 18px rgba(7,18,46,.35);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:12px;font-weight:700;
-  transition:transform .2s,background .2s;z-index:5;
-}
-.hs:hover{transform:scale(1.18);background:var(--mid)}
-.hs::before{
-  content:'';position:absolute;
-  width:50px;height:50px;border-radius:50%;
-  border:1.5px solid rgba(12,29,82,.25);
-  animation:pulse 2.2s infinite;
-}
-@keyframes pulse{0%{opacity:.9;transform:scale(.65)}100%{opacity:0;transform:scale(1.5)}}
-.hs-tip{
-  position:absolute;left:48px;top:50%;transform:translateY(-50%) translateX(4px);
-  background:#fff;border:1px solid var(--border);
-  border-radius:12px;padding:16px 20px;width:230px;
-  box-shadow:0 16px 48px rgba(7,18,46,.1);
-  opacity:0;pointer-events:none;
-  transition:opacity .22s,transform .22s;z-index:10;
-  transform-origin:left center;
-}
-.hs-tip.vis{opacity:1;transform:translateY(-50%) translateX(0)}
-.hs-tip.left-tip{left:auto;right:48px;transform:translateY(-50%) translateX(-4px)}
-.hs-tip.left-tip.vis{transform:translateY(-50%) translateX(0)}
-.hs-tip strong{display:block;color:var(--navy);font-size:14px;font-weight:700;margin-bottom:4px}
-.hs-tip p{color:var(--muted);font-size:13px;line-height:1.55}
-.prod-right{}
-.sec-tag{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--navy2);opacity:.45;display:block;margin-bottom:16px}
-.sec-tag-light{color:rgba(255,255,255,.4);opacity:1}
-.sec-h2{font-size:clamp(32px,4vw,52px);font-weight:800;color:var(--navy);line-height:1.1;letter-spacing:-.025em;margin-bottom:18px}
-.sec-h2-light{color:#fff}
-.sec-p{font-size:17px;color:var(--muted);line-height:1.7;max-width:540px}
-.sec-p-light{color:rgba(255,255,255,.5)}
-.feat-list{display:flex;flex-direction:column;gap:0;margin-top:44px}
-.feat-row{display:flex;gap:20px;align-items:flex-start;padding:22px 0;border-bottom:1px solid var(--border)}
-.feat-row:first-child{padding-top:0}
-.feat-row:last-child{border-bottom:none}
-.feat-idx{font-size:11px;font-weight:700;color:rgba(12,29,82,.2);letter-spacing:.08em;padding-top:2px;min-width:22px}
-.feat-txt strong{display:block;font-weight:700;color:var(--navy);margin-bottom:4px;font-size:15px}
-.feat-txt p{color:var(--muted);font-size:14px;line-height:1.6}
+.stat{padding:0 36px 0 0}
+.stat:first-child{padding-left:0}
+.stat-n{font-size:34px;font-weight:800;color:#fff;letter-spacing:-.025em;line-height:1}
+.stat-n sup{font-size:15px;vertical-align:super}
+.stat-l{font-size:11px;color:rgba(255,255,255,.32);text-transform:uppercase;letter-spacing:.08em;margin-top:5px}
 
-/* ═══════════════════════════════════════
-   PAGE 2 — VORTEILE
-═══════════════════════════════════════ */
-#pg-vorteile{background:#fff}
-.vort-wrap{max-width:1240px;margin:0 auto;padding:80px 56px}
-.vort-hd{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:64px;gap:40px}
-.vort-grid{
+/* ── CARDS GRID ── */
+.cards-grid{
   display:grid;grid-template-columns:repeat(3,1fr);
-  gap:2px;background:rgba(12,29,82,.07);border-radius:18px;overflow:hidden;
+  gap:1px;background:rgba(12,29,82,.07);
+  border-radius:16px;overflow:hidden;
+  margin-top:52px;
 }
-.vort-card{background:#fff;padding:44px 40px;transition:background .25s,transform .18s;cursor:default}
-.vort-card:hover{background:var(--navy);transform:none}
-.v-idx{font-size:11px;font-weight:700;color:rgba(12,29,82,.18);letter-spacing:.1em;margin-bottom:18px;transition:color .25s}
-.v-title{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:10px;transition:color .25s}
-.v-body{font-size:14px;color:var(--muted);line-height:1.65;transition:color .25s}
-.vort-card:hover .v-idx{color:rgba(255,255,255,.25)}
-.vort-card:hover .v-title{color:#fff}
-.vort-card:hover .v-body{color:rgba(255,255,255,.5)}
+.card{background:#fff;padding:40px 36px;transition:background .24s}
+.card:hover{background:var(--ink)}
+.card-n{font-size:11px;font-weight:700;color:rgba(12,29,82,.18);letter-spacing:.1em;margin-bottom:16px;transition:color .24s}
+.card-t{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:10px;line-height:1.3;transition:color .24s}
+.card-b{font-size:13.5px;color:var(--muted);line-height:1.65;transition:color .24s}
+.card:hover .card-n{color:rgba(255,255,255,.25)}
+.card:hover .card-t{color:#fff}
+.card:hover .card-b{color:rgba(255,255,255,.5)}
 
-/* ═══════════════════════════════════════
-   PAGE 3 — EINBAU
-═══════════════════════════════════════ */
-#pg-einbau{background:var(--navy)}
-.einbau-wrap{
-  max-width:1240px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:100px;align-items:center;
-  min-height:calc(100vh - 68px);
-  padding:80px 56px;
-}
-.einbau-img img{width:100%;border-radius:20px;display:block;box-shadow:0 40px 100px rgba(0,0,0,.5)}
-.e-steps{display:flex;flex-direction:column;gap:0;margin-top:48px}
-.e-step{display:flex;gap:22px;padding:24px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-.e-step:last-child{border-bottom:none}
-.e-n{
-  width:40px;height:40px;border-radius:50%;flex-shrink:0;
-  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
-  display:flex;align-items:center;justify-content:center;
-  font-size:14px;font-weight:700;color:#fff;
-}
-.e-txt strong{display:block;color:#fff;font-weight:700;font-size:15px;margin-bottom:3px}
-.e-txt p{color:rgba(255,255,255,.42);font-size:14px;line-height:1.6}
-
-/* ═══════════════════════════════════════
-   PAGE 4 — KALKULATOR
-═══════════════════════════════════════ */
-#pg-kalkulator{background:var(--off)}
-.kalk-wrap{
-  max-width:1240px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:100px;align-items:center;
-  min-height:calc(100vh - 68px);
-  padding:80px 56px;
-}
-.kalk-img img{width:100%;border-radius:20px;display:block;box-shadow:0 30px 80px rgba(12,29,82,.1)}
+/* ── KALK CARD ── */
 .kalk-card{
-  background:#fff;border-radius:22px;padding:48px;
-  box-shadow:0 2px 40px rgba(12,29,82,.06);
+  background:#fff;border-radius:18px;padding:44px;
   border:1px solid var(--border);
+  box-shadow:0 2px 32px rgba(12,29,82,.06);
 }
-.kalk-card h3{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:32px;letter-spacing:-.02em}
-.r-row{margin-bottom:24px}
-.r-row label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
-.r-row label b{color:var(--navy);font-weight:700}
-input[type=range].dk{accent-color:var(--navy2)}
-.kalk-res{
-  background:var(--off);border-radius:14px;
-  padding:24px 28px;margin-top:8px;border:1px solid var(--border);
+.kalk-card h3{font-size:20px;font-weight:800;color:var(--ink);margin-bottom:28px;letter-spacing:-.02em}
+.slider-row{margin-bottom:20px}
+.slider-row label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:7px}
+.slider-row label b{color:var(--ink);font-weight:700}
+input[type=range]{width:100%;accent-color:var(--ink2);cursor:pointer}
+.kalk-result{
+  background:var(--soft);border:1px solid var(--border);
+  border-radius:12px;padding:22px 26px;margin-top:8px;
 }
 .kr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
 .kr:last-child{margin-bottom:0}
 .kr span{color:var(--muted);font-size:13px}
-.kr b{color:var(--navy);font-size:18px;font-weight:800}
-.kr-big{padding-top:14px;margin-top:8px;border-top:1px solid var(--border)}
-.kr-big span{font-size:12px}
-.kr-big b{font-size:34px;letter-spacing:-.02em}
+.kr b{color:var(--ink);font-size:17px;font-weight:800}
+.kr-big{padding-top:12px;margin-top:6px;border-top:1px solid var(--border)}
+.kr-big b{font-size:32px;letter-spacing:-.02em}
 
-/* ═══════════════════════════════════════
-   PAGE 5 — KONTAKT
-═══════════════════════════════════════ */
-#pg-kontakt{background:var(--navy)}
-.kont-wrap{
-  max-width:1240px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:100px;align-items:center;
-  min-height:calc(100vh - 68px);
-  padding:80px 56px;
+/* ── KONTAKT FORM ── */
+.kform{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;padding:44px;
 }
-.kont-info-card{padding-top:8px}
-.kont-list{display:flex;flex-direction:column;gap:26px;margin-top:48px}
-.kont-item{display:flex;gap:18px;align-items:flex-start}
-.kont-ico{
-  width:48px;height:48px;flex-shrink:0;border-radius:12px;
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
-  display:flex;align-items:center;justify-content:center;font-size:20px;
-}
-.kont-txt strong{display:block;color:#fff;font-weight:600;margin-bottom:3px;font-size:15px}
-.kont-txt p{color:rgba(255,255,255,.42);font-size:14px}
-.kont-form{
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-  border-radius:20px;padding:48px;
-}
-.kont-form h3{color:#fff;font-size:20px;font-weight:700;margin-bottom:6px}
-.kont-form p{color:rgba(255,255,255,.38);font-size:14px;margin-bottom:28px}
-.k-inp{
+.kform h3{color:#fff;font-size:19px;font-weight:700;margin-bottom:6px}
+.kform>p{color:rgba(255,255,255,.35);font-size:13.5px;margin-bottom:26px}
+.inp{
   width:100%;background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.09);border-radius:10px;
-  padding:13px 16px;color:#fff;font-size:14px;
-  font-family:inherit;margin-bottom:12px;outline:none;
-  transition:border-color .2s;
+  border:1px solid rgba(255,255,255,.09);border-radius:9px;
+  padding:12px 15px;color:#fff;font-size:14px;
+  font-family:inherit;margin-bottom:11px;outline:none;
+  transition:border-color .18s;
 }
-.k-inp::placeholder{color:rgba(255,255,255,.28)}
-.k-inp:focus{border-color:rgba(255,255,255,.32)}
-textarea.k-inp{resize:vertical;min-height:110px}
+.inp::placeholder{color:rgba(255,255,255,.25)}
+.inp:focus{border-color:rgba(255,255,255,.3)}
+textarea.inp{resize:vertical;min-height:100px}
 
-/* ── MODALS ── */
-.overlay{
+/* ── CONTACT INFO ── */
+.kinfo-list{display:flex;flex-direction:column;gap:24px;margin-top:44px}
+.kinfo-item{display:flex;gap:16px;align-items:flex-start}
+.kinfo-ico{
+  width:44px;height:44px;flex-shrink:0;border-radius:10px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.kinfo-txt strong{display:block;color:#fff;font-weight:600;font-size:14.5px;margin-bottom:2px}
+.kinfo-txt p{color:rgba(255,255,255,.4);font-size:13.5px}
+
+/* ── HOTSPOTS ── */
+.hs-wrap{position:relative}
+.hs-wrap img{width:100%;border-radius:18px;display:block;box-shadow:0 40px 100px rgba(7,18,46,.13)}
+.hs{
+  position:absolute;width:30px;height:30px;border-radius:50%;
+  background:var(--ink2);border:2px solid rgba(255,255,255,.9);
+  box-shadow:0 4px 16px rgba(7,18,46,.35);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:11px;font-weight:700;
+  transition:transform .18s,background .18s;z-index:5;
+}
+.hs::before{
+  content:'';position:absolute;
+  width:46px;height:46px;border-radius:50%;
+  border:1px solid rgba(12,29,82,.22);
+  animation:hsp 2.5s infinite;
+}
+@keyframes hsp{0%{transform:scale(.65);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+.hs:hover{transform:scale(1.15);background:var(--mid)}
+.hs-tip{
+  position:absolute;
+  background:#fff;border:1px solid var(--border);
+  border-radius:12px;padding:16px 20px;width:220px;
+  box-shadow:0 16px 48px rgba(7,18,46,.12);
+  opacity:0;pointer-events:none;
+  transition:opacity .2s,transform .2s;z-index:10;
+  left:44px;top:50%;transform:translateY(-50%) translateX(4px);
+}
+.hs-tip.vis{opacity:1;transform:translateY(-50%) translateX(0)}
+.hs-tip.lt{left:auto;right:44px;transform:translateY(-50%) translateX(-4px)}
+.hs-tip.lt.vis{transform:translateY(-50%) translateX(0)}
+.hs-tip strong{display:block;color:var(--ink);font-size:13.5px;font-weight:700;margin-bottom:4px}
+.hs-tip p{color:var(--muted);font-size:13px;line-height:1.55}
+
+/* ── QUIZ (home right panel) ── */
+.quiz-panel{
+  background:rgba(255,255,255,.04);
+  border-left:1px solid rgba(255,255,255,.07);
+  display:flex;flex-direction:column;min-height:calc(100vh - 64px);
+}
+.quiz-top{
+  padding:28px 36px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.quiz-top h3{color:#fff;font-size:15.5px;font-weight:700}
+.quiz-top p{color:rgba(255,255,255,.35);font-size:12px;margin-top:3px}
+.pips{display:flex;gap:5px}
+.pip{width:26px;height:2px;border-radius:2px;background:rgba(255,255,255,.1);transition:background .3s}
+.pip.on{background:#fff}
+.quiz-body{padding:36px;flex:1}
+.quiz-step{display:none}
+.quiz-step.on{display:block}
+.quiz-q{color:#fff;font-size:18px;font-weight:700;line-height:1.4;margin-bottom:22px}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:24px}
+.quiz-opt{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+  border-radius:10px;padding:16px 12px;
+  color:rgba(255,255,255,.72);font-size:13.5px;font-weight:500;
+  cursor:pointer;font-family:inherit;text-align:center;line-height:1.35;
+  transition:all .18s;
+}
+.quiz-opt:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.25);color:#fff}
+.quiz-opt.sel{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.45);color:#fff}
+.qa{display:flex;gap:9px}
+.qb{
+  flex:1;padding:13px;border-radius:9px;
+  font-family:inherit;font-weight:600;font-size:13.5px;
+  cursor:pointer;border:none;transition:all .18s;text-align:center;
+}
+.qn{background:#fff;color:var(--ink)}.qn:hover{background:rgba(255,255,255,.9)}
+.qbk{background:rgba(255,255,255,.06);color:rgba(255,255,255,.55)}.qbk:hover{background:rgba(255,255,255,.1)}
+/* mini calc */
+.msl{margin-bottom:18px}
+.msl label{display:flex;justify-content:space-between;font-size:12.5px;color:rgba(255,255,255,.5);margin-bottom:7px}
+.msl label b{color:#fff;font-weight:600}
+input[type=range].light{accent-color:#fff}
+.mres{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:11px;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;
+  margin:4px 0 22px;
+}
+.mres p{color:rgba(255,255,255,.4);font-size:11px;text-transform:uppercase;letter-spacing:.07em}
+.mres b{color:#fff;font-size:28px;font-weight:800;letter-spacing:-.02em}
+/* lead */
+.qlead{display:none}.qlead.on{display:block}
+.qsucc{display:none;text-align:center;padding:56px 36px}
+.qsucc.on{display:block}
+.qcheck{
+  width:56px;height:56px;border-radius:50%;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;color:#fff;margin:0 auto 20px;
+}
+.qinp{
+  width:100%;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.09);border-radius:9px;
+  padding:12px 15px;color:#fff;font-size:13.5px;
+  font-family:inherit;margin-bottom:11px;outline:none;transition:border-color .18s;
+}
+.qinp::placeholder{color:rgba(255,255,255,.25)}
+.qinp:focus{border-color:rgba(255,255,255,.35)}
+
+/* ── MODAL ── */
+.ov{
   display:none;position:fixed;inset:0;
-  background:rgba(5,10,30,.78);z-index:900;
+  background:rgba(4,10,26,.8);z-index:900;
   align-items:center;justify-content:center;
   backdrop-filter:blur(8px);
 }
-.overlay.open{display:flex}
-.modal{
-  background:var(--navy);border:1px solid rgba(255,255,255,.1);
-  border-radius:20px;padding:52px;
-  width:100%;max-width:460px;position:relative;
-  box-shadow:0 40px 120px rgba(0,0,0,.6);
+.ov.on{display:flex}
+.mbox{
+  background:#071528;border:1px solid rgba(255,255,255,.09);
+  border-radius:18px;padding:48px;width:100%;max-width:440px;
+  position:relative;box-shadow:0 40px 120px rgba(0,0,0,.7);
 }
-.m-x{
-  position:absolute;top:16px;right:16px;
-  background:rgba(255,255,255,.07);border:none;
-  width:34px;height:34px;border-radius:50%;
-  color:rgba(255,255,255,.45);font-size:18px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:background .2s;
+.mx{
+  position:absolute;top:14px;right:14px;
+  background:rgba(255,255,255,.06);border:none;
+  width:32px;height:32px;border-radius:50%;
+  color:rgba(255,255,255,.4);font-size:17px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .18s;
 }
-.m-x:hover{background:rgba(255,255,255,.14);color:#fff}
-.modal h2{color:#fff;font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em}
-.modal>p{color:rgba(255,255,255,.42);font-size:14px;margin-bottom:28px;line-height:1.6}
-.cal-ph{
+.mx:hover{background:rgba(255,255,255,.12);color:#fff}
+.mbox h2{color:#fff;font-size:22px;font-weight:800;margin-bottom:7px;letter-spacing:-.02em}
+.mbox>p{color:rgba(255,255,255,.38);font-size:13.5px;margin-bottom:26px;line-height:1.6}
+.cph{
   background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.14);
-  border-radius:12px;padding:48px 24px;text-align:center;
-  color:rgba(255,255,255,.28);font-size:14px;
+  border-radius:11px;padding:44px 24px;
+  text-align:center;color:rgba(255,255,255,.25);font-size:13.5px;
 }
 
 /* ── RESPONSIVE ── */
-@media(max-width:960px){
+@media(max-width:900px){
   html,body{overflow:auto}
-  .page{position:relative;top:auto;inset:auto;overflow:visible;height:auto}
-  .page.show{opacity:1}
-  nav{padding:0 24px}
-  .nav-tabs{gap:2px}
-  .nav-tab{padding:8px 12px;font-size:13px}
-  #pg-home,.prod-wrap,.einbau-wrap,.kalk-wrap,.kont-wrap{grid-template-columns:1fr;min-height:auto}
-  #pg-home{display:block}
-  .home-left{padding:60px 24px}
-  .home-right{border-left:none;border-top:1px solid rgba(255,255,255,.07)}
-  .prod-wrap,.einbau-wrap,.kalk-wrap,.kont-wrap{padding:60px 24px;gap:48px}
-  .vort-wrap{padding:60px 24px}
-  .vort-hd{flex-direction:column;align-items:flex-start}
-  .vort-grid{grid-template-columns:1fr}
+  .page{position:relative;inset:auto;top:auto;overflow:visible;height:auto}
+  .page.on{opacity:1}
+  nav{padding:0 20px}
+  .nt{display:none}
+  .wrap{padding:52px 20px}
+  .two-col{grid-template-columns:1fr;gap:44px;min-height:auto}
+  .cards-grid{grid-template-columns:1fr}
+  .quiz-panel{min-height:auto;border-left:none;border-top:1px solid rgba(255,255,255,.07)}
+  #pg-home>div{display:block}
 }
 </style>
 </head>
@@ -450,443 +370,434 @@ textarea.k-inp{resize:vertical;min-height:110px}
 
 <!-- ── NAV ── -->
 <nav>
-  <a href="#" onclick="show('home');return false" class="nav-logo">
-    <img src="images/Logo_provitec_2023-01.webp" alt="PROVITEC"/>
+  <a href="#" onclick="go('home');return false">
+    <img src="images/Logo_provitec_2023-01.webp" alt="PROVITEC" style="height:32px;display:block"/>
   </a>
   <div class="nav-tabs">
-    <button class="nav-tab active" data-pg="home" onclick="show('home')">Start</button>
-    <button class="nav-tab" data-pg="produkt" onclick="show('produkt')">Produkt</button>
-    <button class="nav-tab" data-pg="vorteile" onclick="show('vorteile')">Vorteile</button>
-    <button class="nav-tab" data-pg="einbau" onclick="show('einbau')">Einbau</button>
-    <button class="nav-tab" data-pg="kalkulator" onclick="show('kalkulator')">Kalkulator</button>
-    <button class="nav-tab-cta" onclick="show('kontakt')">Kontakt</button>
+    <button class="nt on" data-p="home"       onclick="go('home')">Start</button>
+    <button class="nt"    data-p="produkt"    onclick="go('produkt')">Produkt</button>
+    <button class="nt"    data-p="vorteile"   onclick="go('vorteile')">Vorteile</button>
+    <button class="nt"    data-p="einbau"     onclick="go('einbau')">Einbau</button>
+    <button class="nt"    data-p="kalkulator" onclick="go('kalkulator')">Kalkulator</button>
+    <button class="nt-cta"                    onclick="go('kontakt')">Kontakt</button>
   </div>
 </nav>
 
-<!-- ══════════════════════════════════════
-     PAGE: HOME
-══════════════════════════════════════ -->
-<div class="page show" id="pg-home">
-  <div style="display:grid;grid-template-columns:1fr 520px;min-height:calc(100vh - 68px)">
+<!-- ════════════════════
+     START
+════════════════════ -->
+<div class="page on" id="pg-home">
+  <div style="display:grid;grid-template-columns:1fr 480px;min-height:calc(100vh - 64px);background:var(--ink)">
 
     <!-- LEFT -->
-    <div class="home-left">
-      <div class="home-eyebrow"><span></span>Professionelle Wasseraufbereitung</div>
-      <h1 class="home-h1">
-        Nie wieder<br>
-        Flaschen&shy;wasser<br>
-        <span class="dim">kaufen.</span>
-      </h1>
-      <p class="home-p">
-        PROVITEC filtert Ihr Leitungswasser auf hoechste Trinkwasserqualitaet — direkt unter der Spuele, leise, wartungsarm, nachhaltig.
-      </p>
-      <div class="home-btns">
-        <button class="btn btn-white" onclick="show('produkt')">Produkt entdecken</button>
-        <button class="btn btn-ghost" onclick="show('kalkulator')">Ersparnis berechnen</button>
-      </div>
-      <div class="home-kpi">
-        <div class="kpi"><div class="kpi-n">99<sup>%</sup></div><div class="kpi-l">Keimreduktion</div></div>
-        <div class="kpi"><div class="kpi-n">5</div><div class="kpi-l">Filterstufen</div></div>
-        <div class="kpi"><div class="kpi-n">10<sup>J</sup></div><div class="kpi-l">Garantie</div></div>
-        <div class="kpi"><div class="kpi-n">2k<sup>+</sup></div><div class="kpi-l">Kunden</div></div>
+    <div style="display:flex;flex-direction:column;justify-content:center;padding:80px 64px;position:relative;overflow:hidden">
+      <!-- subtle grid -->
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:68px 68px;pointer-events:none"></div>
+      <!-- glow orb -->
+      <div style="position:absolute;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(26,46,122,.5) 0%,transparent 70%);right:-80px;bottom:-80px;pointer-events:none"></div>
+
+      <div style="position:relative;z-index:1">
+        <div style="display:flex;align-items:center;gap:12px;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:32px">
+          <span style="width:28px;height:1px;background:rgba(255,255,255,.2);display:block"></span>
+          Professionelle Wasseraufbereitung
+        </div>
+
+        <h1 style="font-size:clamp(48px,5.8vw,80px);font-weight:800;color:#fff;line-height:1.0;letter-spacing:-.035em;margin-bottom:26px">
+          Nie wieder<br>
+          Flaschen&shy;wasser<br>
+          <span style="color:rgba(255,255,255,.2)">kaufen.</span>
+        </h1>
+
+        <p style="font-size:17px;color:rgba(255,255,255,.48);line-height:1.72;max-width:440px;margin-bottom:44px">
+          PROVITEC&#174; filtert Ihr Leitungswasser auf hoechste Qualitaet &#8212; still oder sprudelnd, direkt aus dem Hahn.
+        </p>
+
+        <div class="btns">
+          <button class="btn btn-light" onclick="go('produkt')">Produkt entdecken</button>
+          <button class="btn btn-ghost-light" onclick="go('kalkulator')">Ersparnis berechnen</button>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat"><div class="stat-n">99<sup>%</sup></div><div class="stat-l">Keimreduktion</div></div>
+          <div class="stat"><div class="stat-n">5</div><div class="stat-l">Filterstufen</div></div>
+          <div class="stat"><div class="stat-n">10<sup>J</sup></div><div class="stat-l">Garantie</div></div>
+          <div class="stat"><div class="stat-n">2k<sup>+</sup></div><div class="stat-l">Kunden</div></div>
+        </div>
       </div>
     </div>
 
     <!-- RIGHT: QUIZ -->
-    <div class="home-right">
+    <div class="quiz-panel">
       <div class="quiz-top">
         <div>
           <h3>Kostenlose Analyse</h3>
           <p>Wie viel koennen Sie sparen?</p>
         </div>
-        <div class="q-pips">
-          <div class="q-pip on" id="pp0"></div>
-          <div class="q-pip" id="pp1"></div>
-          <div class="q-pip" id="pp2"></div>
-          <div class="q-pip" id="pp3"></div>
+        <div class="pips">
+          <div class="pip on" id="pp0"></div>
+          <div class="pip" id="pp1"></div>
+          <div class="pip" id="pp2"></div>
+          <div class="pip" id="pp3"></div>
         </div>
       </div>
 
-      <!-- STEPS -->
-      <div id="qSteps" style="flex:1;display:flex;flex-direction:column">
+      <div id="qsteps" style="flex:1;display:flex;flex-direction:column">
         <div class="quiz-body" style="flex:1">
-          <!-- Q1 -->
-          <div class="quiz-step show" id="qs0">
+          <div class="quiz-step on" id="qs0">
             <p class="quiz-q">Wie viele Flaschen kaufen Sie pro Monat?</p>
             <div class="quiz-opts">
-              <button class="quiz-opt" onclick="pick(this,0)">1–20 Flaschen</button>
-              <button class="quiz-opt" onclick="pick(this,0)">20–50 Flaschen</button>
-              <button class="quiz-opt" onclick="pick(this,0)">50–100 Flaschen</button>
-              <button class="quiz-opt" onclick="pick(this,0)">Ueber 100</button>
+              <button class="quiz-opt" onclick="pick(this)">1&#8211;20 Flaschen</button>
+              <button class="quiz-opt" onclick="pick(this)">20&#8211;50 Flaschen</button>
+              <button class="quiz-opt" onclick="pick(this)">50&#8211;100 Flaschen</button>
+              <button class="quiz-opt" onclick="pick(this)">Ueber 100</button>
             </div>
-            <div class="q-actions">
-              <button class="q-btn q-next" onclick="qgo(1)">Weiter</button>
-            </div>
+            <div class="qa"><button class="qb qn" onclick="qgo(1)">Weiter</button></div>
           </div>
-          <!-- Q2 -->
           <div class="quiz-step" id="qs1">
             <p class="quiz-q">Warum kaufen Sie Flaschenwasser?</p>
             <div class="quiz-opts">
-              <button class="quiz-opt" onclick="pick(this,1)">Geschmack</button>
-              <button class="quiz-opt" onclick="pick(this,1)">Hygiene</button>
-              <button class="quiz-opt" onclick="pick(this,1)">Kalkgehalt</button>
-              <button class="quiz-opt" onclick="pick(this,1)">Gewohnheit</button>
+              <button class="quiz-opt" onclick="pick(this)">Geschmack</button>
+              <button class="quiz-opt" onclick="pick(this)">Hygiene</button>
+              <button class="quiz-opt" onclick="pick(this)">Kalkgehalt</button>
+              <button class="quiz-opt" onclick="pick(this)">Gewohnheit</button>
             </div>
-            <div class="q-actions">
-              <button class="q-btn q-back" onclick="qgo(0)">Zurueck</button>
-              <button class="q-btn q-next" onclick="qgo(2)">Weiter</button>
+            <div class="qa">
+              <button class="qb qbk" onclick="qgo(0)">Zurueck</button>
+              <button class="qb qn"  onclick="qgo(2)">Weiter</button>
             </div>
           </div>
-          <!-- Q3 -->
           <div class="quiz-step" id="qs2">
             <p class="quiz-q">Wie wichtig ist Nachhaltigkeit?</p>
             <div class="quiz-opts">
-              <button class="quiz-opt" onclick="pick(this,2)">Sehr wichtig</button>
-              <button class="quiz-opt" onclick="pick(this,2)">Wichtig</button>
-              <button class="quiz-opt" onclick="pick(this,2)">Weniger</button>
-              <button class="quiz-opt" onclick="pick(this,2)">Egal</button>
+              <button class="quiz-opt" onclick="pick(this)">Sehr wichtig</button>
+              <button class="quiz-opt" onclick="pick(this)">Wichtig</button>
+              <button class="quiz-opt" onclick="pick(this)">Weniger</button>
+              <button class="quiz-opt" onclick="pick(this)">Egal</button>
             </div>
-            <div class="q-actions">
-              <button class="q-btn q-back" onclick="qgo(1)">Zurueck</button>
-              <button class="q-btn q-next" onclick="qgo(3)">Weiter</button>
+            <div class="qa">
+              <button class="qb qbk" onclick="qgo(1)">Zurueck</button>
+              <button class="qb qn"  onclick="qgo(3)">Weiter</button>
             </div>
           </div>
-          <!-- Q4 calc -->
           <div class="quiz-step" id="qs3">
-            <p class="quiz-q">Ihr persoenliches Sparpotenzial:</p>
-            <div class="m-sl">
+            <p class="quiz-q">Ihr Sparpotenzial:</p>
+            <div class="msl">
               <label>Flaschen / Woche <b id="qcB">8</b></label>
-              <input type="range" min="1" max="50" value="8" oninput="g('qcB').textContent=this.value;qres()">
+              <input type="range" class="light" min="1" max="50" value="8" oninput="G('qcB').textContent=this.value;qres()">
             </div>
-            <div class="m-sl">
+            <div class="msl">
               <label>Preis / Flasche <b id="qcP">0.50</b> &#8364;</label>
-              <input type="range" min="30" max="200" value="50" oninput="g('qcP').textContent=(this.value/100).toFixed(2);qres()">
+              <input type="range" class="light" min="30" max="200" value="50" oninput="G('qcP').textContent=(this.value/100).toFixed(2);qres()">
             </div>
-            <div class="m-res">
+            <div class="mres">
               <p>Ersparnis / Jahr</p>
               <b id="qcR">208 &#8364;</b>
             </div>
-            <div class="q-actions">
-              <button class="q-btn q-back" onclick="qgo(2)">Zurueck</button>
-              <button class="q-btn q-next" onclick="showLead()">Ergebnis anfordern</button>
+            <div class="qa">
+              <button class="qb qbk" onclick="qgo(2)">Zurueck</button>
+              <button class="qb qn"  onclick="showLead()">Ergebnis anfordern</button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- LEAD -->
-      <div class="q-lead" id="qLead">
+      <!-- Lead form -->
+      <div class="qlead" id="qlead">
         <div class="quiz-top" style="border-top:none">
-          <div><h3>Fast geschafft</h3><p>Wo sollen wir das Ergebnis hinsenden?</p></div>
+          <div><h3>Fast geschafft</h3><p>Wohin soll das Ergebnis?</p></div>
         </div>
         <div class="quiz-body">
-          <input class="ql-inp" id="lName" type="text" placeholder="Ihr Name"/>
-          <input class="ql-inp" id="lMail" type="email" placeholder="E-Mail-Adresse"/>
-          <input class="ql-inp" id="lTel" type="tel" placeholder="Telefon (optional)"/>
-          <button class="q-btn q-next" style="width:100%;margin-top:4px" onclick="qsub()">Ergebnis erhalten</button>
-          <p style="color:rgba(255,255,255,.22);font-size:11px;text-align:center;margin-top:14px">Kein Spam. Datenschutz wird eingehalten.</p>
+          <input class="qinp" id="lName" type="text"  placeholder="Ihr Name"/>
+          <input class="qinp" id="lMail" type="email" placeholder="E-Mail-Adresse"/>
+          <input class="qinp" id="lTel"  type="tel"   placeholder="Telefon (optional)"/>
+          <button class="qb qn" style="width:100%;margin-top:4px" onclick="qsub()">Ergebnis erhalten</button>
+          <p style="color:rgba(255,255,255,.2);font-size:11px;text-align:center;margin-top:12px">Kein Spam. Datenschutz garantiert.</p>
         </div>
       </div>
 
-      <!-- SUCCESS -->
-      <div class="q-success" id="qSuccess">
-        <div class="q-check">&#10003;</div>
-        <h3 style="color:#fff;font-size:22px;font-weight:800;margin-bottom:10px">Vielen Dank!</h3>
-        <p style="color:rgba(255,255,255,.45);max-width:280px;margin:0 auto 28px;font-size:15px;line-height:1.65">Wir melden uns innerhalb von 24 Stunden. Jetzt Termin buchen:</p>
-        <button class="btn btn-white btn-full" onclick="openCal()">Beratung vereinbaren</button>
+      <!-- Success -->
+      <div class="qsucc" id="qsucc">
+        <div class="qcheck">&#10003;</div>
+        <h3 style="color:#fff;font-size:20px;font-weight:800;margin-bottom:10px">Vielen Dank!</h3>
+        <p style="color:rgba(255,255,255,.42);max-width:260px;margin:0 auto 26px;font-size:14.5px;line-height:1.65">Wir melden uns innerhalb von 24 Stunden.</p>
+        <button class="btn btn-light btn-full" onclick="openCal()">Termin vereinbaren</button>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     PAGE: PRODUKT
-══════════════════════════════════════ -->
-<div class="page" id="pg-produkt">
-  <div class="prod-wrap">
-    <!-- image + hotspots -->
-    <div class="prod-img">
-      <img src="images/PROaqua_4700.webp" alt="PROVITEC PROaqua 4700"/>
-      <!-- HOTSPOTS -->
-      <div class="hs" style="left:72%;top:10%" onmouseenter="ht(1)" onmouseleave="hh(1)">1
-        <div class="hs-tip left-tip" id="ht1"><strong>Sedimentfilter</strong><p>Entfernt Rost, Sand und Schwebstoffe ab 5 Mikrometer zuverlaessig.</p></div>
-      </div>
-      <div class="hs" style="left:72%;top:24%" onmouseenter="ht(2)" onmouseleave="hh(2)">2
-        <div class="hs-tip left-tip" id="ht2"><strong>Aktivkohle-Block</strong><p>Bindet Chlor, Pestizide und organische Verbindungen effektiv.</p></div>
-      </div>
-      <div class="hs" style="left:72%;top:39%" onmouseenter="ht(3)" onmouseleave="hh(3)">3
-        <div class="hs-tip left-tip" id="ht3"><strong>UF-Membran</strong><p>Filtert auf 0,02 Mikrometer — Bakterien und Mikroplastik zurueck.</p></div>
-      </div>
-      <div class="hs" style="left:72%;top:54%" onmouseenter="ht(4)" onmouseleave="hh(4)">4
-        <div class="hs-tip left-tip" id="ht4"><strong>Mineralisierung</strong><p>Gibt Calcium und Magnesium in optimaler Dosierung zurueck.</p></div>
-      </div>
-      <div class="hs" style="left:72%;top:69%" onmouseenter="ht(5)" onmouseleave="hh(5)">5
-        <div class="hs-tip left-tip" id="ht5"><strong>Aktivkohle-Granulat</strong><p>Finalpolitur fuer Geschmack und vollstaendige Geruchsneutralitaet.</p></div>
-      </div>
-      <div class="hs" style="left:72%;top:84%" onmouseenter="ht(6)" onmouseleave="hh(6)">6
-        <div class="hs-tip left-tip" id="ht6"><strong>Hochdruckgehaeuse</strong><p>Druckstabil bis 10 bar, TUV-geprueft, lebensmittelecht.</p></div>
-      </div>
-    </div>
-    <!-- info -->
-    <div class="prod-right">
-      <span class="sec-tag">Das System</span>
-      <h2 class="sec-h2">PROVITEC<br>PROaqua 4700</h2>
-      <p class="sec-p">Fuenf Filterstufen, ein kompaktes Gehaeuse. Fahren Sie ueber die nummerierten Punkte, um jede Stufe zu erkunden.</p>
-      <div class="feat-list">
-        <div class="feat-row">
-          <span class="feat-idx">01</span>
-          <div class="feat-txt"><strong>Kristallklares Trinkwasser</strong><p>Direktanschluss am Hahn — stilles oder gespritztes Wasser auf Knopfdruck.</p></div>
+<!-- ════════════════════
+     PRODUKT
+════════════════════ -->
+<div class="page" id="pg-produkt" style="background:var(--soft)">
+  <div class="wrap">
+    <div class="two-col">
+      <!-- Image + Hotspots -->
+      <div class="hs-wrap">
+        <img src="images/PROaqua_4700.webp" alt="PROVITEC PROaqua 4700"/>
+        <div class="hs" style="left:70%;top:11%" onmouseenter="ht(1)" onmouseleave="hh(1)">1
+          <div class="hs-tip lt" id="ht1"><strong>Sedimentfilter</strong><p>Entfernt Rost, Sand und Schwebstoffe ab 5 Mikrometer.</p></div>
         </div>
-        <div class="feat-row">
-          <span class="feat-idx">02</span>
-          <div class="feat-txt"><strong>3.000 Liter Kapazitaet</strong><p>Eine Kartusche entspricht 6.000 Einliterflaschen. Wechsel in 2 Minuten.</p></div>
+        <div class="hs" style="left:70%;top:26%" onmouseenter="ht(2)" onmouseleave="hh(2)">2
+          <div class="hs-tip lt" id="ht2"><strong>Aktivkohle-Block</strong><p>Bindet Chlor, Pestizide und organische Verbindungen effektiv.</p></div>
         </div>
-        <div class="feat-row">
-          <span class="feat-idx">03</span>
-          <div class="feat-txt"><strong>TUV-zertifiziert, Made in Germany</strong><p>Jede Charge im Labor analysiert — entspricht der deutschen Trinkwasserverordnung.</p></div>
+        <div class="hs" style="left:70%;top:41%" onmouseenter="ht(3)" onmouseleave="hh(3)">3
+          <div class="hs-tip lt" id="ht3"><strong>UF-Membran</strong><p>0,02 Mikrometer Filtration &#8212; Bakterien und Mikroplastik bleiben zurueck.</p></div>
+        </div>
+        <div class="hs" style="left:70%;top:56%" onmouseenter="ht(4)" onmouseleave="hh(4)">4
+          <div class="hs-tip lt" id="ht4"><strong>Mineralisierung</strong><p>Gibt Calcium und Magnesium optimal dosiert zurueck.</p></div>
+        </div>
+        <div class="hs" style="left:70%;top:71%" onmouseenter="ht(5)" onmouseleave="hh(5)">5
+          <div class="hs-tip lt" id="ht5"><strong>Aktivkohle-Granulat</strong><p>Finalpolitur fuer perfekten Geschmack und Geruchsneutralitaet.</p></div>
+        </div>
+        <div class="hs" style="left:70%;top:86%" onmouseenter="ht(6)" onmouseleave="hh(6)">6
+          <div class="hs-tip lt" id="ht6"><strong>Hochdruckgehaeuse</strong><p>Druckstabil bis 10 bar, TUV-geprueft, lebensmittelecht.</p></div>
         </div>
       </div>
-      <div style="display:flex;gap:14px;margin-top:40px">
-        <button class="btn btn-navy" onclick="openAngebot()">Angebot anfragen</button>
-        <button class="btn btn-outline" onclick="show('einbau')">Zur Installation</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     PAGE: VORTEILE
-══════════════════════════════════════ -->
-<div class="page" id="pg-vorteile">
-  <div class="vort-wrap">
-    <div class="vort-hd">
+      <!-- Text -->
       <div>
-        <span class="sec-tag">Warum PROVITEC</span>
-        <h2 class="sec-h2" style="margin-bottom:0">Ueberzeugende<br>Argumente.</h2>
-      </div>
-      <p class="sec-p" style="max-width:360px;text-align:right">Hover ueber die Karten, um mehr zu erfahren.</p>
-    </div>
-    <div class="vort-grid">
-      <div class="vort-card">
-        <div class="v-idx">01</div>
-        <div class="v-title">Bis zu 70 % guenstiger</div>
-        <div class="v-body">Im Vergleich zu gekaeutem Flaschenwasser amortisiert sich das System im ersten Jahr. Danach reine Ersparnis.</div>
-      </div>
-      <div class="vort-card">
-        <div class="v-idx">02</div>
-        <div class="v-title">Zero Plastic Waste</div>
-        <div class="v-body">Eine Familie spart bis zu 1.200 Plastikflaschen pro Jahr — ein messbarer Beitrag zum Klimaschutz.</div>
-      </div>
-      <div class="vort-card">
-        <div class="v-idx">03</div>
-        <div class="v-title">Laborgetestete Reinheit</div>
-        <div class="v-body">Jede Charge im akkreditierten Labor analysiert, entspricht der deutschen Trinkwasserverordnung.</div>
-      </div>
-      <div class="vort-card">
-        <div class="v-idx">04</div>
-        <div class="v-title">Hygienisch sicher</div>
-        <div class="v-body">Die UF-Membran haelt Bakterien, Viren und Mikroplastik zurueck — ohne Chemie oder Zusatzstoffe.</div>
-      </div>
-      <div class="vort-card">
-        <div class="v-idx">05</div>
-        <div class="v-title">Platzsparend kompakt</div>
-        <div class="v-body">Passt unter jede Standardspuele. Kein Umbau, keine Bauarbeiten — fertig in 30 Minuten.</div>
-      </div>
-      <div class="vort-card">
-        <div class="v-idx">06</div>
-        <div class="v-title">10 Jahre Garantie</div>
-        <div class="v-body">PROVITEC steht mit 10 Jahren Herstellergarantie und deutschem Kundendienst hinter jedem Geraet.</div>
+        <span class="tag">Das System</span>
+        <h2 class="dark">PROVITEC<br>PROaqua 4700</h2>
+        <p class="lead dark">Fuenf Filterstufen, ein kompaktes Gehaeuse. Hover ueber die Punkte, um jede Stufe zu erkunden.</p>
+        <div class="feat-list">
+          <div class="feat-item">
+            <span class="feat-n">01</span>
+            <div class="feat-text"><strong>Kristallklares Trinkwasser</strong><p>Stilles oder gespritztes Wasser auf Knopfdruck &#8212; ohne Schleppen.</p></div>
+          </div>
+          <div class="feat-item">
+            <span class="feat-n">02</span>
+            <div class="feat-text"><strong>3.000 Liter Kapazitaet</strong><p>Entspricht 6.000 Einliterflaschen. Wechsel in unter 2 Minuten.</p></div>
+          </div>
+          <div class="feat-item">
+            <span class="feat-n">03</span>
+            <div class="feat-text"><strong>TUV-zertifiziert, Made in Germany</strong><p>Laborgetestet nach deutscher Trinkwasserverordnung.</p></div>
+          </div>
+        </div>
+        <div class="btns" style="margin-top:36px">
+          <button class="btn btn-dark"       onclick="openAngebot()">Angebot anfragen</button>
+          <button class="btn btn-ghost-dark" onclick="go('einbau')">Zur Installation</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     PAGE: EINBAU
-══════════════════════════════════════ -->
-<div class="page" id="pg-einbau">
-  <div class="einbau-wrap">
-    <div class="einbau-img">
-      <img src="images/einbau.png" alt="PROVITEC Einbau unter der Spuele"/>
-    </div>
-    <div>
-      <span class="sec-tag sec-tag-light">Installation</span>
-      <h2 class="sec-h2 sec-h2-light">In 30 Minuten<br>eingebaut.</h2>
-      <p class="sec-p sec-p-light">Keine Fachkraft noetig. Das System ist so konstruiert, dass Sie es selbst installieren koennen.</p>
-      <div class="e-steps">
-        <div class="e-step"><div class="e-n">1</div><div class="e-txt"><strong>Wasserzufuhr absperren</strong><p>Den Kaltwasserhahn unter der Spuele schliessen.</p></div></div>
-        <div class="e-step"><div class="e-n">2</div><div class="e-txt"><strong>T-Stueck einsetzen</strong><p>Mitgeliefertes T-Stueck in die Kaltwasserzuleitung schrauben.</p></div></div>
-        <div class="e-step"><div class="e-n">3</div><div class="e-txt"><strong>Filtergehaeuse montieren</strong><p>Befestigung am Schrankboden — zwei Schrauben genuegen.</p></div></div>
-        <div class="e-step"><div class="e-n">4</div><div class="e-txt"><strong>Filterhahn einbauen</strong><p>Ein kleines Loch in der Spuele, passend fuer alle gaengigen Modelle.</p></div></div>
-        <div class="e-step"><div class="e-n">5</div><div class="e-txt"><strong>Wasser aufdrehen und geniessen</strong><p>System spiulen, pruefen — reines Wasser direkt aus dem Hahn.</p></div></div>
+<!-- ════════════════════
+     VORTEILE
+════════════════════ -->
+<div class="page" id="pg-vorteile" style="background:#fff">
+  <div class="wrap">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:40px">
+      <div>
+        <span class="tag">Warum PROVITEC</span>
+        <h2 class="dark" style="margin-bottom:0">Sechs starke<br>Argumente.</h2>
       </div>
-      <div style="display:flex;gap:14px;margin-top:40px">
-        <button class="btn btn-white" onclick="openCal()">Termin buchen</button>
-        <button class="btn btn-ghost" onclick="show('kalkulator')">Ersparnis berechnen</button>
+      <p style="color:var(--muted);font-size:15px;max-width:300px;text-align:right;line-height:1.65;padding-bottom:4px">Hover ueber die Kacheln fuer Details.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="card"><div class="card-n">01</div><div class="card-t">Bis zu 70% guenstiger</div><div class="card-b">Amortisiert sich im ersten Jahr. Danach reine Ersparnis gegenueber Flaschenwasser.</div></div>
+      <div class="card"><div class="card-n">02</div><div class="card-t">Zero Plastic Waste</div><div class="card-b">Bis zu 1.200 Plastikflaschen weniger pro Jahr &#8212; ein messbarer Beitrag fuer die Umwelt.</div></div>
+      <div class="card"><div class="card-n">03</div><div class="card-t">Laborgetestete Reinheit</div><div class="card-b">Jede Charge akkreditiert analysiert, nach deutscher Trinkwasserverordnung zertifiziert.</div></div>
+      <div class="card"><div class="card-n">04</div><div class="card-t">Hygienisch sicher</div><div class="card-b">UF-Membran haelt Bakterien, Viren und Mikroplastik zurueck &#8212; komplett ohne Chemie.</div></div>
+      <div class="card"><div class="card-n">05</div><div class="card-t">Platzsparend kompakt</div><div class="card-b">Passt unter jede Standardspuele. Keine Bauarbeiten &#8212; fertig in 30 Minuten.</div></div>
+      <div class="card"><div class="card-n">06</div><div class="card-t">10 Jahre Garantie</div><div class="card-b">Herstellergarantie mit deutschem Kundendienst &#8212; langfristige Sicherheit garantiert.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════
+     EINBAU
+════════════════════ -->
+<div class="page" id="pg-einbau" style="background:var(--ink)">
+  <div class="wrap">
+    <div class="two-col">
+      <div>
+        <img src="images/einbau.png" alt="Einbau" style="width:100%;border-radius:18px;display:block;box-shadow:0 48px 100px rgba(0,0,0,.55)"/>
+      </div>
+      <div>
+        <span class="tag tag-light">Installation</span>
+        <h2 class="light">In 30 Minuten<br>eingebaut.</h2>
+        <p class="lead light">Keine Fachkraft noetig &#8212; das System ist so konstruiert, dass jeder es installieren kann.</p>
+        <div class="steps">
+          <div class="step-item"><div class="step-n">1</div><div class="step-text"><strong>Wasserzufuhr absperren</strong><p>Den Kaltwasserhahn unter der Spuele schliessen.</p></div></div>
+          <div class="step-item"><div class="step-n">2</div><div class="step-text"><strong>T-Stueck einsetzen</strong><p>Mitgeliefertes T-Stueck in die Kaltwasserzuleitung schrauben.</p></div></div>
+          <div class="step-item"><div class="step-n">3</div><div class="step-text"><strong>Filtergehaeuse montieren</strong><p>Befestigung am Schrankboden &#8212; zwei Schrauben genuegen.</p></div></div>
+          <div class="step-item"><div class="step-n">4</div><div class="step-text"><strong>Filterhahn einbauen</strong><p>Ein kleines Loch in der Spuele, passend fuer alle gaengigen Modelle.</p></div></div>
+          <div class="step-item"><div class="step-n">5</div><div class="step-text"><strong>Wasser aufdrehen</strong><p>System spiulen, pruefen &#8212; reines Wasser direkt aus dem Hahn.</p></div></div>
+        </div>
+        <div class="btns" style="margin-top:36px">
+          <button class="btn btn-light"       onclick="openCal()">Termin buchen</button>
+          <button class="btn btn-ghost-light" onclick="go('kalkulator')">Ersparnis berechnen</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════
-     PAGE: KALKULATOR
-══════════════════════════════════════ -->
-<div class="page" id="pg-kalkulator">
-  <div class="kalk-wrap">
-    <div>
-      <span class="sec-tag">Sparrechner</span>
-      <h2 class="sec-h2">Was kostet Sie<br>Flaschenwasser?</h2>
-      <p class="sec-p" style="margin-bottom:40px">Die meisten unterschaetzen ihre jaehrlichen Ausgaben. Rechnen Sie selbst.</p>
-      <div class="kalk-img"><img src="images/Provitec-Einsparung.webp" alt="Einsparungsvergleich"/></div>
-    </div>
-    <div class="kalk-card">
-      <h3>Ihr Sparpotenzial</h3>
-      <div class="r-row">
-        <label>Personen im Haushalt <b id="rPers">2</b></label>
-        <input type="range" class="dk" min="1" max="6" value="2" oninput="g('rPers').textContent=this.value;fcalc()">
+<!-- ════════════════════
+     KALKULATOR
+════════════════════ -->
+<div class="page" id="pg-kalkulator" style="background:var(--soft)">
+  <div class="wrap">
+    <div class="two-col">
+      <div>
+        <span class="tag">Sparrechner</span>
+        <h2 class="dark">Was kostet Sie<br>Flaschenwasser?</h2>
+        <p class="lead dark" style="margin-bottom:32px">Die meisten unterschaetzen ihre jaehrlichen Ausgaben erheblich. Rechnen Sie selbst.</p>
+        <img src="images/Provitec-Einsparung.webp" alt="Einsparung" style="width:100%;border-radius:16px;display:block;box-shadow:0 24px 60px rgba(12,29,82,.1)"/>
       </div>
-      <div class="r-row">
-        <label>Flaschen pro Woche <b id="rBot">10</b></label>
-        <input type="range" class="dk" min="1" max="60" value="10" oninput="g('rBot').textContent=this.value;fcalc()">
+      <div class="kalk-card">
+        <h3>Ihr Sparpotenzial</h3>
+        <div class="slider-row">
+          <label>Personen im Haushalt <b id="rP">2</b></label>
+          <input type="range" min="1" max="6" value="2" oninput="G('rP').textContent=this.value;fc()">
+        </div>
+        <div class="slider-row">
+          <label>Flaschen / Woche <b id="rB">10</b></label>
+          <input type="range" min="1" max="60" value="10" oninput="G('rB').textContent=this.value;fc()">
+        </div>
+        <div class="slider-row">
+          <label>Preis / Flasche <b id="rPr">0.50</b> &#8364;</label>
+          <input type="range" min="30" max="250" value="50" oninput="G('rPr').textContent=(this.value/100).toFixed(2);fc()">
+        </div>
+        <div class="slider-row">
+          <label>Schleppaufwand / Monat <b id="rM">60</b> Min.</label>
+          <input type="range" min="0" max="300" value="60" oninput="G('rM').textContent=this.value;fc()">
+        </div>
+        <div class="kalk-result">
+          <div class="kr"><span>Kosten Flaschenwasser / Jahr</span><b id="rC">260 &#8364;</b></div>
+          <div class="kr kr-big"><span>Ersparnis mit PROVITEC / Jahr</span><b id="rS">195 &#8364;</b></div>
+        </div>
+        <button class="btn btn-dark btn-full" style="margin-top:22px" onclick="openAngebot()">Angebot anfragen</button>
       </div>
-      <div class="r-row">
-        <label>Preis pro Flasche <b id="rPri">0.50</b> &#8364;</label>
-        <input type="range" class="dk" min="30" max="250" value="50" oninput="g('rPri').textContent=(this.value/100).toFixed(2);fcalc()">
-      </div>
-      <div class="r-row">
-        <label>Schleppaufwand / Monat <b id="rMin">60</b> Min.</label>
-        <input type="range" class="dk" min="0" max="300" value="60" oninput="g('rMin').textContent=this.value;fcalc()">
-      </div>
-      <div class="kalk-res">
-        <div class="kr"><span>Kosten Flaschenwasser / Jahr</span><b id="rCost">260 &#8364;</b></div>
-        <div class="kr kr-big"><span>Ersparnis mit PROVITEC / Jahr</span><b id="rSave">195 &#8364;</b></div>
-      </div>
-      <button class="btn btn-navy btn-full" style="margin-top:24px" onclick="openAngebot()">Angebot anfragen</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     PAGE: KONTAKT
-══════════════════════════════════════ -->
-<div class="page" id="pg-kontakt">
-  <div class="kont-wrap">
-    <div class="kont-info-card">
-      <span class="sec-tag sec-tag-light">Kontakt</span>
-      <h2 class="sec-h2 sec-h2-light">Bereit fuer<br>sauberes Wasser?</h2>
-      <p class="sec-p sec-p-light">Kostenlos und unverbindlich beraten lassen — oder direkt Termin buchen.</p>
-      <ul class="kont-list">
-        <li class="kont-item"><div class="kont-ico">&#128222;</div><div class="kont-txt"><strong>Telefon</strong><p>+49 (0) 800 123 456 7</p></div></li>
-        <li class="kont-item"><div class="kont-ico">&#128140;</div><div class="kont-txt"><strong>E-Mail</strong><p>info@provitec.de</p></div></li>
-        <li class="kont-item"><div class="kont-ico">&#128337;</div><div class="kont-txt"><strong>Erreichbar</strong><p>Mo–Fr, 8:00–18:00 Uhr</p></div></li>
-      </ul>
-      <button class="btn btn-white" style="margin-top:44px" onclick="openCal()">Beratungsgespraech vereinbaren</button>
-    </div>
-    <div class="kont-form">
-      <h3>Nachricht senden</h3>
-      <p>Wir antworten innerhalb von 24 Stunden.</p>
-      <input class="k-inp" id="kName" type="text" placeholder="Ihr Name"/>
-      <input class="k-inp" id="kMail" type="email" placeholder="E-Mail-Adresse"/>
-      <input class="k-inp" id="kTel" type="tel" placeholder="Telefonnummer (optional)"/>
-      <textarea class="k-inp" id="kMsg" rows="4" placeholder="Ihre Nachricht..."></textarea>
-      <button class="btn btn-white btn-full" onclick="ksub()">Nachricht senden</button>
     </div>
   </div>
 </div>
 
-<!-- ── MODAL ANGEBOT ── -->
-<div class="overlay" id="ovA">
-  <div class="modal">
-    <button class="m-x" onclick="g('ovA').classList.remove('open')">&#215;</button>
+<!-- ════════════════════
+     KONTAKT
+════════════════════ -->
+<div class="page" id="pg-kontakt" style="background:var(--ink)">
+  <div class="wrap">
+    <div class="two-col">
+      <div>
+        <span class="tag tag-light">Kontakt</span>
+        <h2 class="light">Bereit fuer<br>sauberes Wasser?</h2>
+        <p class="lead light">Kostenlos und unverbindlich beraten lassen &#8212; oder direkt Termin buchen.</p>
+        <ul class="kinfo-list" style="list-style:none">
+          <li class="kinfo-item">
+            <div class="kinfo-ico">&#128222;</div>
+            <div class="kinfo-txt"><strong>Telefon</strong><p>+49 (0) 800 123 456 7</p></div>
+          </li>
+          <li class="kinfo-item">
+            <div class="kinfo-ico">&#128140;</div>
+            <div class="kinfo-txt"><strong>E-Mail</strong><p>info@provitec.de</p></div>
+          </li>
+          <li class="kinfo-item">
+            <div class="kinfo-ico">&#128337;</div>
+            <div class="kinfo-txt"><strong>Erreichbar</strong><p>Mo&#8211;Fr, 8:00&#8211;18:00 Uhr</p></div>
+          </li>
+        </ul>
+        <button class="btn btn-light" style="margin-top:40px" onclick="openCal()">Beratung vereinbaren</button>
+      </div>
+      <div class="kform">
+        <h3>Nachricht senden</h3>
+        <p>Wir antworten innerhalb von 24 Stunden.</p>
+        <input class="inp" id="kNm" type="text"  placeholder="Ihr Name"/>
+        <input class="inp" id="kMl" type="email" placeholder="E-Mail-Adresse"/>
+        <input class="inp" id="kTl" type="tel"   placeholder="Telefonnummer (optional)"/>
+        <textarea class="inp" id="kMs" rows="4"  placeholder="Ihre Nachricht..."></textarea>
+        <button class="btn btn-light btn-full" onclick="ksub()">Nachricht senden</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ANGEBOT -->
+<div class="ov" id="ovA">
+  <div class="mbox">
+    <button class="mx" onclick="G('ovA').classList.remove('on')">&#215;</button>
     <h2>Angebot anfragen</h2>
-    <p>Individuelles Angebot — kostenlos und unverbindlich.</p>
-    <input class="ql-inp" id="mName" type="text" placeholder="Ihr Name"/>
-    <input class="ql-inp" id="mMail" type="email" placeholder="E-Mail-Adresse"/>
-    <input class="ql-inp" id="mTel" type="tel" placeholder="Telefonnummer"/>
-    <button class="q-btn q-next" style="width:100%;margin-top:8px" onclick="msub()">Angebot anfordern</button>
+    <p>Individuell, kostenlos und unverbindlich.</p>
+    <input class="qinp" id="mN" type="text"  placeholder="Ihr Name"/>
+    <input class="qinp" id="mM" type="email" placeholder="E-Mail-Adresse"/>
+    <input class="qinp" id="mT" type="tel"   placeholder="Telefonnummer"/>
+    <button class="qb qn" style="width:100%;margin-top:8px" onclick="msub()">Angebot anfordern</button>
   </div>
 </div>
 
-<!-- ── MODAL KALENDER ── -->
-<div class="overlay" id="ovC">
-  <div class="modal">
-    <button class="m-x" onclick="g('ovC').classList.remove('open')">&#215;</button>
+<!-- MODAL KALENDER -->
+<div class="ov" id="ovC">
+  <div class="mbox">
+    <button class="mx" onclick="G('ovC').classList.remove('on')">&#215;</button>
     <h2>Termin vereinbaren</h2>
-    <p>Kostenloses Beratungsgespraech — wir kommen zu Ihnen.</p>
-    <div class="cal-ph">Kalender-Integration folgt<br><small style="opacity:.5">(Calendly / Cal.com)</small></div>
-    <button class="q-btn q-back" style="width:100%;margin-top:16px" onclick="g('ovC').classList.remove('open')">Schliessen</button>
+    <p>Kostenloses Beratungsgespraech &#8212; wir kommen zu Ihnen.</p>
+    <div class="cph">Kalender-Integration folgt<br><small style="opacity:.4">(Calendly / Cal.com)</small></div>
+    <button class="qb qbk" style="width:100%;margin-top:12px" onclick="G('ovC').classList.remove('on')">Schliessen</button>
   </div>
 </div>
 
 <script>
-// utils
-const g=x=>document.getElementById(x);
+const G = x => document.getElementById(x);
 
-// PAGE SWITCHING
-function show(pg){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('show'));
-  g('pg-'+pg).classList.add('show');
-  document.querySelectorAll('.nav-tab').forEach(t=>{
-    t.classList.toggle('active',t.dataset.pg===pg);
-  });
-  // reset scroll
-  g('pg-'+pg).scrollTop=0;
+/* PAGE SWITCH */
+function go(p){
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('.nt').forEach(el => el.classList.toggle('on', el.dataset.p === p));
+  G('pg-' + p).classList.add('on');
+  G('pg-' + p).scrollTop = 0;
 }
 
-// QUIZ
-let qStep=0;
+/* QUIZ */
 function qgo(n){
-  document.querySelectorAll('.quiz-step').forEach(s=>s.classList.remove('show'));
-  g('qs'+n).classList.add('show');
-  qStep=n;
-  [0,1,2,3].forEach(i=>g('pp'+i).classList.toggle('on',i<=n));
+  document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('on'));
+  G('qs' + n).classList.add('on');
+  [0,1,2,3].forEach(i => G('pp' + i).classList.toggle('on', i <= n));
 }
 function pick(el){
-  el.closest('.quiz-opts').querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('sel'));
+  el.closest('.quiz-opts').querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('sel'));
   el.classList.add('sel');
 }
 function showLead(){
-  g('qSteps').style.display='none';
-  const l=g('qLead');l.classList.add('show');
+  G('qsteps').style.display = 'none';
+  G('qlead').classList.add('on');
 }
 function qsub(){
-  const n=g('lName').value.trim(),m=g('lMail').value.trim();
-  if(!n||!m){alert('Bitte Name und E-Mail angeben.');return}
-  g('qLead').classList.remove('show');
-  g('qSuccess').classList.add('show');
+  if(!G('lName').value.trim() || !G('lMail').value.trim()){ alert('Bitte Name und E-Mail angeben.'); return; }
+  G('qlead').classList.remove('on');
+  G('qsucc').classList.add('on');
 }
 function qres(){
-  const b=parseInt(g('qcB').textContent)||8;
-  const p=parseFloat(g('qcP').textContent)||0.5;
-  g('qcR').innerHTML=Math.round(b*52*p*.75)+' &#8364;';
+  const b = parseInt(G('qcB').textContent) || 8;
+  const p = parseFloat(G('qcP').textContent) || 0.5;
+  G('qcR').innerHTML = Math.round(b * 52 * p * .75) + ' &#8364;';
 }
 
-// FULL CALC
-function fcalc(){
-  const b=parseInt(g('rBot').textContent)||10;
-  const p=parseFloat(g('rPri').textContent)||0.5;
-  const c=Math.round(b*52*p);
-  g('rCost').innerHTML=c+' &#8364;';
-  g('rSave').innerHTML=Math.round(c*.75)+' &#8364;';
+/* KALKULATOR */
+function fc(){
+  const b = parseInt(G('rB').textContent) || 10;
+  const p = parseFloat(G('rPr').textContent) || 0.5;
+  const c = Math.round(b * 52 * p);
+  G('rC').innerHTML = c + ' &#8364;';
+  G('rS').innerHTML = Math.round(c * .75) + ' &#8364;';
 }
 
-// HOTSPOTS
-function ht(n){g('ht'+n).classList.add('vis')}
-function hh(n){g('ht'+n).classList.remove('vis')}
+/* HOTSPOTS */
+function ht(n){ G('ht' + n).classList.add('vis') }
+function hh(n){ G('ht' + n).classList.remove('vis') }
 
-// MODALS
-function openAngebot(){g('ovA').classList.add('open')}
-function openCal(){g('ovA').classList.remove('open');g('ovC').classList.add('open')}
+/* MODALS */
+function openAngebot(){ G('ovA').classList.add('on') }
+function openCal(){ G('ovA').classList.remove('on'); G('ovC').classList.add('on') }
 function msub(){
-  const n=g('mName').value.trim(),m=g('mMail').value.trim();
-  if(!n||!m){alert('Bitte Name und E-Mail angeben.');return}
-  g('ovA').classList.remove('open');alert('Danke! Wir melden uns.');
+  if(!G('mN').value.trim() || !G('mM').value.trim()){ alert('Bitte Name und E-Mail angeben.'); return; }
+  G('ovA').classList.remove('on');
+  alert('Danke! Wir melden uns bei Ihnen.');
 }
 function ksub(){
-  const n=g('kName').value.trim(),m=g('kMail').value.trim();
-  if(!n||!m){alert('Bitte Name und E-Mail angeben.');return}
-  alert('Nachricht gesendet. Wir antworten innerhalb von 24 Stunden!');
+  if(!G('kNm').value.trim() || !G('kMl').value.trim()){ alert('Bitte Name und E-Mail angeben.'); return; }
+  alert('Nachricht gesendet. Wir antworten innerhalb von 24 Stunden.');
 }
 </script>
 </body>
