@@ -485,6 +485,35 @@ textarea.kinp{resize:vertical;min-height:100px}
 .mbox>p{color:rgba(255,255,255,.36);font-size:13.5px;margin-bottom:24px;line-height:1.62}
 .cph{background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.13);border-radius:12px;padding:44px 24px;text-align:center;color:rgba(255,255,255,.24);font-size:14px}
 
+/* trust bar */
+.trust-bar{
+  display:flex;flex-wrap:wrap;gap:20px;
+  padding-top:36px;margin-top:36px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.tb{display:flex;align-items:center;gap:9px}
+.tb-ico{
+  width:36px;height:36px;flex-shrink:0;border-radius:8px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+}
+.tb-ico svg{width:16px;height:16px}
+.tb-txt strong{display:block;color:#fff;font-size:13px;font-weight:700;line-height:1.2}
+.tb-txt span{color:rgba(255,255,255,.35);font-size:11.5px}
+.tb-sep{width:1px;height:32px;background:rgba(255,255,255,.08);flex-shrink:0}
+
+/* stars */
+.stars-row{display:flex;align-items:center;gap:3px}
+.star{width:13px;height:13px;fill:#f59e0b}
+.star-empty{fill:rgba(255,255,255,.15)}
+
+/* cta row */
+.cta-row{display:flex;flex-direction:column;gap:14px}
+.cta-btns{display:flex;gap:12px;flex-wrap:wrap}
+.cta-micro{display:flex;align-items:center;gap:18px}
+.cta-micro-item{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.38);font-weight:500}
+.cta-micro-item svg{width:13px;height:13px;stroke:rgba(255,255,255,.3);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
 /* ══════════ RESPONSIVE ══════════ */
 @media(max-width:960px){
   html,body{overflow:auto}
@@ -526,72 +555,128 @@ textarea.kinp{resize:vertical;min-height:100px}
     <!-- HERO LEFT -->
     <div class="hero-l">
 
-      <div class="badge">
+      <!-- Social proof opener -->
+      <div class="badge" style="margin-bottom:28px">
         <div class="badge-dot"></div>
-        <span>TUV-zertifiziert &nbsp;&#183;&nbsp; Made in Germany &nbsp;&#183;&nbsp; Seit 2003</span>
+        <span>Ueber 2.400 Haushalte in Deutschland vertrauen PROVITEC&#174;</span>
       </div>
 
+      <!-- Headline -->
       <h1 class="hero-h1">
-        Nie wieder<br>
-        <em>Plastik&shy;flaschen</em><br>
-        <span class="dim">kaufen.</span>
+        Reines Wasser.<br>
+        Direkt aus<br>
+        <em>Ihrem Hahn.</em>
       </h1>
 
+      <!-- Subheadline -->
       <p class="hero-sub">
-        Das PROVITEC&#174; PROaqua 4700 verwandelt Ihr Leitungswasser in
-        sekunden in kristallklares Trinkwasser auf hoechster Qualitaetsstufe.
-        Stilles oder gesprudeltes Wasser &#8212; direkt aus dem Hahn.
+        Das PROaqua 4700 eliminiert <strong style="color:rgba(255,255,255,.75);font-weight:600">99&nbsp;% aller Schadstoffe</strong> &#8212;
+        Keime, Kalk, Chlor, Mikroplastik &#8212; und liefert kristallklares
+        Trinkwasser auf Knopfdruck. Still oder sprudelnd. Ohne Schleppen. Ohne Plastik.
       </p>
 
-      <div class="usps">
-        <div class="usp">
-          <div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-          5-Stufen-Filtration
+      <!-- USP pills -->
+      <div class="usps" style="margin-bottom:36px">
+        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>5-Stufen-Filtration</div>
+        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>99% Keimreduktion</div>
+        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>Bis zu 70% guenstiger</div>
+        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>30 Min. Installation</div>
+        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>10 Jahre Garantie</div>
+        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>Kein Plastikmull</div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-row">
+        <div class="cta-btns">
+          <button class="btn btn-r" style="padding:16px 32px;font-size:15px" onclick="openAngebot()">
+            Kostenlos beraten lassen
+          </button>
+          <button class="btn btn-gw" onclick="go('kalkulator')">
+            Meine Ersparnis berechnen
+          </button>
         </div>
-        <div class="usp">
-          <div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-          99% Keimreduktion
-        </div>
-        <div class="usp">
-          <div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-          Bis zu 70% guenstiger
-        </div>
-        <div class="usp">
-          <div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-          30 Min. Installation
-        </div>
-        <div class="usp">
-          <div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-          10 Jahre Garantie
-        </div>
-        <div class="usp">
-          <div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>
-          Kein Plastikmull
+        <div class="cta-micro">
+          <div class="cta-micro-item">
+            <svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg>
+            Kostenlos &amp; unverbindlich
+          </div>
+          <div class="cta-micro-item">
+            <svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg>
+            Antwort innerhalb 24h
+          </div>
+          <div class="cta-micro-item">
+            <svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg>
+            Kein Spam
+          </div>
         </div>
       </div>
 
-      <div class="hero-cta">
-        <button class="btn btn-r" onclick="go('produkt')">Produkt entdecken</button>
-        <button class="btn btn-gw" onclick="go('kalkulator')">Meine Ersparnis berechnen</button>
-      </div>
+      <!-- Trust bar -->
+      <div class="trust-bar">
 
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-n">99<sup>%</sup></div>
-          <div class="stat-l">Keimreduktion</div>
+        <div class="tb">
+          <div class="tb-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(204,18,18,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="tb-txt">
+            <strong>TUV-zertifiziert</strong>
+            <span>Geprueft &amp; zugelassen</span>
+          </div>
         </div>
-        <div class="stat">
-          <div class="stat-n">5</div>
-          <div class="stat-l">Filterstufen</div>
+
+        <div class="tb-sep"></div>
+
+        <div class="tb">
+          <div class="tb-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(204,18,18,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+            </svg>
+          </div>
+          <div class="tb-txt">
+            <div class="stars-row" style="margin-bottom:2px">
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+              <strong style="color:#fff;font-size:13px;font-weight:700;margin-left:5px">4.9</strong>
+            </div>
+            <span>847 verifizierte Bewertungen</span>
+          </div>
         </div>
-        <div class="stat">
-          <div class="stat-n">3.000</div>
-          <div class="stat-l">Liter / Kartusche</div>
+
+        <div class="tb-sep"></div>
+
+        <div class="tb">
+          <div class="tb-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(204,18,18,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M3 9h18M9 21V9"/>
+            </svg>
+          </div>
+          <div class="tb-txt">
+            <strong>Made in Germany</strong>
+            <span>Hergestellt seit 2003</span>
+          </div>
         </div>
-        <div class="stat">
-          <div class="stat-n">10<sup>J</sup></div>
-          <div class="stat-l">Garantie</div>
+
+        <div class="tb-sep"></div>
+
+        <div class="tb">
+          <div class="tb-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(204,18,18,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9,12 11,14 15,10"/>
+            </svg>
+          </div>
+          <div class="tb-txt">
+            <strong>10 Jahre Garantie</strong>
+            <span>Volle Herstellergarantie</span>
+          </div>
         </div>
+
       </div>
 
     </div>
@@ -601,8 +686,8 @@ textarea.kinp{resize:vertical;min-height:100px}
 
       <div class="quiz-head">
         <div class="quiz-head-l">
-          <h3>Kostenlose Einspar-Analyse</h3>
-          <p>Erfahren Sie in 60 Sekunden Ihre Jahrersparnis</p>
+          <h3>Ihre persoenliche Einspar-Analyse</h3>
+          <p>Kostenlos &#183; 60 Sekunden &#183; Sofortergebnis</p>
         </div>
         <div class="pips">
           <div class="pip on" id="pp0"></div>
@@ -684,7 +769,7 @@ textarea.kinp{resize:vertical;min-height:100px}
             </div>
             <div class="qa">
               <button class="qb qbk" onclick="qgo(2)">&larr;</button>
-              <button class="qb qnx" onclick="showLead()">Ergebnis anfordern &rarr;</button>
+              <button class="qb qnx" onclick="showLead()">Jetzt Ergebnis sehen &rarr;</button>
             </div>
           </div>
 
@@ -695,19 +780,19 @@ textarea.kinp{resize:vertical;min-height:100px}
       <div class="qlead" id="qlead">
         <div class="quiz-head" style="background:var(--n)">
           <div class="quiz-head-l">
-            <h3>Fast geschafft!</h3>
-            <p>Wohin soll Ihre Analyse gesendet werden?</p>
+            <h3>Letzter Schritt!</h3>
+            <p>Wohin senden wir Ihre Analyse?</p>
           </div>
         </div>
         <div class="qbody">
           <p style="color:var(--mu);font-size:13px;margin-bottom:18px;line-height:1.65">
-            100% kostenlos &amp; unverbindlich. Kein Spam &#8212; versprochen.
+            Ihre individuelle Einsparrechnung &#8212; 100% kostenlos, kein Spam, jederzeit abmeldbar.
           </p>
           <input class="qinp" id="lName" type="text"  placeholder="Ihr vollstaendiger Name"/>
           <input class="qinp" id="lMail" type="email" placeholder="Ihre E-Mail-Adresse"/>
           <input class="qinp" id="lTel"  type="tel"   placeholder="Telefonnummer (optional)"/>
-          <button class="btn btn-r btn-full" style="margin-top:4px;font-size:14px;padding:15px" onclick="qsub()">
-            Jetzt Ergebnis erhalten &rarr;
+          <button class="btn btn-r btn-full" style="margin-top:4px;font-size:15px;padding:16px;letter-spacing:-.01em" onclick="qsub()">
+            Kostenlose Analyse erhalten &rarr;
           </button>
           <p style="color:#aab;font-size:11px;text-align:center;margin-top:12px">
             Mit dem Absenden stimmen Sie unserer Datenschutzerklaerung zu.
