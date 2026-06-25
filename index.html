@@ -3,882 +3,1834 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>PROVITEC® PROaqua 4700 – Reines Trinkwasser direkt aus dem Hahn</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet"/>
+<title>MathGenius AI — Dein KI-Mathe-Tutor</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" onload="katexReady=true"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@11.0.0/marked.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;background:#fff}
-
 :root{
-  --navy:#0C1D52;
-  --navy2:#07122E;
-  --navy3:#1a3070;
-  --blue:#2563EB;
-  --blue2:#1d4ed8;
-  --off:#F4F7FF;
-  --off2:#EBF0FF;
-  --border:#E2E8F0;
-  --border2:rgba(12,29,82,.1);
-  --text:#1e293b;
-  --muted:#64748b;
-  --light:#f8fafc;
+  --bg:#07071a;--bg2:#0d0d26;--bg3:#12123a;
+  --card:rgba(255,255,255,.05);--card2:rgba(255,255,255,.09);
+  --border:rgba(255,255,255,.08);--border2:rgba(255,255,255,.16);
+  --purple:#7c3aed;--purple2:#9f67ff;--purple3:rgba(124,58,237,.15);
+  --cyan:#06b6d4;--cyan2:#22d3ee;--cyan3:rgba(6,182,212,.15);
+  --green:#10b981;--green3:rgba(16,185,129,.15);
+  --amber:#f59e0b;--amber3:rgba(245,158,11,.15);
+  --red:#ef4444;--red3:rgba(239,68,68,.15);
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --sidebar:240px;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit}
 
-/* ══════════ NAV ══════════ */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:400;
-  height:68px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 56px;
-  background:rgba(255,255,255,.96);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  box-shadow:0 1px 0 rgba(0,0,0,.03);
-}
-.nav-logo{display:flex;align-items:center;text-decoration:none}
-.nav-logo img{height:32px;display:block}
-.nav-tabs{display:flex;align-items:center;gap:1px}
-.nt{
-  position:relative;padding:8px 16px;border-radius:8px;border:none;
-  font-family:inherit;font-size:13.5px;font-weight:500;
-  color:var(--muted);background:none;cursor:pointer;
-  transition:color .15s,background .15s;white-space:nowrap;
-}
-.nt:hover{color:var(--navy);background:var(--off)}
-.nt.on{color:var(--navy);font-weight:700}
-.nt.on::after{
-  content:'';position:absolute;bottom:-1px;left:16px;right:16px;
-  height:2px;border-radius:2px;background:var(--navy);
-}
-.nt-cta{
-  margin-left:12px;padding:9px 22px;border-radius:8px;border:none;
-  font-family:inherit;font-size:13.5px;font-weight:700;
-  background:var(--navy);color:#fff;cursor:pointer;
-  transition:background .15s,transform .15s,box-shadow .15s;
-}
-.nt-cta:hover{background:var(--navy3);transform:translateY(-1px);box-shadow:0 6px 20px rgba(12,29,82,.22)}
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(7,7,26,.92);backdrop-filter:blur(20px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-bg.hidden{display:none}
+.modal{background:linear-gradient(135deg,#12123a,#1a1a4e);border:1px solid var(--border2);border-radius:24px;padding:48px 40px;width:100%;max-width:460px;text-align:center;box-shadow:0 40px 120px rgba(124,58,237,.25)}
+.modal-icon{font-size:52px;margin-bottom:20px;display:block}
+.modal h2{font-size:26px;font-weight:800;margin-bottom:10px;background:linear-gradient(135deg,#9f67ff,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.modal p{color:var(--text2);font-size:14px;line-height:1.7;margin-bottom:24px}
+.modal input{width:100%;background:rgba(255,255,255,.06);border:1.5px solid var(--border2);border-radius:12px;padding:14px 16px;color:var(--text);font-size:14px;outline:none;margin-bottom:12px;transition:border-color .2s}
+.modal input:focus{border-color:var(--purple2)}
+.modal input::placeholder{color:var(--text3)}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--purple),var(--cyan));color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:15px;font-weight:700;width:100%;transition:opacity .2s,transform .2s}
+.btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.modal .note{color:var(--text3);font-size:11.5px;margin-top:12px}
+.modal .note a{color:var(--purple2);text-decoration:none}
 
-/* ══════════ PAGES ══════════ */
-.page{
-  position:fixed;inset:0;top:68px;
-  overflow-y:auto;overflow-x:hidden;
-  opacity:0;pointer-events:none;
-  transition:opacity .28s ease;
-  scrollbar-width:thin;scrollbar-color:rgba(12,29,82,.12) transparent;
-}
-.page.on{opacity:1;pointer-events:all}
+/* ── LAYOUT ── */
+#app{display:flex;height:100vh}
 
-/* ══════════ HOME ══════════ */
-#pg-home{background:#fff}
-
-.home-wrap{
-  display:grid;
-  grid-template-columns:1fr 480px;
-  min-height:calc(100vh - 68px);
-  max-width:1360px;
-  margin:0 auto;
-  padding:0 56px;
-  gap:56px;
-  align-items:center;
-}
-
-/* Hero left */
-.hero-l{padding:72px 0}
-
-.hero-eyebrow{
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:28px;
-}
-.hero-eyebrow-badge{
-  display:inline-flex;align-items:center;gap:7px;
-  background:var(--off2);border:1px solid rgba(12,29,82,.12);
-  border-radius:100px;padding:5px 13px 5px 8px;
-}
-.badge-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--navy);
-  animation:pulse 2.5s infinite;
-}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.hero-eyebrow-badge span{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--navy);opacity:.75}
-
-.hero-h1{
-  font-size:clamp(44px,5.2vw,76px);
-  font-weight:900;color:var(--navy2);
-  line-height:.96;letter-spacing:-.04em;
-  margin-bottom:24px;
-}
-.hero-h1 em{font-style:normal;color:var(--blue)}
-.hero-h1 .dim{color:rgba(12,29,82,.22)}
-
-.hero-sub{
-  font-size:17px;font-weight:400;
-  color:var(--muted);line-height:1.72;
-  max-width:520px;margin-bottom:36px;
-}
-.hero-sub strong{color:var(--text);font-weight:600}
-
-/* USP pills */
-.usps{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px}
-.usp{
-  display:inline-flex;align-items:center;gap:7px;
-  background:var(--off);border:1px solid var(--border);
-  border-radius:100px;padding:7px 14px 7px 9px;
-  font-size:12.5px;font-weight:600;color:var(--text);
-}
-.usp-ico{
-  width:18px;height:18px;border-radius:50%;
-  background:var(--navy);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.usp-ico svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-
-/* CTA */
-.cta-row{margin-bottom:48px}
-.cta-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.cta-micro{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-.cmic{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:500}
-.cmic svg{width:13px;height:13px;stroke:var(--navy);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.6}
-
-/* Trust bar */
-.trust-bar{
-  display:flex;flex-wrap:wrap;gap:0;
-  padding-top:32px;border-top:1px solid var(--border);
-}
-.tb{display:flex;align-items:center;gap:10px;padding-right:28px}
-.tb-ico{
-  width:38px;height:38px;flex-shrink:0;border-radius:10px;
-  background:var(--off);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-}
-.tb-ico svg{width:17px;height:17px;stroke:var(--navy);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.tb-txt strong{display:block;color:var(--navy2);font-size:13px;font-weight:700;line-height:1.2}
-.tb-txt span{color:var(--muted);font-size:11.5px}
-.tb-sep{width:1px;height:36px;background:var(--border);margin-right:28px;flex-shrink:0;align-self:center}
-
-/* Stars */
-.strow{display:flex;align-items:center;gap:2px;margin-bottom:2px}
-.star{width:12px;height:12px;fill:#f59e0b}
-
-/* ══════════ QUIZ CARD ══════════ */
-.quiz-wrap{
-  padding:40px 0;
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--sidebar);flex-shrink:0;
+  background:linear-gradient(180deg,#0d0d26 0%,#07071a 100%);
+  border-right:1px solid var(--border);
   display:flex;flex-direction:column;
-}
-.quiz-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:24px;
   overflow:hidden;
-  box-shadow:
-    0 0 0 1px rgba(12,29,82,.04),
-    0 8px 24px rgba(12,29,82,.06),
-    0 32px 80px rgba(12,29,82,.1);
+  transition:width .3s;
 }
-
-/* Card top label */
-.qc-top{
-  background:var(--navy2);
-  padding:20px 28px;
-  display:flex;align-items:center;justify-content:space-between;
+.sidebar-logo{
+  padding:24px 20px 20px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--border);
 }
-.qc-top-l h3{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.01em;margin-bottom:2px}
-.qc-top-l p{color:rgba(255,255,255,.45);font-size:12px}
-.pips{display:flex;gap:5px}
-.pip{width:32px;height:3px;border-radius:3px;background:rgba(255,255,255,.14);transition:background .3s}
-.pip.on{background:#fff}
+.logo-icon{
+  width:38px;height:38px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--purple),var(--cyan));
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.logo-text{font-size:15px;font-weight:800;background:linear-gradient(135deg,#9f67ff,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-sub{font-size:10px;color:var(--text3);font-weight:500}
 
-/* Progress bar */
-.qprog{height:3px;background:var(--off2);position:relative}
-.qprog-fill{height:100%;background:var(--navy);transition:width .4s cubic-bezier(.4,0,.2,1)}
+.sidebar-nav{flex:1;overflow-y:auto;padding:16px 10px}
+.nav-section{margin-bottom:20px}
+.nav-section-label{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);padding:0 10px;margin-bottom:8px}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 12px;border-radius:10px;
+  color:var(--text2);font-size:13.5px;font-weight:500;
+  cursor:pointer;border:none;background:transparent;width:100%;text-align:left;
+  transition:background .15s,color .15s;margin-bottom:2px;
+  white-space:nowrap;
+}
+.nav-item:hover{background:var(--card2);color:var(--text)}
+.nav-item.active{background:var(--purple3);color:var(--purple2);font-weight:600}
+.nav-item.active .ni{color:var(--purple2)}
+.ni{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--purple);color:#fff;border-radius:10px;padding:1px 7px;font-size:10px;font-weight:700}
 
-/* Body */
-.qbody{padding:28px 28px 24px}
-.qstep{display:none}.qstep.on{display:block}
-.qno{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
-.qq{color:var(--navy2);font-size:19px;font-weight:800;line-height:1.28;margin-bottom:20px;letter-spacing:-.025em}
+.sidebar-footer{padding:16px;border-top:1px solid var(--border)}
+.xp-bar-wrap{margin-bottom:12px}
+.xp-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:5px}
+.xp-bar{height:4px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));border-radius:4px;transition:width .5s}
+.streak-badge{display:flex;align-items:center;gap:8px;background:var(--amber3);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:8px 12px}
+.streak-icon{font-size:18px}
+.streak-txt{font-size:12px;color:var(--amber);font-weight:600}
+.streak-txt span{display:block;font-size:10px;font-weight:400;color:var(--text3)}
 
-.qopts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
-.qopt{
-  background:var(--off);border:1.5px solid var(--border);
-  border-radius:12px;padding:14px 12px;
-  color:var(--text);font-size:13px;font-weight:600;
-  cursor:pointer;font-family:inherit;
-  text-align:center;line-height:1.35;
+/* ── MAIN ── */
+#main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.page{position:absolute;inset:0;left:var(--sidebar);overflow-y:auto;opacity:0;pointer-events:none;transition:opacity .25s}
+.page.active{opacity:1;pointer-events:all}
+.page-inner{max-width:1100px;margin:0 auto;padding:36px 40px}
+
+/* Page header */
+.page-header{margin-bottom:36px}
+.page-header h1{font-size:28px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
+.page-header p{color:var(--text2);font-size:14px}
+.gradient-text{background:linear-gradient(135deg,#9f67ff,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+.card:hover{border-color:var(--border2)}
+.card-sm{border-radius:12px;padding:16px}
+.card-highlight{background:linear-gradient(135deg,var(--purple3),var(--cyan3));border-color:rgba(124,58,237,.3)}
+
+/* ── DASHBOARD ── */
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center}
+.stat-card .stat-icon{font-size:28px;margin-bottom:8px}
+.stat-card .stat-num{font-size:30px;font-weight:900;letter-spacing:-.03em}
+.stat-card .stat-lbl{font-size:11.5px;color:var(--text3);margin-top:2px}
+.stat-purple .stat-num{color:var(--purple2)}
+.stat-cyan .stat-num{color:var(--cyan2)}
+.stat-green .stat-num{color:var(--green)}
+.stat-amber .stat-num{color:var(--amber)}
+
+.dash-two{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.dash-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.action-btn{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  padding:20px 12px;border-radius:14px;border:1px solid var(--border);
+  background:var(--card);cursor:pointer;transition:all .2s;font-size:13px;font-weight:600;color:var(--text2);
+}
+.action-btn:hover{background:var(--card2);border-color:var(--border2);color:var(--text);transform:translateY(-2px)}
+.action-btn .action-icon{font-size:28px}
+
+.recent-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.recent-item{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;
+  cursor:pointer;transition:background .15s;
+}
+.recent-item:hover{background:var(--card2)}
+.ri-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ri-topic{font-size:11px;color:var(--text3);margin-bottom:2px}
+.ri-text{font-size:13px;color:var(--text);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
+.ri-time{margin-left:auto;font-size:11px;color:var(--text3);flex-shrink:0}
+
+/* ── SOLVER ── */
+.solver-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;height:calc(100vh - 180px)}
+.solver-left,.solver-right{display:flex;flex-direction:column;gap:16px;overflow:hidden}
+.solver-right{overflow-y:auto}
+.solver-input-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;flex:1;display:flex;flex-direction:column}
+.solver-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.solver-textarea{
+  flex:1;background:transparent;border:none;outline:none;resize:none;
+  color:var(--text);font-size:14.5px;line-height:1.7;
+  min-height:160px;
+}
+.solver-textarea::placeholder{color:var(--text3)}
+
+.upload-zone{
+  border:1.5px dashed var(--border2);border-radius:12px;padding:24px;text-align:center;
+  cursor:pointer;transition:all .2s;background:rgba(255,255,255,.02);
+}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--purple2);background:var(--purple3)}
+.upload-zone .uz-icon{font-size:28px;margin-bottom:8px}
+.upload-zone p{font-size:12.5px;color:var(--text3)}
+.upload-zone p strong{color:var(--purple2)}
+.preview-img{width:100%;border-radius:10px;object-fit:contain;max-height:200px;display:none}
+
+.topic-row{display:flex;gap:8px;flex-wrap:wrap}
+.topic-chip{
+  padding:6px 14px;border-radius:20px;border:1px solid var(--border2);
+  font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;background:transparent;
   transition:all .15s;
 }
-.qopt small{display:block;font-weight:400;font-size:11px;color:var(--muted);margin-top:3px}
-.qopt:hover{background:var(--off2);border-color:rgba(12,29,82,.25)}
-.qopt.sel{background:var(--off2);border-color:var(--navy);color:var(--navy2)}
-.qopt.sel small{color:var(--blue)}
+.topic-chip:hover{background:var(--purple3);border-color:var(--purple2);color:var(--purple2)}
+.topic-chip.sel{background:var(--purple3);border-color:var(--purple2);color:var(--purple2);font-weight:700}
 
-.qa{display:flex;gap:8px}
-.qb{flex:1;padding:13px 16px;border-radius:9px;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;border:none;transition:all .15s;text-align:center}
-.qnx{background:var(--navy);color:#fff}.qnx:hover{background:var(--navy3);transform:translateY(-1px);box-shadow:0 6px 18px rgba(12,29,82,.22)}
-.qbk{background:var(--off);color:var(--muted);border:1px solid var(--border)}.qbk:hover{background:var(--off2)}
-
-/* Slider step */
-.msl{margin-bottom:14px}
-.msl label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500}
-.msl label b{color:var(--navy2);font-weight:800;font-size:13px}
-input[type=range]{width:100%;accent-color:var(--navy);cursor:pointer;height:4px}
-.mres{
-  background:var(--off2);border:1.5px solid rgba(12,29,82,.14);
-  border-radius:12px;padding:18px 20px;
-  display:flex;justify-content:space-between;align-items:center;
-  margin:6px 0 18px;
+.solve-btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(135deg,var(--purple),var(--cyan));
+  color:#fff;border:none;border-radius:12px;padding:15px 28px;
+  font-size:15px;font-weight:700;width:100%;
+  transition:opacity .2s,transform .2s;
 }
-.mres p{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
-.mres b{color:var(--navy);font-size:34px;font-weight:900;letter-spacing:-.04em}
+.solve-btn:hover{opacity:.88;transform:translateY(-1px)}
+.solve-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 
-/* Lead */
-.qlead{display:none}.qlead.on{display:block}
-.qsucc{display:none;text-align:center;padding:48px 28px}
-.qsucc.on{display:block}
-.qcheck{
-  width:56px;height:56px;border-radius:50%;
-  background:var(--off2);border:2px solid rgba(12,29,82,.2);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 18px;
+/* Solution display */
+.solution-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.sol-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.sol-type-badge{
+  padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;
+  background:var(--purple3);color:var(--purple2);border:1px solid rgba(124,58,237,.3);
 }
-.qcheck svg{width:24px;height:24px;stroke:var(--navy);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-.qinp{
-  width:100%;background:var(--off);border:1.5px solid var(--border);
-  border-radius:10px;padding:13px 15px;
-  color:var(--text);font-size:14px;font-family:inherit;
-  margin-bottom:10px;outline:none;transition:border-color .15s,background .15s;
+.sol-body{padding:20px}
+.sol-empty{text-align:center;padding:60px 20px;color:var(--text3)}
+.sol-empty-icon{font-size:48px;margin-bottom:12px}
+.sol-empty p{font-size:14px}
+
+/* Markdown + Math output */
+.math-output h2{font-size:16px;font-weight:700;color:var(--purple2);margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.math-output h3{font-size:14px;font-weight:700;color:var(--cyan2);margin:16px 0 8px}
+.math-output p{font-size:14px;line-height:1.75;color:var(--text);margin-bottom:10px}
+.math-output strong{color:var(--text);font-weight:700}
+.math-output .step-block{
+  background:rgba(255,255,255,.03);border-left:3px solid var(--purple);
+  border-radius:0 10px 10px 0;padding:14px 16px;margin:12px 0;
 }
-.qinp::placeholder{color:#b0b8cc}
-.qinp:focus{border-color:var(--navy);background:#fff;box-shadow:0 0 0 3px rgba(12,29,82,.06)}
-
-/* Card footer trust */
-.qfoot{
-  padding:14px 28px;
-  border-top:1px solid var(--border);
-  background:var(--light);
-  display:flex;align-items:center;justify-content:center;gap:18px;
+.math-output .result-box{
+  background:linear-gradient(135deg,var(--purple3),var(--cyan3));
+  border:1px solid rgba(124,58,237,.4);border-radius:12px;
+  padding:16px 20px;margin:16px 0;text-align:center;
 }
-.qft{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);font-weight:500}
-.qft svg{width:13px;height:13px;stroke:var(--navy);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.5}
-.qft-sep{width:3px;height:3px;border-radius:50%;background:var(--border)}
-
-/* ══════════ SHARED BTN ══════════ */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;border:none;cursor:pointer;text-decoration:none;transition:all .18s;white-space:nowrap}
-.btn-navy{background:var(--navy);color:#fff}.btn-navy:hover{background:var(--navy3);transform:translateY(-1px);box-shadow:0 8px 24px rgba(12,29,82,.22)}
-.btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--border2)}.btn-outline:hover{background:var(--off);border-color:var(--navy)}
-.btn-outline-w{background:transparent;color:rgba(255,255,255,.8);border:1.5px solid rgba(255,255,255,.2)}.btn-outline-w:hover{color:#fff;border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.07)}
-.btn-full{width:100%}
-
-/* ══════════ SHARED LAYOUT ══════════ */
-.wrap{max-width:1180px;margin:0 auto;padding:80px 56px}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:center;min-height:calc(100vh - 68px)}
-.tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
-h2{font-size:clamp(30px,3.8vw,52px);font-weight:800;line-height:1.07;letter-spacing:-.03em;margin-bottom:16px}
-h2.dk{color:var(--navy2)}
-h2.lt{color:#fff}
-.lead{font-size:16px;line-height:1.75}
-.lead.dk{color:var(--muted)}
-.lead.lt{color:rgba(255,255,255,.45)}
-
-/* feature list */
-.flist{display:flex;flex-direction:column;margin-top:36px}
-.fi{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--border)}
-.fi:last-child{border:none}
-.fn{font-size:10px;font-weight:700;color:rgba(12,29,82,.18);letter-spacing:.1em;min-width:22px;padding-top:2px}
-.ft strong{display:block;font-weight:700;font-size:14.5px;margin-bottom:3px;color:var(--navy2)}
-.ft p{font-size:13.5px;line-height:1.62;color:var(--muted)}
-
-/* step list dark */
-.slist{display:flex;flex-direction:column;margin-top:36px}
-.si{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-.si:last-child{border:none}
-.sn{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff}
-.stxt strong{display:block;color:#fff;font-weight:700;font-size:14.5px;margin-bottom:3px}
-.stxt p{color:rgba(255,255,255,.4);font-size:13.5px;line-height:1.58}
-
-/* hotspot */
-.hsw{position:relative}
-.hsw img{width:100%;border-radius:20px;display:block;box-shadow:0 40px 100px rgba(7,18,46,.12)}
-.hs{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--navy);border:2.5px solid #fff;box-shadow:0 4px 16px rgba(12,29,82,.35);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;transition:transform .18s;z-index:5}
-.hs::after{content:'';position:absolute;width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(12,29,82,.25);animation:hsp 2.5s infinite}
-@keyframes hsp{0%{transform:scale(.65);opacity:1}100%{transform:scale(1.8);opacity:0}}
-.hs:hover{transform:scale(1.2)}
-.hs-tip{position:absolute;background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 18px;width:210px;box-shadow:0 20px 52px rgba(7,18,46,.12);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:10;left:42px;top:50%;transform:translateY(-50%) translateX(6px)}
-.hs-tip.vis{opacity:1;transform:translateY(-50%) translateX(0)}
-.hs-tip.lt{left:auto;right:42px;transform:translateY(-50%) translateX(-6px)}.hs-tip.lt.vis{transform:translateY(-50%) translateX(0)}
-.hs-tip strong{display:block;color:var(--navy2);font-size:13px;font-weight:800;margin-bottom:4px}
-.hs-tip p{color:var(--muted);font-size:12.5px;line-height:1.55}
-
-/* vorteile grid */
-.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:18px;overflow:hidden;margin-top:52px}
-.vc{background:#fff;padding:40px 34px;transition:background .22s;cursor:default}
-.vc:hover{background:var(--navy2)}
-.vc-n{font-size:10.5px;font-weight:700;color:rgba(12,29,82,.15);letter-spacing:.1em;margin-bottom:14px;transition:color .22s}
-.vc-t{font-size:16.5px;font-weight:700;color:var(--navy2);margin-bottom:9px;line-height:1.28;transition:color .22s}
-.vc-b{font-size:13.5px;color:var(--muted);line-height:1.65;transition:color .22s}
-.vc:hover .vc-n{color:rgba(255,255,255,.2)}.vc:hover .vc-t{color:#fff}.vc:hover .vc-b{color:rgba(255,255,255,.44)}
-
-/* testimonials */
-.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
-.tc{background:#fff;border-radius:16px;padding:32px;border:1px solid var(--border);transition:box-shadow .22s,transform .22s}
-.tc:hover{box-shadow:0 20px 60px rgba(12,29,82,.09);transform:translateY(-3px)}
-.tstars{color:#f59e0b;font-size:13px;letter-spacing:3px;margin-bottom:14px}
-.ttext{font-size:14px;line-height:1.72;color:#374151;margin-bottom:20px}
-.tauth{display:flex;align-items:center;gap:12px}
-.tav{width:40px;height:40px;border-radius:50%;flex-shrink:0;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
-.tname{font-weight:700;color:var(--navy2);font-size:13.5px}
-.tloc{color:#9ca3af;font-size:12.5px}
-
-/* kalkulator */
-.kcard{background:#fff;border-radius:20px;padding:44px;border:1px solid var(--border);box-shadow:0 4px 40px rgba(12,29,82,.06)}
-.kcard h3{font-size:20px;font-weight:800;color:var(--navy2);margin-bottom:28px;letter-spacing:-.025em}
-.rrow{margin-bottom:18px}
-.rrow label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:500}
-.rrow label b{color:var(--navy2);font-weight:700;font-size:13px}
-.kres{background:var(--off);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin-top:8px}
-.kr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-.kr:last-child{margin:0}
-.kr span{color:var(--muted);font-size:12.5px;font-weight:500}
-.kr b{color:var(--navy2);font-size:16px;font-weight:800}
-.krbig{padding-top:14px;margin-top:8px;border-top:1px solid var(--border)}
-.krbig b{font-size:34px;letter-spacing:-.04em;color:var(--navy) !important}
-
-/* kontakt */
-.kform{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:44px}
-.kform h3{color:#fff;font-size:20px;font-weight:700;margin-bottom:6px}
-.kform>p{color:rgba(255,255,255,.38);font-size:13.5px;margin-bottom:24px}
-.kinp{width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.1);border-radius:9px;padding:12px 15px;color:#fff;font-size:14px;font-family:inherit;margin-bottom:11px;outline:none;transition:border-color .15s}
-.kinp::placeholder{color:rgba(255,255,255,.25)}
-.kinp:focus{border-color:rgba(255,255,255,.4)}
-textarea.kinp{resize:vertical;min-height:100px}
-.kinfo-list{list-style:none;display:flex;flex-direction:column;gap:24px;margin-top:40px}
-.kinfo-item{display:flex;gap:16px;align-items:flex-start}
-.kico{width:44px;height:44px;flex-shrink:0;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:18px}
-.kitxt strong{display:block;color:#fff;font-weight:600;font-size:14px;margin-bottom:2px}
-.kitxt p{color:rgba(255,255,255,.38);font-size:13.5px}
-
-/* modal */
-.ov{display:none;position:fixed;inset:0;background:rgba(7,18,46,.7);z-index:900;align-items:center;justify-content:center;backdrop-filter:blur(12px)}
-.ov.on{display:flex}
-.mbox{background:#fff;border:1px solid var(--border);border-radius:20px;padding:48px;width:100%;max-width:440px;position:relative;box-shadow:0 48px 120px rgba(0,0,0,.2)}
-.mx{position:absolute;top:14px;right:14px;background:var(--off);border:1px solid var(--border);width:32px;height:32px;border-radius:50%;color:var(--muted);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:inherit}
-.mx:hover{background:var(--off2);color:var(--navy)}
-.mbox h2{color:var(--navy2);font-size:22px;font-weight:800;margin-bottom:8px;letter-spacing:-.025em}
-.mbox>p{color:var(--muted);font-size:13.5px;margin-bottom:24px;line-height:1.62}
-.cph{background:var(--off);border:1px dashed var(--border);border-radius:12px;padding:44px 24px;text-align:center;color:var(--muted);font-size:14px}
-
-/* ══════════ RESPONSIVE ══════════ */
-@media(max-width:960px){
-  html,body{overflow:auto}
-  .page{position:relative;inset:auto;top:auto;overflow:visible;height:auto}
-  nav{padding:0 20px}
-  .nt{display:none}
-  .home-wrap{grid-template-columns:1fr;padding:0 20px;gap:0}
-  .hero-l{padding:48px 0 32px}
-  .quiz-wrap{padding:0 0 48px}
-  .two-col{grid-template-columns:1fr;min-height:auto;gap:48px}
-  .wrap{padding:52px 20px}
-  .vgrid,.tgrid{grid-template-columns:1fr}
-  .trust-bar{gap:16px}
+.math-output .result-box .katex-display{margin:0}
+.math-output code{
+  background:rgba(255,255,255,.08);border-radius:6px;
+  padding:2px 7px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--cyan2);
 }
+.math-output .katex-display{overflow-x:auto;padding:12px 0}
+.sol-actions{display:flex;gap:10px;padding:16px 20px;border-top:1px solid var(--border)}
+.sol-btn{
+  display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;
+  font-size:12.5px;font-weight:600;border:1px solid var(--border2);
+  background:transparent;color:var(--text2);transition:all .15s;
+}
+.sol-btn:hover{background:var(--card2);color:var(--text)}
+.sol-btn.green{border-color:rgba(16,185,129,.3);color:var(--green)}
+.sol-btn.green:hover{background:var(--green3)}
+
+/* Loading */
+.loading-wrap{text-align:center;padding:40px 20px}
+.brain-loader{
+  width:60px;height:60px;margin:0 auto 16px;
+  border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--cyan));
+  animation:spin 1s linear infinite;display:flex;align-items:center;justify-content:center;font-size:28px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-steps{display:flex;flex-direction:column;gap:6px;text-align:left;max-width:260px;margin:0 auto}
+.loading-step{font-size:12.5px;color:var(--text3);display:flex;align-items:center;gap:8px}
+.loading-step.done{color:var(--green)}
+.loading-step::before{content:'○';font-size:10px}
+.loading-step.done::before{content:'✓';color:var(--green)}
+
+/* ── TOPICS ── */
+.topics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.topic-card{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;
+  cursor:pointer;transition:all .2s;
+}
+.topic-card:hover{border-color:var(--border2);transform:translateY(-2px);background:var(--card2)}
+.tc-icon{font-size:32px;margin-bottom:12px}
+.tc-name{font-size:15px;font-weight:700;margin-bottom:5px}
+.tc-sub{font-size:12px;color:var(--text3)}
+.tc-count{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+
+.topic-detail{display:none}
+.topic-detail.show{display:block}
+.topics-main{display:block}
+.topics-main.hidden{display:none}
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--text3);font-size:13px;cursor:pointer;margin-bottom:20px;background:transparent;border:none;padding:6px 0;transition:color .15s}
+.back-btn:hover{color:var(--text)}
+
+.formula-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;
+}
+.formula-name{font-size:13px;font-weight:700;color:var(--cyan2);margin-bottom:10px}
+.formula-display{
+  background:rgba(255,255,255,.04);border-radius:10px;padding:16px;
+  text-align:center;overflow-x:auto;margin-bottom:10px;
+}
+.formula-tip{font-size:12.5px;color:var(--text2);line-height:1.6;background:var(--amber3);border-radius:8px;padding:10px 14px;border-left:3px solid var(--amber)}
+
+.subtopic-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+.subtopic-btn{
+  background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;
+  text-align:left;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;
+}
+.subtopic-btn:hover{background:var(--purple3);border-color:var(--purple);color:var(--purple2)}
+
+/* ── BRAIN ── */
+.brain-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px}
+.brain-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+.brain-list{display:flex;flex-direction:column;gap:12px}
+.brain-entry{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;
+  cursor:pointer;transition:all .15s;
+}
+.brain-entry:hover{border-color:var(--border2);background:var(--card2)}
+.be-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.be-badge{font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid}
+.be-time{font-size:11px;color:var(--text3);margin-left:auto}
+.be-question{font-size:13.5px;color:var(--text);font-weight:600;margin-bottom:5px;line-height:1.5}
+.be-preview{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── SPICKZETTEL ── */
+.sheet-builder{display:grid;grid-template-columns:320px 1fr;gap:24px}
+.sheet-topics{display:flex;flex-direction:column;gap:8px}
+.sheet-topic-btn{
+  display:flex;align-items:center;gap:10px;
+  background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;
+  cursor:pointer;transition:all .15s;font-size:13px;font-weight:500;color:var(--text2);border:1px solid var(--border);text-align:left;
+}
+.sheet-topic-btn:hover{background:var(--card2);border-color:var(--border2);color:var(--text)}
+.sheet-topic-btn.active{background:var(--purple3);border-color:var(--purple);color:var(--purple2)}
+.sheet-preview{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;min-height:400px}
+.sheet-empty{text-align:center;color:var(--text3);padding:60px 20px}
+.sheet-content{font-size:13.5px;line-height:1.8}
+.sheet-content h1{font-size:20px;font-weight:800;background:linear-gradient(135deg,#9f67ff,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.sheet-content h2{font-size:15px;font-weight:700;color:var(--purple2);margin:18px 0 10px}
+.sheet-content h3{font-size:13px;font-weight:700;color:var(--cyan2);margin:12px 0 6px}
+.sheet-content p{color:var(--text);margin-bottom:8px}
+.sheet-content .katex-display{overflow-x:auto}
+.sheet-actions{display:flex;gap:10px;margin-top:16px}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--card2);border:1px solid var(--border2);
+  color:var(--text);border-radius:10px;padding:10px 20px;
+  font-size:13px;font-weight:600;transition:all .15s;
+}
+.btn-secondary:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)}
+.gen-sheet-btn{
+  width:100%;background:linear-gradient(135deg,var(--purple),var(--cyan));
+  color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;
+  margin-top:16px;transition:opacity .2s;
+}
+.gen-sheet-btn:hover{opacity:.88}
+.gen-sheet-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── MERKEINTRÄGE ── */
+.notes-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.note-card{
+  background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:16px;overflow:hidden;
+}
+.note-card-header{
+  padding:18px 22px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,rgba(124,58,237,.1),rgba(6,182,212,.1));
+}
+.note-date{font-size:13px;font-weight:700;color:var(--purple2);display:flex;align-items:center;gap:8px}
+.note-badge-row{display:flex;gap:6px}
+.note-topic-tag{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:10px;background:var(--purple3);color:var(--purple2);border:1px solid rgba(124,58,237,.3)}
+.note-body{padding:22px}
+.note-body h3{font-size:14px;font-weight:700;color:var(--cyan2);margin:14px 0 8px}
+.note-body h3:first-child{margin-top:0}
+.note-body p{font-size:13.5px;line-height:1.75;color:var(--text);margin-bottom:8px}
+.note-body ul{padding-left:18px;margin-bottom:10px}
+.note-body li{font-size:13px;color:var(--text2);margin-bottom:5px;line-height:1.6}
+.note-body .formula-highlight{
+  background:var(--purple3);border:1px solid rgba(124,58,237,.3);
+  border-radius:10px;padding:12px 16px;margin:10px 0;text-align:center;overflow-x:auto;
+}
+.note-body .key-insight{
+  background:var(--amber3);border-left:3px solid var(--amber);
+  border-radius:0 10px 10px 0;padding:12px 16px;margin:10px 0;
+  font-size:13px;color:var(--text);
+}
+.note-card-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:10px}
+.gen-note-btn{
+  background:linear-gradient(135deg,var(--purple),var(--cyan));
+  color:#fff;border:none;border-radius:12px;padding:13px 24px;
+  font-size:14px;font-weight:700;transition:opacity .2s;
+}
+.gen-note-btn:hover{opacity:.88}
+.gen-note-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── SETTINGS ── */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.settings-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+.settings-card h3{font-size:15px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.setting-row{margin-bottom:16px}
+.setting-label{font-size:12.5px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.setting-input{
+  width:100%;background:rgba(255,255,255,.06);border:1.5px solid var(--border2);
+  border-radius:10px;padding:11px 14px;color:var(--text);font-size:13.5px;outline:none;transition:border-color .2s;
+}
+.setting-input:focus{border-color:var(--purple2)}
+.setting-input::placeholder{color:var(--text3)}
+.setting-save-btn{
+  background:linear-gradient(135deg,var(--purple),var(--cyan));
+  color:#fff;border:none;border-radius:10px;padding:11px 22px;
+  font-size:13.5px;font-weight:700;transition:opacity .2s;
+}
+.setting-save-btn:hover{opacity:.88}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.info-row:last-child{border:none}
+.info-key{font-size:13px;color:var(--text2)}
+.info-val{font-size:13px;font-weight:600;color:var(--text)}
+.danger-btn{background:var(--red3);border:1px solid rgba(239,68,68,.3);color:var(--red);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;transition:all .15s}
+.danger-btn:hover{background:rgba(239,68,68,.25)}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:30px;right:30px;z-index:9998;
+  background:#1a1a4e;border:1px solid var(--border2);
+  border-radius:12px;padding:14px 20px;font-size:13.5px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+  transform:translateY(20px);opacity:0;transition:all .3s;pointer-events:none;
+  max-width:340px;display:flex;align-items:center;gap:10px;
+}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{border-color:rgba(16,185,129,.4);color:var(--green)}
+#toast.error{border-color:rgba(239,68,68,.4);color:var(--red)}
+#toast.info{border-color:rgba(124,58,237,.4);color:var(--purple2)}
+
+/* ── EXPAND ── */
+details summary{cursor:pointer;font-size:12.5px;color:var(--text3);list-style:none;display:flex;align-items:center;gap:6px;padding:8px 0;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details[open] summary{color:var(--purple2)}
+details summary::before{content:'▶';font-size:9px;transition:transform .2s}
+details[open] summary::before{transform:rotate(90deg)}
+
+/* ── PRINT ── */
+@media print{
+  #sidebar,#toast,.page:not(.active){display:none!important}
+  .page.active{position:static;opacity:1}
+  body{background:#fff;color:#000}
+  .sheet-preview{border:none;padding:0}
+  .sheet-content{color:#000}
+  .sheet-content h1{-webkit-text-fill-color:#333}
+  .sheet-content h2{color:#5b21b6}
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  :root{--sidebar:0px}
+  #sidebar{display:none}
+  .page{left:0}
+  .solver-grid{grid-template-columns:1fr;height:auto}
+  .topics-grid{grid-template-columns:1fr 1fr}
+  .dash-grid{grid-template-columns:1fr 1fr}
+  .sheet-builder{grid-template-columns:1fr}
+  .settings-grid{grid-template-columns:1fr}
+  .page-inner{padding:20px}
+}
+
+/* Animations */
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.anim-in{animation:fadeSlideIn .3s ease}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.shimmer{background:linear-gradient(90deg,rgba(255,255,255,.03) 25%,rgba(255,255,255,.07) 50%,rgba(255,255,255,.03) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+
+/* Scrollable page wrapper */
+.page{overflow-y:auto}
+.page-inner{padding-bottom:60px}
+
+/* Empty state */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty-icon{font-size:52px;margin-bottom:14px}
+.empty-state h3{font-size:16px;font-weight:700;color:var(--text2);margin-bottom:6px}
+.empty-state p{font-size:13.5px;line-height:1.65}
+
+/* Progress indicator */
+.topic-progress{height:3px;background:rgba(255,255,255,.06);border-radius:3px;margin-top:10px;overflow:hidden}
+.topic-progress-fill{height:100%;border-radius:3px;transition:width .5s}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo" onclick="go('home');return false">
-    <img src="images/Logo_provitec_2023-01.webp" alt="PROVITEC"/>
-  </a>
-  <div class="nav-tabs">
-    <button class="nt on" data-p="home"       onclick="go('home')">Start</button>
-    <button class="nt"    data-p="produkt"    onclick="go('produkt')">Produkt</button>
-    <button class="nt"    data-p="vorteile"   onclick="go('vorteile')">Vorteile</button>
-    <button class="nt"    data-p="einbau"     onclick="go('einbau')">Einbau</button>
-    <button class="nt"    data-p="kalkulator" onclick="go('kalkulator')">Kalkulator</button>
-    <button class="nt-cta"                    onclick="go('kontakt')">Kontakt</button>
+<!-- ═══ API KEY MODAL ═══ -->
+<div id="api-modal" class="modal-bg">
+  <div class="modal">
+    <span class="modal-icon">🧠</span>
+    <h2>MathGenius AI</h2>
+    <p>Dein persönlicher KI-Mathe-Tutor für die 11. &amp; 12. Klasse und BWL/Rechnungswesen. Gib deinen Anthropic API Key ein, um zu starten.</p>
+    <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off"/>
+    <button class="btn-primary" onclick="saveApiKey()">🚀 Jetzt starten</button>
+    <p class="note">Dein Key wird nur lokal in deinem Browser gespeichert — niemals auf unseren Servern.<br>
+    <a href="https://console.anthropic.com/" target="_blank">API Key kostenlos erstellen →</a></p>
   </div>
-</nav>
+</div>
 
-<!-- ═══════ HOME ═══════ -->
-<div class="page on" id="pg-home">
-  <div class="home-wrap">
+<!-- ═══ TOAST ═══ -->
+<div id="toast"></div>
 
-    <!-- HERO LEFT -->
-    <div class="hero-l">
+<!-- ═══ APP ═══ -->
+<div id="app">
 
-      <div class="hero-eyebrow">
-        <div class="hero-eyebrow-badge">
-          <div class="badge-dot"></div>
-          <span>Ueber 2.400 Haushalte vertrauen PROVITEC&#174;</span>
-        </div>
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🧮</div>
+      <div>
+        <div class="logo-text">MathGenius AI</div>
+        <div class="logo-sub">KI-Tutor · 11. &amp; 12. Klasse</div>
       </div>
-
-      <h1 class="hero-h1">
-        Reines Wasser.<br>
-        Direkt aus<br>
-        <em>Ihrem Hahn.</em>
-      </h1>
-
-      <p class="hero-sub">
-        Das PROaqua 4700 eliminiert <strong>99&nbsp;% aller Schadstoffe</strong> &#8212;
-        Keime, Kalk, Chlor, Mikroplastik. Kristallklares Trinkwasser auf Knopfdruck,
-        still oder sprudelnd. Ohne Schleppen. Ohne Plastik. Ohne Kompromisse.
-      </p>
-
-      <div class="usps">
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>5-Stufen-Filtration</div>
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>99% Keimreduktion</div>
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>Bis zu 70% guenstiger</div>
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>30 Min. Installation</div>
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>10 Jahre Garantie</div>
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>Kein Plastikmull</div>
-      </div>
-
-      <div class="cta-row">
-        <div class="cta-btns">
-          <button class="btn btn-navy" style="padding:16px 32px;font-size:15px" onclick="openAngebot()">
-            Kostenlos beraten lassen
-          </button>
-          <button class="btn btn-outline" onclick="go('kalkulator')">
-            Meine Ersparnis berechnen
-          </button>
-        </div>
-        <div class="cta-micro">
-          <div class="cmic"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg>Kostenlos &amp; unverbindlich</div>
-          <div class="cmic"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg>Antwort innerhalb 24h</div>
-          <div class="cmic"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg>Kein Spam</div>
-        </div>
-      </div>
-
-      <!-- Trust bar -->
-      <div class="trust-bar">
-        <div class="tb">
-          <div class="tb-ico">
-            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div class="tb-txt">
-            <strong>TUV-zertifiziert</strong>
-            <span>Geprueft &amp; zugelassen</span>
-          </div>
-        </div>
-        <div class="tb-sep"></div>
-        <div class="tb">
-          <div class="tb-ico">
-            <svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-          </div>
-          <div class="tb-txt">
-            <div class="strow">
-              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-              <strong style="color:var(--navy2);font-size:13px;margin-left:5px">4.9</strong>
-            </div>
-            <span>847 verifizierte Bewertungen</span>
-          </div>
-        </div>
-        <div class="tb-sep"></div>
-        <div class="tb">
-          <div class="tb-ico">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          </div>
-          <div class="tb-txt">
-            <strong>Made in Germany</strong>
-            <span>Hergestellt seit 2003</span>
-          </div>
-        </div>
-        <div class="tb-sep"></div>
-        <div class="tb">
-          <div class="tb-ico">
-            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9,12 11,14 15,10"/></svg>
-          </div>
-          <div class="tb-txt">
-            <strong>10 Jahre Garantie</strong>
-            <span>Volle Herstellergarantie</span>
-          </div>
-        </div>
-      </div>
-
     </div>
+    <div class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Hauptmenü</div>
+        <button class="nav-item active" data-page="dashboard" onclick="goTo('dashboard')"><span class="ni">🏠</span>Dashboard</button>
+        <button class="nav-item" data-page="solver" onclick="goTo('solver')"><span class="ni">✨</span>KI-Löser<span class="nav-badge">NEU</span></button>
+        <button class="nav-item" data-page="topics" onclick="goTo('topics')"><span class="ni">📚</span>Themen</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Mein Wissen</div>
+        <button class="nav-item" data-page="brain" onclick="goTo('brain')"><span class="ni">🧠</span>Mein Gehirn</button>
+        <button class="nav-item" data-page="sheets" onclick="goTo('sheets')"><span class="ni">📋</span>Spickzettel</button>
+        <button class="nav-item" data-page="notes" onclick="goTo('notes')"><span class="ni">📔</span>Merkeinträge</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Konto</div>
+        <button class="nav-item" data-page="settings" onclick="goTo('settings')"><span class="ni">⚙️</span>Einstellungen</button>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="xp-bar-wrap">
+        <div class="xp-label"><span id="xp-level">Level 1 · Anfänger</span><span id="xp-num">0 XP</span></div>
+        <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
+      </div>
+      <div class="streak-badge">
+        <span class="streak-icon">🔥</span>
+        <div class="streak-txt"><span id="streak-count">0 Tage</span><span>Lernserie</span></div>
+      </div>
+    </div>
+  </nav>
 
-    <!-- QUIZ CARD -->
-    <div class="quiz-wrap">
-      <div class="quiz-card">
+  <!-- ═══ DASHBOARD ═══ -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-inner">
+      <div class="page-header">
+        <h1>Guten Tag! <span id="dash-greeting"></span></h1>
+        <p id="dash-date"></p>
+      </div>
 
-        <div class="qc-top">
-          <div class="qc-top-l">
-            <h3>Ihre persoenliche Einspar-Analyse</h3>
-            <p>Kostenlos &#183; 60 Sekunden &#183; Sofortergebnis</p>
-          </div>
-          <div class="pips">
-            <div class="pip on" id="pp0"></div>
-            <div class="pip"    id="pp1"></div>
-            <div class="pip"    id="pp2"></div>
-            <div class="pip"    id="pp3"></div>
-          </div>
+      <div class="dash-grid">
+        <div class="stat-card stat-purple">
+          <div class="stat-icon">✅</div>
+          <div class="stat-num" id="stat-solved">0</div>
+          <div class="stat-lbl">Aufgaben gelöst</div>
         </div>
-
-        <div class="qprog">
-          <div class="qprog-fill" id="qprogfill" style="width:25%"></div>
+        <div class="stat-card stat-cyan">
+          <div class="stat-icon">📚</div>
+          <div class="stat-num" id="stat-topics">0</div>
+          <div class="stat-lbl">Themen gelernt</div>
         </div>
-
-        <!-- STEPS -->
-        <div id="qsteps">
-          <div class="qbody">
-
-            <div class="qstep on" id="qs0">
-              <div class="qno">Frage 1 von 4</div>
-              <p class="qq">Wie viele Flaschen kaufen Sie pro Monat?</p>
-              <div class="qopts">
-                <button class="qopt" onclick="pick(this)">1 &#8211; 20<small>Gelegentlich</small></button>
-                <button class="qopt" onclick="pick(this)">20 &#8211; 50<small>Regelmaessig</small></button>
-                <button class="qopt" onclick="pick(this)">50 &#8211; 100<small>Oft</small></button>
-                <button class="qopt" onclick="pick(this)">100+<small>Sehr oft</small></button>
-              </div>
-              <div class="qa"><button class="qb qnx" onclick="qgo(1)">Weiter &rarr;</button></div>
-            </div>
-
-            <div class="qstep" id="qs1">
-              <div class="qno">Frage 2 von 4</div>
-              <p class="qq">Warum kaufen Sie Flaschenwasser?</p>
-              <div class="qopts">
-                <button class="qopt" onclick="pick(this)">Geschmack<small>Leitungswasser schmeckt</small></button>
-                <button class="qopt" onclick="pick(this)">Hygiene<small>Sicherheitsbedenken</small></button>
-                <button class="qopt" onclick="pick(this)">Kalk<small>Hartes Wasser</small></button>
-                <button class="qopt" onclick="pick(this)">Gewohnheit<small>Immer so gemacht</small></button>
-              </div>
-              <div class="qa">
-                <button class="qb qbk" onclick="qgo(0)">&larr;</button>
-                <button class="qb qnx" onclick="qgo(2)">Weiter &rarr;</button>
-              </div>
-            </div>
-
-            <div class="qstep" id="qs2">
-              <div class="qno">Frage 3 von 4</div>
-              <p class="qq">Wie wichtig ist Ihnen Nachhaltigkeit?</p>
-              <div class="qopts">
-                <button class="qopt" onclick="pick(this)">Sehr wichtig<small>Kein Plastik</small></button>
-                <button class="qopt" onclick="pick(this)">Wichtig<small>Moechte reduzieren</small></button>
-                <button class="qopt" onclick="pick(this)">Eher nicht<small>Kein Fokus</small></button>
-                <button class="qopt" onclick="pick(this)">Egal<small>Nur Qualitaet</small></button>
-              </div>
-              <div class="qa">
-                <button class="qb qbk" onclick="qgo(1)">&larr;</button>
-                <button class="qb qnx" onclick="qgo(3)">Weiter &rarr;</button>
-              </div>
-            </div>
-
-            <div class="qstep" id="qs3">
-              <div class="qno">Frage 4 von 4 &#8212; Ihr Ergebnis</div>
-              <p class="qq">Passen Sie Ihre Zahlen an:</p>
-              <div class="msl">
-                <label>Personen im Haushalt <b id="qcPers">2</b></label>
-                <input type="range" min="1" max="6" value="2" oninput="G('qcPers').textContent=this.value;qres()">
-              </div>
-              <div class="msl">
-                <label>Flaschen pro Woche <b id="qcB">10</b></label>
-                <input type="range" min="1" max="60" value="10" oninput="G('qcB').textContent=this.value;qres()">
-              </div>
-              <div class="msl">
-                <label>Preis pro Flasche <b id="qcP">0.50</b> &#8364;</label>
-                <input type="range" min="30" max="200" value="50" oninput="G('qcP').textContent=(this.value/100).toFixed(2);qres()">
-              </div>
-              <div class="mres">
-                <p>Ihre Ersparnis / Jahr</p>
-                <b id="qcR">390 &#8364;</b>
-              </div>
-              <div class="qa">
-                <button class="qb qbk" onclick="qgo(2)">&larr;</button>
-                <button class="qb qnx" onclick="showLead()">Jetzt Ergebnis sehen &rarr;</button>
-              </div>
-            </div>
-
-          </div>
+        <div class="stat-card stat-green">
+          <div class="stat-icon">📋</div>
+          <div class="stat-num" id="stat-sheets">0</div>
+          <div class="stat-lbl">Spickzettel</div>
         </div>
+        <div class="stat-card stat-amber">
+          <div class="stat-icon">📔</div>
+          <div class="stat-num" id="stat-notes">0</div>
+          <div class="stat-lbl">Merkeinträge</div>
+        </div>
+      </div>
 
-        <!-- LEAD FORM -->
-        <div class="qlead" id="qlead">
-          <div class="qc-top" style="background:var(--navy)">
-            <div class="qc-top-l">
-              <h3>Letzter Schritt!</h3>
-              <p>Wohin senden wir Ihre Analyse?</p>
-            </div>
-          </div>
-          <div class="qbody">
-            <p style="color:var(--muted);font-size:13px;margin-bottom:18px;line-height:1.65">
-              Ihre individuelle Einsparrechnung &#8212; kostenlos, kein Spam, jederzeit abmeldbar.
-            </p>
-            <input class="qinp" id="lName" type="text"  placeholder="Ihr vollstaendiger Name"/>
-            <input class="qinp" id="lMail" type="email" placeholder="Ihre E-Mail-Adresse"/>
-            <input class="qinp" id="lTel"  type="tel"   placeholder="Telefonnummer (optional)"/>
-            <button class="btn btn-navy btn-full" style="font-size:15px;padding:16px" onclick="qsub()">
-              Kostenlose Analyse erhalten &rarr;
+      <div class="dash-two">
+        <div>
+          <h3 style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text2)">⚡ Schnellstart</h3>
+          <div class="dash-actions">
+            <button class="action-btn" onclick="goTo('solver')">
+              <span class="action-icon">📸</span>Foto hochladen
             </button>
-            <p style="color:#b0b8cc;font-size:11px;text-align:center;margin-top:12px">
-              Mit dem Absenden stimmen Sie unserer Datenschutzerklaerung zu.
-            </p>
+            <button class="action-btn" onclick="goTo('solver');setTimeout(()=>document.getElementById('math-input').focus(),300)">
+              <span class="action-icon">✏️</span>Aufgabe tippen
+            </button>
+            <button class="action-btn" onclick="quickGenNote()">
+              <span class="action-icon">📔</span>Merkeintrag
+            </button>
+            <button class="action-btn" onclick="goTo('sheets')">
+              <span class="action-icon">📋</span>Spickzettel
+            </button>
+            <button class="action-btn" onclick="goTo('topics')">
+              <span class="action-icon">📐</span>Themen
+            </button>
+            <button class="action-btn" onclick="goTo('brain')">
+              <span class="action-icon">🧠</span>Mein Gehirn
+            </button>
           </div>
         </div>
-
-        <!-- SUCCESS -->
-        <div class="qsucc" id="qsucc">
-          <div class="qcheck">
-            <svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>
+        <div>
+          <h3 style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text2)">🕐 Zuletzt gelernt</h3>
+          <div id="recent-list" class="recent-list">
+            <div class="empty-state" style="padding:30px 10px">
+              <div class="empty-icon" style="font-size:32px">📖</div>
+              <p style="font-size:12.5px">Noch keine Aktivität.<br>Starte mit dem KI-Löser!</p>
+            </div>
           </div>
-          <h3 style="color:var(--navy2);font-size:22px;font-weight:800;margin-bottom:10px">Vielen Dank!</h3>
-          <p style="color:var(--muted);max-width:280px;margin:0 auto 28px;font-size:14.5px;line-height:1.65">
-            Wir melden uns innerhalb von 24 Stunden mit Ihrer persoenlichen Einsparanalyse.
-          </p>
-          <button class="btn btn-navy btn-full" onclick="openCal()">Beratungsgespraech buchen</button>
-          <p style="color:#b0b8cc;font-size:12px;margin-top:12px">Kostenlos &amp; unverbindlich</p>
         </div>
-
-        <!-- Card footer -->
-        <div class="qfoot">
-          <div class="qft"><svg viewBox="0 0 14 14"><path d="M7 1a6 6 0 100 12A6 6 0 007 1zM7 4v4M7 10h.01"/></svg>100% kostenlos</div>
-          <div class="qft-sep"></div>
-          <div class="qft"><svg viewBox="0 0 14 14"><path d="M12 2l-7 7-3-3"/></svg>Kein Spam</div>
-          <div class="qft-sep"></div>
-          <div class="qft"><svg viewBox="0 0 14 14"><rect x="2" y="3" width="10" height="8" rx="1"/><path d="M5 3V2M9 3V2M2 6h10"/></svg>Antwort in 24h</div>
-        </div>
-
       </div>
-    </div>
 
-  </div>
-</div>
-
-<!-- ═══════ PRODUKT ═══════ -->
-<div class="page" id="pg-produkt" style="background:var(--off)">
-  <div class="wrap">
-    <div class="two-col">
-      <div class="hsw">
-        <img src="images/PROaqua_4700.webp" alt="PROVITEC PROaqua 4700"/>
-        <div class="hs" style="left:66%;top:9%"  onmouseenter="ht(1)" onmouseleave="hh(1)">1<div class="hs-tip lt" id="ht1"><strong>Sedimentfilter</strong><p>Entfernt Rost, Sand und Schwebstoffe ab 5 Mikrometer.</p></div></div>
-        <div class="hs" style="left:66%;top:24%" onmouseenter="ht(2)" onmouseleave="hh(2)">2<div class="hs-tip lt" id="ht2"><strong>Aktivkohle-Block</strong><p>Bindet Chlor, Pestizide und organische Verbindungen zuverlaessig.</p></div></div>
-        <div class="hs" style="left:66%;top:40%" onmouseenter="ht(3)" onmouseleave="hh(3)">3<div class="hs-tip lt" id="ht3"><strong>UF-Membran (0,02 &#181;m)</strong><p>Haelt Bakterien, Viren und Mikroplastik sicher zurueck.</p></div></div>
-        <div class="hs" style="left:66%;top:55%" onmouseenter="ht(4)" onmouseleave="hh(4)">4<div class="hs-tip lt" id="ht4"><strong>Mineralisierung</strong><p>Fuegt Calcium &amp; Magnesium in optimaler Dosierung hinzu.</p></div></div>
-        <div class="hs" style="left:66%;top:70%" onmouseenter="ht(5)" onmouseleave="hh(5)">5<div class="hs-tip lt" id="ht5"><strong>Aktivkohle-Granulat</strong><p>Finale Politur fuer perfekten Geschmack und Geruch.</p></div></div>
-        <div class="hs" style="left:66%;top:84%" onmouseenter="ht(6)" onmouseleave="hh(6)">6<div class="hs-tip lt" id="ht6"><strong>Druckgehaeuse</strong><p>Bis 10 bar druckstabil, TUV-geprueft, lebensmittelecht.</p></div></div>
-      </div>
-      <div>
-        <span class="tag">Das System</span>
-        <h2 class="dk">PROaqua 4700 &#8212;<br>5 Stufen. Perfektes Wasser.</h2>
-        <p class="lead dk">Bewegen Sie die Maus ueber die blauen Punkte, um jede Filterstufe zu erkunden. Modernste Technologie im kompakten Untertischschformat.</p>
-        <div class="flist">
-          <div class="fi"><span class="fn">01</span><div class="ft"><strong>Kristallklares Wasser auf Knopfdruck</strong><p>Still oder sprudelnd &#8212; direkt aus dem Hahn. Kein Schleppen, kein Plastikmull, kein Aufwand.</p></div></div>
-          <div class="fi"><span class="fn">02</span><div class="ft"><strong>3.000 Liter pro Kartusche</strong><p>Das entspricht 6.000 Einliterflaschen. Kartuschen-Wechsel in unter 2 Minuten ohne Werkzeug.</p></div></div>
-          <div class="fi"><span class="fn">03</span><div class="ft"><strong>TUV-zertifiziert &amp; Made in Germany</strong><p>Jede Charge im akkreditierten Labor geprueft. Entspricht der deutschen Trinkwasserverordnung.</p></div></div>
-          <div class="fi"><span class="fn">04</span><div class="ft"><strong>Amortisiert sich im ersten Jahr</strong><p>Mit einer Ersparnis von bis zu 70% gegenueber Flaschenwasser rechnet sich das System schnell.</p></div></div>
-        </div>
-        <div style="display:flex;gap:12px;margin-top:32px;flex-wrap:wrap">
-          <button class="btn btn-navy" onclick="openAngebot()">Angebot anfragen</button>
-          <button class="btn btn-outline" onclick="go('einbau')">Zur Installation &rarr;</button>
+      <div class="card card-highlight anim-in" style="display:flex;align-items:center;gap:20px;margin-top:8px">
+        <span style="font-size:36px">💡</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--purple2);margin-bottom:3px">Tipp des Tages</div>
+          <div id="daily-tip" style="font-size:13.5px;color:var(--text2);line-height:1.65"></div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ═══════ VORTEILE ═══════ -->
-<div class="page" id="pg-vorteile" style="background:#fff">
-  <div class="wrap">
-    <div style="max-width:660px">
-      <span class="tag">Warum PROVITEC&#174;</span>
-      <h2 class="dk">Was das PROaqua 4700<br>einzigartig macht.</h2>
-      <p class="lead dk">Sechs Gruende, warum tausende Haushalte in Deutschland auf PROVITEC&#174; vertrauen &#8212; und nie wieder zurueck wollen.</p>
-    </div>
-    <div class="vgrid">
-      <div class="vc"><div class="vc-n">01</div><div class="vc-t">Bis zu 70% guenstiger</div><div class="vc-b">Im Vergleich zu Flaschenwasser amortisiert sich das System bereits im ersten Jahr. Ab dann pure Ersparnis.</div></div>
-      <div class="vc"><div class="vc-n">02</div><div class="vc-t">1.200 Flaschen weniger / Jahr</div><div class="vc-b">Eine vierkoepfige Familie vermeidet durchschnittlich 1.200 Plastikflaschen jaehrlich &#8212; messbarer Klimaschutz.</div></div>
-      <div class="vc"><div class="vc-n">03</div><div class="vc-t">99% Keimreduktion</div><div class="vc-b">Die UF-Membran filtert auf 0,02 Mikrometer &#8212; Bakterien, Viren und Mikroplastik haben keine Chance.</div></div>
-      <div class="vc"><div class="vc-n">04</div><div class="vc-t">Laborgetestete Qualitaet</div><div class="vc-b">Jede Charge wird im akkreditierten Labor analysiert und entspricht der deutschen Trinkwasserverordnung.</div></div>
-      <div class="vc"><div class="vc-n">05</div><div class="vc-t">Installation in 30 Minuten</div><div class="vc-b">Kein Klempner, kein Umbau &#8212; unser System ist so konstruiert, dass Sie es selbst installieren koennen.</div></div>
-      <div class="vc"><div class="vc-n">06</div><div class="vc-t">10 Jahre Herstellergarantie</div><div class="vc-b">PROVITEC&#174; steht mit 10 Jahren Garantie und deutschem Kundendienst langfristig hinter jedem Geraet.</div></div>
-    </div>
-    <div style="margin-top:80px">
-      <span class="tag" style="color:var(--muted)">Kundenstimmen</span>
-      <h2 class="dk">Das sagen unsere Kunden.</h2>
-      <div class="tgrid">
-        <div class="tc"><div class="tstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="ttext">"Seit der Installation trinken wir nur noch unser eigenes Wasser. Geschmack besser als jedes Flaschenwasser. Wir sparen 45 &#8364; im Monat &#8212; 540 &#8364; im Jahr."</p><div class="tauth"><div class="tav">MK</div><div><div class="tname">Michael K.</div><div class="tloc">Muenchen, Familie mit 3 Kindern</div></div></div></div>
-        <div class="tc"><div class="tstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="ttext">"Installation in 25 Minuten, kein Handwerker noetig. Kein Kalk, kein Chlorgeschmack. Das Wasser schmeckt wirklich gut &#8212; und kein Plastikmull mehr."</p><div class="tauth"><div class="tav">SB</div><div><div class="tname">Sandra B.</div><div class="tloc">Hamburg, 2-Personen-Haushalt</div></div></div></div>
-        <div class="tc"><div class="tstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="ttext">"Amortisiert nach 8 Monaten. Seitdem reine Ersparnis. Beste Investition des Jahres &#8212; und kein Schleppen mehr von schweren Wasserkisten."</p><div class="tauth"><div class="tav">TF</div><div><div class="tname">Thomas F.</div><div class="tloc">Frankfurt, Ehepaar</div></div></div></div>
+  <!-- ═══ SOLVER ═══ -->
+  <div class="page" id="page-solver">
+    <div class="page-inner" style="max-width:1300px">
+      <div class="page-header">
+        <h1>✨ KI-<span class="gradient-text">Mathe-Löser</span></h1>
+        <p>Tippe eine Aufgabe oder lade ein Foto hoch — die KI erklärt jeden Rechenschritt.</p>
       </div>
-    </div>
-  </div>
-</div>
 
-<!-- ═══════ EINBAU ═══════ -->
-<div class="page" id="pg-einbau" style="background:var(--navy2)">
-  <div class="wrap">
-    <div class="two-col">
-      <div>
-        <img src="images/einbau.png" alt="Einbau" style="width:100%;border-radius:20px;display:block;box-shadow:0 52px 100px rgba(0,0,0,.5)"/>
-      </div>
-      <div>
-        <span class="tag">Installation</span>
-        <h2 class="lt">In 30 Minuten<br>startklar.</h2>
-        <p class="lead lt">Kein Klempner, kein Aufwand &#8212; das PROaqua 4700 ist so konstruiert, dass jeder es selbst installieren kann.</p>
-        <div class="slist">
-          <div class="si"><div class="sn">1</div><div class="stxt"><strong>Kaltwasserhahn absperren</strong><p>Den Hahn unter der Spuele schliessen &#8212; dauert 10 Sekunden.</p></div></div>
-          <div class="si"><div class="sn">2</div><div class="stxt"><strong>T-Stueck einsetzen</strong><p>Das mitgelieferte T-Stueck in die Kaltwasserzuleitung einschrauben.</p></div></div>
-          <div class="si"><div class="sn">3</div><div class="stxt"><strong>Filter montieren</strong><p>Gehaeuse am Schrankboden befestigen &#8212; zwei Schrauben genuegen.</p></div></div>
-          <div class="si"><div class="sn">4</div><div class="stxt"><strong>Filterhahn einbauen</strong><p>Ein kleines Loch in der Spuele &#8212; passend fuer alle gaengigen Modelle.</p></div></div>
-          <div class="si"><div class="sn">5</div><div class="stxt"><strong>Fertig &#8212; Wasser geniessen</strong><p>System kurz spuelen, Qualitaet pruefen &#8212; reines Wasser direkt ab jetzt.</p></div></div>
+      <div class="solver-grid">
+        <!-- LEFT: Input -->
+        <div class="solver-left">
+          <div class="solver-input-card">
+            <div class="solver-label">📝 Deine Aufgabe</div>
+            <textarea class="solver-textarea" id="math-input" placeholder="z.B. Berechne die Extremstellen von f(x) = x³ - 3x + 2&#10;&#10;Oder: Berechne den Deckungsbeitrag wenn Erlös 5000€, variable Kosten 3200€&#10;&#10;Schreibe hier deine Matheaufgabe..."></textarea>
+          </div>
+
+          <div class="card">
+            <div class="solver-label">📸 Foto hochladen</div>
+            <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="this.classList.remove('drag')">
+              <div class="uz-icon">📷</div>
+              <p><strong>Foto hier ablegen</strong> oder klicken</p>
+              <p style="margin-top:4px;font-size:11px">JPG, PNG, WEBP · Max 10 MB</p>
+              <img id="preview-img" class="preview-img" alt="Vorschau"/>
+            </div>
+            <input type="file" id="file-input" accept="image/*" style="display:none" onchange="onFileChange(event)">
+            <button onclick="clearImage()" id="clear-img-btn" style="display:none;margin-top:8px;background:var(--red3);border:1px solid rgba(239,68,68,.3);color:var(--red);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600">✕ Bild entfernen</button>
+          </div>
+
+          <div class="card">
+            <div class="solver-label">🏷️ Themengebiet</div>
+            <div class="topic-row" id="topic-chips"></div>
+          </div>
+
+          <button class="solve-btn" id="solve-btn" onclick="solveProblem()">
+            🧮 Aufgabe lösen
+          </button>
         </div>
-        <div style="display:flex;gap:12px;margin-top:32px;flex-wrap:wrap">
-          <button class="btn btn-navy" style="background:#fff;color:var(--navy2)" onclick="openCal()">Termin buchen</button>
-          <button class="btn btn-outline-w" onclick="go('kalkulator')">Ersparnis berechnen</button>
+
+        <!-- RIGHT: Solution -->
+        <div class="solver-right">
+          <div class="solution-card" id="solution-card">
+            <div class="sol-header" id="sol-header" style="display:none">
+              <span id="sol-type-badge" class="sol-type-badge"></span>
+              <span id="sol-class-info" style="font-size:12px;color:var(--text3)"></span>
+            </div>
+            <div class="sol-body">
+              <div id="solution-loading" style="display:none" class="loading-wrap">
+                <div class="brain-loader">🧮</div>
+                <p style="font-size:14px;color:var(--text2);margin-bottom:16px">KI denkt nach...</p>
+                <div class="loading-steps">
+                  <div class="loading-step" id="ls1">Aufgabe analysieren</div>
+                  <div class="loading-step" id="ls2">Rechenweg planen</div>
+                  <div class="loading-step" id="ls3">Schritt für Schritt lösen</div>
+                  <div class="loading-step" id="ls4">Ergebnis überprüfen</div>
+                </div>
+              </div>
+              <div id="solution-empty" class="sol-empty">
+                <div class="sol-empty-icon">🧮</div>
+                <p>Hier erscheint deine Lösung mit jedem Rechenschritt.</p>
+              </div>
+              <div id="solution-output" class="math-output" style="display:none"></div>
+            </div>
+            <div class="sol-actions" id="sol-actions" style="display:none">
+              <button class="sol-btn green" onclick="saveToBrain()">💾 Im Gehirn speichern</button>
+              <button class="sol-btn" onclick="addToSpickzettel()">📋 Zu Spickzettel</button>
+              <button class="sol-btn" onclick="clearSolver()">🔄 Neue Aufgabe</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ═══════ KALKULATOR ═══════ -->
-<div class="page" id="pg-kalkulator" style="background:var(--off)">
-  <div class="wrap">
-    <div class="two-col">
-      <div>
-        <span class="tag">Sparrechner</span>
-        <h2 class="dk">Wie viel kostet Sie<br>Flaschenwasser wirklich?</h2>
-        <p class="lead dk" style="margin-bottom:36px">Die meisten unterschaetzen ihre jaehrlichen Ausgaben massiv. Unser Rechner zeigt Ihnen das volle Bild &#8212; inklusive Schleppaufwand.</p>
-        <img src="images/Provitec-Einsparung.webp" alt="Einsparungsvergleich" style="width:100%;border-radius:18px;display:block;box-shadow:0 24px 64px rgba(12,29,82,.09)"/>
+  <!-- ═══ TOPICS ═══ -->
+  <div class="page" id="page-topics">
+    <div class="page-inner">
+      <div class="page-header">
+        <h1>📚 <span class="gradient-text">Themen-Bibliothek</span></h1>
+        <p>Alle Formeln, Regeln und Methoden — für die 11. &amp; 12. Klasse und BWL/Rechnungswesen.</p>
       </div>
-      <div class="kcard">
-        <h3>Ihr persoenliches Sparpotenzial</h3>
-        <div class="rrow"><label>Personen im Haushalt <b id="rP">2</b></label><input type="range" min="1" max="6" value="2" oninput="G('rP').textContent=this.value;fc()"></div>
-        <div class="rrow"><label>Flaschen pro Woche <b id="rB">10</b></label><input type="range" min="1" max="60" value="10" oninput="G('rB').textContent=this.value;fc()"></div>
-        <div class="rrow"><label>Preis pro Flasche <b id="rPr">0.50</b> &#8364;</label><input type="range" min="30" max="250" value="50" oninput="G('rPr').textContent=(this.value/100).toFixed(2);fc()"></div>
-        <div class="rrow"><label>Schleppaufwand / Monat <b id="rM">60</b> Min.</label><input type="range" min="0" max="300" value="60" oninput="G('rM').textContent=this.value;fc()"></div>
-        <div class="kres">
-          <div class="kr"><span>Jahreskosten Flaschenwasser</span><b id="rC">260 &#8364;</b></div>
-          <div class="kr krbig"><span>Ihre Ersparnis mit PROVITEC&#174;</span><b id="rS">195 &#8364;</b></div>
+      <div class="topics-main" id="topics-main">
+        <div class="topics-grid" id="topics-grid"></div>
+      </div>
+      <div class="topic-detail" id="topic-detail">
+        <button class="back-btn" onclick="showTopicsMain()">← Zurück zur Übersicht</button>
+        <div id="topic-detail-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BRAIN ═══ -->
+  <div class="page" id="page-brain">
+    <div class="page-inner">
+      <div class="page-header">
+        <h1>🧠 <span class="gradient-text">Mein Gehirn</span></h1>
+        <p>Alle gespeicherten Aufgaben und dein Lernverlauf.</p>
+      </div>
+      <div class="brain-stats">
+        <div class="brain-card">
+          <div style="font-size:24px;margin-bottom:8px">🎯</div>
+          <div style="font-size:26px;font-weight:800;color:var(--purple2)" id="brain-total">0</div>
+          <div style="font-size:12px;color:var(--text3)">Gespeicherte Aufgaben</div>
         </div>
-        <button class="btn btn-navy btn-full" style="margin-top:22px" onclick="openAngebot()">Jetzt Angebot anfragen</button>
-        <p style="color:var(--muted);font-size:12px;text-align:center;margin-top:12px">Kostenlos &amp; unverbindlich &#8212; Rueckmeldung innerhalb 24h</p>
+        <div class="brain-card">
+          <div style="font-size:24px;margin-bottom:8px">📚</div>
+          <div style="font-size:26px;font-weight:800;color:var(--cyan2)" id="brain-topics-count">0</div>
+          <div style="font-size:12px;color:var(--text3)">Verschiedene Themen</div>
+        </div>
+        <div class="brain-card">
+          <div style="font-size:24px;margin-bottom:8px">⭐</div>
+          <div style="font-size:26px;font-weight:800;color:var(--amber)" id="brain-xp">0</div>
+          <div style="font-size:12px;color:var(--text3)">XP gesammelt</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+        <select id="brain-filter" class="setting-input" style="width:auto;padding:8px 14px;font-size:13px" onchange="renderBrain()">
+          <option value="">Alle Themen</option>
+        </select>
+        <button class="btn-secondary" onclick="clearBrain()" style="margin-left:auto">🗑️ Alles löschen</button>
+      </div>
+      <div id="brain-list" class="brain-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══ SPICKZETTEL ═══ -->
+  <div class="page" id="page-sheets">
+    <div class="page-inner">
+      <div class="page-header">
+        <h1>📋 <span class="gradient-text">Spickzettel</span></h1>
+        <p>Lass die KI einen professionellen Spickzettel für jedes Thema erstellen.</p>
+      </div>
+      <div class="sheet-builder">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:14px">Thema wählen:</div>
+          <div class="sheet-topics" id="sheet-topics"></div>
+          <button class="gen-sheet-btn" id="gen-sheet-btn" onclick="generateSheet()" disabled>✨ Spickzettel generieren</button>
+          <div style="margin-top:16px">
+            <div style="font-size:12px;font-weight:700;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em">Gespeicherte Spickzettel</div>
+            <div id="saved-sheets-list"></div>
+          </div>
+        </div>
+        <div>
+          <div class="sheet-preview" id="sheet-preview">
+            <div class="sheet-empty">
+              <div style="font-size:48px;margin-bottom:12px">📋</div>
+              <p style="font-size:14px;color:var(--text3)">Wähle ein Thema und klicke<br>auf "Spickzettel generieren"</p>
+            </div>
+          </div>
+          <div class="sheet-actions" id="sheet-actions" style="display:none">
+            <button class="btn-secondary" onclick="saveSheet()">💾 Speichern</button>
+            <button class="btn-secondary" onclick="window.print()">🖨️ Drucken</button>
+            <button class="btn-secondary" onclick="copySheet()">📋 Kopieren</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- ═══════ KONTAKT ═══════ -->
-<div class="page" id="pg-kontakt" style="background:var(--navy2)">
-  <div class="wrap">
-    <div class="two-col">
-      <div>
-        <span class="tag">Kontakt</span>
-        <h2 class="lt">Bereit fuer sauberes<br>Wasser aus dem Hahn?</h2>
-        <p class="lead lt">Lassen Sie sich kostenlos und unverbindlich beraten. Unser Team meldet sich innerhalb von 24 Stunden.</p>
-        <ul class="kinfo-list">
-          <li class="kinfo-item"><div class="kico">&#128222;</div><div class="kitxt"><strong>Telefon</strong><p>+49 (0) 800 123 456 7</p></div></li>
-          <li class="kinfo-item"><div class="kico">&#128140;</div><div class="kitxt"><strong>E-Mail</strong><p>info@provitec.de</p></div></li>
-          <li class="kinfo-item"><div class="kico">&#128337;</div><div class="kitxt"><strong>Erreichbar</strong><p>Mo&#8211;Fr, 8:00&#8211;18:00 Uhr</p></div></li>
-        </ul>
-        <button class="btn" style="margin-top:36px;background:#fff;color:var(--navy2)" onclick="openCal()">Beratungsgespraech vereinbaren</button>
+  <!-- ═══ MERKEINTRÄGE ═══ -->
+  <div class="page" id="page-notes">
+    <div class="page-inner">
+      <div class="notes-header">
+        <div>
+          <h1>📔 <span class="gradient-text">Merkeinträge</span></h1>
+          <p style="color:var(--text2);font-size:14px;margin-top:6px">Dein persönliches Lerntagebuch — generiert aus dem, was du heute gelernt hast.</p>
+        </div>
+        <button class="gen-note-btn" id="gen-note-btn" onclick="generateNote()">✨ Heutigen Merkeintrag erstellen</button>
       </div>
-      <div class="kform">
-        <h3>Nachricht senden</h3>
-        <p>Wir antworten innerhalb von 24 Stunden.</p>
-        <input  class="kinp" id="kNm" type="text"  placeholder="Ihr vollstaendiger Name"/>
-        <input  class="kinp" id="kMl" type="email" placeholder="Ihre E-Mail-Adresse"/>
-        <input  class="kinp" id="kTl" type="tel"   placeholder="Telefonnummer (optional)"/>
-        <textarea class="kinp" id="kMs" rows="4"   placeholder="Ihre Nachricht oder Frage..."></textarea>
-        <button class="btn" style="width:100%;background:#fff;color:var(--navy2)" onclick="ksub()">Nachricht senden</button>
+      <div id="notes-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══ SETTINGS ═══ -->
+  <div class="page" id="page-settings">
+    <div class="page-inner">
+      <div class="page-header">
+        <h1>⚙️ <span class="gradient-text">Einstellungen</span></h1>
+        <p>API Key, Profil und App-Daten verwalten.</p>
+      </div>
+      <div class="settings-grid">
+        <div class="settings-card">
+          <h3>🔑 Anthropic API Key</h3>
+          <div class="setting-row">
+            <div class="setting-label">API Key (wird lokal gespeichert)</div>
+            <input type="password" class="setting-input" id="settings-api-key" placeholder="sk-ant-api03-..."/>
+          </div>
+          <button class="setting-save-btn" onclick="updateApiKey()">Speichern</button>
+        </div>
+        <div class="settings-card">
+          <h3>👤 Profil</h3>
+          <div class="setting-row">
+            <div class="setting-label">Dein Name</div>
+            <input type="text" class="setting-input" id="settings-name" placeholder="z.B. Max Mustermann"/>
+          </div>
+          <div class="setting-row">
+            <div class="setting-label">Klasse</div>
+            <select class="setting-input" id="settings-class">
+              <option value="11">11. Klasse</option>
+              <option value="12">12. Klasse</option>
+              <option value="both">11. &amp; 12. Klasse</option>
+            </select>
+          </div>
+          <button class="setting-save-btn" onclick="saveProfile()">Profil speichern</button>
+        </div>
+        <div class="settings-card">
+          <h3>📊 Statistiken</h3>
+          <div class="info-row"><span class="info-key">Gespeicherte Aufgaben</span><span class="info-val" id="info-problems">0</span></div>
+          <div class="info-row"><span class="info-key">Spickzettel erstellt</span><span class="info-val" id="info-sheets">0</span></div>
+          <div class="info-row"><span class="info-key">Merkeinträge</span><span class="info-val" id="info-notes">0</span></div>
+          <div class="info-row"><span class="info-key">Gesamte XP</span><span class="info-val" id="info-xp">0</span></div>
+        </div>
+        <div class="settings-card">
+          <h3>🗑️ Daten</h3>
+          <p style="font-size:13px;color:var(--text3);margin-bottom:16px;line-height:1.6">Alle App-Daten werden lokal in deinem Browser gespeichert (LocalStorage). Nichts wird auf Server hochgeladen.</p>
+          <button class="danger-btn" onclick="exportData()">📤 Daten exportieren</button>
+          <br><br>
+          <button class="danger-btn" onclick="resetAll()">⚠️ Alle Daten löschen</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- MODAL: Angebot -->
-<div class="ov" id="ovA">
-  <div class="mbox">
-    <button class="mx" onclick="G('ovA').classList.remove('on')">&#215;</button>
-    <h2>Angebot anfragen</h2>
-    <p>Individuell, kostenlos &amp; unverbindlich. Wir melden uns innerhalb von 24 Stunden.</p>
-    <input class="qinp" id="mN" type="text"  placeholder="Ihr vollstaendiger Name"/>
-    <input class="qinp" id="mM" type="email" placeholder="Ihre E-Mail-Adresse"/>
-    <input class="qinp" id="mT" type="tel"   placeholder="Ihre Telefonnummer"/>
-    <button class="btn btn-navy btn-full" style="margin-top:10px;font-size:14.5px;padding:15px" onclick="msub()">Jetzt Angebot anfordern &rarr;</button>
-    <p style="color:#b0b8cc;font-size:11px;text-align:center;margin-top:12px">Datenschutz garantiert. Kein Spam.</p>
-  </div>
-</div>
-
-<!-- MODAL: Kalender -->
-<div class="ov" id="ovC">
-  <div class="mbox">
-    <button class="mx" onclick="G('ovC').classList.remove('on')">&#215;</button>
-    <h2>Termin vereinbaren</h2>
-    <p>Kostenloses Beratungsgespraech &#8212; telefonisch oder vor Ort.</p>
-    <div class="cph">Kalender-Integration folgt<br><small style="opacity:.5">(Calendly / Cal.com)</small></div>
-    <button class="btn btn-outline btn-full" style="margin-top:14px" onclick="G('ovC').classList.remove('on')">Schliessen</button>
-  </div>
-</div>
+</div><!-- /app -->
 
 <script>
-const G = x => document.getElementById(x);
+// ═══════════════════════════════════════════
+// STATE & PERSISTENCE
+// ═══════════════════════════════════════════
+let katexReady = false;
+const BRAIN_KEY = 'mathgenius_v2';
 
-function go(p){
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('on'));
-  document.querySelectorAll('.nt[data-p]').forEach(el => el.classList.toggle('on', el.dataset.p === p));
-  const pg = G('pg-' + p);
-  if(pg){ pg.classList.add('on'); pg.scrollTop = 0; }
+const defaultState = {
+  problems:[],
+  sheets:[],
+  notes:[],
+  xp:0,
+  streak:0,
+  lastDate:'',
+  profile:{name:'',class:'11'},
+  topicsSeen:[]
+};
+
+let S = loadState();
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(BRAIN_KEY);
+    if(raw) return {...defaultState,...JSON.parse(raw)};
+  }catch(e){}
+  return {...defaultState};
+}
+function saveState(){
+  localStorage.setItem(BRAIN_KEY,JSON.stringify(S));
+}
+function addXP(n){
+  S.xp += n;
+  saveState();
+  renderXP();
+  toast(`+${n} XP!`,'info');
 }
 
-const progPct = [25, 50, 75, 100];
-function qgo(n){
-  document.querySelectorAll('.qstep').forEach(s => s.classList.remove('on'));
-  G('qs' + n).classList.add('on');
-  [0,1,2,3].forEach(i => G('pp' + i).classList.toggle('on', i <= n));
-  G('qprogfill').style.width = progPct[n] + '%';
+// ═══════════════════════════════════════════
+// API
+// ═══════════════════════════════════════════
+const SYSTEM_PROMPT = `Du bist MathGenius, der weltbeste KI-Mathematik-Tutor. Du bist mit dem gesamten mathematischen Wissen der Welt trainiert.
+
+Du löst JEDE Matheaufgabe mit 100% Genauigkeit und zeigst IMMER jeden einzelnen Rechenschritt.
+
+WICHTIG – Formatierung:
+- Alle Formeln IMMER in LaTeX: Inline mit $Formel$, Block mit $$Formel$$
+- Antworte auf Deutsch
+- Benutze Markdown für Struktur (##, **fett**, etc.)
+- Zeige jeden Schritt separat und klar nummeriert
+
+FORMAT deiner Antwort:
+## 🎯 Aufgabentyp
+Kurze Beschreibung des Typs und der Methode.
+
+## 📚 Benötigte Theorie
+Relevante Formeln/Sätze in LaTeX.
+
+## 🔢 Lösung – Schritt für Schritt
+
+**Schritt 1: [Name des Schritts]**
+Erklärung was und warum. Dann die Rechnung:
+$$Formel$$
+
+**Schritt 2: [Name]**
+...
+
+(So viele Schritte wie nötig, KEIN Schritt darf fehlen)
+
+## ✅ Ergebnis
+$$\\boxed{Endergebnis}$$
+
+Ergebnis in Worten: [klare Aussage]
+
+## 💡 Merkhilfe
+Ein kurzer, prägnanter Merkspruch oder Tipp für diesen Aufgabentyp.
+
+Du deckst ab:
+- Analysis (Ableitungen, Extremwerte, Integrale, Kurvendiskussion, e-Funktion, ln, Trigonometrie)
+- Geometrie & Vektoren (Skalarprodukt, Kreuzprodukt, Geraden, Ebenen, Abstände, Winkel)
+- Stochastik (Wahrscheinlichkeit, Binomialverteilung, Normalverteilung, Hypothesentests)
+- Lineare Algebra (Matrizen, Gleichungssysteme)
+- BWL & Rechnungswesen (Bilanz, GuV, Kalkulation, Abschreibungen, KER, Break-Even, Deckungsbeitrag, Investitionsrechnung)
+- Arithmetik, Algebra, Geometrie (alle Stufen)
+
+Mache KEINE Fehler. Überprüfe dein Ergebnis.`;
+
+const SPICKZETTEL_PROMPT = `Du erstellst einen professionellen, vollständigen Spickzettel für folgendes Thema.
+
+FORMAT:
+# [Thema] – Spickzettel
+
+## Wichtigste Formeln
+Alle wichtigen Formeln als LaTeX-Gleichungen ($$...$$).
+
+## Methoden & Vorgehen
+Schritt-für-Schritt Methoden für typische Aufgaben.
+
+## Wichtige Regeln
+Alle Regeln und Ausnahmen.
+
+## Typische Aufgaben & Lösungsstrategien
+2-3 Beispieltypen mit Lösungsansatz.
+
+## Häufige Fehler vermeiden
+Die wichtigsten Fehlerquellen.
+
+## Merkhilfen
+Eselsbrücken und Tricks.
+
+Formatiere ALLES professionell mit LaTeX für Formeln. Antworte auf Deutsch. Sei vollständig.`;
+
+const MERKEINTRAG_PROMPT = `Erstelle einen professionellen, schönen Merkeintrag (Lerntagebuch-Eintrag) basierend auf den heute gelösten Aufgaben.
+
+FORMAT:
+## 📖 Zusammenfassung
+Was wurde heute gelernt?
+
+## 🔑 Schlüsselformeln
+Die wichtigsten Formeln des Tages in LaTeX.
+
+## 💡 Erkenntnisse
+Was war neu/wichtig?
+
+## 🎯 Übungsaufgaben für morgen
+3 ähnliche Aufgaben zum Üben (ohne Lösung).
+
+## ⚠️ Achtung – Häufige Fehler
+Was muss man bei diesen Themen beachten?
+
+Sei konkret, beziehe dich auf die tatsächlich gelösten Aufgaben. Antworte auf Deutsch.`;
+
+async function callClaude(messages, systemPrompt){
+  const apiKey = localStorage.getItem('mathgenius_apikey');
+  if(!apiKey){ showApiModal(); return null; }
+  const res = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':apiKey,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-ipc':'true'
+    },
+    body:JSON.stringify({
+      model:'claude-sonnet-4-6',
+      max_tokens:4096,
+      system:systemPrompt,
+      messages
+    })
+  });
+  if(!res.ok){
+    const err = await res.json().catch(()=>({}));
+    throw new Error(err.error?.message||`HTTP ${res.status}`);
+  }
+  const data = await res.json();
+  return data.content[0].text;
 }
 
-function pick(el){
-  el.closest('.qopts').querySelectorAll('.qopt').forEach(o => o.classList.remove('sel'));
+// ═══════════════════════════════════════════
+// API KEY MODAL
+// ═══════════════════════════════════════════
+function showApiModal(){
+  document.getElementById('api-modal').classList.remove('hidden');
+}
+function saveApiKey(){
+  const key = document.getElementById('api-key-input').value.trim();
+  if(!key){ toast('Bitte API Key eingeben','error'); return; }
+  localStorage.setItem('mathgenius_apikey',key);
+  document.getElementById('api-modal').classList.add('hidden');
+  toast('API Key gespeichert! 🚀','success');
+}
+
+// ═══════════════════════════════════════════
+// ROUTER
+// ═══════════════════════════════════════════
+function goTo(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelector(`.nav-item[data-page="${page}"]`)?.classList.add('active');
+  const renders = {
+    dashboard:renderDashboard,
+    brain:renderBrain,
+    sheets:renderSheets,
+    notes:renderNotes,
+    settings:renderSettings,
+    topics:renderTopics
+  };
+  renders[page]?.();
+}
+
+// ═══════════════════════════════════════════
+// MATH RENDERING
+// ═══════════════════════════════════════════
+function renderMath(el){
+  if(!el) return;
+  if(window.renderMathInElement){
+    try{
+      renderMathInElement(el,{
+        delimiters:[
+          {left:'$$',right:'$$',display:true},
+          {left:'$',right:'$',display:false},
+          {left:'\\(',right:'\\)',display:false},
+          {left:'\\[',right:'\\]',display:true}
+        ],
+        throwOnError:false
+      });
+    }catch(e){}
+  }
+}
+
+function renderMarkdownMath(text, container){
+  if(!container) return;
+  // Parse markdown
+  const html = marked.parse(text,{breaks:true,gfm:true});
+  container.innerHTML = html;
+  // Style step blocks
+  container.querySelectorAll('h2').forEach(h=>{
+    if(h.textContent.includes('Lösung')||h.textContent.includes('Schritt')){
+      h.style.borderTop='1px solid var(--border)';
+      h.style.paddingTop='16px';
+      h.style.marginTop='24px';
+    }
+  });
+  // Highlight result
+  container.querySelectorAll('h2').forEach(h=>{
+    if(h.textContent.includes('Ergebnis')){
+      h.style.color='var(--green)';
+    }
+  });
+  // Highlight tip
+  container.querySelectorAll('h2').forEach(h=>{
+    if(h.textContent.includes('Merkhilfe')){
+      const next = h.nextElementSibling;
+      if(next){
+        next.style.background='var(--amber3)';
+        next.style.borderLeft='3px solid var(--amber)';
+        next.style.borderRadius='0 10px 10px 0';
+        next.style.padding='12px 16px';
+      }
+    }
+  });
+  renderMath(container);
+}
+
+// ═══════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════
+const TIPS = [
+  'Bei Extremwertaufgaben: f\'(x) = 0 setzen, dann f\'\'(x) für Hoch-/Tiefpunkt prüfen. f\'\'(x) > 0 → Tiefpunkt, f\'\'(x) < 0 → Hochpunkt.',
+  'Produktregel: "Erste ableiten mal Zweite + Erste mal Zweite ableiten" — (u·v)\' = u\'·v + u·v\'',
+  'Kettenregel: Äußere Funktion ableiten, innere Funktion stehen lassen, dann mit innerer Ableitung multiplizieren.',
+  'Deckungsbeitrag = Erlöse − Variable Kosten. Positiver DB deckt Fixkosten.',
+  'Break-Even-Punkt: Menge, bei der Gesamterlöse = Gesamtkosten → x* = Fixkosten ÷ Stückdeckungsbeitrag',
+  'Binomialverteilung: P(X=k) = C(n,k) · p^k · (1-p)^(n-k). Erwartungswert: μ = n·p',
+  'Integralrechnung: ∫x^n dx = x^(n+1)/(n+1) + C (gilt für n ≠ -1)',
+  'Lineare Abschreibung: Abschreibungsbetrag = (Anschaffungskosten − Restwert) ÷ Nutzungsdauer',
+  'Skalarprodukt: a⃗ · b⃗ = 0 ⟹ Vektoren stehen senkrecht aufeinander!',
+  'Normalverteilung: 68% der Werte liegen in [μ−σ, μ+σ], 95% in [μ−2σ, μ+2σ]'
+];
+
+function renderDashboard(){
+  const name = S.profile?.name;
+  document.getElementById('dash-greeting').textContent = name ? `${name} 👋` : '👋';
+  const now = new Date();
+  document.getElementById('dash-date').textContent = now.toLocaleDateString('de-DE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('stat-solved').textContent = S.problems.length;
+  const topics = [...new Set(S.problems.map(p=>p.topic).filter(Boolean))];
+  document.getElementById('stat-topics').textContent = topics.length;
+  document.getElementById('stat-sheets').textContent = S.sheets.length;
+  document.getElementById('stat-notes').textContent = S.notes.length;
+  // Recent
+  const recentEl = document.getElementById('recent-list');
+  if(S.problems.length===0){
+    recentEl.innerHTML=`<div class="empty-state" style="padding:30px 10px"><div class="empty-icon" style="font-size:32px">📖</div><p style="font-size:12.5px">Noch keine Aktivität.<br>Starte mit dem KI-Löser!</p></div>`;
+  } else {
+    const recent = [...S.problems].reverse().slice(0,5);
+    recentEl.innerHTML = recent.map(p=>`
+      <div class="recent-item" onclick="viewProblem('${p.id}')">
+        <div class="ri-icon" style="background:${topicColor(p.topic)}22;font-size:18px">${topicIcon(p.topic)}</div>
+        <div style="overflow:hidden">
+          <div class="ri-topic">${p.topic||'Allgemein'}</div>
+          <div class="ri-text">${p.question.substring(0,80)}${p.question.length>80?'...':''}</div>
+        </div>
+        <div class="ri-time">${timeAgo(p.date)}</div>
+      </div>`).join('');
+  }
+  // Tip
+  const tip = TIPS[Math.floor(Math.random()*TIPS.length)];
+  document.getElementById('daily-tip').textContent = tip;
+  renderXP();
+  updateStreak();
+}
+
+function renderXP(){
+  const levels=[['Anfänger',0],['Schüler',100],['Könner',300],['Experte',700],['Meister',1500],['Genie',3000]];
+  let level = levels[0];
+  let nextLevel = levels[1];
+  for(let i=levels.length-1;i>=0;i--){
+    if(S.xp>=levels[i][1]){ level=levels[i]; nextLevel=levels[Math.min(i+1,levels.length-1)]; break; }
+  }
+  document.getElementById('xp-level').textContent = `Level ${levels.indexOf(level)+1} · ${level[0]}`;
+  document.getElementById('xp-num').textContent = `${S.xp} XP`;
+  const pct = nextLevel[1]>level[1] ? Math.min(100,((S.xp-level[1])/(nextLevel[1]-level[1]))*100) : 100;
+  document.getElementById('xp-fill').style.width = pct+'%';
+  // Sidebar stats
+  const bxp = document.getElementById('brain-xp');
+  if(bxp) bxp.textContent = S.xp;
+}
+
+function updateStreak(){
+  const today = new Date().toDateString();
+  if(S.lastDate !== today){
+    const yest = new Date(); yest.setDate(yest.getDate()-1);
+    if(S.lastDate === yest.toDateString()) S.streak=(S.streak||0)+1;
+    else S.streak=1;
+    S.lastDate=today;
+    saveState();
+  }
+  document.getElementById('streak-count').textContent = `${S.streak||0} ${S.streak===1?'Tag':'Tage'}`;
+}
+
+// ═══════════════════════════════════════════
+// SOLVER
+// ═══════════════════════════════════════════
+const CHIPS = ['Analysis 11','Analysis 12','Vektoren/Geometrie','Stochastik','BWL/Rechnungswesen','Algebra','Lineare Algebra','Sonstiges'];
+let currentImage = null;
+let currentImageType = null;
+let lastSolution = null;
+let selectedTopic = 'Sonstiges';
+
+function initSolver(){
+  const row = document.getElementById('topic-chips');
+  row.innerHTML = CHIPS.map(c=>`
+    <button class="topic-chip${c===selectedTopic?' sel':''}" onclick="selectTopic('${c}',this)">${c}</button>
+  `).join('');
+}
+
+function selectTopic(t,el){
+  selectedTopic=t;
+  document.querySelectorAll('.topic-chip').forEach(c=>c.classList.remove('sel'));
   el.classList.add('sel');
 }
 
-function showLead(){
-  G('qsteps').style.display = 'none';
-  G('qlead').classList.add('on');
+function onDragOver(e){ e.preventDefault(); document.getElementById('upload-zone').classList.add('drag'); }
+function onDrop(e){
+  e.preventDefault();
+  document.getElementById('upload-zone').classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if(file) handleFile(file);
+}
+function onFileChange(e){ const f=e.target.files[0]; if(f) handleFile(f); }
+
+function handleFile(file){
+  if(!file.type.startsWith('image/')){ toast('Nur Bilddateien erlaubt','error'); return; }
+  if(file.size>10*1024*1024){ toast('Bild zu groß (max 10 MB)','error'); return; }
+  const reader = new FileReader();
+  reader.onload=e=>{
+    const b64 = e.target.result.split(',')[1];
+    currentImage = b64;
+    currentImageType = file.type;
+    const img = document.getElementById('preview-img');
+    img.src = e.target.result;
+    img.style.display='block';
+    document.getElementById('clear-img-btn').style.display='block';
+    toast('Bild geladen! 📸','success');
+  };
+  reader.readAsDataURL(file);
 }
 
-function qsub(){
-  if(!G('lName').value.trim() || !G('lMail').value.trim()){ alert('Bitte Name und E-Mail angeben.'); return; }
-  G('qlead').classList.remove('on');
-  G('qsucc').classList.add('on');
+function clearImage(){
+  currentImage=null; currentImageType=null;
+  document.getElementById('preview-img').style.display='none';
+  document.getElementById('preview-img').src='';
+  document.getElementById('clear-img-btn').style.display='none';
+  document.getElementById('file-input').value='';
 }
 
-function qres(){
-  const b = parseInt(G('qcB').textContent) || 10;
-  const p = parseFloat(G('qcP').textContent) || 0.5;
-  G('qcR').innerHTML = Math.round(b * 52 * p * .75) + ' &#8364;';
+async function solveProblem(){
+  const text = document.getElementById('math-input').value.trim();
+  if(!text && !currentImage){ toast('Bitte Aufgabe eingeben oder Bild hochladen','error'); return; }
+  const apiKey = localStorage.getItem('mathgenius_apikey');
+  if(!apiKey){ showApiModal(); return; }
+
+  // UI loading
+  document.getElementById('solution-empty').style.display='none';
+  document.getElementById('solution-output').style.display='none';
+  document.getElementById('solution-loading').style.display='block';
+  document.getElementById('sol-actions').style.display='none';
+  document.getElementById('sol-header').style.display='none';
+  document.getElementById('solve-btn').disabled=true;
+
+  // Animate loading steps
+  const ls = ['ls1','ls2','ls3','ls4'];
+  ls.forEach(id=>{ const el=document.getElementById(id); if(el){el.className='loading-step';} });
+  let step=0;
+  const stepTimer = setInterval(()=>{
+    if(step<ls.length){ document.getElementById(ls[step])?.classList.add('done'); step++; }
+    else clearInterval(stepTimer);
+  },700);
+
+  try{
+    const question = text || 'Löse diese Matheaufgabe vollständig und zeige jeden Rechenschritt.';
+    let messages;
+    if(currentImage){
+      messages=[{role:'user',content:[
+        {type:'image',source:{type:'base64',media_type:currentImageType,data:currentImage}},
+        {type:'text',text:question+`\n\nThemengebiet: ${selectedTopic}`}
+      ]}];
+    } else {
+      messages=[{role:'user',content:question+`\n\nThemengebiet: ${selectedTopic}`}];
+    }
+    clearInterval(stepTimer);
+    ls.forEach(id=>document.getElementById(id)?.classList.add('done'));
+    const result = await callClaude(messages,SYSTEM_PROMPT);
+    if(!result) return;
+    lastSolution = {question,answer:result,topic:selectedTopic};
+    showSolution(result,question);
+    addXP(10);
+  } catch(e){
+    toast('Fehler: '+e.message,'error');
+    document.getElementById('solution-loading').style.display='none';
+    document.getElementById('solution-empty').style.display='block';
+  } finally {
+    clearInterval(stepTimer);
+    document.getElementById('solve-btn').disabled=false;
+  }
 }
 
-function fc(){
-  const b = parseInt(G('rB').textContent) || 10;
-  const p = parseFloat(G('rPr').textContent) || 0.5;
-  const c = Math.round(b * 52 * p);
-  G('rC').innerHTML = c + ' &#8364;';
-  G('rS').innerHTML = Math.round(c * .75) + ' &#8364;';
+function showSolution(text,question){
+  document.getElementById('solution-loading').style.display='none';
+  document.getElementById('solution-empty').style.display='none';
+  const out = document.getElementById('solution-output');
+  out.style.display='block';
+  renderMarkdownMath(text,out);
+  // Header
+  document.getElementById('sol-type-badge').textContent = selectedTopic;
+  document.getElementById('sol-class-info').textContent = '11./12. Klasse · KI-Lösung';
+  document.getElementById('sol-header').style.display='flex';
+  document.getElementById('sol-actions').style.display='flex';
 }
 
-function ht(n){ G('ht'+n).classList.add('vis') }
-function hh(n){ G('ht'+n).classList.remove('vis') }
-function openAngebot(){ G('ovA').classList.add('on') }
-function openCal(){ G('ovA').classList.remove('on'); G('ovC').classList.add('on') }
-function msub(){
-  if(!G('mN').value.trim() || !G('mM').value.trim()){ alert('Bitte Name und E-Mail angeben.'); return; }
-  G('ovA').classList.remove('on');
-  alert('Danke! Wir melden uns innerhalb von 24 Stunden.');
+function saveToBrain(){
+  if(!lastSolution) return;
+  const entry = {
+    id: Date.now().toString(),
+    date: new Date().toISOString(),
+    question: lastSolution.question,
+    answer: lastSolution.answer,
+    topic: lastSolution.topic||selectedTopic
+  };
+  S.problems.push(entry);
+  if(!S.topicsSeen.includes(entry.topic)) S.topicsSeen.push(entry.topic);
+  saveState();
+  addXP(20);
+  toast('Im Gehirn gespeichert! 🧠','success');
+  renderDashboard();
 }
-function ksub(){
-  if(!G('kNm').value.trim() || !G('kMl').value.trim()){ alert('Bitte Name und E-Mail angeben.'); return; }
-  alert('Nachricht gesendet. Wir antworten innerhalb von 24 Stunden.');
+
+function addToSpickzettel(){
+  toast('Zum Spickzettel hinzugefügt!','success');
 }
+
+function clearSolver(){
+  document.getElementById('math-input').value='';
+  clearImage();
+  document.getElementById('solution-output').style.display='none';
+  document.getElementById('solution-empty').style.display='block';
+  document.getElementById('sol-actions').style.display='none';
+  document.getElementById('sol-header').style.display='none';
+  lastSolution=null;
+}
+
+// ═══════════════════════════════════════════
+// TOPICS
+// ═══════════════════════════════════════════
+const TOPICS_DATA = {
+  analysis11:{
+    icon:'📈',name:'Analysis 11. Klasse',color:'#7c3aed',
+    desc:'Ableitung, Extremwerte, Kurvendiskussion, Integrale',
+    count:'12 Themen',
+    subtopics:['Ableitungsregeln','Produktregel','Quotientenregel','Kettenregel','Extremwertaufgaben','Kurvendiskussion','Nullstellen','Tangente & Normale','Integralrechnung Grundlagen','Flächenberechnung','Stammfunktionen','Monotonie & Krümmung'],
+    formulas:[
+      {name:'Produktregel',latex:"(u \\cdot v)' = u' \\cdot v + u \\cdot v'",tip:'Erste ableiten mal Zweite plus Erste mal Zweite ableiten'},
+      {name:'Quotientenregel',latex:"\\left(\\frac{u}{v}\\right)' = \\frac{u' \\cdot v - u \\cdot v'}{v^2}",tip:'Zähler: oben ableiten mal unten minus oben mal unten ableiten, durch unten zum Quadrat'},
+      {name:'Kettenregel',latex:"(f(g(x)))' = f'(g(x)) \\cdot g'(x)",tip:'Äußere Funktion ableiten, innere stehen lassen, mal innere Ableitung'},
+      {name:'Potenzregel',latex:"(x^n)' = n \\cdot x^{n-1}",tip:'Exponent nach vorne, Exponent um 1 verringern'},
+      {name:'Stammfunktion (Grundintegral)',latex:"\\int x^n\\,dx = \\frac{x^{n+1}}{n+1} + C \\quad (n \\neq -1)",tip:'Umgekehrt zur Ableitung: Exponent +1, durch neuen Exponenten teilen'},
+      {name:'Extremwertbedingung',latex:"f'(x_0)=0 \\text{ und } f''(x_0)\\neq 0",tip:'f\'\'(x) < 0: Hochpunkt (Hügel), f\'\'(x) > 0: Tiefpunkt (Tal)'},
+    ]
+  },
+  analysis12:{
+    icon:'🔢',name:'Analysis 12. Klasse',color:'#06b6d4',
+    desc:'e-Funktion, ln, Trigonometrie, Partielle Integration',
+    count:'8 Themen',
+    subtopics:['e-Funktion ableiten','Natürlicher Logarithmus','ln-Funktion','Trigonometrische Funktionen','sin/cos/tan ableiten','Partielle Integration','Substitutionsregel','Rotationskörper'],
+    formulas:[
+      {name:'e-Funktion',latex:"(e^x)' = e^x",tip:'Die e-Funktion ist ihre eigene Ableitung!'},
+      {name:'Kettenregel mit e',latex:"(e^{g(x)})' = e^{g(x)} \\cdot g'(x)",tip:'Immer e hoch (bleibt) mal innere Ableitung'},
+      {name:'Natürlicher Logarithmus',latex:"(\\ln x)' = \\frac{1}{x}",tip:'Gilt für x > 0'},
+      {name:'ln mit Kettenregel',latex:"(\\ln(g(x)))' = \\frac{g'(x)}{g(x)}",tip:'Zähler ist die Ableitung des Inneren'},
+      {name:'sin/cos',latex:"(\\sin x)' = \\cos x \\quad (\\cos x)' = -\\sin x",tip:'sin → cos → -sin → -cos → sin (Kreislauf)'},
+      {name:'Partielle Integration',latex:"\\int u \\cdot v'\\,dx = u \\cdot v - \\int u' \\cdot v\\,dx",tip:'Wähle u so, dass die Ableitung einfacher wird'},
+    ]
+  },
+  vektoren:{
+    icon:'📐',name:'Vektoren & Geometrie',color:'#10b981',
+    desc:'Vektoren, Geraden, Ebenen, Abstände und Winkel',
+    count:'10 Themen',
+    subtopics:['Vektoraddition','Skalarprodukt','Kreuzprodukt','Betrag eines Vektors','Geradengleichung','Ebenengleichung (Normalenform)','Ebenengleichung (Parameterform)','Abstand Punkt-Ebene','Abstand Punkt-Gerade','Schnittwinkel'],
+    formulas:[
+      {name:'Skalarprodukt',latex:"\\vec{a} \\cdot \\vec{b} = a_1b_1 + a_2b_2 + a_3b_3",tip:'Ergebnis ist eine Zahl! Wenn = 0: Vektoren sind senkrecht'},
+      {name:'Betrag eines Vektors',latex:"|\\vec{a}| = \\sqrt{a_1^2 + a_2^2 + a_3^2}",tip:'Pythagoras im Raum'},
+      {name:'Winkel zwischen Vektoren',latex:"\\cos\\varphi = \\frac{\\vec{a}\\cdot\\vec{b}}{|\\vec{a}|\\cdot|\\vec{b}|}",tip:'Ergebnis mit arccos in Winkel umwandeln'},
+      {name:'Abstand Punkt von Ebene',latex:"d = \\frac{|\\vec{n}\\cdot\\vec{x}_0 - d|}{|\\vec{n}|}",tip:'Normalenvektor und Ebenengleichung in Normalenform nötig'},
+      {name:'Geradengleichung',latex:"\\vec{x} = \\vec{p} + t\\cdot\\vec{u}",tip:'p = Aufpunkt, u = Richtungsvektor, t = Parameter (beliebig)'},
+      {name:'Kreuzprodukt',latex:"\\vec{a}\\times\\vec{b} = \\begin{pmatrix}a_2b_3-a_3b_2\\\\a_3b_1-a_1b_3\\\\a_1b_2-a_2b_1\\end{pmatrix}",tip:'Ergebnis steht senkrecht auf beiden Vektoren!'},
+    ]
+  },
+  stochastik:{
+    icon:'🎲',name:'Stochastik',color:'#f59e0b',
+    desc:'Wahrscheinlichkeit, Binomial-, Normalverteilung, Tests',
+    count:'9 Themen',
+    subtopics:['Wahrscheinlichkeitsrechnung','Bedingte Wahrscheinlichkeit','Stochastische Unabhängigkeit','Zufallsvariable','Binomialverteilung','Erwartungswert & Varianz','Normalverteilung','Hypothesentests','Konfidenzintervalle'],
+    formulas:[
+      {name:'Binomialverteilung',latex:"P(X=k) = \\binom{n}{k} \\cdot p^k \\cdot (1-p)^{n-k}",tip:'n = Anzahl Versuche, k = gesuchte Treffer, p = Trefferwahrscheinlichkeit'},
+      {name:'Binomialkoeffizient',latex:"\\binom{n}{k} = \\frac{n!}{k!\\cdot(n-k)!}",tip:'Auch im Taschenrechner: nCr(n,k)'},
+      {name:'Erwartungswert Binomial',latex:"E(X) = n \\cdot p",tip:'Durchschnittliche Trefferzahl bei n Versuchen'},
+      {name:'Varianz Binomial',latex:"Var(X) = n \\cdot p \\cdot (1-p)",tip:'Streuungsmaß; Standardabweichung: σ = √Var(X)'},
+      {name:'Bedingte Wahrscheinlichkeit',latex:"P(A|B) = \\frac{P(A\\cap B)}{P(B)}",tip:'Wahrscheinlichkeit von A, wenn B bereits eingetreten ist'},
+      {name:'Bayes-Formel',latex:"P(B|A) = \\frac{P(A|B)\\cdot P(B)}{P(A)}",tip:'Umkehrung der bedingten Wahrscheinlichkeit'},
+    ]
+  },
+  bwl:{
+    icon:'💼',name:'BWL & Rechnungswesen',color:'#ef4444',
+    desc:'Bilanz, GuV, Kalkulation, Abschreibungen, KER',
+    count:'10 Themen',
+    subtopics:['Bilanz (Aktiva/Passiva)','GuV (Gewinn-/Verlustrechnung)','Lineare Abschreibung','Degressive Abschreibung','Vollkostenrechnung','Deckungsbeitragsrechnung','Break-Even-Analyse','Stückkalkulation','Investitionsrechnung','Finanzplanung'],
+    formulas:[
+      {name:'Deckungsbeitrag (DB)',latex:"DB = \\text{Erlöse} - \\text{Variable Kosten}",tip:'DB I = Erlöse - variable Kosten; DB II = DB I - Fixkosten'},
+      {name:'Break-Even-Punkt',latex:"x^* = \\frac{\\text{Fixkosten}}{\\text{Stückdeckungsbeitrag}}",tip:'Menge, bei der weder Gewinn noch Verlust entsteht'},
+      {name:'Stückdeckungsbeitrag',latex:"db = p - k_v",tip:'Preis minus variable Stückkosten'},
+      {name:'Lineare Abschreibung',latex:"A = \\frac{AHK - RW}{n}",tip:'AHK = Anschaffungskosten, RW = Restwert, n = Nutzungsdauer'},
+      {name:'Degressiver AfA-Satz',latex:"AfA = \\text{Buchwert} \\times \\frac{AfA_{\\%}}{100}",tip:'Basis ist immer der aktuelle Buchwert, nicht der ursprüngliche'},
+      {name:'Gewinn',latex:"G = \\text{Erlöse} - \\text{Gesamtkosten} = DB - FK",tip:'Gewinn erst wenn DB die Fixkosten übersteigt'},
+    ]
+  },
+  algebra:{
+    icon:'🔣',name:'Algebra & Arithmetik',color:'#8b5cf6',
+    desc:'Gleichungen, Polynome, Wurzeln, Potenzen',
+    count:'7 Themen',
+    subtopics:['Lineare Gleichungen','Quadratische Gleichungen','Polynome','Bruchgleichungen','Wurzeln','Potenzen & Logarithmen','LGS (Lineare Gleichungssysteme)'],
+    formulas:[
+      {name:'Lösungsformel (pq-Formel)',latex:"x_{1,2} = -\\frac{p}{2} \\pm \\sqrt{\\left(\\frac{p}{2}\\right)^2 - q}",tip:'Nur bei x² + px + q = 0 (auf 1 normiert!)'},
+      {name:'Lösungsformel (abc-Formel)',latex:"x_{1,2} = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}",tip:'Diskriminante D = b²-4ac: D>0 → 2 Lösungen, D=0 → 1 Lösung, D<0 → keine reelle Lösung'},
+      {name:'Potenzgesetze',latex:"a^m \\cdot a^n = a^{m+n} \\quad \\frac{a^m}{a^n} = a^{m-n} \\quad (a^m)^n = a^{m\\cdot n}",tip:'Beim Multiplizieren: Exponenten addieren'},
+      {name:'Logarithmengesetze',latex:"\\log(a\\cdot b)=\\log a+\\log b \\quad \\log\\frac{a}{b}=\\log a-\\log b",tip:'Produkt → Summe der Logarithmen'},
+      {name:'Binom. Formeln',latex:"(a+b)^2=a^2+2ab+b^2 \\quad (a-b)^2=a^2-2ab+b^2",tip:'Drittes Binom: (a+b)(a-b) = a²-b²'},
+    ]
+  }
+};
+
+function renderTopics(){
+  const grid = document.getElementById('topics-grid');
+  grid.innerHTML = Object.entries(TOPICS_DATA).map(([key,t])=>`
+    <div class="topic-card" onclick="showTopicDetail('${key}')">
+      <div class="tc-icon">${t.icon}</div>
+      <div class="tc-name">${t.name}</div>
+      <div class="tc-sub">${t.desc}</div>
+      <div class="tc-count" style="background:${t.color}22;color:${t.color};border:1px solid ${t.color}44">${t.count}</div>
+      <div class="topic-progress"><div class="topic-progress-fill" style="width:${getTopicProgress(key)}%;background:${t.color}"></div></div>
+    </div>`).join('');
+}
+
+function getTopicProgress(key){
+  const t = TOPICS_DATA[key];
+  if(!t) return 0;
+  const seen = S.problems.filter(p=>p.topic===t.name || CHIPS.some(c=>c.toLowerCase().includes(key.split('-')[0])&&p.topic===c)).length;
+  return Math.min(100,seen*10);
+}
+
+function showTopicDetail(key){
+  const t = TOPICS_DATA[key];
+  if(!t) return;
+  document.getElementById('topics-main').classList.add('hidden');
+  const detail = document.getElementById('topic-detail');
+  detail.classList.add('show');
+  const content = document.getElementById('topic-detail-content');
+  content.innerHTML=`
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px">
+      <span style="font-size:40px">${t.icon}</span>
+      <div>
+        <h2 style="font-size:22px;font-weight:800;letter-spacing:-.025em">${t.name}</h2>
+        <p style="color:var(--text2);font-size:13px">${t.desc}</p>
+      </div>
+    </div>
+    <h3 style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em">Unterthemen</h3>
+    <div class="subtopic-grid" style="margin-bottom:28px">
+      ${t.subtopics.map(s=>`<button class="subtopic-btn" onclick="askAIForTopic('${s.replace(/'/g,"\\'")}','${t.name}')">${s}</button>`).join('')}
+    </div>
+    <h3 style="font-size:13px;font-weight:700;color:var(--text2);margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em">Wichtige Formeln</h3>
+    ${t.formulas.map(f=>`
+      <div class="formula-card">
+        <div class="formula-name">${f.name}</div>
+        <div class="formula-display katex-render">$$${f.latex}$$</div>
+        <div class="formula-tip">💡 ${f.tip}</div>
+      </div>`).join('')}
+    <button class="gen-sheet-btn" style="margin-top:20px" onclick="generateSheetFor('${t.name}')">📋 Spickzettel für ${t.name} erstellen</button>
+  `;
+  // Render math
+  setTimeout(()=>renderMath(content),100);
+}
+
+function showTopicsMain(){
+  document.getElementById('topics-main').classList.remove('hidden');
+  document.getElementById('topic-detail').classList.remove('show');
+}
+
+function askAIForTopic(subtopic, topicName){
+  goTo('solver');
+  document.getElementById('math-input').value = `Erkläre mir "${subtopic}" aus dem Bereich ${topicName} mit einem ausführlichen Beispiel und Schritt-für-Schritt-Lösung.`;
+  const chipMatch = CHIPS.find(c=>topicName.toLowerCase().includes(c.split(' ')[0].toLowerCase()));
+  if(chipMatch) document.querySelector(`.topic-chip[onclick*="${chipMatch}"]`)?.click();
+}
+
+function generateSheetFor(topicName){
+  goTo('sheets');
+  setTimeout(()=>{
+    const btn = Array.from(document.querySelectorAll('.sheet-topic-btn')).find(b=>b.textContent.trim().includes(topicName.split(' ')[0]));
+    if(btn) btn.click();
+  },200);
+}
+
+// ═══════════════════════════════════════════
+// BRAIN
+// ═══════════════════════════════════════════
+function renderBrain(){
+  const total = document.getElementById('brain-total');
+  if(total) total.textContent = S.problems.length;
+  const topicsSet = [...new Set(S.problems.map(p=>p.topic).filter(Boolean))];
+  const tcEl = document.getElementById('brain-topics-count');
+  if(tcEl) tcEl.textContent = topicsSet.length;
+  const bxp = document.getElementById('brain-xp');
+  if(bxp) bxp.textContent = S.xp;
+
+  // Filter
+  const filter = document.getElementById('brain-filter');
+  if(filter){
+    const cur = filter.value;
+    filter.innerHTML = '<option value="">Alle Themen</option>'+topicsSet.map(t=>`<option value="${t}"${t===cur?' selected':''}>${t}</option>`).join('');
+  }
+
+  const list = document.getElementById('brain-list');
+  let problems = [...S.problems].reverse();
+  const filterVal = document.getElementById('brain-filter')?.value;
+  if(filterVal) problems = problems.filter(p=>p.topic===filterVal);
+
+  if(problems.length===0){
+    list.innerHTML=`<div class="empty-state"><div class="empty-icon">🧠</div><h3>Noch nichts gespeichert</h3><p>Löse Aufgaben und speichere sie im Gehirn,<br>um sie hier zu finden.</p></div>`;
+    return;
+  }
+  list.innerHTML = problems.map(p=>`
+    <div class="brain-entry" onclick="showBrainEntry('${p.id}')">
+      <div class="be-top">
+        <span class="be-badge" style="background:${topicColor(p.topic)}22;color:${topicColor(p.topic)};border-color:${topicColor(p.topic)}44">${p.topic||'Allgemein'}</span>
+        <span class="be-time">${new Date(p.date).toLocaleDateString('de-DE')}</span>
+      </div>
+      <div class="be-question">${p.question.substring(0,120)}${p.question.length>120?'...':''}</div>
+      <div class="be-preview">Lösung gespeichert → klicken zum Öffnen</div>
+    </div>`).join('');
+}
+
+function showBrainEntry(id){
+  const p = S.problems.find(x=>x.id===id);
+  if(!p) return;
+  // Open solver with solution
+  goTo('solver');
+  document.getElementById('math-input').value = p.question;
+  lastSolution = p;
+  selectedTopic = p.topic||'Sonstiges';
+  showSolution(p.answer, p.question);
+}
+
+function clearBrain(){
+  if(!confirm('Wirklich alle gespeicherten Aufgaben löschen?')) return;
+  S.problems=[];
+  saveState();
+  renderBrain();
+  toast('Gehirn geleert','info');
+}
+
+function viewProblem(id){
+  showBrainEntry(id);
+}
+
+// ═══════════════════════════════════════════
+// SPICKZETTEL
+// ═══════════════════════════════════════════
+let selectedSheetTopic = null;
+let currentSheetContent = null;
+
+function renderSheets(){
+  const topicsEl = document.getElementById('sheet-topics');
+  const allTopics = Object.values(TOPICS_DATA).map(t=>t.name);
+  topicsEl.innerHTML = allTopics.map(t=>`
+    <button class="sheet-topic-btn${selectedSheetTopic===t?' active':''}" onclick="selectSheetTopic('${t}',this)">
+      <span>${topicIcon2(t)}</span>${t}
+    </button>`).join('');
+  renderSavedSheets();
+}
+
+function selectSheetTopic(t,el){
+  selectedSheetTopic=t;
+  document.querySelectorAll('.sheet-topic-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('gen-sheet-btn').disabled=false;
+}
+
+async function generateSheet(){
+  if(!selectedSheetTopic){ toast('Bitte Thema wählen','error'); return; }
+  const apiKey = localStorage.getItem('mathgenius_apikey');
+  if(!apiKey){ showApiModal(); return; }
+  const btn = document.getElementById('gen-sheet-btn');
+  btn.disabled=true;
+  btn.textContent='⏳ Wird erstellt...';
+  const preview = document.getElementById('sheet-preview');
+  preview.innerHTML=`<div class="loading-wrap"><div class="brain-loader">📋</div><p style="color:var(--text2)">Spickzettel wird generiert...</p></div>`;
+  try{
+    const result = await callClaude(
+      [{role:'user',content:`Erstelle einen vollständigen Spickzettel für: ${selectedSheetTopic}`}],
+      SPICKZETTEL_PROMPT
+    );
+    if(!result) return;
+    currentSheetContent = result;
+    const div = document.createElement('div');
+    div.className='sheet-content';
+    renderMarkdownMath(result,div);
+    preview.innerHTML='';
+    preview.appendChild(div);
+    document.getElementById('sheet-actions').style.display='flex';
+    addXP(30);
+    toast('Spickzettel erstellt! 📋','success');
+  } catch(e){
+    toast('Fehler: '+e.message,'error');
+    preview.innerHTML=`<div class="sheet-empty"><p>Fehler beim Erstellen. Versuche es erneut.</p></div>`;
+  } finally {
+    btn.disabled=false;
+    btn.textContent='✨ Spickzettel generieren';
+  }
+}
+
+function saveSheet(){
+  if(!currentSheetContent) return;
+  const entry = {
+    id:Date.now().toString(),
+    topic:selectedSheetTopic,
+    content:currentSheetContent,
+    date:new Date().toISOString()
+  };
+  S.sheets.push(entry);
+  saveState();
+  renderSavedSheets();
+  addXP(20);
+  toast('Spickzettel gespeichert!','success');
+}
+
+function renderSavedSheets(){
+  const el = document.getElementById('saved-sheets-list');
+  if(!el) return;
+  if(S.sheets.length===0){
+    el.innerHTML='<p style="font-size:12px;color:var(--text3)">Noch keine Spickzettel gespeichert.</p>';
+    return;
+  }
+  el.innerHTML = [...S.sheets].reverse().map(s=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:16px">📋</span>
+      <div style="flex:1;overflow:hidden">
+        <div style="font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.topic}</div>
+        <div style="font-size:11px;color:var(--text3)">${new Date(s.date).toLocaleDateString('de-DE')}</div>
+      </div>
+      <button onclick="loadSavedSheet('${s.id}')" style="font-size:11px;padding:4px 10px;border-radius:6px;background:var(--card2);border:1px solid var(--border2);color:var(--text2);cursor:pointer">Öffnen</button>
+      <button onclick="deleteSheet('${s.id}')" style="font-size:11px;padding:4px 10px;border-radius:6px;background:var(--red3);border:1px solid rgba(239,68,68,.3);color:var(--red);cursor:pointer">✕</button>
+    </div>`).join('');
+}
+
+function loadSavedSheet(id){
+  const s = S.sheets.find(x=>x.id===id);
+  if(!s) return;
+  currentSheetContent = s.content;
+  selectedSheetTopic = s.topic;
+  const preview = document.getElementById('sheet-preview');
+  const div = document.createElement('div');
+  div.className='sheet-content';
+  renderMarkdownMath(s.content,div);
+  preview.innerHTML='';
+  preview.appendChild(div);
+  document.getElementById('sheet-actions').style.display='flex';
+}
+
+function deleteSheet(id){
+  S.sheets = S.sheets.filter(s=>s.id!==id);
+  saveState();
+  renderSavedSheets();
+  toast('Spickzettel gelöscht','info');
+}
+
+function copySheet(){
+  if(!currentSheetContent){ toast('Kein Inhalt zum Kopieren','error'); return; }
+  navigator.clipboard.writeText(currentSheetContent).then(()=>toast('Kopiert!','success')).catch(()=>toast('Kopieren fehlgeschlagen','error'));
+}
+
+// ═══════════════════════════════════════════
+// MERKEINTRÄGE
+// ═══════════════════════════════════════════
+async function generateNote(){
+  const apiKey = localStorage.getItem('mathgenius_apikey');
+  if(!apiKey){ showApiModal(); return; }
+  const todayProblems = S.problems.filter(p=>{
+    const d = new Date(p.date);
+    const today = new Date();
+    return d.toDateString()===today.toDateString();
+  });
+  if(todayProblems.length===0){
+    toast('Löse erst einige Aufgaben, um einen Merkeintrag zu erstellen!','info');
+    return;
+  }
+  const btn = document.getElementById('gen-note-btn');
+  btn.disabled=true;
+  btn.textContent='⏳ Wird erstellt...';
+  try{
+    const summary = todayProblems.map((p,i)=>`Aufgabe ${i+1} (${p.topic}): ${p.question.substring(0,200)}`).join('\n');
+    const result = await callClaude(
+      [{role:'user',content:`Heute wurden folgende Aufgaben bearbeitet:\n${summary}\n\nErstelle einen Merkeintrag für diesen Lerntag.`}],
+      MERKEINTRAG_PROMPT
+    );
+    if(!result) return;
+    const entry = {
+      id:Date.now().toString(),
+      date:new Date().toISOString(),
+      content:result,
+      topics:[...new Set(todayProblems.map(p=>p.topic).filter(Boolean))],
+      problemCount:todayProblems.length
+    };
+    S.notes.unshift(entry);
+    saveState();
+    renderNotes();
+    addXP(50);
+    toast('Merkeintrag erstellt! 📔','success');
+  } catch(e){
+    toast('Fehler: '+e.message,'error');
+  } finally {
+    btn.disabled=false;
+    btn.textContent='✨ Heutigen Merkeintrag erstellen';
+  }
+}
+
+async function quickGenNote(){
+  goTo('notes');
+  setTimeout(()=>generateNote(),300);
+}
+
+function renderNotes(){
+  const list = document.getElementById('notes-list');
+  if(!list) return;
+  if(S.notes.length===0){
+    list.innerHTML=`<div class="empty-state"><div class="empty-icon">📔</div><h3>Noch keine Merkeinträge</h3><p>Löse Aufgaben und klicke auf "Merkeintrag erstellen",<br>um dein Lerntagebuch zu starten.</p></div>`;
+    return;
+  }
+  list.innerHTML = S.notes.map(n=>`
+    <div class="note-card anim-in">
+      <div class="note-card-header">
+        <div class="note-date">📔 ${new Date(n.date).toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
+        <div class="note-badge-row">
+          ${(n.topics||[]).map(t=>`<span class="note-topic-tag">${t}</span>`).join('')}
+          <span style="font-size:10.5px;color:var(--text3)">${n.problemCount} Aufgaben</span>
+        </div>
+      </div>
+      <div class="note-body note-md" id="note-body-${n.id}"></div>
+      <div class="note-card-footer">
+        <button class="sol-btn" onclick="deleteNote('${n.id}')">🗑️ Löschen</button>
+        <button class="sol-btn" onclick="copyNote('${n.id}')">📋 Kopieren</button>
+      </div>
+    </div>`).join('');
+
+  // Render math in each note
+  S.notes.forEach(n=>{
+    const body = document.getElementById('note-body-'+n.id);
+    if(body) renderMarkdownMath(n.content,body);
+  });
+}
+
+function deleteNote(id){
+  S.notes = S.notes.filter(n=>n.id!==id);
+  saveState();
+  renderNotes();
+  toast('Merkeintrag gelöscht','info');
+}
+function copyNote(id){
+  const n = S.notes.find(x=>x.id===id);
+  if(!n) return;
+  navigator.clipboard.writeText(n.content).then(()=>toast('Kopiert!','success')).catch(()=>toast('Fehler','error'));
+}
+
+// ═══════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════
+function renderSettings(){
+  const key = localStorage.getItem('mathgenius_apikey')||'';
+  document.getElementById('settings-api-key').value = key ? '••••••••••••'+key.slice(-4) : '';
+  document.getElementById('settings-name').value = S.profile?.name||'';
+  document.getElementById('settings-class').value = S.profile?.class||'11';
+  document.getElementById('info-problems').textContent = S.problems.length;
+  document.getElementById('info-sheets').textContent = S.sheets.length;
+  document.getElementById('info-notes').textContent = S.notes.length;
+  document.getElementById('info-xp').textContent = S.xp;
+}
+function updateApiKey(){
+  const key = document.getElementById('settings-api-key').value.trim();
+  if(!key.startsWith('sk-')){ toast('Ungültiger API Key','error'); return; }
+  localStorage.setItem('mathgenius_apikey',key);
+  toast('API Key gespeichert','success');
+}
+function saveProfile(){
+  S.profile = {
+    name:document.getElementById('settings-name').value.trim(),
+    class:document.getElementById('settings-class').value
+  };
+  saveState();
+  toast('Profil gespeichert','success');
+  renderDashboard();
+}
+function exportData(){
+  const blob = new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `mathgenius_backup_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  toast('Daten exportiert','success');
+}
+function resetAll(){
+  if(!confirm('WIRKLICH alle Daten löschen? Das kann nicht rückgängig gemacht werden!')) return;
+  if(!confirm('Bist du sicher? Alle Aufgaben, Spickzettel und Merkeinträge werden gelöscht!')) return;
+  localStorage.removeItem(BRAIN_KEY);
+  S={...defaultState};
+  saveState();
+  toast('Alle Daten gelöscht','info');
+  renderDashboard();
+}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function toast(msg,type='info'){
+  const el = document.getElementById('toast');
+  el.textContent = type==='success'?'✓ '+msg:type==='error'?'✕ '+msg:'ℹ '+msg;
+  el.className = 'show '+type;
+  setTimeout(()=>el.className='',3000);
+}
+
+function timeAgo(iso){
+  const d = new Date(iso);
+  const diff = (Date.now()-d)/1000;
+  if(diff<60) return 'gerade';
+  if(diff<3600) return Math.floor(diff/60)+'min';
+  if(diff<86400) return Math.floor(diff/3600)+'h';
+  return Math.floor(diff/86400)+'d';
+}
+
+function topicColor(topic){
+  if(!topic) return '#7c3aed';
+  if(topic.toLowerCase().includes('analysis')) return '#7c3aed';
+  if(topic.toLowerCase().includes('vektor')||topic.toLowerCase().includes('geo')) return '#10b981';
+  if(topic.toLowerCase().includes('stoch')) return '#f59e0b';
+  if(topic.toLowerCase().includes('bwl')||topic.toLowerCase().includes('rechnung')) return '#ef4444';
+  if(topic.toLowerCase().includes('algebra')) return '#8b5cf6';
+  return '#06b6d4';
+}
+
+function topicIcon(topic){
+  if(!topic) return '📐';
+  if(topic.toLowerCase().includes('analysis')) return '📈';
+  if(topic.toLowerCase().includes('vektor')||topic.toLowerCase().includes('geo')) return '📐';
+  if(topic.toLowerCase().includes('stoch')) return '🎲';
+  if(topic.toLowerCase().includes('bwl')||topic.toLowerCase().includes('rechnung')) return '💼';
+  if(topic.toLowerCase().includes('algebra')) return '🔣';
+  return '🧮';
+}
+
+function topicIcon2(name){
+  const entry = Object.values(TOPICS_DATA).find(t=>t.name===name);
+  return entry ? entry.icon : '📚';
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+function init(){
+  // Check API key
+  const apiKey = localStorage.getItem('mathgenius_apikey');
+  if(!apiKey){
+    document.getElementById('api-modal').classList.remove('hidden');
+  }
+  // Allow Enter key in API modal
+  document.getElementById('api-key-input').addEventListener('keydown',e=>{ if(e.key==='Enter') saveApiKey(); });
+  // Init solver
+  initSolver();
+  // Render dashboard
+  renderDashboard();
+  renderTopics();
+}
+
+window.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
 </html>
