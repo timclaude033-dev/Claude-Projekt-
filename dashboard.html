@@ -355,12 +355,14 @@ select.inp option { background: var(--s2); }
   border-radius: 99px;
 }
 
-.tag-now   { background: rgba(224,85,85,.15); color: #f87171; }
-.tag-week  { background: rgba(224,155,58,.15); color: #f9a825; }
-.tag-month { background: rgba(59,191,114,.12); color: #5dd68e; }
-.tag-later { background: rgba(90,106,130,.15); color: var(--muted2); }
-.tag-legal { background: rgba(139,108,247,.15); color: #a78bfa; }
-.tag-ms    { background: rgba(201,168,76,.15); color: var(--gold2); }
+.tag-gratis { background: rgba(59,191,114,.13); color: #4ade80; font-weight: 700; }
+.tag-paid   { background: rgba(224,85,85,.13); color: #f87171; font-weight: 700; }
+.tag-ms     { background: rgba(201,168,76,.15); color: var(--gold2); }
+.tag-now    { background: rgba(224,85,85,.15); color: #f87171; }
+.tag-week   { background: rgba(224,155,58,.15); color: #f9a825; }
+.tag-month  { background: rgba(59,191,114,.12); color: #5dd68e; }
+.tag-later  { background: rgba(90,106,130,.15); color: var(--muted2); }
+.tag-legal  { background: rgba(139,108,247,.15); color: #a78bfa; }
 
 .kb-card-grip {
   width: 16px;
@@ -918,71 +920,82 @@ function renderGoalBar(v) {
 // ══════════════════════════════════════════════
 // KANBAN DATA
 // ══════════════════════════════════════════════
+// cost: 'free' | 'paid'
 const TASKS = [
-  // Infrastruktur & Setup
-  { id:'t1',  text:'Domain flowmatic.de oder flowmatic.io registrieren',                           col:'offen', tag:'now'  },
-  { id:'t2',  text:'GitHub Pages für Repository aktivieren und testen',                            col:'offen', tag:'now'  },
-  { id:'t3',  text:'n8n Cloud-Account erstellen',                                                 col:'offen', tag:'now'  },
-  { id:'t4',  text:'Gmail-Konto für Flowmatic einrichten + SMTP in n8n konfigurieren',            col:'offen', tag:'now'  },
-  { id:'t5',  text:'Google Sheets Vorlage für Lead-Speicherung anlegen',                          col:'offen', tag:'now'  },
-  { id:'t6',  text:'Gewerbe anmelden',                                                            col:'offen', tag:'legal'},
-  { id:'t7',  text:'Geschäftskonto eröffnen',                                                     col:'offen', tag:'legal'},
-  // Brand
-  { id:'t8',  text:'Flowmatic-Logo erstellen (SVG)',                                              col:'offen', tag:'now'  },
-  { id:'t9',  text:'Brand-Farben und Fonts festlegen',                                            col:'offen', tag:'now'  },
-  { id:'t10', text:'Eigene Flowmatic-Landingpage mit Angeboten live stellen',                     col:'offen', tag:'now'  },
-  { id:'t11', text:'LinkedIn-Profil auf Flowmatic-Brand umstellen',                               col:'offen', tag:'week' },
-  { id:'t12', text:'Professionelle E-Mail-Signatur erstellen',                                    col:'offen', tag:'week' },
-  // Demos
-  { id:'t13', text:'Immobilien-Demo Landingpage bauen (Quiz-Funnel, Hero, Testimonials)',         col:'offen', tag:'now'  },
-  { id:'t14', text:'Immobilien-Demo auf GitHub Pages deployen und mobil testen',                  col:'offen', tag:'now'  },
-  { id:'t15', text:'Testformular ausfüllen — n8n Webhook, Mail und Google Sheets prüfen',         col:'offen', tag:'week' },
-  { id:'t16', text:'n8n Automation 1: Webhook, Bestätigungsmail, Inhaber-Benachrichtigung, Sheets', col:'offen', tag:'now'},
-  { id:'t17', text:'n8n Automation 2: Follow-up E-Mail Sequenz (Tag 0, 1, 3, 7)',                col:'offen', tag:'week' },
-  { id:'t18', text:'n8n Automation 3: Wöchentlicher Performance-Report',                         col:'offen', tag:'month'},
-  { id:'t19', text:'Zweite Demo-Branche wählen und bauen (Coaches / Handwerker)',                 col:'offen', tag:'month'},
-  // Angebot & Verträge
-  { id:'t20', text:'Angebots-PDF erstellen (Leistungen, Preise, Pakete)',                        col:'offen', tag:'now'  },
-  { id:'t21', text:'Rechnungsvorlage erstellen mit Steuernummer, Zahlungsziel 14 Tage',          col:'offen', tag:'week' },
-  { id:'t22', text:'Dienstleistungsvertrag / AGB Vorlage erstellen',                             col:'offen', tag:'week' },
-  { id:'t23', text:'Onboarding-Fragebogen für neue Kunden erstellen',                            col:'offen', tag:'week' },
-  { id:'t24', text:'Projektübergabe-Dokumentation für Kunden nach Lieferung',                    col:'offen', tag:'month'},
-  // Akquise
-  { id:'t25', text:'Liste mit 50 Immobilienmaklern auf XING und LinkedIn erstellen',             col:'offen', tag:'now'  },
-  { id:'t26', text:'Outreach-Template schreiben (kurz, Demo-Link rein)',                         col:'offen', tag:'now'  },
-  { id:'t27', text:'10 erste Immobilienmakler kontaktieren',                                     col:'offen', tag:'week' },
-  { id:'t28', text:'Ersten LinkedIn-Post veröffentlichen (Demo zeigen)',                         col:'offen', tag:'week' },
-  { id:'t29', text:'Follow-up nach 3 Tagen an alle kontaktierten Makler',                        col:'offen', tag:'week' },
-  { id:'t30', text:'Wöchentlich 15 neue Makler kontaktieren (Routine)',                          col:'offen', tag:'later'},
-  { id:'t31', text:'2x pro Woche LinkedIn-Content veröffentlichen',                              col:'offen', tag:'later'},
-  // Erster Kunde
-  { id:'t32', text:'Erstgespräch führen: 30 Min, Demo zeigen, Bedarf klären',                   col:'offen', tag:'week' },
-  { id:'t33', text:'Individuelles Angebot erstellen und versenden',                              col:'offen', tag:'week' },
-  { id:'t34', text:'Ersten Auftrag annehmen und 50 % Anzahlung einholen',                       col:'offen', tag:'ms'   },
-  { id:'t35', text:'Kunden-Landingpage in 7 Tagen liefern und n8n-Workflow einrichten',         col:'offen', tag:'month'},
-  { id:'t36', text:'Erste Rechnung stellen und Restzahlung einziehen',                          col:'offen', tag:'month'},
-  { id:'t37', text:'Kundenstimme nach Projektabschluss einholen',                               col:'offen', tag:'month'},
-  { id:'t38', text:'Retainer-Gespräch: Seite weiter optimieren?',                               col:'offen', tag:'month'},
-  // Tools für dich
-  { id:'t39', text:'Landingpage-Generator: Branche eingeben, Claude generiert Texte und HTML',  col:'offen', tag:'month'},
-  { id:'t40', text:'n8n Workflow-Bibliothek aufbauen (wiederverwendbare Flows pro Branche)',     col:'offen', tag:'month'},
-  { id:'t41', text:'Outreach-Automatisierung: n8n sendet LinkedIn-DMs und Follow-up-Mails',     col:'offen', tag:'month'},
-  { id:'t42', text:'Kunden-Onboarding-Automation: Auftrag rein, Fragebogen, Sheets, Willkommens-Mail', col:'offen', tag:'month'},
-  { id:'t43', text:'Wettbewerber-Analyse-Tool: Branche eingeben, Claude analysiert Landingpages', col:'offen', tag:'later'},
-  // Skalierung
-  { id:'t44', text:'5 aktive Retainer-Kunden erreichen (2.500 € passiv / Monat)',               col:'offen', tag:'ms'   },
-  { id:'t45', text:'Erste Case Study mit echten Lead-Zahlen schreiben',                         col:'offen', tag:'month'},
-  { id:'t46', text:'Google Ads Testkampagne starten (50–100 € Budget)',                         col:'offen', tag:'later'},
-  { id:'t47', text:'Ersten Freelancer für Ausführungsaufgaben engagieren',                      col:'offen', tag:'later'},
-  { id:'t48', text:'190.000 € Gesamtziel erreicht — Porsche kaufen',                            col:'offen', tag:'ms'   },
+
+  // ── BLOCK 1: KOSTENLOS — Setup & Tools ──────────────────────────────
+  { id:'t2',  text:'GitHub Pages für Repository aktivieren und testen',                              col:'offen', tag:'gratis', cost:'free' },
+  { id:'t3',  text:'n8n Cloud-Account erstellen (kostenloser Free-Plan)',                            col:'offen', tag:'gratis', cost:'free' },
+  { id:'t4',  text:'Gmail-Konto für Flowmatic einrichten + SMTP in n8n konfigurieren',              col:'offen', tag:'gratis', cost:'free' },
+  { id:'t5',  text:'Google Sheets Vorlage für Lead-Speicherung anlegen',                            col:'offen', tag:'gratis', cost:'free' },
+
+  // ── BLOCK 2: KOSTENLOS — Brand & Auftreten ───────────────────────────
+  { id:'t8',  text:'Flowmatic-Logo erstellen — Claude Code oder Canva Free',                        col:'offen', tag:'gratis', cost:'free' },
+  { id:'t9',  text:'Brand-Farben und Fonts festlegen',                                              col:'offen', tag:'gratis', cost:'free' },
+  { id:'t11', text:'LinkedIn-Profil auf Flowmatic-Brand umstellen (Foto, Headline, About)',         col:'offen', tag:'gratis', cost:'free' },
+  { id:'t12', text:'Professionelle E-Mail-Signatur erstellen',                                      col:'offen', tag:'gratis', cost:'free' },
+
+  // ── BLOCK 3: KOSTENLOS — Demos bauen ────────────────────────────────
+  { id:'t10', text:'Eigene Flowmatic-Landingpage mit Angeboten und Demo-Links live stellen',        col:'offen', tag:'gratis', cost:'free' },
+  { id:'t13', text:'Immobilien-Demo Landingpage bauen (Claude Code)',                               col:'offen', tag:'gratis', cost:'free' },
+  { id:'t14', text:'Immobilien-Demo auf GitHub Pages deployen und mobil testen',                    col:'offen', tag:'gratis', cost:'free' },
+  { id:'t15', text:'Testformular ausfüllen — n8n Webhook, Mail und Google Sheets prüfen',           col:'offen', tag:'gratis', cost:'free' },
+  { id:'t16', text:'n8n Automation 1: Webhook, Bestätigungsmail, Benachrichtigung, Sheets',        col:'offen', tag:'gratis', cost:'free' },
+  { id:'t17', text:'n8n Automation 2: Follow-up E-Mail Sequenz (Tag 0, 1, 3, 7)',                  col:'offen', tag:'gratis', cost:'free' },
+  { id:'t18', text:'n8n Automation 3: Wöchentlicher Performance-Report',                           col:'offen', tag:'gratis', cost:'free' },
+  { id:'t19', text:'Zweite Demo-Branche bauen (Coaches / Handwerker / Klinik)',                     col:'offen', tag:'gratis', cost:'free' },
+
+  // ── BLOCK 4: KOSTENLOS — Angebote & Dokumente ────────────────────────
+  { id:'t20', text:'Angebots-PDF erstellen mit Canva Free (Leistungen, Preise, Pakete)',            col:'offen', tag:'gratis', cost:'free' },
+  { id:'t21', text:'Rechnungsvorlage erstellen (Word / Google Docs — kostenlos)',                   col:'offen', tag:'gratis', cost:'free' },
+  { id:'t22', text:'Dienstleistungsvertrag / AGB Vorlage — kostenlose Muster online',              col:'offen', tag:'gratis', cost:'free' },
+  { id:'t23', text:'Onboarding-Fragebogen für neue Kunden erstellen (Google Forms)',                col:'offen', tag:'gratis', cost:'free' },
+  { id:'t24', text:'Projektübergabe-Dokumentation für Kunden erstellen',                            col:'offen', tag:'gratis', cost:'free' },
+
+  // ── BLOCK 5: KOSTENLOS — Akquise & Erster Kunde ──────────────────────
+  { id:'t25', text:'Liste mit 50 Immobilienmaklern auf XING und LinkedIn zusammenstellen',          col:'offen', tag:'gratis', cost:'free' },
+  { id:'t26', text:'Outreach-Template schreiben (kurz, Demo-Link rein)',                            col:'offen', tag:'gratis', cost:'free' },
+  { id:'t27', text:'10 erste Immobilienmakler kontaktieren (LinkedIn DM oder E-Mail)',              col:'offen', tag:'gratis', cost:'free' },
+  { id:'t28', text:'Ersten LinkedIn-Post veröffentlichen (Demo zeigen)',                            col:'offen', tag:'gratis', cost:'free' },
+  { id:'t29', text:'Follow-up nach 3 Tagen an alle kontaktierten Makler schicken',                 col:'offen', tag:'gratis', cost:'free' },
+  { id:'t32', text:'Erstgespräch führen: 30 Min, Demo zeigen, Bedarf klären',                     col:'offen', tag:'gratis', cost:'free' },
+  { id:'t33', text:'Individuelles Angebot erstellen und versenden',                                col:'offen', tag:'gratis', cost:'free' },
+  { id:'t34', text:'Ersten Auftrag annehmen und 50 % Anzahlung einholen',                         col:'offen', tag:'gratis', cost:'free' },
+  { id:'t35', text:'Kunden-Landingpage in 7 Tagen liefern und n8n-Workflow einrichten',           col:'offen', tag:'gratis', cost:'free' },
+  { id:'t36', text:'Rechnung stellen und Restzahlung einziehen',                                   col:'offen', tag:'gratis', cost:'free' },
+  { id:'t37', text:'Kundenstimme nach Projektabschluss einholen',                                  col:'offen', tag:'gratis', cost:'free' },
+  { id:'t38', text:'Retainer-Gespräch führen: Seite weiter optimieren?',                           col:'offen', tag:'gratis', cost:'free' },
+
+  // ── BLOCK 6: KOSTENLOS — Tools für dich ──────────────────────────────
+  { id:'t39', text:'Landingpage-Generator bauen: Branche eingeben, Claude generiert HTML',         col:'offen', tag:'gratis', cost:'free' },
+  { id:'t40', text:'n8n Workflow-Bibliothek aufbauen (wiederverwendbare Flows pro Branche)',       col:'offen', tag:'gratis', cost:'free' },
+  { id:'t41', text:'Outreach-Automatisierung mit n8n: Follow-up-Mails automatisch senden',        col:'offen', tag:'gratis', cost:'free' },
+  { id:'t42', text:'Kunden-Onboarding-Automation: Fragebogen, Sheets, Willkommens-Mail',          col:'offen', tag:'gratis', cost:'free' },
+  { id:'t30', text:'Wöchentlich 15 neue Makler kontaktieren (Routine etablieren)',                 col:'offen', tag:'gratis', cost:'free' },
+  { id:'t31', text:'2x pro Woche LinkedIn-Content veröffentlichen',                               col:'offen', tag:'gratis', cost:'free' },
+  { id:'t45', text:'Erste Case Study mit echten Lead-Zahlen schreiben',                           col:'offen', tag:'gratis', cost:'free' },
+
+  // ── BLOCK 7: MEILENSTEINE ─────────────────────────────────────────────
+  { id:'t44', text:'5 aktive Retainer-Kunden erreichen — 2.500 € passiv pro Monat',               col:'offen', tag:'ms',     cost:'free' },
+  { id:'t48', text:'190.000 € Gesamtziel erreicht',                                               col:'offen', tag:'ms',     cost:'free' },
+
+  // ── BLOCK 8: KOSTENPFLICHTIG ─────────────────────────────────────────
+  { id:'t1',  text:'Domain flowmatic.de registrieren — ca. 10–15 € / Jahr (Strato, Namecheap)',   col:'offen', tag:'paid',   cost:'paid' },
+  { id:'t6',  text:'Gewerbe anmelden — ca. 20–40 € Gewerbegebühr (einmalig)',                     col:'offen', tag:'paid',   cost:'paid' },
+  { id:'t7',  text:'Geschäftskonto eröffnen — z.B. Finom (ab 0 €) oder Sparkasse (ab ~5 €/Mo)',  col:'offen', tag:'paid',   cost:'paid' },
+  { id:'t43', text:'Wettbewerber-Analyse-Tool mit Claude API — API-Kosten je nach Nutzung',       col:'offen', tag:'paid',   cost:'paid' },
+  { id:'t46', text:'Google Ads Testkampagne starten — 50–100 € Budget',                           col:'offen', tag:'paid',   cost:'paid' },
+  { id:'t47', text:'Ersten Freelancer / VA engagieren — ca. 15–25 € / Stunde',                   col:'offen', tag:'paid',   cost:'paid' },
+  { id:'t49', text:'n8n Cloud auf bezahlten Plan upgraden — ab 20 € / Monat (wenn >5 Workflows)', col:'offen', tag:'paid',   cost:'paid' },
+  { id:'t50', text:'Canva Pro für professionellere Angebots-PDFs — ca. 13 € / Monat',             col:'offen', tag:'paid',   cost:'paid' },
 ];
 
-const TAG_LABELS = { now:'Sofort', week:'Woche 1', month:'Monat 1–2', later:'Später', legal:'Rechtlich', ms:'Meilenstein' };
+const TAG_LABELS = { gratis:'Kostenlos', paid:'Kostenpflichtig', ms:'Meilenstein', now:'Sofort', week:'Woche 1', month:'Monat 1–2', later:'Später', legal:'Rechtlich' };
 
 let taskState = {};
 
 function loadKanban() {
-  const saved = localStorage.getItem('fm_kb2');
+  const saved = localStorage.getItem('fm_kb3');
   if (saved) taskState = JSON.parse(saved);
   else TASKS.forEach(t => taskState[t.id] = t.col);
   renderKanban();
@@ -1045,7 +1058,7 @@ function onDrop(e, col) {
   const id = e.dataTransfer.getData('text/plain');
   if (id) {
     taskState[id] = col;
-    localStorage.setItem('fm_kb2', JSON.stringify(taskState));
+    localStorage.setItem('fm_kb3', JSON.stringify(taskState));
     renderKanban();
   }
 }
