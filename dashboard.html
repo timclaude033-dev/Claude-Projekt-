@@ -836,24 +836,70 @@ select.inp option { background: var(--s2); }
 
         <!-- ANGEBOTS-BUILDER -->
         <div class="g2">
-          <div class="card">
-            <div class="card-title">Angebots-Builder — Pakete auswählen</div>
-            <div class="price-row"><div class="price-name">Starter Landingpage<small>1 Seite, Kontaktformular, 5 Tage Lieferzeit</small></div><div class="price-amt">1.500 €</div><div class="toggle" data-val="1500" onclick="tp(this)"></div></div>
-            <div class="price-row"><div class="price-name">Performance Landingpage<small>Quiz-Funnel + Kalkulator + Social Proof, 7 Tage</small></div><div class="price-amt">3.500 €</div><div class="toggle on" data-val="3500" onclick="tp(this)"></div></div>
-            <div class="price-row"><div class="price-name">Service 1 — Lead-Eingang Automation<small>Webhook &rarr; Bestätigungsmail &rarr; Benachrichtigung &rarr; Sheets</small></div><div class="price-amt">1.000 €</div><div class="toggle on" data-val="1000" onclick="tp(this)"></div></div>
-            <div class="price-row"><div class="price-name">Service 2 — Follow-up Sequenz<small>4 automatische Mails: Tag 0, 1, 3, 7 &rarr; stoppt bei Antwort</small></div><div class="price-amt">1.400 €</div><div class="toggle on" data-val="1400" onclick="tp(this)"></div></div>
-            <div class="price-row"><div class="price-name">Service 3 — Wöchentlicher Performance-Report<small>Automatischer KPI-Bericht jeden Montag per Mail</small></div><div class="price-amt">1.200 €</div><div class="toggle" data-val="1200" onclick="tp(this)"></div></div>
-            <div class="price-row"><div class="price-name">Monatlicher Retainer<small>Pflege, A/B-Tests, Optimierungen, technischer Support</small></div><div class="price-amt">500 €/Mo</div><div class="toggle on" data-val="500" data-mo="1" onclick="tp(this)"></div></div>
-            <div class="total-row"><div><div class="total-lbl">Gesamtpreis (netto, einmalig)</div><div style="font-size:11px;color:var(--muted);margin-top:2px;" id="moNote">+ 500 €/Monat ab Monat 2</div></div><div class="total-val" id="offerTotal">5.900 €</div></div>
+          <div>
+            <div class="card-title" style="margin-bottom:12px;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted2);">Paket auswählen</div>
+
+            <!-- Paket 1 -->
+            <div class="pkg-card" id="pkg1" onclick="selectPkg(1)" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:18px;margin-bottom:10px;cursor:pointer;transition:all .15s;position:relative;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                <div class="pkg-radio" id="pkgr1" style="width:16px;height:16px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
+                <div style="font-size:13px;font-weight:800;color:var(--text);">Paket 1 — Lead-Eingang</div>
+                <div style="margin-left:auto;font-size:16px;font-weight:900;color:var(--gold2);">2.500 €</div>
+              </div>
+              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:26px;">
+                <span style="color:var(--accent);">+</span> Starter Landingpage (1 Seite, Formular)<br>
+                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Mail an Kunden &rarr; Benachrichtigung &rarr; Google Sheets<br>
+                <span style="color:var(--gold);">+</span> Retainer 200 €/Mo ab Monat 2
+              </div>
+            </div>
+
+            <!-- Paket 2 -->
+            <div class="pkg-card" id="pkg2" onclick="selectPkg(2)" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:18px;margin-bottom:10px;cursor:pointer;transition:all .15s;position:relative;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                <div class="pkg-radio" id="pkgr2" style="width:16px;height:16px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
+                <div style="font-size:13px;font-weight:800;color:var(--text);">Paket 2 — Lead-Eingang + Follow-up</div>
+                <div style="margin-left:auto;font-size:16px;font-weight:900;color:var(--gold2);">4.500 €</div>
+              </div>
+              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:26px;">
+                <span style="color:var(--accent);">+</span> Performance Landingpage (Quiz-Funnel + Kalkulator)<br>
+                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Mail &rarr; Benachrichtigung &rarr; Google Sheets<br>
+                <span style="color:var(--accent);">+</span> Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7 &rarr; stoppt bei Antwort<br>
+                <span style="color:var(--gold);">+</span> Retainer 350 €/Mo ab Monat 2
+              </div>
+            </div>
+
+            <!-- Paket 3 -->
+            <div class="pkg-card" id="pkg3" onclick="selectPkg(3)" style="background:var(--s1);border:1px solid rgba(201,168,76,.3);border-radius:var(--r2);padding:18px;margin-bottom:10px;cursor:pointer;transition:all .15s;position:relative;">
+              <div style="position:absolute;top:-1px;right:16px;background:var(--gold);color:var(--bg);font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:0 0 6px 6px;">Empfohlen</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                <div class="pkg-radio" id="pkgr3" style="width:16px;height:16px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
+                <div style="font-size:13px;font-weight:800;color:var(--text);">Paket 3 — Komplett-System</div>
+                <div style="margin-left:auto;font-size:16px;font-weight:900;color:var(--gold2);">6.200 €</div>
+              </div>
+              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:26px;">
+                <span style="color:var(--accent);">+</span> Performance Landingpage (Quiz-Funnel + Kalkulator)<br>
+                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Mail &rarr; Benachrichtigung &rarr; Google Sheets<br>
+                <span style="color:var(--accent);">+</span> Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7<br>
+                <span style="color:var(--accent);">+</span> Service 3: Wöchentlicher Performance-Report jeden Montag<br>
+                <span style="color:var(--gold);">+</span> Retainer 500 €/Mo ab Monat 2
+              </div>
+            </div>
           </div>
+
           <div class="card">
             <div class="card-title">Angebots-Vorschau</div>
-            <div style="background:var(--s2);border-radius:var(--r);padding:16px;font-size:12px;line-height:2;margin-bottom:12px;">
+            <div style="background:var(--s2);border-radius:var(--r);padding:18px;font-size:12px;line-height:1.9;margin-bottom:12px;min-height:220px;">
               <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);">Angebot — Flowmatic</div>
-              <div id="offerLines" style="color:var(--muted2);"></div>
+              <div id="offerLines" style="color:var(--muted2);">Bitte Paket auswählen...</div>
+              <div id="offerRetainer" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">
+                Monatlicher Retainer ab Monat 2: <span id="retainerAmt" style="color:var(--gold2);font-weight:700;"></span>
+              </div>
               <div class="div"></div>
-              <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">Gesamt (netto)</span><span style="color:var(--gold2);font-weight:700;" id="offerTotalB">0 €</span></div>
-              <div style="font-size:10px;color:var(--muted);margin-top:6px;">zzgl. 19 % MwSt. &middot; 50 % Anzahlung bei Auftragserteilung &middot; Zahlungsziel 14 Tage</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="color:var(--muted);">Einmaliger Setup-Preis (netto)</span>
+                <span style="color:var(--gold2);font-weight:800;font-size:15px;" id="offerTotalB">—</span>
+              </div>
+              <div style="font-size:10px;color:var(--muted);margin-top:8px;">zzgl. 19 % MwSt. &middot; 50 % Anzahlung bei Auftragserteilung &middot; Zahlungsziel 14 Tage</div>
             </div>
             <button class="btn btn-primary" style="width:100%;" onclick="copyOffer()">Angebotstext kopieren</button>
           </div>
@@ -1192,42 +1238,93 @@ function setS(s,p,b,r,a1,a2) {
 }
 
 // ══════════════════════════════════════════════
-// OFFER BUILDER
+// OFFER BUILDER — 3 PAKETE
 // ══════════════════════════════════════════════
-function tp(el) { el.classList.toggle('on'); updateOffer(); }
-function updateOffer() {
-  let total=0, mo=0;
-  document.querySelectorAll('.toggle').forEach(t=>{
-    if(t.classList.contains('on')){ const v=parseInt(t.dataset.val)||0; t.dataset.mo ? mo+=v : total+=v; }
-  });
-  document.getElementById('offerTotal').textContent = total.toLocaleString('de-DE')+' €';
-  document.getElementById('offerTotalB').textContent = total.toLocaleString('de-DE')+' €';
-  document.getElementById('moNote').textContent = mo ? '+ '+mo.toLocaleString('de-DE')+' €/Monat ab Monat 2' : '';
-  const lines=[];
-  document.querySelectorAll('.price-row').forEach(row=>{
-    const tgl=row.querySelector('.toggle');
-    if(tgl&&tgl.classList.contains('on')){
-      const name=row.querySelector('.price-name').childNodes[0].textContent.trim();
-      const amt=row.querySelector('.price-amt').textContent;
-      lines.push(`<div style="display:flex;justify-content:space-between;"><span style="color:var(--muted2)">${name}</span><span style="color:var(--gold2);font-weight:600">${amt}</span></div>`);
+const PAKETE = {
+  1: {
+    name: 'Paket 1 — Lead-Eingang',
+    price: 2500,
+    retainer: 200,
+    items: [
+      'Starter Landingpage (1 Seite, Kontaktformular)',
+      'Service 1: Formular → Bestätigungsmail → Inhaber-Benachrichtigung → Google Sheets',
+    ]
+  },
+  2: {
+    name: 'Paket 2 — Lead-Eingang + Follow-up',
+    price: 4500,
+    retainer: 350,
+    items: [
+      'Performance Landingpage (Quiz-Funnel + Kalkulator)',
+      'Service 1: Formular → Bestätigungsmail → Inhaber-Benachrichtigung → Google Sheets',
+      'Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7 → stoppt automatisch bei Antwort',
+    ]
+  },
+  3: {
+    name: 'Paket 3 — Komplett-System',
+    price: 6200,
+    retainer: 500,
+    items: [
+      'Performance Landingpage (Quiz-Funnel + Kalkulator)',
+      'Service 1: Formular → Bestätigungsmail → Inhaber-Benachrichtigung → Google Sheets',
+      'Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7 → stoppt automatisch bei Antwort',
+      'Service 3: Wöchentlicher Performance-Report (Leads, Conversions, offene Kontakte)',
+    ]
+  }
+};
+
+let selectedPkg = null;
+
+function selectPkg(n) {
+  selectedPkg = n;
+  [1,2,3].forEach(i => {
+    const card = document.getElementById('pkg'+i);
+    const radio = document.getElementById('pkgr'+i);
+    if (i === n) {
+      card.style.borderColor = i === 3 ? 'var(--gold)' : 'var(--accent)';
+      card.style.background = 'var(--s2)';
+      radio.style.borderColor = i === 3 ? 'var(--gold)' : 'var(--accent)';
+      radio.style.background = i === 3 ? 'var(--gold)' : 'var(--accent)';
+      radio.style.boxShadow = i === 3 ? '0 0 8px var(--gold)' : '0 0 8px var(--accent)';
+    } else {
+      card.style.borderColor = i === 3 ? 'rgba(201,168,76,.3)' : 'var(--border)';
+      card.style.background = 'var(--s1)';
+      radio.style.borderColor = 'var(--muted)';
+      radio.style.background = 'transparent';
+      radio.style.boxShadow = 'none';
     }
   });
-  document.getElementById('offerLines').innerHTML = lines.join('') || '<span style="color:var(--muted)">Keine Pakete ausgewählt</span>';
+  const p = PAKETE[n];
+  const lines = p.items.map(item =>
+    `<div style="display:flex;gap:8px;margin-bottom:4px;"><span style="color:var(--accent);flex-shrink:0;">+</span><span style="color:var(--muted2)">${item}</span></div>`
+  ).join('');
+  document.getElementById('offerLines').innerHTML = lines;
+  document.getElementById('offerTotalB').textContent = p.price.toLocaleString('de-DE') + ' €';
+  document.getElementById('offerRetainer').style.display = 'block';
+  document.getElementById('retainerAmt').textContent = p.retainer.toLocaleString('de-DE') + ' €/Monat';
 }
+
 function copyOffer() {
-  const lines=[]; let total=0;
-  document.querySelectorAll('.price-row').forEach(row=>{
-    const tgl=row.querySelector('.toggle');
-    if(tgl&&tgl.classList.contains('on')){
-      const name=row.querySelector('.price-name').childNodes[0].textContent.trim();
-      const amt=row.querySelector('.price-amt').textContent;
-      lines.push('- '+name+': '+amt);
-      if(!tgl.dataset.mo) total+=parseInt(tgl.dataset.val)||0;
-    }
+  if (!selectedPkg) { alert('Bitte zuerst ein Paket auswählen.'); return; }
+  const p = PAKETE[selectedPkg];
+  const items = p.items.map(i => '- ' + i).join('\n');
+  const txt =
+    'ANGEBOT — FLOWMATIC\n\n' +
+    p.name + '\n\n' +
+    'Leistungsumfang:\n' + items + '\n\n' +
+    'Monatlicher Retainer ab Monat 2: ' + p.retainer.toLocaleString('de-DE') + ' €/Monat\n\n' +
+    'Setup-Preis (netto): ' + p.price.toLocaleString('de-DE') + ' €\n' +
+    'zzgl. 19 % MwSt.\n' +
+    '50 % Anzahlung bei Auftragserteilung\n' +
+    'Zahlungsziel: 14 Tage';
+  navigator.clipboard.writeText(txt).then(() => {
+    const b = event.target;
+    b.textContent = 'Kopiert';
+    setTimeout(() => b.textContent = 'Angebotstext kopieren', 2000);
   });
-  const txt='ANGEBOT — FLOWMATIC\n\nLeistungsumfang:\n'+lines.join('\n')+'\n\nGesamtbetrag (netto): '+total.toLocaleString('de-DE')+' €\nzzgl. 19 % MwSt.\n50 % Anzahlung bei Auftragserteilung\nZahlungsziel: 14 Tage';
-  navigator.clipboard.writeText(txt).then(()=>{ const b=event.target; b.textContent='Kopiert'; setTimeout(()=>b.textContent='Angebotstext kopieren',2000); });
 }
+
+function updateOffer() {} // kept for compatibility
 
 // ══════════════════════════════════════════════
 // PITCH TIMER
