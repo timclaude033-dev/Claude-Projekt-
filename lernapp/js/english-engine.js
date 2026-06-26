@@ -6,12 +6,17 @@ const EnglishEngine = (() => {
   const TOPICS = [
     { id: 'tenses', label: '⏰ Tenses', difficulty: 2 },
     { id: 'grammar', label: '📖 Grammar', difficulty: 2 },
-    { id: 'vocabulary', label: '💬 Vocabulary', difficulty: 1 },
+    { id: 'vocabulary', label: '💬 Vocabulary Basic', difficulty: 1 },
+    { id: 'vocab_advanced', label: '📚 Vocabulary Advanced', difficulty: 2 },
+    { id: 'vocab_thematic', label: '🌍 Thematic Vocab', difficulty: 2 },
+    { id: 'irregular_verbs', label: '🔄 Irregular Verbs', difficulty: 2 },
     { id: 'articles', label: '📌 Articles', difficulty: 1 },
     { id: 'prepositions', label: '📍 Prepositions', difficulty: 2 },
     { id: 'conditional', label: '🔀 Conditional', difficulty: 3 },
     { id: 'passive', label: '🔄 Passive Voice', difficulty: 3 },
     { id: 'relative', label: '🔗 Relative Clauses', difficulty: 3 },
+    { id: 'reported_speech', label: '💬 Reported Speech', difficulty: 3 },
+    { id: 'modal_verbs', label: '⚡ Modal Verbs', difficulty: 2 },
   ];
 
   let currentExercise = null;
@@ -143,6 +148,117 @@ const EnglishEngine = (() => {
   const checkAnswer = (userAnswer) => {
     if (!currentExercise) return null;
     return Brain.checkAnswer(userAnswer, currentExercise.answer, currentExercise.type);
+  };
+
+  generators.vocab_advanced = () => {
+    const vocab = [
+      { q: 'What does "inevitable" mean?', a: 'unvermeidlich|unausweichlich|zwangsläufig', h: 'in- (not) + evitable → cannot be avoided' },
+      { q: 'What does "ambiguous" mean?', a: 'zweideutig|mehrdeutig|unklar|doppeldeutig', h: 'ambi- = both → can be interpreted in more than one way' },
+      { q: 'What does "persevere" mean?', a: 'durchhalten|beharren|weitermachen|nicht aufgeben', h: 'per- (through) + severe → to keep going despite difficulties' },
+      { q: 'What does "contemplate" mean?', a: 'nachdenken|überlegen|betrachten|erwägen', h: 'To think deeply about something' },
+      { q: 'What does "elaborate" mean as an adjective?', a: 'ausgearbeitet|detailliert|aufwendig|komplex', h: 'Carefully worked out, with many details' },
+      { q: 'What does "concise" mean?', a: 'prägnant|kurz und bündig|knapp|kurz gefasst', h: 'Opposite of verbose/wordy – short but complete' },
+      { q: 'What does "advocate" mean as a verb?', a: 'befürworten|eintreten für|vertreten|unterstützen', h: '"I advocate for human rights" = Ich trete für Menschenrechte ein' },
+      { q: 'What does "predominantly" mean?', a: 'überwiegend|hauptsächlich|vorwiegend|größtenteils', h: 'Mostly, for the most part' },
+      { q: 'What does "reinforce" mean?', a: 'verstärken|bekräftigen|stärken|untermauern', h: 'To make stronger or support' },
+      { q: 'What does "coherent" mean?', a: 'kohärent|zusammenhängend|logisch|schlüssig', h: 'Logical and consistent, fitting together well' },
+      { q: 'What does "imply" mean?', a: 'andeuten|implizieren|nahelegen|bedeuten', h: 'To suggest without saying directly' },
+      { q: 'What does "substantial" mean?', a: 'erheblich|beträchtlich|wesentlich|bedeutend', h: 'Large in size, amount, or importance' },
+      { q: 'What does "undermine" mean?', a: 'untergraben|schwächen|aushöhlen|sabotieren', h: 'To weaken or damage gradually' },
+      { q: 'What is the noun form of "develop"?', a: 'development', h: 'develop → development (-ment suffix for nouns)' },
+      { q: 'What is the adjective form of "rely"?', a: 'reliable', h: 'rely → reliable (-able suffix)' },
+    ];
+    const pair = vocab[Math.floor(Math.random() * vocab.length)];
+    return { question: pair.q, answer: pair.a, hint: pair.h, type: 'contains', topic: 'Vocabulary Advanced' };
+  };
+
+  generators.vocab_thematic = () => {
+    const themes = [
+      { theme: '🌍 Environment', words: [
+        { q: 'What is the English word for "Klimawandel"?', a: 'climate change', h: 'One of the biggest global challenges' },
+        { q: 'What does "sustainable" mean?', a: 'nachhaltig', h: 'sustainable development = nachhaltige Entwicklung' },
+        { q: 'What does "renewable energy" mean?', a: 'erneuerbare energie', h: 'Solar, wind, water → renewable' },
+        { q: 'What is "deforestation"?', a: 'abholzung|entwaldung', h: 'de- (remove) + forest → removing trees' },
+        { q: 'What does "carbon footprint" mean?', a: 'co2-fußabdruck|kohlenstoff-fußabdruck', h: 'The amount of CO₂ you produce' },
+      ]},
+      { theme: '🏙️ Society', words: [
+        { q: 'What does "inequality" mean?', a: 'ungleichheit', h: 'in- (not) + equality' },
+        { q: 'What does "migration" mean?', a: 'migration|einwanderung|auswanderung', h: 'Moving from one place/country to another' },
+        { q: 'What does "discrimination" mean?', a: 'diskriminierung|benachteiligung', h: 'Treating people differently/unfairly' },
+        { q: 'What does "integration" mean?', a: 'integration|eingliederung', h: 'Becoming part of a group/society' },
+        { q: 'What does "poverty" mean?', a: 'armut', h: 'poor (adjective) → poverty (noun)' },
+      ]},
+      { theme: '💻 Technology', words: [
+        { q: 'What does "artificial intelligence" mean?', a: 'künstliche intelligenz|ki', h: 'AI = Artificial Intelligence = KI' },
+        { q: 'What does "privacy" mean in a digital context?', a: 'datenschutz|privatsphäre', h: 'Your right to control your personal data' },
+        { q: 'What does "algorithm" mean?', a: 'algorithmus', h: 'A set of rules/instructions for solving a problem' },
+        { q: 'What does "cyberbullying" mean?', a: 'cybermobbing|online mobbing', h: 'Bullying that takes place online' },
+        { q: 'What does "digital footprint" mean?', a: 'digitale spur|digitaler fußabdruck', h: 'The data trail you leave online' },
+      ]},
+      { theme: '🎓 School & Education', words: [
+        { q: 'What does "curriculum" mean?', a: 'lehrplan', h: 'The subjects studied at school' },
+        { q: 'What does "compulsory" mean?', a: 'pflicht|verpflichtend|obligatorisch', h: 'compulsory education = Schulpflicht' },
+        { q: 'What does "scholarship" mean?', a: 'stipendium', h: 'Money given to a student to pay for studies' },
+        { q: 'What does "graduate" mean as a verb?', a: 'abschließen|abschluss machen|graduieren', h: 'To complete a course of study successfully' },
+        { q: 'What is "peer pressure"?', a: 'gruppenzwang', h: 'Pressure from people your own age to do something' },
+      ]},
+    ];
+    const theme = themes[Math.floor(Math.random() * themes.length)];
+    const pair = theme.words[Math.floor(Math.random() * theme.words.length)];
+    return { question: `[${theme.theme}]\n${pair.q}`, answer: pair.a, hint: pair.h, type: 'contains', topic: 'Vocabulary Thematic' };
+  };
+
+  generators.irregular_verbs = () => {
+    const verbs = [
+      ['begin', 'began', 'begun'], ['break', 'broke', 'broken'], ['bring', 'brought', 'brought'],
+      ['build', 'built', 'built'], ['buy', 'bought', 'bought'], ['catch', 'caught', 'caught'],
+      ['choose', 'chose', 'chosen'], ['come', 'came', 'come'], ['cut', 'cut', 'cut'],
+      ['do', 'did', 'done'], ['drink', 'drank', 'drunk'], ['drive', 'drove', 'driven'],
+      ['eat', 'ate', 'eaten'], ['fall', 'fell', 'fallen'], ['feel', 'felt', 'felt'],
+      ['find', 'found', 'found'], ['fly', 'flew', 'flown'], ['forget', 'forgot', 'forgotten'],
+      ['get', 'got', 'gotten/got'], ['give', 'gave', 'given'], ['go', 'went', 'gone'],
+      ['grow', 'grew', 'grown'], ['have', 'had', 'had'], ['hear', 'heard', 'heard'],
+      ['hold', 'held', 'held'], ['keep', 'kept', 'kept'], ['know', 'knew', 'known'],
+      ['leave', 'left', 'left'], ['lose', 'lost', 'lost'], ['make', 'made', 'made'],
+      ['meet', 'met', 'met'], ['put', 'put', 'put'], ['read', 'read', 'read'],
+      ['run', 'ran', 'run'], ['say', 'said', 'said'], ['see', 'saw', 'seen'],
+      ['sell', 'sold', 'sold'], ['send', 'sent', 'sent'], ['sit', 'sat', 'sat'],
+      ['sleep', 'slept', 'slept'], ['speak', 'spoke', 'spoken'], ['spend', 'spent', 'spent'],
+      ['stand', 'stood', 'stood'], ['steal', 'stole', 'stolen'], ['swim', 'swam', 'swum'],
+      ['take', 'took', 'taken'], ['teach', 'taught', 'taught'], ['tell', 'told', 'told'],
+      ['think', 'thought', 'thought'], ['throw', 'threw', 'thrown'], ['understand', 'understood', 'understood'],
+      ['wake', 'woke', 'woken'], ['wear', 'wore', 'worn'], ['win', 'won', 'won'], ['write', 'wrote', 'written'],
+    ];
+    const verb = verbs[Math.floor(Math.random() * verbs.length)];
+    const type = Math.floor(Math.random() * 3);
+    if (type === 0) return { question: `What is the **Past Simple** of "${verb[0]}"?`, answer: verb[1], hint: `Infinitive: ${verb[0]} | Past: ? | Past Participle: ${verb[2]}`, type: 'exact', topic: 'Irregular Verbs' };
+    if (type === 1) return { question: `What is the **Past Participle** of "${verb[0]}"?`, answer: verb[2], hint: `Infinitive: ${verb[0]} | Past: ${verb[1]} | PP: ?`, type: 'contains', topic: 'Irregular Verbs' };
+    return { question: `Complete: Infinitive → Past → Past Participle\n"${verb[0]}" → ??? → ???`, answer: `${verb[1]}|${verb[2]}`, hint: 'Learn all three forms!', type: 'contains', topic: 'Irregular Verbs' };
+  };
+
+  generators.reported_speech = () => {
+    const exercises = [
+      { question: 'Change to reported speech:\n"I am happy," she said.', answer: 'she said (that) she was happy|she said she was happy', hint: 'am → was (Backshift: Present Simple → Past Simple)', type: 'contains', topic: 'Reported Speech' },
+      { question: 'Change to reported speech:\n"I will come tomorrow," he said.', answer: 'he said (that) he would come|he said he would come', hint: 'will → would | tomorrow → the next day', type: 'contains', topic: 'Reported Speech' },
+      { question: 'Change to reported speech:\n"I have finished my homework," she said.', answer: 'she said (that) she had finished|she said she had finished', hint: 'Present Perfect → Past Perfect (Backshift)', type: 'contains', topic: 'Reported Speech' },
+      { question: 'Change the question to reported speech:\n"Where do you live?" he asked.', answer: 'he asked where i lived|he asked where she lived', hint: 'Questions: no question mark, normal word order, tense backshift', type: 'contains', topic: 'Reported Speech' },
+      { question: 'What happens to "now" in reported speech?', answer: 'then|at that time', h: 'Time expressions change: now → then, today → that day, tomorrow → the next day', type: 'contains', topic: 'Reported Speech' },
+      { question: 'Change to reported speech:\n"Don\'t touch that!" she told him.', answer: 'she told him not to touch|she told him to not touch', hint: 'Commands: tell + object + (not) to + infinitive', type: 'contains', topic: 'Reported Speech' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  };
+
+  generators.modal_verbs = () => {
+    const exercises = [
+      { question: 'Choose the correct modal verb:\n"You ___ wear a seatbelt. It\'s the law!"\n(must / should / could)', answer: 'must', hint: 'must = obligation (legal/strong) | should = advice', type: 'exact', topic: 'Modal Verbs' },
+      { question: 'Choose the correct modal verb:\n"She ___ speak five languages!" (ability)', answer: 'can', hint: 'can = ability in the present', type: 'exact', topic: 'Modal Verbs' },
+      { question: 'Choose the correct modal verb:\n"It ___ rain today. The sky is dark." (possibility)', answer: 'might|may|could', hint: 'might/may/could = possibility (not certain)', type: 'contains', topic: 'Modal Verbs' },
+      { question: 'What is the difference between "must" and "have to"?', answer: 'must: internal obligation|have to: external|must: personal|have to: rules|both: obligation', hint: 'must = personal feeling/decision | have to = external rule/necessity', type: 'contains', topic: 'Modal Verbs' },
+      { question: '"You ___ smoke here. It\'s forbidden!"\nChoose: must not / don\'t have to', answer: 'must not|mustn\'t', hint: 'must not = forbidden! | don\'t have to = not necessary (but allowed)', type: 'contains', topic: 'Modal Verbs' },
+      { question: '"You ___ come if you don\'t want to."\nChoose: must not / don\'t have to', answer: 'don\'t have to', hint: 'don\'t have to = it\'s not necessary, but you CAN', type: 'contains', topic: 'Modal Verbs' },
+      { question: 'What does "should have done" express?', answer: 'hätte sollen|regret|bedauern|hätte machen sollen|past regret', hint: 'should have + past participle = Bedauern über Vergangenheit', type: 'contains', topic: 'Modal Verbs' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
   };
 
   const getHint = () => currentExercise ? currentExercise.hint : null;

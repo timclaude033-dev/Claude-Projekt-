@@ -214,8 +214,18 @@
         <div class="page" id="page-math">
           <div class="subject-header math-gradient">
             <h2>🔢 Mathematik</h2>
-            <p>Übe Rechnen, Algebra, Geometrie & mehr</p>
+            <p>Aufgaben · Funktionsplotter · Wahrscheinlichkeit · Analysis</p>
           </div>
+
+          <!-- Tabs -->
+          <div class="math-tabs">
+            <button class="math-tab active" data-tab="exercises">✏️ Aufgaben</button>
+            <button class="math-tab" data-tab="plotter">📈 Funktionsplotter</button>
+            <button class="math-tab" data-tab="probability">🎲 Wahrscheinlichkeit</button>
+          </div>
+
+          <!-- Tab: Aufgaben -->
+          <div class="math-tab-content active" id="math-tab-exercises">
           <div class="subject-layout">
             <div class="topic-sidebar">
               <h3>Themen</h3>
@@ -242,6 +252,105 @@
               </div>
             </div>
           </div>
+          </div><!-- /math-tab-exercises -->
+
+          <!-- Tab: Funktionsplotter -->
+          <div class="math-tab-content" id="math-tab-plotter">
+            <div class="plotter-layout">
+              <div class="plotter-controls">
+                <h3>📈 Funktionsplotter</h3>
+                <p class="plotter-info">Gib eine Funktion ein – die KI zeichnet sie und berechnet Nullstellen!</p>
+                <div class="plotter-input-row">
+                  <span class="fx-label">f(x) =</span>
+                  <input type="text" id="plotter-input" class="answer-input" placeholder="z.B. x^2 - 4  oder  x^3 - 3*x" style="flex:1">
+                  <button class="btn btn-primary" id="plotter-add-btn">➕ Hinzufügen</button>
+                </div>
+                <div class="plotter-presets">
+                  <span>Schnellauswahl:</span>
+                  <button class="preset-btn" data-fn="x^2">x²</button>
+                  <button class="preset-btn" data-fn="x^3">x³</button>
+                  <button class="preset-btn" data-fn="x^4 - 4*x^2">x⁴-4x²</button>
+                  <button class="preset-btn" data-fn="x^6 - 10*x^4 + 9*x^2">x⁶-10x⁴+9x²</button>
+                  <button class="preset-btn" data-fn="2*x^2 - 3*x - 2">2x²-3x-2</button>
+                  <button class="preset-btn" data-fn="sin(x)">sin(x)</button>
+                  <button class="preset-btn" data-fn="(x-2)*(x+3)*(x-1)">(x-2)(x+3)(x-1)</button>
+                </div>
+                <div id="plotter-function-list" class="plotter-fn-list"></div>
+                <div class="plotter-zoom-btns">
+                  <button class="btn btn-ghost small" id="plotter-zoom-in">🔍+</button>
+                  <button class="btn btn-ghost small" id="plotter-zoom-out">🔍-</button>
+                  <button class="btn btn-ghost small" id="plotter-reset">↺ Reset</button>
+                  <button class="btn btn-danger small" id="plotter-clear">✕ Alles löschen</button>
+                </div>
+                <div id="plotter-results" class="plotter-results hidden">
+                  <h4>🔍 Analyse:</h4>
+                  <div id="plotter-zeros"></div>
+                  <div id="plotter-extrema"></div>
+                </div>
+              </div>
+              <div class="plotter-canvas-wrap">
+                <canvas id="plotter-canvas"></canvas>
+                <p class="plotter-tip">🖱️ Scrollen = Zoom · Ziehen = Verschieben</p>
+              </div>
+            </div>
+          </div><!-- /math-tab-plotter -->
+
+          <!-- Tab: Wahrscheinlichkeit -->
+          <div class="math-tab-content" id="math-tab-probability">
+            <div class="prob-layout">
+              <div class="prob-sidebar">
+                <h3>🎲 Wahrscheinlichkeit</h3>
+                <div class="prob-tools">
+                  <button class="tool-btn active" id="prob-basic-btn">📊 Grundlagen</button>
+                  <button class="tool-btn" id="prob-tree-btn">🌳 Baumdiagramm</button>
+                  <button class="tool-btn" id="prob-table-btn">📋 Vierfeldertafel</button>
+                </div>
+              </div>
+              <div class="prob-main">
+                <!-- Basic exercises -->
+                <div id="prob-basic-view">
+                  <div class="exercise-card">
+                    <div class="exercise-header">
+                      <span class="topic-badge">Wahrscheinlichkeit</span>
+                    </div>
+                    <div id="prob-question" class="question-text">Klicke auf ein Tool links, um zu beginnen!</div>
+                    <div id="prob-hint" class="hint-box hidden"></div>
+                    <div class="answer-area">
+                      <input type="text" id="prob-answer" class="answer-input" placeholder="Deine Antwort...">
+                      <div class="answer-btns">
+                        <button class="btn btn-secondary" id="prob-hint-btn">💡 Tipp</button>
+                        <button class="btn btn-primary" id="prob-check-btn">✓ Prüfen</button>
+                        <button class="btn btn-ghost" id="prob-next-btn">→ Weiter</button>
+                      </div>
+                    </div>
+                    <div id="prob-feedback" class="feedback-area hidden"></div>
+                    <div id="prob-steps" class="solution-steps hidden"></div>
+                  </div>
+                </div>
+                <!-- Tree diagram -->
+                <div id="prob-tree-view" class="hidden">
+                  <div class="prob-card">
+                    <h3>🌳 Baumdiagramm</h3>
+                    <div id="prob-tree-context" class="prob-context"></div>
+                    <canvas id="tree-canvas" style="width:100%;border-radius:12px;margin:1rem 0"></canvas>
+                    <div id="prob-tree-questions" class="prob-tree-qs"></div>
+                    <button class="btn btn-ghost" id="prob-tree-next">→ Neues Szenario</button>
+                  </div>
+                </div>
+                <!-- Vierfeldertafel -->
+                <div id="prob-table-view" class="hidden">
+                  <div class="prob-card">
+                    <h3>📋 Vierfeldertafel</h3>
+                    <div id="prob-table-context" class="prob-context"></div>
+                    <canvas id="table-canvas" style="width:100%;border-radius:12px;margin:1rem 0"></canvas>
+                    <div id="prob-table-questions" class="prob-table-qs"></div>
+                    <button class="btn btn-ghost" id="prob-table-next">→ Neues Szenario</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /math-tab-probability -->
+
         </div>
 
         <!-- DEUTSCH PAGE -->
@@ -595,6 +704,8 @@
   <!-- Scripts -->
   <script src="js/storage.js"></script>
   <script src="js/brain.js"></script>
+  <script src="js/probability.js"></script>
+  <script src="js/plotter.js"></script>
   <script src="js/math-engine.js"></script>
   <script src="js/deutsch-engine.js"></script>
   <script src="js/english-engine.js"></script>

@@ -156,6 +156,173 @@ const App = (() => {
     document.getElementById('math-answer').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') checkMathAnswer();
     });
+
+    // Math tab switching
+    document.querySelectorAll('.math-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.math-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.math-tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        const target = document.getElementById('math-tab-' + tab.dataset.tab);
+        if (target) target.classList.add('active');
+        if (tab.dataset.tab === 'plotter') {
+          setTimeout(() => Plotter.init('plotter-canvas'), 100);
+        }
+        if (tab.dataset.tab === 'probability') {
+          initProbabilityButtons();
+          loadProbabilityExercise();
+        }
+      });
+    });
+
+    // Plotter controls
+    const plotterInput = document.getElementById('plotter-input');
+    document.getElementById('plotter-add-btn')?.addEventListener('click', () => {
+      const expr = plotterInput?.value.trim();
+      if (!expr) return;
+      const info = Plotter.addFunction(expr);
+      const list = document.getElementById('plotter-fn-list');
+      if (list && info) {
+        const item = document.createElement('div');
+        item.className = 'plotter-fn-item';
+        let details = `<span class="fn-expr">${expr}</span>`;
+        if (info.zeros?.length) details += ` <span class="fn-zeros">Nullstellen: ${info.zeros.map(z => z.toFixed(2)).join(', ')}</span>`;
+        if (info.extrema?.length) details += ` <span class="fn-extrema">Extrema: ${info.extrema.map(e => `(${e.x.toFixed(2)}|${e.y.toFixed(2)})`).join(', ')}</span>`;
+        item.innerHTML = details;
+        list.appendChild(item);
+      }
+      if (plotterInput) plotterInput.value = '';
+    });
+    plotterInput?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('plotter-add-btn')?.click();
+    });
+
+    document.getElementById('plotter-clear-btn')?.addEventListener('click', () => {
+      Plotter.clearFunctions();
+      const list = document.getElementById('plotter-fn-list');
+      if (list) list.innerHTML = '';
+    });
+    document.getElementById('plotter-zoom-in')?.addEventListener('click', () => Plotter.zoom(0.7));
+    document.getElementById('plotter-zoom-out')?.addEventListener('click', () => Plotter.zoom(1.4));
+    document.getElementById('plotter-reset')?.addEventListener('click', () => {
+      Plotter.setRange(-10, 10, -10, 10);
+    });
+
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (plotterInput) plotterInput.value = btn.dataset.fn;
+        document.getElementById('plotter-add-btn')?.click();
+      });
+    });
+
+    // Probability buttons wired in initProbabilityButtons (called when tab opens)
+  };
+
+  let probMode = 'basic';
+  let currentProbExercise = null;
+
+  const initProbabilityButtons = () => {
+    const basicBtn = document.getElementById('prob-basic-btn');
+    const treeBtn = document.getElementById('prob-tree-btn');
+    const tableBtn = document.getElementById('prob-table-btn');
+    if (!basicBtn || basicBtn._wired) return;
+    basicBtn._wired = true;
+
+    const switchView = (mode) => {
+      probMode = mode;
+      document.getElementById('prob-basic-view').classList.toggle('hidden', mode !== 'basic');
+      document.getElementById('prob-tree-view').classList.toggle('hidden', mode !== 'tree');
+      document.getElementById('prob-table-view').classList.toggle('hidden', mode !== 'table');
+      [basicBtn, treeBtn, tableBtn].forEach(b => b.classList.remove('active'));
+      if (mode === 'basic') basicBtn.classList.add('active');
+      if (mode === 'tree') treeBtn.classList.add('active');
+      if (mode === 'table') tableBtn.classList.add('active');
+      loadProbabilityExercise();
+    };
+
+    basicBtn.addEventListener('click', () => switchView('basic'));
+    treeBtn.addEventListener('click', () => switchView('tree'));
+    tableBtn.addEventListener('click', () => switchView('table'));
+
+    document.getElementById('prob-check-btn')?.addEventListener('click', checkProbabilityAnswer);
+    document.getElementById('prob-next-btn')?.addEventListener('click', loadProbabilityExercise);
+    document.getElementById('prob-hint-btn')?.addEventListener('click', () => {
+      const hint = document.getElementById('prob-hint');
+      if (hint && currentProbExercise?.hint) {
+        hint.textContent = '💡 ' + currentProbExercise.hint;
+        hint.classList.remove('hidden');
+      }
+    });
+    document.getElementById('prob-answer')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkProbabilityAnswer();
+    });
+    document.getElementById('prob-tree-next')?.addEventListener('click', loadProbabilityExercise);
+    document.getElementById('prob-table-next')?.addEventListener('click', loadProbabilityExercise);
+  };
+
+  const loadProbabilityExercise = () => {
+    if (probMode === 'basic') {
+      const exercises = Probability.generateBasicProbability();
+      if (!exercises?.length) return;
+      currentProbExercise = exercises[Math.floor(Math.random() * exercises.length)];
+      document.getElementById('prob-question').textContent = currentProbExercise.question;
+      document.getElementById('prob-answer').value = '';
+      document.getElementById('prob-feedback').className = 'feedback-area hidden';
+      document.getElementById('prob-hint').classList.add('hidden');
+      document.getElementById('prob-steps').classList.add('hidden');
+    } else if (probMode === 'tree') {
+      const result = Probability.generateTreeProblem();
+      if (!result) return;
+      document.getElementById('prob-tree-context').innerHTML = result.scenario;
+      const canvas = document.getElementById('tree-canvas');
+      if (canvas) {
+        canvas.width = 600; canvas.height = 300;
+        setTimeout(() => Probability.drawTree('tree-canvas', result.treeData), 100);
+      }
+      document.getElementById('prob-tree-questions').innerHTML = result.questions.map(q =>
+        `<div class="prob-card"><div class="prob-q">${q.question}</div>
+        <button class="btn btn-ghost" style="margin-top:.5rem" onclick="this.nextElementSibling.classList.toggle('hidden')">Lösung</button>
+        <div class="prob-a hidden" style="margin-top:.5rem;color:var(--success)">${q.answer}</div></div>`
+      ).join('');
+    } else if (probMode === 'table') {
+      const result = Probability.generateVierfeldertafel();
+      if (!result) return;
+      document.getElementById('prob-table-context').innerHTML = result.scenario;
+      const canvas = document.getElementById('table-canvas');
+      if (canvas) {
+        canvas.width = 500; canvas.height = 200;
+        setTimeout(() => Probability.drawVierfeldertafel('table-canvas', result.tableData), 100);
+      }
+      document.getElementById('prob-table-questions').innerHTML = result.questions.map(q =>
+        `<div class="prob-card"><div class="prob-q">${q.question}</div>
+        <button class="btn btn-ghost" style="margin-top:.5rem" onclick="this.nextElementSibling.classList.toggle('hidden')">Lösung</button>
+        <div class="prob-a hidden" style="margin-top:.5rem;color:var(--success)">${q.answer}</div></div>`
+      ).join('');
+    }
+  };
+
+  const checkProbabilityAnswer = () => {
+    if (!currentProbExercise) return;
+    const answer = document.getElementById('prob-answer').value.trim();
+    if (!answer) return;
+    const correct = Brain.checkAnswer(answer, currentProbExercise.answer, currentProbExercise.type || 'number');
+    const fb = document.getElementById('prob-feedback');
+    if (correct) {
+      fb.className = 'feedback-area correct';
+      fb.innerHTML = `✅ <strong>Richtig!</strong>`;
+      Progress.addExerciseResult('math', true, false);
+      Animations.showToast('✓ Richtig! +10 Punkte', 'success');
+      setTimeout(loadProbabilityExercise, 2000);
+    } else {
+      fb.className = 'feedback-area wrong';
+      fb.innerHTML = `❌ Nicht ganz. Richtig: <strong>${currentProbExercise.answer}</strong>`;
+      if (currentProbExercise.explanation) {
+        const steps = document.getElementById('prob-steps');
+        steps.innerHTML = currentProbExercise.explanation;
+        steps.classList.remove('hidden');
+      }
+    }
+    fb.classList.remove('hidden');
   };
 
   const loadMathExercise = (topicId, btn) => {

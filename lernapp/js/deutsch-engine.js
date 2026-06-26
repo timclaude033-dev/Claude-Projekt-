@@ -12,6 +12,10 @@ const DeutschEngine = (() => {
     { id: 'wortschatz', label: '💬 Wortschatz', difficulty: 1 },
     { id: 'stilmittel', label: '🎨 Stilmittel', difficulty: 3 },
     { id: 'literatur', label: '📚 Literatur', difficulty: 3 },
+    { id: 'charakterisierung', label: '🎭 Charakterisierung', difficulty: 3 },
+    { id: 'inhaltsangabe', label: '📄 Inhaltsangabe', difficulty: 2 },
+    { id: 'dramenanalyse', label: '🎬 Dramenanalyse', difficulty: 4 },
+    { id: 'eroeiterung', label: '✍️ Erörterung', difficulty: 3 },
   ];
 
   let currentExercise = null;
@@ -149,6 +153,67 @@ const DeutschEngine = (() => {
   const checkAnswer = (userAnswer) => {
     if (!currentExercise) return null;
     return Brain.checkAnswer(userAnswer, currentExercise.answer, currentExercise.type);
+  };
+
+  // ===== NEUE THEMEN =====
+  generators.charakterisierung = () => {
+    const exercises = [
+      { question: 'In welcher **Reihenfolge** baut man eine Charakterisierung auf?\n(Einleitung / Hauptteil / Schluss)', answer: 'einleitung|hauptteil|schluss', hint: 'Klassischer Dreischritt: Einleitung → Hauptteil → Schluss', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Was gehört in die **Einleitung** einer Charakterisierung?\n(Nenne 3 Elemente)', answer: 'name|werk|autor|figur|kurz|erscheint', hint: 'Name der Figur, Werk/Autor, kurze Vorstellung der Rolle', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Was ist der Unterschied zwischen **direkter und indirekter Charakterisierung**?', answer: 'direkt: autor beschreibt|indirekt: handlungen|verhalten|dialog|indirekt zeigt|direkt sagt', hint: 'Direkt: Autor nennt Eigenschaften | Indirekt: Leser erschließt aus Verhalten', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Formuliere einen **Einleitungssatz** für eine Charakterisierung:\nFigur: "Gregor Samsa" aus "Die Verwandlung" von Kafka', answer: 'gregor samsa|verwandlung|kafka|hauptfigur', hint: 'Muster: "Die folgende Charakterisierung befasst sich mit [Figur] aus [Werk] von [Autor]."', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Welche **Aspekte** werden im Hauptteil einer Charakterisierung analysiert?\n(Nenne mindestens 3)', answer: 'äußere erscheinung|charakter|verhalten|beziehungen|entwicklung|eigenschaften', hint: 'Äußeres → Inneres → Verhalten → Beziehungen → Entwicklung', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Welcher **Tempus** (Zeitform) wird in einer Charakterisierung verwendet?', answer: 'präsens', hint: 'In literarischen Analysen immer Präsens verwenden!', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Wie belegt man eine Behauptung in der Charakterisierung?', answer: 'zitat|textstelle|beleg|nachweis|beispiel', hint: 'Behauptung → Beleg (Zitat/Textstelle) → Deutung', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Was ist der **Unterschied** zwischen Charakterisierung und Personenbeschreibung?', answer: 'charakterisierung: innere eigenschaften|literarisch|analyse|personenbeschreibung: äußerlich|real', hint: 'Charakterisierung = literarische Figur, innere+äußere Analyse | Personenbeschreibung = reale Person, meist äußerlich', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Was schreibt man in den **Schluss** einer Charakterisierung?', answer: 'fazit|zusammenfassung|bedeutung|funktion|stellung|gesamteindruck', hint: 'Fazit: Gesamtbewertung der Figur + ihre Funktion im Werk', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Korrigiere: "Der Autor schrieb, dass Hamlet traurig war."\nWas ist falsch?', answer: 'tempus|vergangenheit|präsens|schreibt|ist', hint: 'Literarisches Präsens: "Der Autor schreibt, dass Hamlet traurig ist."', type: 'contains', topic: 'Charakterisierung' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  };
+
+  generators.inhaltsangabe = () => {
+    const exercises = [
+      { question: 'Welche **5 W-Fragen** beantwortet eine Inhaltsangabe?', answer: 'wer|was|wann|wo|warum|wie', hint: 'Wer? Was? Wann? Wo? Warum? (+ Wie?)', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'In welchem **Tempus** schreibt man eine Inhaltsangabe?', answer: 'präsens', hint: 'Inhaltsangabe IMMER im Präsens (Gegenwartsform)!', type: 'exact', topic: 'Inhaltsangabe' },
+      { question: 'Was gehört in den **Einleitungssatz** einer Inhaltsangabe?\n(nenne alle Elemente)', answer: 'titel|autor|textsorte|erscheinungsjahr|thema', hint: 'Muster: "[Textsorte] „[Titel]" von [Autor] ([Jahr]) handelt von..."', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Formuliere einen korrekten **Einleitungssatz**:\nRoman "Der Vorleser", Bernhard Schlink, 1995', answer: 'roman|vorleser|bernhard schlink|1995|handelt', hint: 'Die Inhaltsangabe des Romans „Der Vorleser" von Bernhard Schlink (1995) handelt von...', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Was soll eine Inhaltsangabe **NICHT** enthalten?', answer: 'eigene meinung|wertung|direkte rede|zitat|wörtliche rede|gefühle', hint: 'Nur Wiedergabe des Inhalts – keine Meinung, keine Zitate, keine direkte Rede!', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Wie formuliert man **indirekte Rede** in der Inhaltsangabe?\nBeispiel: Er sagte: "Ich komme morgen."', answer: 'er sage|er käme|konjunktiv|er komme|indirekte rede', hint: 'Indirekte Rede: Konjunktiv I → "Er sagte, er komme morgen."', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Welche **Wörter** helfen beim Strukturieren einer Inhaltsangabe?\n(Nenne Beispiele)', answer: 'zunächst|danach|anschließend|schließlich|daraufhin|zum schluss|darüber hinaus', hint: 'Temporale Konnektoren: zunächst, danach, anschließend, schließlich, daraufhin...', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Wie lang sollte eine Inhaltsangabe sein?\n(Verhältnis zum Original)', answer: '10|quarter|viertel|25|kürzer|zusammengefasst', hint: 'Faustregel: ca. 1/4 bis max. 1/3 des Originals – nur das Wesentliche!', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Darf man in der Inhaltsangabe **Rückblenden oder Vorgriffe** erwähnen?', answer: 'ja|kann|wenn wichtig|wenn zum verständnis', hint: 'Ja, aber: immer die chronologische Handlung im Fokus behalten', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Was unterscheidet eine **Inhaltsangabe** von einer **Zusammenfassung**?', answer: 'inhaltsangabe: literarischer text|zusammenfassung: allgemein|sachtext|beide: kürzen', hint: 'Inhaltsangabe: speziell für literarische Texte | Zusammenfassung: für Sach- und Fachtexte', type: 'contains', topic: 'Inhaltsangabe' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  };
+
+  generators.dramenanalyse = () => {
+    const exercises = [
+      { question: 'Aus welchen **5 Akten** besteht das klassische Drama nach Aristoteles/Freytag?', answer: 'exposition|steigende handlung|höhepunkt|fallende handlung|katastrophe|auflösung', hint: '1. Exposition 2. Steigende Handlung 3. Höhepunkt/Peripetie 4. Fallende Handlung 5. Katastrophe/Lösung', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist eine **Peripetie** im Drama?', answer: 'wendepunkt|umschwung|wende|entscheidende wendung|schicksalswende', hint: 'Der entscheidende Wendepunkt/Umschwung – meist im 3. Akt', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist eine **Exposition** im Drama?', answer: 'einleitung|einführung|vorstellung|ausgangslage|figuren vorgestellt|konflikt angedeutet', hint: '1. Akt: Figuren und Ausgangssituation werden eingeführt, Konflikt angedeutet', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was unterscheidet **Tragödie** und **Komödie**?', answer: 'tragödie: trauriges ende|tod|scheitern|komödie: glückliches ende|hochzeit|auflösung', hint: 'Tragödie: Ende in Leid/Tod | Komödie: Ende in Glück/Lösung', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist ein **Monolog** im Drama?', answer: 'eine person|allein|selbstgespräch|inneres gefühl|gedanken laut', hint: 'Eine Figur spricht allein auf der Bühne – Gedanken werden laut', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was versteht man unter dem **epischen Theater** (Brecht)?', answer: 'verfremdung|zuschauer nachdenken|nicht mitfühlen|kritisch|v-effekt', hint: 'Brecht: Zuschauer soll NICHT mitfühlen, sondern kritisch nachdenken (Verfremdungseffekt)', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist ein **Akt** und was ist eine **Szene** im Drama?', answer: 'akt: großer abschnitt|szene: kleiner|vorhang|ort oder personenwechsel', hint: 'Akt = großer Abschnitt (Vorhang fällt) | Szene = kleinere Einheit (Personenwechsel/Ortswechsel)', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Wie analysiert man einen **Dialog** im Drama?\n(Nenne die wichtigsten Analysepunkte)', answer: 'ton|verhältnis|macht|dominanz|absicht|strategie|information|gefühl', hint: 'Wer spricht wie viel? Wer dominiert? Welche Absicht? Welche Informationen werden geteilt?', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist eine **Regieanweisung** (Bühnenanweisung)?', answer: 'anweisung|kursiv|klammer|regie|bühne|handlung|not verbally|bewegung', hint: 'In Klammern oder kursiv: Anweisungen für Schauspieler/Regie – gehören nicht zum Dialog', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist der **Unterschied** zwischen offenem und geschlossenem Drama?', answer: 'geschlossen: einheit von ort zeit handlung|offen: verschiedene orte|zeiten|keine strenge einheit', hint: 'Geschlossen (klassisch): Einheit von Ort, Zeit, Handlung | Offen (modern): freie Struktur', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Nenne 3 **berühmte deutsche Dramen** und ihre Autoren.', answer: 'faust|goethe|kabale und liebe|schiller|nathan|lessing|woyzeck|büchner|brecht', hint: 'Faust (Goethe) / Kabale und Liebe (Schiller) / Nathan der Weise (Lessing) / Woyzeck (Büchner)', type: 'contains', topic: 'Dramenanalyse' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  };
+
+  generators.eroeiterung = () => {
+    const exercises = [
+      { question: 'Was ist der **Aufbau** einer Erörterung?', answer: 'einleitung|hauptteil|schluss|these|argument|beispiel|fazit', hint: 'Einleitung (These) → Hauptteil (Argumente + Beispiele) → Schluss (Fazit)', type: 'contains', topic: 'Erörterung' },
+      { question: 'Was ist das **Sanduhr-Prinzip** bei der Erörterung?', answer: 'gegenargumente|eigene meinung|stärkste argumente zuletzt|pro contra', hint: 'Erst Gegenargumente, dann eigene Meinung – stärkstes Argument zuletzt (Steigerung)', type: 'contains', topic: 'Erörterung' },
+      { question: 'Welche **Argumente** sind in einer Erörterung besonders überzeugend?\n(Typen nennen)', answer: 'fakten|statistik|experten|beispiele|logisch|erfahrung|normativ', hint: 'Faktenargument / Expertenargument / Beispielargument / Normatives Argument', type: 'contains', topic: 'Erörterung' },
+      { question: 'Was ist der Unterschied zwischen **linearer und dialektischer Erörterung**?', answer: 'linear: nur eine seite|dialektisch: pro und contra|beide seiten|abwägung', hint: 'Linear: nur eine Position | Dialektisch: Pro und Contra, dann eigenes Fazit', type: 'contains', topic: 'Erörterung' },
+      { question: 'Formuliere einen **Einleitungssatz** für eine Erörterung zum Thema "Handyverbot in der Schule".', answer: 'handyverbot|schule|frage|diskutiert|debattiert|kontrovers', hint: 'Muster: "Das Thema [X] wird derzeit kontrovers diskutiert. In der folgenden Erörterung..."', type: 'contains', topic: 'Erörterung' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
   };
 
   const getHint = () => currentExercise ? currentExercise.hint : null;

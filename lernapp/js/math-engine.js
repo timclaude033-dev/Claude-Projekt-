@@ -15,6 +15,12 @@ const MathEngine = (() => {
     { id: 'statistics', label: '📊 Statistik', difficulty: 2 },
     { id: 'equations', label: '= Gleichungen', difficulty: 3 },
     { id: 'wordproblems', label: '📖 Textaufgaben', difficulty: 3 },
+    { id: 'functions', label: '📈 Funktionen', difficulty: 3 },
+    { id: 'nullstellen', label: '✕ Nullstellen', difficulty: 3 },
+    { id: 'probability', label: '🎲 Wahrscheinlichkeit', difficulty: 2 },
+    { id: 'combinatorics', label: '🔢 Kombinatorik', difficulty: 3 },
+    { id: 'trigonometry', label: '📐 Trigonometrie', difficulty: 3 },
+    { id: 'analysis', label: '∫ Analysis', difficulty: 4 },
   ];
 
   let currentExercise = null;
@@ -343,6 +349,255 @@ const MathEngine = (() => {
           topic: 'Gleichungen'
         };
       }
+    },
+
+    functions: () => {
+      const types = [
+        () => {
+          const a = rand(1,4), b = rand(-5,5), c = rand(-8,8);
+          const sign = b >= 0 ? '+' : '';
+          const sign2 = c >= 0 ? '+' : '';
+          const vertex_x = -b / (2*a);
+          const vertex_y = a*vertex_x*vertex_x + b*vertex_x + c;
+          return {
+            question: `Gegeben: f(x) = ${a}x² ${b !== 0 ? (b>0?'+':'')+b+'x' : ''} ${c !== 0 ? (c>0?'+':'')+c : ''}\n\nWelchen **Wert hat die Funktion an der Stelle x = 2**?`,
+            answer: (a*4 + b*2 + c).toString(),
+            hint: 'Setze x = 2 in die Funktion ein',
+            steps: [`f(2) = ${a}·2² ${b>=0?'+':''} ${b}·2 ${c>=0?'+':''} ${c}`, `= ${a*4} ${b>=0?'+':''} ${b*2} ${c>=0?'+':''} ${c}`, `= ${a*4 + b*2 + c}`],
+            type: 'number', topic: 'Funktionen'
+          };
+        },
+        () => {
+          const a = rand(1,3), b = rand(-4,4);
+          const yInt = b;
+          return {
+            question: `f(x) = ${a === 1 ? '' : a}x³ ${b >= 0 ? '+' : ''}${b}\n\nWie lautet der **y-Achsenabschnitt** (f(0))?`,
+            answer: yInt.toString(),
+            hint: 'y-Achsenabschnitt: setze x = 0 ein',
+            steps: [`f(0) = ${a}·0³ + ${b}`, `= 0 + ${b}`, `= ${yInt}`],
+            type: 'number', topic: 'Funktionen'
+          };
+        },
+        () => {
+          const a = rand(1,3);
+          return {
+            question: `Welche **Symmetrie** hat f(x) = ${a}x⁴?\n(achsensymmetrisch / punktsymmetrisch / keine)`,
+            answer: 'achsensymmetrisch',
+            hint: 'Gerade Exponenten → Achsensymmetrie zur y-Achse',
+            steps: ['f(-x) = a(-x)⁴ = ax⁴ = f(x)', '→ f(-x) = f(x) → achsensymmetrisch zur y-Achse'],
+            type: 'contains', topic: 'Funktionen'
+          };
+        },
+        () => {
+          const a = rand(1,3);
+          return {
+            question: `Welche **Symmetrie** hat f(x) = ${a}x³?\n(achsensymmetrisch / punktsymmetrisch / keine)`,
+            answer: 'punktsymmetrisch',
+            hint: 'Ungerade Exponenten → Punktsymmetrie zum Ursprung',
+            steps: ['f(-x) = a(-x)³ = -ax³ = -f(x)', '→ f(-x) = -f(x) → punktsymmetrisch zum Ursprung'],
+            type: 'contains', topic: 'Funktionen'
+          };
+        },
+        () => {
+          const a = rand(1,3), c = rand(1,9);
+          return {
+            question: `f(x) = ${a}x² + ${c}\n\nHat diese Funktion **Nullstellen**? (ja/nein)\nWenn ja: berechne sie.`,
+            answer: c > 0 ? 'nein|keine' : `x = ${Math.sqrt(-c/a).toFixed(2)}`,
+            hint: c > 0 ? `${a}x² + ${c} = 0 → x² = ${-c/a} → keine reelle Lösung!` : 'Setze f(x) = 0 und löse nach x auf',
+            steps: c > 0 ? [`${a}x² + ${c} = 0`, `x² = ${-c/a}`, `Keine reelle Lösung (negativ unter Wurzel)!`] : [`${a}x² = ${-c}`, `x² = ${-c/a}`, `x = ±${Math.sqrt(-c/a).toFixed(2)}`],
+            type: 'contains', topic: 'Funktionen'
+          };
+        },
+        () => {
+          const p = rand(-5, 5), q = rand(1, 6)*(-1);
+          return {
+            question: `Schnittpunkt mit y-Achse:\nf(x) = (x ${p>=0?'-':'+'}${Math.abs(p)})(x ${q>=0?'-':'+'}${Math.abs(q)})\n\nWie lautet f(0)?`,
+            answer: (p * (-q) < 0 ? p*Math.abs(q) : (-p)*q).toString(),
+            hint: 'Setze x = 0 ein: f(0) = (0-p)(0-q) = p·q',
+            steps: [`f(0) = (0 − ${p})(0 − ${q})`, `= (${-p})(${-q})`, `= ${(-p)*(-q)}`],
+            type: 'number', topic: 'Funktionen'
+          };
+        }
+      ];
+      return types[Math.floor(Math.random() * types.length)]();
+    },
+
+    nullstellen: () => {
+      const types = [
+        () => {
+          const a = rand(1,4), b = rand(-6,6);
+          const x0 = -b/a;
+          const whole = Number.isInteger(x0);
+          return {
+            question: `Berechne die **Nullstelle** von:\nf(x) = ${a}x ${b>=0?'+':''}${b}`,
+            answer: whole ? x0.toString() : x0.toFixed(2),
+            hint: 'Setze f(x) = 0 und löse nach x auf',
+            steps: [`${a}x ${b>=0?'+':''}${b} = 0`, `${a}x = ${-b}`, `x = ${-b}/${a}`, `x = ${x0.toFixed(2)}`],
+            type: 'number', topic: 'Nullstellen'
+          };
+        },
+        () => {
+          const [r1, r2] = [rand(-5,5), rand(-5,5)];
+          const b = -(r1+r2), c = r1*r2;
+          return {
+            question: `Berechne die **Nullstellen** mit der Mitternachtsformel:\nf(x) = x² ${b>=0?'+':''}${b}x ${c>=0?'+':''}${c}`,
+            answer: `${Math.min(r1,r2)}|${Math.max(r1,r2)}`,
+            hint: 'x = (-b ± √(b²-4ac)) / 2a',
+            steps: [
+              `a=1, b=${b}, c=${c}`,
+              `Diskriminante: D = b²-4ac = ${b*b}-4·${c} = ${b*b - 4*c}`,
+              `√D = ${Math.sqrt(b*b - 4*c).toFixed(2)}`,
+              `x₁ = (${-b} + ${Math.sqrt(b*b-4*c).toFixed(2)}) / 2 = ${r1}`,
+              `x₂ = (${-b} - ${Math.sqrt(b*b-4*c).toFixed(2)}) / 2 = ${r2}`
+            ],
+            type: 'contains', topic: 'Nullstellen'
+          };
+        },
+        () => {
+          const r = rand(1,6);
+          return {
+            question: `Berechne die **Nullstellen** durch Ausklammern:\nf(x) = x³ ${r>0?'- ':'+ '}${r}x²\n(Tipp: x ausklammern)`,
+            answer: `0|${r}`,
+            hint: 'x ausklammern: x(x² − rx) = x·x(x − r)',
+            steps: [`x³ ${r>0?'-':'+'}${r}x² = 0`, `x²(x ${r>0?'-':'+'}${r}) = 0`, `x₁ = 0 (doppelte NS), x₂ = ${r}`],
+            type: 'contains', topic: 'Nullstellen'
+          };
+        },
+        () => {
+          const a = rand(1,4), p = rand(1,5);
+          return {
+            question: `Diskriminante berechnen:\nf(x) = x² ${(2*p)>0?'+':''}${2*p}x ${p*p+1 > 0 ? '+' : ''}${p*p+1}\n\nWie viele Nullstellen hat die Funktion?\n(0 / 1 / 2)`,
+            answer: '0',
+            hint: 'D = b²-4ac. Wenn D < 0: keine reellen Nullstellen',
+            steps: [`b = ${2*p}, c = ${p*p+1}`, `D = (${2*p})² - 4·1·${p*p+1}`, `= ${4*p*p} - ${4*(p*p+1)}`, `= ${4*p*p - 4*(p*p+1)}`, `D < 0 → keine reellen Nullstellen`],
+            type: 'exact', topic: 'Nullstellen'
+          };
+        }
+      ];
+      return types[Math.floor(Math.random() * types.length)]();
+    },
+
+    probability: () => {
+      const ex = Probability.generateBasicProbability();
+      return { ...ex, type: 'contains' };
+    },
+
+    combinatorics: () => {
+      const types = [
+        () => {
+          const n = rand(4,8), k = rand(2,Math.min(n-1,4));
+          const factorial = (n) => n <= 1 ? 1 : n * factorial(n-1);
+          const perm = factorial(n) / factorial(n-k);
+          return {
+            question: `**Permutation ohne Wiederholung:**\nWie viele geordnete Möglichkeiten gibt es, ${k} aus ${n} Elementen auszuwählen?\nP(${n},${k}) = ?`,
+            answer: perm.toString(),
+            hint: `P(n,k) = n! / (n-k)! = ${n}! / ${n-k}!`,
+            steps: [`P(${n},${k}) = ${n}! / (${n}-${k})!`, `= ${n}! / ${n-k}!`, `= ${Array.from({length:k},(_,i)=>n-i).join(' × ')}`, `= ${perm}`],
+            type: 'number', topic: 'Kombinatorik'
+          };
+        },
+        () => {
+          const n = rand(4,8), k = rand(2,Math.min(n-1,4));
+          const factorial = (n) => n <= 1 ? 1 : n * factorial(n-1);
+          const comb = factorial(n) / (factorial(k) * factorial(n-k));
+          return {
+            question: `**Kombination ohne Wiederholung:**\nWie viele Möglichkeiten gibt es, ${k} aus ${n} Elementen (ungeordnet) auszuwählen?\nC(${n},${k}) = ?`,
+            answer: comb.toString(),
+            hint: `C(n,k) = n! / (k! × (n-k)!)`,
+            steps: [`C(${n},${k}) = ${n}! / (${k}! × ${n-k}!)`, `= ${Array.from({length:k},(_,i)=>n-i).join('×')} / ${Array.from({length:k},(_,i)=>k-i).join('×')}`, `= ${comb}`],
+            type: 'number', topic: 'Kombinatorik'
+          };
+        },
+        () => {
+          const n = rand(2,5), k = rand(2,4);
+          const res = Math.pow(n, k);
+          return {
+            question: `**Variation mit Wiederholung:**\nEin ${k}-stelliger Code aus ${n} Ziffern (0 bis ${n-1}).\nWie viele Codes gibt es?`,
+            answer: res.toString(),
+            hint: `n^k = ${n}^${k}`,
+            steps: [`Jede Stelle: ${n} Möglichkeiten`, `${k} Stellen → ${n}^${k}`, `= ${res}`],
+            type: 'number', topic: 'Kombinatorik'
+          };
+        }
+      ];
+      return types[Math.floor(Math.random() * types.length)]();
+    },
+
+    trigonometry: () => {
+      const angles = [
+        { deg: 0, rad: '0', sin: 0, cos: 1, tan: 0 },
+        { deg: 30, rad: 'π/6', sin: 0.5, cos: '√3/2', tan: '1/√3' },
+        { deg: 45, rad: 'π/4', sin: '√2/2', cos: '√2/2', tan: 1 },
+        { deg: 60, rad: 'π/3', sin: '√3/2', cos: 0.5, tan: '√3' },
+        { deg: 90, rad: 'π/2', sin: 1, cos: 0, tan: '∞' },
+      ];
+
+      const exercises = [
+        () => {
+          const angle = angles[Math.floor(Math.random() * (angles.length - 1))];
+          return { question: `Berechne: **sin(${angle.deg}°)** = ?`, answer: angle.sin.toString(), hint: 'Einheitskreis: sin = y-Koordinate', steps: [`sin(${angle.deg}°) = ${angle.sin}`], type: 'contains', topic: 'Trigonometrie' };
+        },
+        () => {
+          const angle = angles[Math.floor(Math.random() * (angles.length - 1))];
+          return { question: `Berechne: **cos(${angle.deg}°)** = ?`, answer: angle.cos.toString(), hint: 'Einheitskreis: cos = x-Koordinate', steps: [`cos(${angle.deg}°) = ${angle.cos}`], type: 'contains', topic: 'Trigonometrie' };
+        },
+        () => {
+          const sides = [[3,4,5],[5,12,13],[8,15,17]];
+          const [a,b,c] = sides[Math.floor(Math.random()*sides.length)];
+          return { question: `Rechtwinkliges Dreieck: a=${a}, b=${b}, c=${c}(Hyp.)\nBerechne: **sin(α)** (α liegt der Seite a gegenüber)`, answer: (a/c).toFixed(4), hint: 'sin(α) = Gegenkathete / Hypotenuse', steps: [`sin(α) = Gegenkathete / Hypotenuse`, `= ${a} / ${c}`, `= ${(a/c).toFixed(4)}`], type: 'number', topic: 'Trigonometrie' };
+        },
+        () => {
+          return { question: `**Sinussatz:**\nIn einem Dreieck gilt:\na / sin(α) = b / sin(β) = c / sin(γ)\n\nMit a = 6 und α = 30°: Berechne **b**, wenn β = 60°.`, answer: (6 * Math.sin(Math.PI/3) / Math.sin(Math.PI/6)).toFixed(2), hint: 'b = a · sin(β) / sin(α)', steps: [`b = a · sin(β) / sin(α)`, `= 6 · sin(60°) / sin(30°)`, `= 6 · (√3/2) / (1/2)`, `= 6√3 ≈ ${(6*Math.sqrt(3)).toFixed(2)}`], type: 'number', topic: 'Trigonometrie' };
+        }
+      ];
+      return exercises[Math.floor(Math.random() * exercises.length)]();
+    },
+
+    analysis: () => {
+      const exercises = [
+        () => {
+          const n = rand(2,5), a = rand(1,4);
+          return {
+            question: `Leite ab: **f(x) = ${a}x^${n}**\nf'(x) = ?`,
+            answer: `${a*n}x^${n-1}|${a*n}x${n-1 === 1 ? '' : '^'+(n-1)}`,
+            hint: `Potenzregel: (axⁿ)' = n·a·xⁿ⁻¹`,
+            steps: [`f(x) = ${a}x^${n}`, `f'(x) = ${n} · ${a} · x^(${n}-1)`, `f'(x) = ${a*n}x^${n-1}`],
+            type: 'contains', topic: 'Analysis'
+          };
+        },
+        () => {
+          const a = rand(2,6), b = rand(1,5);
+          return {
+            question: `Leite ab: **f(x) = ${a}x² + ${b}x**\nf'(x) = ?`,
+            answer: `${2*a}x + ${b}|${2*a}x+${b}`,
+            hint: 'Summenregel: jeden Term einzeln ableiten',
+            steps: [`(${a}x²)' = ${2*a}x`, `(${b}x)' = ${b}`, `f'(x) = ${2*a}x + ${b}`],
+            type: 'contains', topic: 'Analysis'
+          };
+        },
+        () => {
+          const a = rand(1,5), b = rand(1,8);
+          return {
+            question: `Berechne das **Integral** (bestimmt von 0 bis ${b}):\n∫ ${a} dx`,
+            answer: (a*b).toString(),
+            hint: '∫ a dx = ax + C | von 0 bis b: a·b - a·0 = a·b',
+            steps: [`∫₀^${b} ${a} dx`, `= [${a}x]₀^${b}`, `= ${a}·${b} - ${a}·0`, `= ${a*b}`],
+            type: 'number', topic: 'Analysis'
+          };
+        },
+        () => {
+          const a = rand(1,4), n = rand(2,4);
+          const result_upper = a * Math.pow(2, n) / n;
+          return {
+            question: `Berechne: ∫₀² **${a}x^${n-1}** dx`,
+            answer: result_upper.toFixed(2),
+            hint: `∫ axⁿ dx = a/(n+1) · x^(n+1) + C`,
+            steps: [`∫₀² ${a}x^${n-1} dx`, `= [${a}/${n} · x^${n}]₀²`, `= ${a}/${n} · 2^${n} - 0`, `= ${a}/${n} · ${Math.pow(2,n)}`, `= ${result_upper.toFixed(2)}`],
+            type: 'number', topic: 'Analysis'
+          };
+        }
+      ];
+      return exercises[Math.floor(Math.random() * exercises.length)]();
     },
 
     wordproblems: () => {

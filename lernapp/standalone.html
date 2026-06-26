@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LearnAI Pro – Deine smarte Lernapp</title>
-  <style>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
 /* ============================================
    LearnAI Pro - Styles
    ============================================ */
@@ -1759,9 +1762,214 @@ html, body {
   .progress-grid { grid-template-columns: 1fr; }
 }
 
+/* ======== MATH TABS ======== */
+.math-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.math-tab {
+  padding: 0.6rem 1.25rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all var(--transition);
+  margin-bottom: -1px;
+}
+
+.math-tab:hover { color: var(--text); }
+.math-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+.math-tab-content { display: none; }
+.math-tab-content.active { display: block; animation: page-in 0.3s ease; }
+
+/* ======== PLOTTER ======== */
+.plotter-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+  height: calc(100vh - 220px);
+}
+
+.plotter-controls {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.plotter-controls h3 { font-size: 1rem; font-weight: 700; }
+.plotter-info { font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; }
+
+.plotter-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fx-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  color: var(--primary);
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.plotter-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.preset-btn {
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.3);
+  color: var(--text);
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all var(--transition);
+}
+
+.preset-btn:hover { background: rgba(99,102,241,0.3); }
+
+.plotter-fn-list { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.plotter-fn-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(255,255,255,0.04);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fn-color-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.fn-label { flex: 1; }
+.fn-remove { cursor: pointer; color: var(--danger); font-size: 0.9rem; background: none; border: none; padding: 0; }
+
+.plotter-zoom-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+.plotter-results {
+  background: rgba(99,102,241,0.08);
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  font-size: 0.82rem;
+}
+
+.plotter-results h4 { font-size: 0.8rem; color: var(--primary); margin-bottom: 0.4rem; }
+
+.plotter-canvas-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+#plotter-canvas {
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  cursor: crosshair;
+  display: block;
+}
+
+.plotter-tip { font-size: 0.75rem; color: var(--text-muted); text-align: center; }
+
+/* ======== PROBABILITY ======== */
+.prob-layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1.5rem;
+  min-height: 400px;
+}
+
+.prob-sidebar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.prob-sidebar h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.75rem; }
+
+.prob-tools { display: flex; flex-direction: column; gap: 0.4rem; }
+
+.prob-main { display: flex; flex-direction: column; gap: 1rem; }
+
+.prob-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.prob-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+
+.prob-context {
+  background: rgba(6,182,212,0.08);
+  border: 1px solid rgba(6,182,212,0.2);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.prob-tree-qs, .prob-table-qs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.prob-q-item {
+  background: rgba(255,255,255,0.03);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+}
+
+.prob-q-text { font-size: 0.9rem; margin-bottom: 0.5rem; }
+.prob-q-answer {
+  font-size: 0.82rem;
+  color: var(--success);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.prob-q-steps {
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .plotter-layout { grid-template-columns: 1fr; }
+  .prob-layout { grid-template-columns: 1fr; }
+  .plotter-canvas-wrap canvas { height: 300px; }
+}
+
 </style>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <!-- Animated Background -->
@@ -1969,8 +2177,18 @@ html, body {
         <div class="page" id="page-math">
           <div class="subject-header math-gradient">
             <h2>🔢 Mathematik</h2>
-            <p>Übe Rechnen, Algebra, Geometrie & mehr</p>
+            <p>Aufgaben · Funktionsplotter · Wahrscheinlichkeit · Analysis</p>
           </div>
+
+          <!-- Tabs -->
+          <div class="math-tabs">
+            <button class="math-tab active" data-tab="exercises">✏️ Aufgaben</button>
+            <button class="math-tab" data-tab="plotter">📈 Funktionsplotter</button>
+            <button class="math-tab" data-tab="probability">🎲 Wahrscheinlichkeit</button>
+          </div>
+
+          <!-- Tab: Aufgaben -->
+          <div class="math-tab-content active" id="math-tab-exercises">
           <div class="subject-layout">
             <div class="topic-sidebar">
               <h3>Themen</h3>
@@ -1997,6 +2215,105 @@ html, body {
               </div>
             </div>
           </div>
+          </div><!-- /math-tab-exercises -->
+
+          <!-- Tab: Funktionsplotter -->
+          <div class="math-tab-content" id="math-tab-plotter">
+            <div class="plotter-layout">
+              <div class="plotter-controls">
+                <h3>📈 Funktionsplotter</h3>
+                <p class="plotter-info">Gib eine Funktion ein – die KI zeichnet sie und berechnet Nullstellen!</p>
+                <div class="plotter-input-row">
+                  <span class="fx-label">f(x) =</span>
+                  <input type="text" id="plotter-input" class="answer-input" placeholder="z.B. x^2 - 4  oder  x^3 - 3*x" style="flex:1">
+                  <button class="btn btn-primary" id="plotter-add-btn">➕ Hinzufügen</button>
+                </div>
+                <div class="plotter-presets">
+                  <span>Schnellauswahl:</span>
+                  <button class="preset-btn" data-fn="x^2">x²</button>
+                  <button class="preset-btn" data-fn="x^3">x³</button>
+                  <button class="preset-btn" data-fn="x^4 - 4*x^2">x⁴-4x²</button>
+                  <button class="preset-btn" data-fn="x^6 - 10*x^4 + 9*x^2">x⁶-10x⁴+9x²</button>
+                  <button class="preset-btn" data-fn="2*x^2 - 3*x - 2">2x²-3x-2</button>
+                  <button class="preset-btn" data-fn="sin(x)">sin(x)</button>
+                  <button class="preset-btn" data-fn="(x-2)*(x+3)*(x-1)">(x-2)(x+3)(x-1)</button>
+                </div>
+                <div id="plotter-function-list" class="plotter-fn-list"></div>
+                <div class="plotter-zoom-btns">
+                  <button class="btn btn-ghost small" id="plotter-zoom-in">🔍+</button>
+                  <button class="btn btn-ghost small" id="plotter-zoom-out">🔍-</button>
+                  <button class="btn btn-ghost small" id="plotter-reset">↺ Reset</button>
+                  <button class="btn btn-danger small" id="plotter-clear">✕ Alles löschen</button>
+                </div>
+                <div id="plotter-results" class="plotter-results hidden">
+                  <h4>🔍 Analyse:</h4>
+                  <div id="plotter-zeros"></div>
+                  <div id="plotter-extrema"></div>
+                </div>
+              </div>
+              <div class="plotter-canvas-wrap">
+                <canvas id="plotter-canvas"></canvas>
+                <p class="plotter-tip">🖱️ Scrollen = Zoom · Ziehen = Verschieben</p>
+              </div>
+            </div>
+          </div><!-- /math-tab-plotter -->
+
+          <!-- Tab: Wahrscheinlichkeit -->
+          <div class="math-tab-content" id="math-tab-probability">
+            <div class="prob-layout">
+              <div class="prob-sidebar">
+                <h3>🎲 Wahrscheinlichkeit</h3>
+                <div class="prob-tools">
+                  <button class="tool-btn active" id="prob-basic-btn">📊 Grundlagen</button>
+                  <button class="tool-btn" id="prob-tree-btn">🌳 Baumdiagramm</button>
+                  <button class="tool-btn" id="prob-table-btn">📋 Vierfeldertafel</button>
+                </div>
+              </div>
+              <div class="prob-main">
+                <!-- Basic exercises -->
+                <div id="prob-basic-view">
+                  <div class="exercise-card">
+                    <div class="exercise-header">
+                      <span class="topic-badge">Wahrscheinlichkeit</span>
+                    </div>
+                    <div id="prob-question" class="question-text">Klicke auf ein Tool links, um zu beginnen!</div>
+                    <div id="prob-hint" class="hint-box hidden"></div>
+                    <div class="answer-area">
+                      <input type="text" id="prob-answer" class="answer-input" placeholder="Deine Antwort...">
+                      <div class="answer-btns">
+                        <button class="btn btn-secondary" id="prob-hint-btn">💡 Tipp</button>
+                        <button class="btn btn-primary" id="prob-check-btn">✓ Prüfen</button>
+                        <button class="btn btn-ghost" id="prob-next-btn">→ Weiter</button>
+                      </div>
+                    </div>
+                    <div id="prob-feedback" class="feedback-area hidden"></div>
+                    <div id="prob-steps" class="solution-steps hidden"></div>
+                  </div>
+                </div>
+                <!-- Tree diagram -->
+                <div id="prob-tree-view" class="hidden">
+                  <div class="prob-card">
+                    <h3>🌳 Baumdiagramm</h3>
+                    <div id="prob-tree-context" class="prob-context"></div>
+                    <canvas id="tree-canvas" style="width:100%;border-radius:12px;margin:1rem 0"></canvas>
+                    <div id="prob-tree-questions" class="prob-tree-qs"></div>
+                    <button class="btn btn-ghost" id="prob-tree-next">→ Neues Szenario</button>
+                  </div>
+                </div>
+                <!-- Vierfeldertafel -->
+                <div id="prob-table-view" class="hidden">
+                  <div class="prob-card">
+                    <h3>📋 Vierfeldertafel</h3>
+                    <div id="prob-table-context" class="prob-context"></div>
+                    <canvas id="table-canvas" style="width:100%;border-radius:12px;margin:1rem 0"></canvas>
+                    <div id="prob-table-questions" class="prob-table-qs"></div>
+                    <button class="btn btn-ghost" id="prob-table-next">→ Neues Szenario</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /math-tab-probability -->
+
         </div>
 
         <!-- DEUTSCH PAGE -->
@@ -2348,9 +2665,8 @@ html, body {
   </div>
 
   <!-- Scripts -->
-                        <script>
-
-/* === storage.js === */
+  <script>
+// === storage.js ===
 /* ============================================
    Storage - IndexedDB + LocalStorage
    ============================================ */
@@ -2545,7 +2861,8 @@ const Storage = (() => {
   return { get, set, update, getUser, saveUser, getProgress, saveProgress, getToday, addDailyExercise, getTodayStats, getWeekStats, addActivity, getActivities, getFlashcards, addFlashcard, updateFlashcard, deleteFlashcard, getNotes, saveNote, deleteNote, getBrain, learnConcept, startSession, getChatHistory, addChatMessage, getAchievements, unlockAchievement, updateStreak };
 })();
 
-/* === brain.js === */
+
+// === brain.js ===
 /* ============================================
    Brain - KI-Wissensbase & Lernlogik
    ============================================ */
@@ -2923,7 +3240,1082 @@ const Brain = (() => {
   return { evaluateMath, checkAnswer, getKnowledge, getAllSubjectKnowledge, generateResponse, generateAutoNote, generateFlashcardsForTopic, KNOWLEDGE_BASE };
 })();
 
-/* === math-engine.js === */
+
+// === animations.js ===
+/* ============================================
+   Animations - Partikel, Konfetti, UI-Effekte
+   ============================================ */
+
+const Animations = (() => {
+  let particles = [];
+  let animFrame = null;
+  let canvas, ctx;
+
+  const init = () => {
+    canvas = document.createElement('canvas');
+    canvas.id = 'particle-canvas';
+    canvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;';
+    document.body.appendChild(canvas);
+
+    resize();
+    window.addEventListener('resize', resize);
+    initParticles();
+    animate();
+  };
+
+  const resize = () => {
+    if (!canvas) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx = canvas.getContext('2d');
+  };
+
+  const initParticles = () => {
+    particles = [];
+    const count = Math.min(window.innerWidth / 15, 80);
+    for (let i = 0; i < count; i++) {
+      particles.push(createParticle());
+    }
+  };
+
+  const createParticle = (x, y) => {
+    const colors = ['rgba(99,102,241,', 'rgba(168,85,247,', 'rgba(6,182,212,', 'rgba(16,185,129,'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    return {
+      x: x || Math.random() * (canvas?.width || window.innerWidth),
+      y: y || Math.random() * (canvas?.height || window.innerHeight),
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      radius: Math.random() * 2 + 0.5,
+      alpha: Math.random() * 0.4 + 0.1,
+      color,
+      twinkle: Math.random() * Math.PI * 2,
+      twinkleSpeed: 0.02 + Math.random() * 0.03
+    };
+  };
+
+  const animate = () => {
+    animFrame = requestAnimationFrame(animate);
+    if (!ctx || !canvas) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.twinkle += p.twinkleSpeed;
+
+      const alpha = p.alpha * (0.7 + 0.3 * Math.sin(p.twinkle));
+
+      if (p.x < 0) p.x = canvas.width;
+      if (p.x > canvas.width) p.x = 0;
+      if (p.y < 0) p.y = canvas.height;
+      if (p.y > canvas.height) p.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + alpha + ')';
+      ctx.fill();
+    });
+
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(99,102,241,${0.05 * (1 - dist / 120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+  };
+
+  // Toast Benachrichtigungen
+  const showToast = (message, type = 'info', duration = 3000) => {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+
+    const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+    toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${message}</span>`;
+
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add('fade-out');
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  };
+
+  // Konfetti
+  const launchConfetti = (count = 60) => {
+    const colors = ['#6366f1', '#a855f7', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
+    const shapes = ['circle', 'square', 'triangle'];
+
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const startX = Math.random() * window.innerWidth;
+        const duration = 2000 + Math.random() * 2000;
+        const size = 8 + Math.random() * 8;
+
+        piece.style.cssText = `
+          left: ${startX}px;
+          top: -20px;
+          width: ${size}px;
+          height: ${size}px;
+          background: ${color};
+          border-radius: ${shape === 'circle' ? '50%' : shape === 'triangle' ? '0' : '2px'};
+          animation-duration: ${duration}ms;
+          transform: rotate(${Math.random() * 360}deg);
+        `;
+
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), duration + 100);
+      }, i * 30);
+    }
+  };
+
+  // Celebration overlay
+  const celebrate = (emoji = '🎉', text = 'Super!') => {
+    const cel = document.getElementById('celebration');
+    const celEmoji = document.getElementById('celebration-emoji');
+    const celText = document.getElementById('celebration-text');
+
+    if (!cel) return;
+
+    celEmoji.textContent = emoji;
+    celText.textContent = text;
+    cel.classList.remove('hidden');
+
+    launchConfetti(50);
+
+    setTimeout(() => {
+      cel.classList.add('hidden');
+    }, 2500);
+  };
+
+  // Answer feedback animation
+  const showAnswerFeedback = (element, correct) => {
+    element.classList.add(correct ? 'correct-flash' : 'wrong-flash');
+
+    // Add CSS dynamically
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes correct-flash-anim {
+        0% { border-color: var(--border); }
+        50% { border-color: var(--success); box-shadow: 0 0 20px rgba(16,185,129,0.4); }
+        100% { border-color: var(--border); }
+      }
+      @keyframes wrong-flash-anim {
+        0% { border-color: var(--border); }
+        25% { border-color: var(--danger); transform: translateX(-5px); }
+        75% { border-color: var(--danger); transform: translateX(5px); }
+        100% { border-color: var(--border); transform: translateX(0); }
+      }
+      .correct-flash { animation: correct-flash-anim 0.6s ease; }
+      .wrong-flash { animation: wrong-flash-anim 0.5s ease; }
+    `;
+    if (!document.getElementById('feedback-styles')) {
+      style.id = 'feedback-styles';
+      document.head.appendChild(style);
+    }
+
+    setTimeout(() => {
+      element.classList.remove('correct-flash', 'wrong-flash');
+    }, 600);
+  };
+
+  // Points popup
+  const showPointsPopup = (points, x, y) => {
+    const popup = document.createElement('div');
+    popup.style.cssText = `
+      position: fixed;
+      left: ${x}px;
+      top: ${y}px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: ${points > 0 ? '#10b981' : '#ef4444'};
+      pointer-events: none;
+      z-index: 1000;
+      animation: points-float 1.2s ease forwards;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    `;
+    popup.textContent = (points > 0 ? '+' : '') + points + ' Punkte';
+
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes points-float {
+        0% { opacity: 1; transform: translateY(0) scale(0.8); }
+        50% { opacity: 1; transform: translateY(-30px) scale(1.1); }
+        100% { opacity: 0; transform: translateY(-60px) scale(1); }
+      }
+    `;
+    if (!document.getElementById('points-float-style')) {
+      style.id = 'points-float-style';
+      document.head.appendChild(style);
+    }
+
+    document.body.appendChild(popup);
+    setTimeout(() => popup.remove(), 1300);
+  };
+
+  // Splash screen ausblenden
+  const hideSplash = () => {
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) {
+        splash.classList.add('fade-out');
+        setTimeout(() => splash.remove(), 600);
+      }
+    }, 2200);
+  };
+
+  // Motivational quotes
+  const QUOTES = [
+    'Bildung ist nicht das Füllen eines Eimers, sondern das Entzünden eines Feuers.',
+    'Jeder Tag ist eine neue Chance zu lernen!',
+    'Wiederholung ist die Mutter des Lernens.',
+    'Wer aufhört zu lernen, ist alt, ob mit 20 oder 80.',
+    'Der Weg zu Wissen führt durch Fehler – mach weiter!',
+    'Eine Stunde Lernen heute ist eine Stunde Freiheit morgen.',
+    'Disziplin ist die Brücke zwischen Zielen und Erfolg.',
+    'Du bist heute klüger als gestern! 🧠',
+    'Klein anfangen, groß denken, immer lernen!',
+    'Fehler sind Beweise dafür, dass du es versuchst!',
+  ];
+
+  const getQuote = () => QUOTES[Math.floor(Math.random() * QUOTES.length)];
+
+  return { init, showToast, celebrate, launchConfetti, showAnswerFeedback, showPointsPopup, hideSplash, getQuote };
+})();
+
+
+// === speech.js ===
+/* ============================================
+   Speech - Web Speech API
+   ============================================ */
+
+const Speech = (() => {
+  let recognition = null;
+  let synthesis = window.speechSynthesis;
+  let isListening = false;
+  let onResult = null;
+  let currentUtterance = null;
+
+  const isSupported = () => 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+  const isSynthesisSupported = () => 'speechSynthesis' in window;
+
+  const initRecognition = () => {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) return null;
+    const rec = new SpeechRec();
+    rec.continuous = false;
+    rec.interimResults = false;
+    rec.lang = 'de-DE';
+    return rec;
+  };
+
+  const startListening = (callback, lang = 'de-DE') => {
+    if (!isSupported()) {
+      if (callback) callback(null, 'Spracherkennung nicht unterstützt');
+      return false;
+    }
+
+    if (isListening) stopListening();
+
+    recognition = initRecognition();
+    recognition.lang = lang;
+
+    recognition.onstart = () => {
+      isListening = true;
+      document.getElementById('voice-status')?.classList.remove('hidden');
+    };
+
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      if (callback) callback(transcript, null);
+    };
+
+    recognition.onerror = (e) => {
+      isListening = false;
+      document.getElementById('voice-status')?.classList.add('hidden');
+      if (callback) callback(null, e.error);
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      document.getElementById('voice-status')?.classList.add('hidden');
+    };
+
+    try {
+      recognition.start();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  const stopListening = () => {
+    if (recognition && isListening) {
+      recognition.stop();
+      isListening = false;
+    }
+    document.getElementById('voice-status')?.classList.add('hidden');
+  };
+
+  const speak = (text, options = {}) => {
+    if (!isSynthesisSupported()) return;
+
+    stop();
+
+    const cleanText = text.replace(/[*_`#~\[\]]/g, '').replace(/\*\*(.+?)\*\*/g, '$1').trim();
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = options.lang || 'de-DE';
+    utterance.rate = options.rate || 0.9;
+    utterance.pitch = options.pitch || 1.0;
+    utterance.volume = options.volume || 1.0;
+
+    // Stimme auswählen
+    const voices = synthesis.getVoices();
+    const preferredLang = options.lang || 'de-DE';
+    const voice = voices.find(v => v.lang.startsWith(preferredLang.split('-')[0])) || voices[0];
+    if (voice) utterance.voice = voice;
+
+    if (options.onEnd) utterance.onend = options.onEnd;
+
+    currentUtterance = utterance;
+    synthesis.speak(utterance);
+    return utterance;
+  };
+
+  const stop = () => {
+    if (synthesis && synthesis.speaking) {
+      synthesis.cancel();
+    }
+    currentUtterance = null;
+  };
+
+  const getIsListening = () => isListening;
+
+  // Warte auf Stimmen (async laden)
+  if (isSynthesisSupported()) {
+    if (synthesis.onvoiceschanged !== undefined) {
+      synthesis.onvoiceschanged = () => {};
+    }
+  }
+
+  return { startListening, stopListening, speak, stop, isSupported, isSynthesisSupported, getIsListening };
+})();
+
+
+// === plotter.js ===
+/* ============================================
+   Funktionsplotter - Canvas-basierter Grapher
+   ============================================ */
+
+const Plotter = (() => {
+  let canvas, ctx;
+  let xMin = -10, xMax = 10, yMin = -10, yMax = 10;
+  let functions = [];
+  let isDragging = false, lastMouseX = 0, lastMouseY = 0;
+
+  const COLORS = ['#6366f1','#a855f7','#06b6d4','#10b981','#f59e0b','#ef4444'];
+
+  const init = () => {
+    canvas = document.getElementById('plotter-canvas');
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+    resize();
+    window.addEventListener('resize', resize);
+    setupControls();
+    draw();
+  };
+
+  const resize = () => {
+    if (!canvas) return;
+    const container = canvas.parentElement;
+    canvas.width = container.clientWidth || 700;
+    canvas.height = 420;
+    draw();
+  };
+
+  // Koordinaten-Umrechnung
+  const toCanvas = (x, y) => ({
+    cx: ((x - xMin) / (xMax - xMin)) * canvas.width,
+    cy: canvas.height - ((y - yMin) / (yMax - yMin)) * canvas.height
+  });
+
+  const toMath = (cx, cy) => ({
+    x: xMin + (cx / canvas.width) * (xMax - xMin),
+    y: yMin + ((canvas.height - cy) / canvas.height) * (yMax - yMin)
+  });
+
+  // Sichere Formel-Auswertung
+  const evalFunc = (expr, x) => {
+    try {
+      const cleaned = expr
+        .replace(/\^/g, '**')
+        .replace(/(\d)(x)/g, '$1*$2')
+        .replace(/(\d)\(/, '$1*(')
+        .replace(/\bsin\b/g, 'Math.sin')
+        .replace(/\bcos\b/g, 'Math.cos')
+        .replace(/\btan\b/g, 'Math.tan')
+        .replace(/\bsqrt\b/g, 'Math.sqrt')
+        .replace(/\babs\b/g, 'Math.abs')
+        .replace(/\bpi\b/g, 'Math.PI')
+        .replace(/\be\b/g, 'Math.E')
+        .replace(/\bln\b/g, 'Math.log')
+        .replace(/\blog\b/g, 'Math.log10');
+      // eslint-disable-next-line no-new-func
+      return Function('"use strict"; const x = ' + x + '; return (' + cleaned + ');')();
+    } catch { return NaN; }
+  };
+
+  const draw = () => {
+    if (!ctx || !canvas) return;
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+
+    // Hintergrund
+    ctx.fillStyle = 'rgba(10,10,15,0.95)';
+    ctx.fillRect(0, 0, W, H);
+
+    drawGrid();
+    drawAxes();
+    functions.forEach((fn, i) => drawFunction(fn.expr, COLORS[i % COLORS.length]));
+  };
+
+  const drawGrid = () => {
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+
+    const stepX = niceStep((xMax - xMin) / 10);
+    const stepY = niceStep((yMax - yMin) / 10);
+
+    for (let x = Math.ceil(xMin / stepX) * stepX; x <= xMax; x += stepX) {
+      const { cx } = toCanvas(x, 0);
+      ctx.beginPath();
+      ctx.moveTo(cx, 0);
+      ctx.lineTo(cx, canvas.height);
+      ctx.stroke();
+    }
+
+    for (let y = Math.ceil(yMin / stepY) * stepY; y <= yMax; y += stepY) {
+      const { cy } = toCanvas(0, y);
+      ctx.beginPath();
+      ctx.moveTo(0, cy);
+      ctx.lineTo(canvas.width, cy);
+      ctx.stroke();
+    }
+  };
+
+  const drawAxes = () => {
+    const { cx: ox, cy: oy } = toCanvas(0, 0);
+
+    // Achsen
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.lineWidth = 1.5;
+
+    // X-Achse
+    ctx.beginPath();
+    ctx.moveTo(0, oy);
+    ctx.lineTo(canvas.width, oy);
+    ctx.stroke();
+
+    // Y-Achse
+    ctx.beginPath();
+    ctx.moveTo(ox, 0);
+    ctx.lineTo(ox, canvas.height);
+    ctx.stroke();
+
+    // Achsenpfeile
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.beginPath();
+    ctx.moveTo(canvas.width - 5, oy);
+    ctx.lineTo(canvas.width - 15, oy - 6);
+    ctx.lineTo(canvas.width - 15, oy + 6);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(ox, 5);
+    ctx.lineTo(ox - 6, 15);
+    ctx.lineTo(ox + 6, 15);
+    ctx.fill();
+
+    // Beschriftungen
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '12px Inter, sans-serif';
+    ctx.textAlign = 'center';
+
+    const stepX = niceStep((xMax - xMin) / 10);
+    const stepY = niceStep((yMax - yMin) / 10);
+
+    for (let x = Math.ceil(xMin / stepX) * stepX; x <= xMax; x += stepX) {
+      if (Math.abs(x) < stepX * 0.01) continue;
+      const { cx, cy: tickY } = toCanvas(x, 0);
+      ctx.fillText(round(x), cx, Math.min(tickY + 18, canvas.height - 4));
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+      ctx.moveTo(cx, tickY - 4);
+      ctx.lineTo(cx, tickY + 4);
+      ctx.stroke();
+    }
+
+    ctx.textAlign = 'right';
+    for (let y = Math.ceil(yMin / stepY) * stepY; y <= yMax; y += stepY) {
+      if (Math.abs(y) < stepY * 0.01) continue;
+      const { cx: tickX, cy } = toCanvas(0, y);
+      ctx.fillText(round(y), Math.max(tickX - 6, 30), cy + 4);
+    }
+
+    // Achsennamen
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.font = 'bold 13px Inter';
+    ctx.textAlign = 'left';
+    ctx.fillText('x', canvas.width - 15, oy - 12);
+    ctx.fillText('y', ox + 10, 18);
+    ctx.fillText('0', Math.min(ox + 6, canvas.width - 20), Math.max(oy + 16, 16));
+  };
+
+  const drawFunction = (expr, color) => {
+    if (!expr) return;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 4;
+
+    const steps = canvas.width * 2;
+    let started = false;
+    let prevY = null;
+
+    ctx.beginPath();
+    for (let i = 0; i <= steps; i++) {
+      const x = xMin + (i / steps) * (xMax - xMin);
+      const y = evalFunc(expr, x);
+
+      if (isNaN(y) || !isFinite(y)) {
+        started = false;
+        prevY = null;
+        continue;
+      }
+
+      // Sprünge erkennen (Asymptoten)
+      if (prevY !== null && Math.abs(y - prevY) > (yMax - yMin) * 3) {
+        started = false;
+      }
+      prevY = y;
+
+      const { cx, cy } = toCanvas(x, y);
+      if (!started) { ctx.moveTo(cx, cy); started = true; }
+      else ctx.lineTo(cx, cy);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  };
+
+  // Nullstellen berechnen (Bisektionsverfahren + Newton)
+  const findZeros = (expr) => {
+    const zeros = [];
+    const steps = 2000;
+    const dx = (xMax - xMin) / steps;
+
+    for (let i = 0; i < steps; i++) {
+      const x1 = xMin + i * dx;
+      const x2 = x1 + dx;
+      const y1 = evalFunc(expr, x1);
+      const y2 = evalFunc(expr, x2);
+
+      if (isNaN(y1) || isNaN(y2)) continue;
+
+      if (y1 * y2 <= 0) {
+        // Bisektionsverfahren
+        let lo = x1, hi = x2;
+        for (let iter = 0; iter < 50; iter++) {
+          const mid = (lo + hi) / 2;
+          const ymid = evalFunc(expr, mid);
+          if (Math.abs(ymid) < 1e-10) { lo = mid; break; }
+          if (evalFunc(expr, lo) * ymid < 0) hi = mid;
+          else lo = mid;
+        }
+        const zero = (lo + hi) / 2;
+        if (!zeros.some(z => Math.abs(z - zero) < 0.001)) {
+          zeros.push(zero);
+        }
+      }
+    }
+    return zeros.map(z => round(z, 4));
+  };
+
+  // Extremstellen (numerisch)
+  const findExtrema = (expr) => {
+    const extrema = [];
+    const steps = 1000;
+    const dx = (xMax - xMin) / steps;
+    const h = 1e-5;
+
+    for (let i = 1; i < steps - 1; i++) {
+      const x = xMin + i * dx;
+      const dy1 = (evalFunc(expr, x) - evalFunc(expr, x - dx)) / dx;
+      const dy2 = (evalFunc(expr, x + dx) - evalFunc(expr, x)) / dx;
+
+      if (dy1 * dy2 < 0) {
+        const y = evalFunc(expr, x);
+        const d2 = (evalFunc(expr, x + h) - 2 * evalFunc(expr, x) + evalFunc(expr, x - h)) / (h * h);
+        extrema.push({ x: round(x, 3), y: round(y, 3), type: d2 > 0 ? 'Tiefpunkt' : 'Hochpunkt' });
+      }
+    }
+    return extrema;
+  };
+
+  // Nullstellen auf Graph markieren
+  const markZeros = (expr) => {
+    const zeros = findZeros(expr);
+    zeros.forEach(z => {
+      const { cx, cy } = toCanvas(z, 0);
+      ctx.beginPath();
+      ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#ef4444';
+      ctx.fill();
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.fillStyle = 'white';
+      ctx.font = 'bold 11px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText(`x=${z}`, cx, cy - 12);
+    });
+    return zeros;
+  };
+
+  const niceStep = (rough) => {
+    const pow = Math.pow(10, Math.floor(Math.log10(rough)));
+    const frac = rough / pow;
+    if (frac < 1.5) return pow;
+    if (frac < 3.5) return 2 * pow;
+    if (frac < 7.5) return 5 * pow;
+    return 10 * pow;
+  };
+
+  const round = (n, dec = 2) => {
+    const f = Math.pow(10, dec);
+    return Math.round(n * f) / f;
+  };
+
+  const addFunction = (expr) => {
+    if (!expr) return;
+    functions.push({ expr });
+    draw();
+    // Nullstellen nach dem Draw markieren
+    const zeros = markZeros(expr);
+    return { zeros, extrema: findExtrema(expr) };
+  };
+
+  const clearFunctions = () => {
+    functions = [];
+    draw();
+  };
+
+  const removeFunction = (index) => {
+    functions.splice(index, 1);
+    draw();
+  };
+
+  const setRange = (xmin, xmax, ymin, ymax) => {
+    xMin = xmin; xMax = xmax; yMin = ymin; yMax = ymax;
+    draw();
+  };
+
+  const zoom = (factor, cx, cy) => {
+    const { x, y } = toMath(cx || canvas.width/2, cy || canvas.height/2);
+    const dx = (xMax - xMin) * factor / 2;
+    const dy = (yMax - yMin) * factor / 2;
+    xMin = x - dx; xMax = x + dx;
+    yMin = y - dy; yMax = y + dy;
+    draw();
+    functions.forEach(fn => markZeros(fn.expr));
+  };
+
+  const setupControls = () => {
+    if (!canvas) return;
+
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      zoom(e.deltaY > 0 ? 1.15 : 0.85, e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = (e.clientX - lastMouseX) / canvas.width * (xMax - xMin);
+      const dy = (e.clientY - lastMouseY) / canvas.height * (yMax - yMin);
+      xMin -= dx; xMax -= dx;
+      yMin += dy; yMax += dy;
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+      draw();
+      functions.forEach(fn => markZeros(fn.expr));
+    });
+
+    canvas.addEventListener('mouseup', () => isDragging = false);
+    canvas.addEventListener('mouseleave', () => isDragging = false);
+  };
+
+  return { init, addFunction, clearFunctions, removeFunction, setRange, zoom, findZeros, findExtrema, draw, markZeros };
+})();
+
+
+// === probability.js ===
+/* ============================================
+   Wahrscheinlichkeit - Vierfeldertafel & Baumdiagramm
+   ============================================ */
+
+const Probability = (() => {
+
+  // ===== BAUMDIAGRAMM =====
+  const drawTree = (canvasId, data) => {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.parentElement.clientWidth || 700;
+    canvas.height = 360;
+    const W = canvas.width, H = canvas.height;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(10,10,15,0.95)';
+    ctx.fillRect(0, 0, W, H);
+
+    const { root, branches } = data;
+    const startX = 60, midX = W * 0.42, endX = W - 60;
+    const branchCount = branches.reduce((s, b) => s + b.children.length, 0);
+    const rowH = Math.min(70, (H - 40) / branchCount);
+
+    let rowIndex = 0;
+    branches.forEach((branch, bi) => {
+      const midY = (branch.children.reduce((s, _, ci) => {
+        const idx = branches.slice(0, bi).reduce((s2, b2) => s2 + b2.children.length, 0) + ci;
+        return s + (40 + idx * rowH + rowH / 2);
+      }, 0)) / branch.children.length;
+
+      const startY = H / 2;
+
+      // Erste Ebene
+      drawBranch(ctx, startX, startY, midX, midY, branch.label, branch.prob, '#6366f1');
+
+      // Zweite Ebene
+      branch.children.forEach((child, ci) => {
+        const childIdx = branches.slice(0, bi).reduce((s, b2) => s + b2.children.length, 0) + ci;
+        const endY = 40 + childIdx * rowH + rowH / 2;
+
+        drawBranch(ctx, midX, midY, endX, endY, child.label, child.prob, '#a855f7');
+
+        // Endergebnis
+        const result = (branch.prob * child.prob).toFixed(4);
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.font = '11px JetBrains Mono, monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(`P = ${result}`, endX + 8, endY + 4);
+        rowIndex++;
+      });
+    });
+
+    // Wurzel
+    ctx.beginPath();
+    ctx.arc(startX, H / 2, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#06b6d4';
+    ctx.fill();
+
+    if (root) {
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.font = 'bold 12px Inter';
+      ctx.textAlign = 'right';
+      ctx.fillText(root, startX - 10, H / 2 + 4);
+    }
+  };
+
+  const drawBranch = (ctx, x1, y1, x2, y2, label, prob, color) => {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(x2, y2, 4, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    const mx = (x1 + x2) / 2;
+    const my = (y1 + y2) / 2;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 11px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, mx, my - 7);
+
+    ctx.fillStyle = 'rgba(6,182,212,0.9)';
+    ctx.font = '10px JetBrains Mono, monospace';
+    ctx.fillText(prob % 1 === 0 ? prob : prob.toFixed ? prob.toFixed(3) : prob, mx, my + 10);
+  };
+
+  // ===== VIERFELDERTAFEL =====
+  const drawVierfeldertafel = (canvasId, data) => {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = Math.min(canvas.parentElement.clientWidth || 600, 600);
+    canvas.height = 260;
+    const W = canvas.width, H = canvas.height;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(10,10,15,0.95)';
+    ctx.fillRect(0, 0, W, H);
+
+    const { rowLabels, colLabels, values, total } = data;
+    const cellW = (W - 160) / 3, cellH = (H - 60) / 3;
+    const startX = 140, startY = 50;
+
+    const drawCell = (x, y, w, h, text, bg, textColor = 'rgba(255,255,255,0.9)') => {
+      ctx.fillStyle = bg;
+      ctx.fillRect(x, y, w, h);
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x, y, w, h);
+      ctx.fillStyle = textColor;
+      ctx.font = 'bold 13px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText(text, x + w / 2, y + h / 2 + 5);
+    };
+
+    // Header Row
+    const colHeaderBg = 'rgba(99,102,241,0.3)';
+    drawCell(startX, startY, cellW, cellH, colLabels[0], colHeaderBg);
+    drawCell(startX + cellW, startY, cellW, cellH, colLabels[1], colHeaderBg);
+    drawCell(startX + 2 * cellW, startY, cellW, cellH, 'Gesamt', 'rgba(99,102,241,0.5)');
+
+    // Rows
+    const rowBg = ['rgba(168,85,247,0.15)', 'rgba(168,85,247,0.1)'];
+    const rowHeaderBg = 'rgba(168,85,247,0.3)';
+
+    for (let r = 0; r < 2; r++) {
+      // Row header
+      ctx.fillStyle = rowHeaderBg;
+      ctx.fillRect(startX - cellW, startY + (r + 1) * cellH, cellW, cellH);
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.strokeRect(startX - cellW, startY + (r + 1) * cellH, cellW, cellH);
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.font = 'bold 13px Inter';
+      ctx.textAlign = 'center';
+      ctx.fillText(rowLabels[r], startX - cellW / 2, startY + (r + 1) * cellH + cellH / 2 + 5);
+
+      const rowSum = values[r][0] + values[r][1];
+      for (let c = 0; c < 2; c++) {
+        drawCell(startX + c * cellW, startY + (r + 1) * cellH, cellW, cellH,
+          values[r][c].toString(), rowBg[r]);
+      }
+      drawCell(startX + 2 * cellW, startY + (r + 1) * cellH, cellW, cellH,
+        rowSum.toString(), 'rgba(6,182,212,0.2)');
+    }
+
+    // Gesamtzeile
+    const totalRow = 'rgba(6,182,212,0.3)';
+    ctx.fillStyle = totalRow;
+    ctx.fillRect(startX - cellW, startY + 3 * cellH, cellW, cellH);
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.strokeRect(startX - cellW, startY + 3 * cellH, cellW, cellH);
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.font = 'bold 13px Inter';
+    ctx.textAlign = 'center';
+    ctx.fillText('Gesamt', startX - cellW / 2, startY + 3 * cellH + cellH / 2 + 5);
+
+    const col0Sum = values[0][0] + values[1][0];
+    const col1Sum = values[0][1] + values[1][1];
+    drawCell(startX, startY + 3 * cellH, cellW, cellH, col0Sum.toString(), totalRow);
+    drawCell(startX + cellW, startY + 3 * cellH, cellW, cellH, col1Sum.toString(), totalRow);
+    drawCell(startX + 2 * cellW, startY + 3 * cellH, cellW, cellH, total.toString(), 'rgba(6,182,212,0.5)');
+
+    // Wahrscheinlichkeiten anzeigen
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '11px Inter';
+    ctx.textAlign = 'left';
+    ctx.fillText(`P(${rowLabels[0]}|${colLabels[0]}) = ${(values[0][0]/col0Sum).toFixed(3)}`, 10, H - 35);
+    ctx.fillText(`P(${rowLabels[0]}|${colLabels[1]}) = ${(values[0][1]/col1Sum).toFixed(3)}`, 10, H - 18);
+  };
+
+  // Aufgabengenerator
+  const generateTreeProblem = () => {
+    const scenarios = [
+      {
+        context: 'Eine Urne enthält 4 rote und 6 blaue Kugeln. Es wird zweimal gezogen (mit Zurücklegen).',
+        root: 'Start',
+        branches: [
+          { label: 'Rot', prob: 0.4, children: [
+            { label: 'Rot', prob: 0.4 },
+            { label: 'Blau', prob: 0.6 }
+          ]},
+          { label: 'Blau', prob: 0.6, children: [
+            { label: 'Rot', prob: 0.4 },
+            { label: 'Blau', prob: 0.6 }
+          ]}
+        ],
+        questions: [
+          { q: 'Wie groß ist die Wahrscheinlichkeit, zweimal Rot zu ziehen?', a: '0.16', steps: ['P(R,R) = P(R) × P(R)', '= 0,4 × 0,4', '= 0,16'] },
+          { q: 'Wie groß ist die Wahrscheinlichkeit, genau eine rote Kugel zu ziehen?', a: '0.48', steps: ['P(R,B) + P(B,R)', '= 0,4×0,6 + 0,6×0,4', '= 0,24 + 0,24', '= 0,48'] }
+        ]
+      },
+      {
+        context: 'Ein Würfel wird zweimal geworfen. Ereignis A: Augenzahl > 4 (P = 1/3). Ereignis B: gerade Zahl (P = 1/2).',
+        root: 'Wurf 1',
+        branches: [
+          { label: '>4', prob: 0.333, children: [
+            { label: '>4', prob: 0.333 },
+            { label: '≤4', prob: 0.667 }
+          ]},
+          { label: '≤4', prob: 0.667, children: [
+            { label: '>4', prob: 0.333 },
+            { label: '≤4', prob: 0.667 }
+          ]}
+        ],
+        questions: [
+          { q: 'Wahrscheinlichkeit: Beide Male >4?', a: '0.111', steps: ['P = 1/3 × 1/3 = 1/9 ≈ 0,111'] },
+          { q: 'Wahrscheinlichkeit: Mindestens einmal >4?', a: '0.556', steps: ['P = 1 - P(kein >4)', '= 1 - (2/3)² = 1 - 4/9 = 5/9 ≈ 0,556'] }
+        ]
+      },
+      {
+        context: 'Bei einer Prüfung bestehen 70% der Schüler. Wer besteht, hat 90% Chance auf Note gut. Wer nicht besteht, hat 10% Chance auf Note gut.',
+        root: 'Schüler',
+        branches: [
+          { label: 'Bestanden', prob: 0.7, children: [
+            { label: 'Gut', prob: 0.9 },
+            { label: 'Nicht gut', prob: 0.1 }
+          ]},
+          { label: 'Nicht bestanden', prob: 0.3, children: [
+            { label: 'Gut', prob: 0.1 },
+            { label: 'Nicht gut', prob: 0.9 }
+          ]}
+        ],
+        questions: [
+          { q: 'P(Bestanden UND Note Gut)?', a: '0.63', steps: ['P = 0,7 × 0,9 = 0,63'] },
+          { q: 'P(Note Gut) gesamt? (Satz der totalen Wahrscheinlichkeit)', a: '0.66', steps: ['P(Gut) = P(Best.)×P(Gut|Best.) + P(n.Best.)×P(Gut|n.Best.)', '= 0,7×0,9 + 0,3×0,1', '= 0,63 + 0,03 = 0,66'] }
+        ]
+      }
+    ];
+    return scenarios[Math.floor(Math.random() * scenarios.length)];
+  };
+
+  const generateVierfeldertafel = () => {
+    const scenarios = [
+      {
+        title: 'Medizinischer Test',
+        rowLabels: ['Krank', 'Gesund'],
+        colLabels: ['Test +', 'Test -'],
+        values: [[90, 10], [20, 880]],
+        total: 1000,
+        context: 'In einer Studie mit 1000 Personen sind 100 krank. Der Test ist bei 90% der Kranken positiv und bei 2% der Gesunden falsch-positiv.'
+      },
+      {
+        title: 'Klassenarbeit',
+        rowLabels: ['Gelernt', 'Nicht gelernt'],
+        colLabels: ['Bestanden', 'Nicht bestanden'],
+        values: [[40, 5], [10, 15]],
+        total: 70,
+        context: 'In einer Klasse mit 70 Schülern haben 45 für die Arbeit gelernt.'
+      },
+      {
+        title: 'Sport & Leistung',
+        rowLabels: ['Sportlich', 'Nicht sportlich'],
+        colLabels: ['Gute Noten', 'Schlechte Noten'],
+        values: [[35, 15], [20, 30]],
+        total: 100,
+        context: 'Studie mit 100 Schülern: 50 sind sportlich aktiv.'
+      }
+    ];
+    return scenarios[Math.floor(Math.random() * scenarios.length)];
+  };
+
+  // Grundlegende Wahrscheinlichkeitsaufgaben
+  const generateBasicProbability = () => {
+    const exercises = [
+      {
+        question: 'Ein Würfel wird geworfen. Wie groß ist P(gerade Zahl)?',
+        answer: '0.5|1/2|3/6',
+        hint: 'Gerade Zahlen: 2, 4, 6 → 3 von 6 Seiten',
+        steps: ['Günstige Ergebnisse: {2, 4, 6} → 3', 'Alle Ergebnisse: {1,2,3,4,5,6} → 6', 'P = 3/6 = 1/2 = 0,5'],
+        topic: 'Wahrscheinlichkeit'
+      },
+      {
+        question: 'Aus 10 Losen (3 Gewinne) wird eines gezogen. Wie groß ist P(Gewinn)?',
+        answer: '0.3|3/10',
+        hint: 'P = günstige Fälle / alle Fälle',
+        steps: ['Günstige Fälle: 3 Gewinnlose', 'Alle Fälle: 10 Lose', 'P(Gewinn) = 3/10 = 0,3'],
+        topic: 'Wahrscheinlichkeit'
+      },
+      {
+        question: 'Gegenwahrscheinlichkeit: P(A) = 0,35. Berechne P(Ā).',
+        answer: '0.65',
+        hint: 'P(Ā) = 1 - P(A)',
+        steps: ['P(Ā) = 1 - P(A)', '= 1 - 0,35', '= 0,65'],
+        topic: 'Wahrscheinlichkeit'
+      },
+      {
+        question: 'Zwei unabhängige Ereignisse: P(A) = 0,4 und P(B) = 0,3.\nWie groß ist P(A ∩ B)?',
+        answer: '0.12',
+        hint: 'Unabhängige Ereignisse: P(A ∩ B) = P(A) × P(B)',
+        steps: ['P(A ∩ B) = P(A) × P(B)', '= 0,4 × 0,3', '= 0,12'],
+        topic: 'Wahrscheinlichkeit'
+      },
+      {
+        question: 'Additionssatz: P(A) = 0,5, P(B) = 0,4, P(A ∩ B) = 0,2.\nWie groß ist P(A ∪ B)?',
+        answer: '0.7',
+        hint: 'P(A ∪ B) = P(A) + P(B) - P(A ∩ B)',
+        steps: ['P(A ∪ B) = P(A) + P(B) - P(A ∩ B)', '= 0,5 + 0,4 - 0,2', '= 0,7'],
+        topic: 'Wahrscheinlichkeit'
+      },
+      {
+        question: 'Bedingte Wahrscheinlichkeit: P(A) = 0,4, P(B|A) = 0,5.\nWie groß ist P(A ∩ B)?',
+        answer: '0.2',
+        hint: 'P(A ∩ B) = P(A) × P(B|A)',
+        steps: ['P(A ∩ B) = P(A) × P(B|A)', '= 0,4 × 0,5', '= 0,2'],
+        topic: 'Wahrscheinlichkeit'
+      },
+      {
+        question: 'Binomialkoeffizient: Wie viele Möglichkeiten gibt es, aus 5 Schülern 2 auszuwählen?\nC(5,2) = ?',
+        answer: '10',
+        hint: 'C(n,k) = n! / (k! × (n-k)!)',
+        steps: ['C(5,2) = 5! / (2! × 3!)', '= (5×4) / (2×1)', '= 20 / 2 = 10'],
+        topic: 'Wahrscheinlichkeit'
+      }
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  };
+
+  return { drawTree, drawVierfeldertafel, generateTreeProblem, generateVierfeldertafel, generateBasicProbability };
+})();
+
+
+// === math-engine.js ===
 /* ============================================
    Math Engine - Aufgabengenerator & Prüfer
    ============================================ */
@@ -2941,6 +4333,12 @@ const MathEngine = (() => {
     { id: 'statistics', label: '📊 Statistik', difficulty: 2 },
     { id: 'equations', label: '= Gleichungen', difficulty: 3 },
     { id: 'wordproblems', label: '📖 Textaufgaben', difficulty: 3 },
+    { id: 'functions', label: '📈 Funktionen', difficulty: 3 },
+    { id: 'nullstellen', label: '✕ Nullstellen', difficulty: 3 },
+    { id: 'probability', label: '🎲 Wahrscheinlichkeit', difficulty: 2 },
+    { id: 'combinatorics', label: '🔢 Kombinatorik', difficulty: 3 },
+    { id: 'trigonometry', label: '📐 Trigonometrie', difficulty: 3 },
+    { id: 'analysis', label: '∫ Analysis', difficulty: 4 },
   ];
 
   let currentExercise = null;
@@ -3271,6 +4669,255 @@ const MathEngine = (() => {
       }
     },
 
+    functions: () => {
+      const types = [
+        () => {
+          const a = rand(1,4), b = rand(-5,5), c = rand(-8,8);
+          const sign = b >= 0 ? '+' : '';
+          const sign2 = c >= 0 ? '+' : '';
+          const vertex_x = -b / (2*a);
+          const vertex_y = a*vertex_x*vertex_x + b*vertex_x + c;
+          return {
+            question: `Gegeben: f(x) = ${a}x² ${b !== 0 ? (b>0?'+':'')+b+'x' : ''} ${c !== 0 ? (c>0?'+':'')+c : ''}\n\nWelchen **Wert hat die Funktion an der Stelle x = 2**?`,
+            answer: (a*4 + b*2 + c).toString(),
+            hint: 'Setze x = 2 in die Funktion ein',
+            steps: [`f(2) = ${a}·2² ${b>=0?'+':''} ${b}·2 ${c>=0?'+':''} ${c}`, `= ${a*4} ${b>=0?'+':''} ${b*2} ${c>=0?'+':''} ${c}`, `= ${a*4 + b*2 + c}`],
+            type: 'number', topic: 'Funktionen'
+          };
+        },
+        () => {
+          const a = rand(1,3), b = rand(-4,4);
+          const yInt = b;
+          return {
+            question: `f(x) = ${a === 1 ? '' : a}x³ ${b >= 0 ? '+' : ''}${b}\n\nWie lautet der **y-Achsenabschnitt** (f(0))?`,
+            answer: yInt.toString(),
+            hint: 'y-Achsenabschnitt: setze x = 0 ein',
+            steps: [`f(0) = ${a}·0³ + ${b}`, `= 0 + ${b}`, `= ${yInt}`],
+            type: 'number', topic: 'Funktionen'
+          };
+        },
+        () => {
+          const a = rand(1,3);
+          return {
+            question: `Welche **Symmetrie** hat f(x) = ${a}x⁴?\n(achsensymmetrisch / punktsymmetrisch / keine)`,
+            answer: 'achsensymmetrisch',
+            hint: 'Gerade Exponenten → Achsensymmetrie zur y-Achse',
+            steps: ['f(-x) = a(-x)⁴ = ax⁴ = f(x)', '→ f(-x) = f(x) → achsensymmetrisch zur y-Achse'],
+            type: 'contains', topic: 'Funktionen'
+          };
+        },
+        () => {
+          const a = rand(1,3);
+          return {
+            question: `Welche **Symmetrie** hat f(x) = ${a}x³?\n(achsensymmetrisch / punktsymmetrisch / keine)`,
+            answer: 'punktsymmetrisch',
+            hint: 'Ungerade Exponenten → Punktsymmetrie zum Ursprung',
+            steps: ['f(-x) = a(-x)³ = -ax³ = -f(x)', '→ f(-x) = -f(x) → punktsymmetrisch zum Ursprung'],
+            type: 'contains', topic: 'Funktionen'
+          };
+        },
+        () => {
+          const a = rand(1,3), c = rand(1,9);
+          return {
+            question: `f(x) = ${a}x² + ${c}\n\nHat diese Funktion **Nullstellen**? (ja/nein)\nWenn ja: berechne sie.`,
+            answer: c > 0 ? 'nein|keine' : `x = ${Math.sqrt(-c/a).toFixed(2)}`,
+            hint: c > 0 ? `${a}x² + ${c} = 0 → x² = ${-c/a} → keine reelle Lösung!` : 'Setze f(x) = 0 und löse nach x auf',
+            steps: c > 0 ? [`${a}x² + ${c} = 0`, `x² = ${-c/a}`, `Keine reelle Lösung (negativ unter Wurzel)!`] : [`${a}x² = ${-c}`, `x² = ${-c/a}`, `x = ±${Math.sqrt(-c/a).toFixed(2)}`],
+            type: 'contains', topic: 'Funktionen'
+          };
+        },
+        () => {
+          const p = rand(-5, 5), q = rand(1, 6)*(-1);
+          return {
+            question: `Schnittpunkt mit y-Achse:\nf(x) = (x ${p>=0?'-':'+'}${Math.abs(p)})(x ${q>=0?'-':'+'}${Math.abs(q)})\n\nWie lautet f(0)?`,
+            answer: (p * (-q) < 0 ? p*Math.abs(q) : (-p)*q).toString(),
+            hint: 'Setze x = 0 ein: f(0) = (0-p)(0-q) = p·q',
+            steps: [`f(0) = (0 − ${p})(0 − ${q})`, `= (${-p})(${-q})`, `= ${(-p)*(-q)}`],
+            type: 'number', topic: 'Funktionen'
+          };
+        }
+      ];
+      return types[Math.floor(Math.random() * types.length)]();
+    },
+
+    nullstellen: () => {
+      const types = [
+        () => {
+          const a = rand(1,4), b = rand(-6,6);
+          const x0 = -b/a;
+          const whole = Number.isInteger(x0);
+          return {
+            question: `Berechne die **Nullstelle** von:\nf(x) = ${a}x ${b>=0?'+':''}${b}`,
+            answer: whole ? x0.toString() : x0.toFixed(2),
+            hint: 'Setze f(x) = 0 und löse nach x auf',
+            steps: [`${a}x ${b>=0?'+':''}${b} = 0`, `${a}x = ${-b}`, `x = ${-b}/${a}`, `x = ${x0.toFixed(2)}`],
+            type: 'number', topic: 'Nullstellen'
+          };
+        },
+        () => {
+          const [r1, r2] = [rand(-5,5), rand(-5,5)];
+          const b = -(r1+r2), c = r1*r2;
+          return {
+            question: `Berechne die **Nullstellen** mit der Mitternachtsformel:\nf(x) = x² ${b>=0?'+':''}${b}x ${c>=0?'+':''}${c}`,
+            answer: `${Math.min(r1,r2)}|${Math.max(r1,r2)}`,
+            hint: 'x = (-b ± √(b²-4ac)) / 2a',
+            steps: [
+              `a=1, b=${b}, c=${c}`,
+              `Diskriminante: D = b²-4ac = ${b*b}-4·${c} = ${b*b - 4*c}`,
+              `√D = ${Math.sqrt(b*b - 4*c).toFixed(2)}`,
+              `x₁ = (${-b} + ${Math.sqrt(b*b-4*c).toFixed(2)}) / 2 = ${r1}`,
+              `x₂ = (${-b} - ${Math.sqrt(b*b-4*c).toFixed(2)}) / 2 = ${r2}`
+            ],
+            type: 'contains', topic: 'Nullstellen'
+          };
+        },
+        () => {
+          const r = rand(1,6);
+          return {
+            question: `Berechne die **Nullstellen** durch Ausklammern:\nf(x) = x³ ${r>0?'- ':'+ '}${r}x²\n(Tipp: x ausklammern)`,
+            answer: `0|${r}`,
+            hint: 'x ausklammern: x(x² − rx) = x·x(x − r)',
+            steps: [`x³ ${r>0?'-':'+'}${r}x² = 0`, `x²(x ${r>0?'-':'+'}${r}) = 0`, `x₁ = 0 (doppelte NS), x₂ = ${r}`],
+            type: 'contains', topic: 'Nullstellen'
+          };
+        },
+        () => {
+          const a = rand(1,4), p = rand(1,5);
+          return {
+            question: `Diskriminante berechnen:\nf(x) = x² ${(2*p)>0?'+':''}${2*p}x ${p*p+1 > 0 ? '+' : ''}${p*p+1}\n\nWie viele Nullstellen hat die Funktion?\n(0 / 1 / 2)`,
+            answer: '0',
+            hint: 'D = b²-4ac. Wenn D < 0: keine reellen Nullstellen',
+            steps: [`b = ${2*p}, c = ${p*p+1}`, `D = (${2*p})² - 4·1·${p*p+1}`, `= ${4*p*p} - ${4*(p*p+1)}`, `= ${4*p*p - 4*(p*p+1)}`, `D < 0 → keine reellen Nullstellen`],
+            type: 'exact', topic: 'Nullstellen'
+          };
+        }
+      ];
+      return types[Math.floor(Math.random() * types.length)]();
+    },
+
+    probability: () => {
+      const ex = Probability.generateBasicProbability();
+      return { ...ex, type: 'contains' };
+    },
+
+    combinatorics: () => {
+      const types = [
+        () => {
+          const n = rand(4,8), k = rand(2,Math.min(n-1,4));
+          const factorial = (n) => n <= 1 ? 1 : n * factorial(n-1);
+          const perm = factorial(n) / factorial(n-k);
+          return {
+            question: `**Permutation ohne Wiederholung:**\nWie viele geordnete Möglichkeiten gibt es, ${k} aus ${n} Elementen auszuwählen?\nP(${n},${k}) = ?`,
+            answer: perm.toString(),
+            hint: `P(n,k) = n! / (n-k)! = ${n}! / ${n-k}!`,
+            steps: [`P(${n},${k}) = ${n}! / (${n}-${k})!`, `= ${n}! / ${n-k}!`, `= ${Array.from({length:k},(_,i)=>n-i).join(' × ')}`, `= ${perm}`],
+            type: 'number', topic: 'Kombinatorik'
+          };
+        },
+        () => {
+          const n = rand(4,8), k = rand(2,Math.min(n-1,4));
+          const factorial = (n) => n <= 1 ? 1 : n * factorial(n-1);
+          const comb = factorial(n) / (factorial(k) * factorial(n-k));
+          return {
+            question: `**Kombination ohne Wiederholung:**\nWie viele Möglichkeiten gibt es, ${k} aus ${n} Elementen (ungeordnet) auszuwählen?\nC(${n},${k}) = ?`,
+            answer: comb.toString(),
+            hint: `C(n,k) = n! / (k! × (n-k)!)`,
+            steps: [`C(${n},${k}) = ${n}! / (${k}! × ${n-k}!)`, `= ${Array.from({length:k},(_,i)=>n-i).join('×')} / ${Array.from({length:k},(_,i)=>k-i).join('×')}`, `= ${comb}`],
+            type: 'number', topic: 'Kombinatorik'
+          };
+        },
+        () => {
+          const n = rand(2,5), k = rand(2,4);
+          const res = Math.pow(n, k);
+          return {
+            question: `**Variation mit Wiederholung:**\nEin ${k}-stelliger Code aus ${n} Ziffern (0 bis ${n-1}).\nWie viele Codes gibt es?`,
+            answer: res.toString(),
+            hint: `n^k = ${n}^${k}`,
+            steps: [`Jede Stelle: ${n} Möglichkeiten`, `${k} Stellen → ${n}^${k}`, `= ${res}`],
+            type: 'number', topic: 'Kombinatorik'
+          };
+        }
+      ];
+      return types[Math.floor(Math.random() * types.length)]();
+    },
+
+    trigonometry: () => {
+      const angles = [
+        { deg: 0, rad: '0', sin: 0, cos: 1, tan: 0 },
+        { deg: 30, rad: 'π/6', sin: 0.5, cos: '√3/2', tan: '1/√3' },
+        { deg: 45, rad: 'π/4', sin: '√2/2', cos: '√2/2', tan: 1 },
+        { deg: 60, rad: 'π/3', sin: '√3/2', cos: 0.5, tan: '√3' },
+        { deg: 90, rad: 'π/2', sin: 1, cos: 0, tan: '∞' },
+      ];
+
+      const exercises = [
+        () => {
+          const angle = angles[Math.floor(Math.random() * (angles.length - 1))];
+          return { question: `Berechne: **sin(${angle.deg}°)** = ?`, answer: angle.sin.toString(), hint: 'Einheitskreis: sin = y-Koordinate', steps: [`sin(${angle.deg}°) = ${angle.sin}`], type: 'contains', topic: 'Trigonometrie' };
+        },
+        () => {
+          const angle = angles[Math.floor(Math.random() * (angles.length - 1))];
+          return { question: `Berechne: **cos(${angle.deg}°)** = ?`, answer: angle.cos.toString(), hint: 'Einheitskreis: cos = x-Koordinate', steps: [`cos(${angle.deg}°) = ${angle.cos}`], type: 'contains', topic: 'Trigonometrie' };
+        },
+        () => {
+          const sides = [[3,4,5],[5,12,13],[8,15,17]];
+          const [a,b,c] = sides[Math.floor(Math.random()*sides.length)];
+          return { question: `Rechtwinkliges Dreieck: a=${a}, b=${b}, c=${c}(Hyp.)\nBerechne: **sin(α)** (α liegt der Seite a gegenüber)`, answer: (a/c).toFixed(4), hint: 'sin(α) = Gegenkathete / Hypotenuse', steps: [`sin(α) = Gegenkathete / Hypotenuse`, `= ${a} / ${c}`, `= ${(a/c).toFixed(4)}`], type: 'number', topic: 'Trigonometrie' };
+        },
+        () => {
+          return { question: `**Sinussatz:**\nIn einem Dreieck gilt:\na / sin(α) = b / sin(β) = c / sin(γ)\n\nMit a = 6 und α = 30°: Berechne **b**, wenn β = 60°.`, answer: (6 * Math.sin(Math.PI/3) / Math.sin(Math.PI/6)).toFixed(2), hint: 'b = a · sin(β) / sin(α)', steps: [`b = a · sin(β) / sin(α)`, `= 6 · sin(60°) / sin(30°)`, `= 6 · (√3/2) / (1/2)`, `= 6√3 ≈ ${(6*Math.sqrt(3)).toFixed(2)}`], type: 'number', topic: 'Trigonometrie' };
+        }
+      ];
+      return exercises[Math.floor(Math.random() * exercises.length)]();
+    },
+
+    analysis: () => {
+      const exercises = [
+        () => {
+          const n = rand(2,5), a = rand(1,4);
+          return {
+            question: `Leite ab: **f(x) = ${a}x^${n}**\nf'(x) = ?`,
+            answer: `${a*n}x^${n-1}|${a*n}x${n-1 === 1 ? '' : '^'+(n-1)}`,
+            hint: `Potenzregel: (axⁿ)' = n·a·xⁿ⁻¹`,
+            steps: [`f(x) = ${a}x^${n}`, `f'(x) = ${n} · ${a} · x^(${n}-1)`, `f'(x) = ${a*n}x^${n-1}`],
+            type: 'contains', topic: 'Analysis'
+          };
+        },
+        () => {
+          const a = rand(2,6), b = rand(1,5);
+          return {
+            question: `Leite ab: **f(x) = ${a}x² + ${b}x**\nf'(x) = ?`,
+            answer: `${2*a}x + ${b}|${2*a}x+${b}`,
+            hint: 'Summenregel: jeden Term einzeln ableiten',
+            steps: [`(${a}x²)' = ${2*a}x`, `(${b}x)' = ${b}`, `f'(x) = ${2*a}x + ${b}`],
+            type: 'contains', topic: 'Analysis'
+          };
+        },
+        () => {
+          const a = rand(1,5), b = rand(1,8);
+          return {
+            question: `Berechne das **Integral** (bestimmt von 0 bis ${b}):\n∫ ${a} dx`,
+            answer: (a*b).toString(),
+            hint: '∫ a dx = ax + C | von 0 bis b: a·b - a·0 = a·b',
+            steps: [`∫₀^${b} ${a} dx`, `= [${a}x]₀^${b}`, `= ${a}·${b} - ${a}·0`, `= ${a*b}`],
+            type: 'number', topic: 'Analysis'
+          };
+        },
+        () => {
+          const a = rand(1,4), n = rand(2,4);
+          const result_upper = a * Math.pow(2, n) / n;
+          return {
+            question: `Berechne: ∫₀² **${a}x^${n-1}** dx`,
+            answer: result_upper.toFixed(2),
+            hint: `∫ axⁿ dx = a/(n+1) · x^(n+1) + C`,
+            steps: [`∫₀² ${a}x^${n-1} dx`, `= [${a}/${n} · x^${n}]₀²`, `= ${a}/${n} · 2^${n} - 0`, `= ${a}/${n} · ${Math.pow(2,n)}`, `= ${result_upper.toFixed(2)}`],
+            type: 'number', topic: 'Analysis'
+          };
+        }
+      ];
+      return exercises[Math.floor(Math.random() * exercises.length)]();
+    },
+
     wordproblems: () => {
       const problems = [
         () => {
@@ -3339,7 +4986,8 @@ const MathEngine = (() => {
   return { generate, checkAnswer, getHint, getSolutionSteps, getTopics, getTopicLabel, getKnowledgeName, current: () => currentExercise };
 })();
 
-/* === deutsch-engine.js === */
+
+// === deutsch-engine.js ===
 /* ============================================
    Deutsch Engine - Aufgaben & Prüfung
    ============================================ */
@@ -3354,6 +5002,10 @@ const DeutschEngine = (() => {
     { id: 'wortschatz', label: '💬 Wortschatz', difficulty: 1 },
     { id: 'stilmittel', label: '🎨 Stilmittel', difficulty: 3 },
     { id: 'literatur', label: '📚 Literatur', difficulty: 3 },
+    { id: 'charakterisierung', label: '🎭 Charakterisierung', difficulty: 3 },
+    { id: 'inhaltsangabe', label: '📄 Inhaltsangabe', difficulty: 2 },
+    { id: 'dramenanalyse', label: '🎬 Dramenanalyse', difficulty: 4 },
+    { id: 'eroeiterung', label: '✍️ Erörterung', difficulty: 3 },
   ];
 
   let currentExercise = null;
@@ -3493,6 +5145,67 @@ const DeutschEngine = (() => {
     return Brain.checkAnswer(userAnswer, currentExercise.answer, currentExercise.type);
   };
 
+  // ===== NEUE THEMEN =====
+  generators.charakterisierung = () => {
+    const exercises = [
+      { question: 'In welcher **Reihenfolge** baut man eine Charakterisierung auf?\n(Einleitung / Hauptteil / Schluss)', answer: 'einleitung|hauptteil|schluss', hint: 'Klassischer Dreischritt: Einleitung → Hauptteil → Schluss', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Was gehört in die **Einleitung** einer Charakterisierung?\n(Nenne 3 Elemente)', answer: 'name|werk|autor|figur|kurz|erscheint', hint: 'Name der Figur, Werk/Autor, kurze Vorstellung der Rolle', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Was ist der Unterschied zwischen **direkter und indirekter Charakterisierung**?', answer: 'direkt: autor beschreibt|indirekt: handlungen|verhalten|dialog|indirekt zeigt|direkt sagt', hint: 'Direkt: Autor nennt Eigenschaften | Indirekt: Leser erschließt aus Verhalten', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Formuliere einen **Einleitungssatz** für eine Charakterisierung:\nFigur: "Gregor Samsa" aus "Die Verwandlung" von Kafka', answer: 'gregor samsa|verwandlung|kafka|hauptfigur', hint: 'Muster: "Die folgende Charakterisierung befasst sich mit [Figur] aus [Werk] von [Autor]."', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Welche **Aspekte** werden im Hauptteil einer Charakterisierung analysiert?\n(Nenne mindestens 3)', answer: 'äußere erscheinung|charakter|verhalten|beziehungen|entwicklung|eigenschaften', hint: 'Äußeres → Inneres → Verhalten → Beziehungen → Entwicklung', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Welcher **Tempus** (Zeitform) wird in einer Charakterisierung verwendet?', answer: 'präsens', hint: 'In literarischen Analysen immer Präsens verwenden!', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Wie belegt man eine Behauptung in der Charakterisierung?', answer: 'zitat|textstelle|beleg|nachweis|beispiel', hint: 'Behauptung → Beleg (Zitat/Textstelle) → Deutung', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Was ist der **Unterschied** zwischen Charakterisierung und Personenbeschreibung?', answer: 'charakterisierung: innere eigenschaften|literarisch|analyse|personenbeschreibung: äußerlich|real', hint: 'Charakterisierung = literarische Figur, innere+äußere Analyse | Personenbeschreibung = reale Person, meist äußerlich', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Was schreibt man in den **Schluss** einer Charakterisierung?', answer: 'fazit|zusammenfassung|bedeutung|funktion|stellung|gesamteindruck', hint: 'Fazit: Gesamtbewertung der Figur + ihre Funktion im Werk', type: 'contains', topic: 'Charakterisierung' },
+      { question: 'Korrigiere: "Der Autor schrieb, dass Hamlet traurig war."\nWas ist falsch?', answer: 'tempus|vergangenheit|präsens|schreibt|ist', hint: 'Literarisches Präsens: "Der Autor schreibt, dass Hamlet traurig ist."', type: 'contains', topic: 'Charakterisierung' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  };
+
+  generators.inhaltsangabe = () => {
+    const exercises = [
+      { question: 'Welche **5 W-Fragen** beantwortet eine Inhaltsangabe?', answer: 'wer|was|wann|wo|warum|wie', hint: 'Wer? Was? Wann? Wo? Warum? (+ Wie?)', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'In welchem **Tempus** schreibt man eine Inhaltsangabe?', answer: 'präsens', hint: 'Inhaltsangabe IMMER im Präsens (Gegenwartsform)!', type: 'exact', topic: 'Inhaltsangabe' },
+      { question: 'Was gehört in den **Einleitungssatz** einer Inhaltsangabe?\n(nenne alle Elemente)', answer: 'titel|autor|textsorte|erscheinungsjahr|thema', hint: 'Muster: "[Textsorte] „[Titel]" von [Autor] ([Jahr]) handelt von..."', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Formuliere einen korrekten **Einleitungssatz**:\nRoman "Der Vorleser", Bernhard Schlink, 1995', answer: 'roman|vorleser|bernhard schlink|1995|handelt', hint: 'Die Inhaltsangabe des Romans „Der Vorleser" von Bernhard Schlink (1995) handelt von...', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Was soll eine Inhaltsangabe **NICHT** enthalten?', answer: 'eigene meinung|wertung|direkte rede|zitat|wörtliche rede|gefühle', hint: 'Nur Wiedergabe des Inhalts – keine Meinung, keine Zitate, keine direkte Rede!', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Wie formuliert man **indirekte Rede** in der Inhaltsangabe?\nBeispiel: Er sagte: "Ich komme morgen."', answer: 'er sage|er käme|konjunktiv|er komme|indirekte rede', hint: 'Indirekte Rede: Konjunktiv I → "Er sagte, er komme morgen."', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Welche **Wörter** helfen beim Strukturieren einer Inhaltsangabe?\n(Nenne Beispiele)', answer: 'zunächst|danach|anschließend|schließlich|daraufhin|zum schluss|darüber hinaus', hint: 'Temporale Konnektoren: zunächst, danach, anschließend, schließlich, daraufhin...', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Wie lang sollte eine Inhaltsangabe sein?\n(Verhältnis zum Original)', answer: '10|quarter|viertel|25|kürzer|zusammengefasst', hint: 'Faustregel: ca. 1/4 bis max. 1/3 des Originals – nur das Wesentliche!', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Darf man in der Inhaltsangabe **Rückblenden oder Vorgriffe** erwähnen?', answer: 'ja|kann|wenn wichtig|wenn zum verständnis', hint: 'Ja, aber: immer die chronologische Handlung im Fokus behalten', type: 'contains', topic: 'Inhaltsangabe' },
+      { question: 'Was unterscheidet eine **Inhaltsangabe** von einer **Zusammenfassung**?', answer: 'inhaltsangabe: literarischer text|zusammenfassung: allgemein|sachtext|beide: kürzen', hint: 'Inhaltsangabe: speziell für literarische Texte | Zusammenfassung: für Sach- und Fachtexte', type: 'contains', topic: 'Inhaltsangabe' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  };
+
+  generators.dramenanalyse = () => {
+    const exercises = [
+      { question: 'Aus welchen **5 Akten** besteht das klassische Drama nach Aristoteles/Freytag?', answer: 'exposition|steigende handlung|höhepunkt|fallende handlung|katastrophe|auflösung', hint: '1. Exposition 2. Steigende Handlung 3. Höhepunkt/Peripetie 4. Fallende Handlung 5. Katastrophe/Lösung', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist eine **Peripetie** im Drama?', answer: 'wendepunkt|umschwung|wende|entscheidende wendung|schicksalswende', hint: 'Der entscheidende Wendepunkt/Umschwung – meist im 3. Akt', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist eine **Exposition** im Drama?', answer: 'einleitung|einführung|vorstellung|ausgangslage|figuren vorgestellt|konflikt angedeutet', hint: '1. Akt: Figuren und Ausgangssituation werden eingeführt, Konflikt angedeutet', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was unterscheidet **Tragödie** und **Komödie**?', answer: 'tragödie: trauriges ende|tod|scheitern|komödie: glückliches ende|hochzeit|auflösung', hint: 'Tragödie: Ende in Leid/Tod | Komödie: Ende in Glück/Lösung', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist ein **Monolog** im Drama?', answer: 'eine person|allein|selbstgespräch|inneres gefühl|gedanken laut', hint: 'Eine Figur spricht allein auf der Bühne – Gedanken werden laut', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was versteht man unter dem **epischen Theater** (Brecht)?', answer: 'verfremdung|zuschauer nachdenken|nicht mitfühlen|kritisch|v-effekt', hint: 'Brecht: Zuschauer soll NICHT mitfühlen, sondern kritisch nachdenken (Verfremdungseffekt)', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist ein **Akt** und was ist eine **Szene** im Drama?', answer: 'akt: großer abschnitt|szene: kleiner|vorhang|ort oder personenwechsel', hint: 'Akt = großer Abschnitt (Vorhang fällt) | Szene = kleinere Einheit (Personenwechsel/Ortswechsel)', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Wie analysiert man einen **Dialog** im Drama?\n(Nenne die wichtigsten Analysepunkte)', answer: 'ton|verhältnis|macht|dominanz|absicht|strategie|information|gefühl', hint: 'Wer spricht wie viel? Wer dominiert? Welche Absicht? Welche Informationen werden geteilt?', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist eine **Regieanweisung** (Bühnenanweisung)?', answer: 'anweisung|kursiv|klammer|regie|bühne|handlung|not verbally|bewegung', hint: 'In Klammern oder kursiv: Anweisungen für Schauspieler/Regie – gehören nicht zum Dialog', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Was ist der **Unterschied** zwischen offenem und geschlossenem Drama?', answer: 'geschlossen: einheit von ort zeit handlung|offen: verschiedene orte|zeiten|keine strenge einheit', hint: 'Geschlossen (klassisch): Einheit von Ort, Zeit, Handlung | Offen (modern): freie Struktur', type: 'contains', topic: 'Dramenanalyse' },
+      { question: 'Nenne 3 **berühmte deutsche Dramen** und ihre Autoren.', answer: 'faust|goethe|kabale und liebe|schiller|nathan|lessing|woyzeck|büchner|brecht', hint: 'Faust (Goethe) / Kabale und Liebe (Schiller) / Nathan der Weise (Lessing) / Woyzeck (Büchner)', type: 'contains', topic: 'Dramenanalyse' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  };
+
+  generators.eroeiterung = () => {
+    const exercises = [
+      { question: 'Was ist der **Aufbau** einer Erörterung?', answer: 'einleitung|hauptteil|schluss|these|argument|beispiel|fazit', hint: 'Einleitung (These) → Hauptteil (Argumente + Beispiele) → Schluss (Fazit)', type: 'contains', topic: 'Erörterung' },
+      { question: 'Was ist das **Sanduhr-Prinzip** bei der Erörterung?', answer: 'gegenargumente|eigene meinung|stärkste argumente zuletzt|pro contra', hint: 'Erst Gegenargumente, dann eigene Meinung – stärkstes Argument zuletzt (Steigerung)', type: 'contains', topic: 'Erörterung' },
+      { question: 'Welche **Argumente** sind in einer Erörterung besonders überzeugend?\n(Typen nennen)', answer: 'fakten|statistik|experten|beispiele|logisch|erfahrung|normativ', hint: 'Faktenargument / Expertenargument / Beispielargument / Normatives Argument', type: 'contains', topic: 'Erörterung' },
+      { question: 'Was ist der Unterschied zwischen **linearer und dialektischer Erörterung**?', answer: 'linear: nur eine seite|dialektisch: pro und contra|beide seiten|abwägung', hint: 'Linear: nur eine Position | Dialektisch: Pro und Contra, dann eigenes Fazit', type: 'contains', topic: 'Erörterung' },
+      { question: 'Formuliere einen **Einleitungssatz** für eine Erörterung zum Thema "Handyverbot in der Schule".', answer: 'handyverbot|schule|frage|diskutiert|debattiert|kontrovers', hint: 'Muster: "Das Thema [X] wird derzeit kontrovers diskutiert. In der folgenden Erörterung..."', type: 'contains', topic: 'Erörterung' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  };
+
   const getHint = () => currentExercise ? currentExercise.hint : null;
   const getTopics = () => TOPICS;
   const getTopicLabel = (id) => { const t = TOPICS.find(t => t.id === id); return t ? t.label : id; };
@@ -3501,7 +5214,8 @@ const DeutschEngine = (() => {
   return { generate, checkAnswer, getHint, getSolutionSteps: () => null, getTopics, getTopicLabel, getKnowledgeName, current: () => currentExercise };
 })();
 
-/* === english-engine.js === */
+
+// === english-engine.js ===
 /* ============================================
    English Engine - Exercises & Checking
    ============================================ */
@@ -3510,12 +5224,17 @@ const EnglishEngine = (() => {
   const TOPICS = [
     { id: 'tenses', label: '⏰ Tenses', difficulty: 2 },
     { id: 'grammar', label: '📖 Grammar', difficulty: 2 },
-    { id: 'vocabulary', label: '💬 Vocabulary', difficulty: 1 },
+    { id: 'vocabulary', label: '💬 Vocabulary Basic', difficulty: 1 },
+    { id: 'vocab_advanced', label: '📚 Vocabulary Advanced', difficulty: 2 },
+    { id: 'vocab_thematic', label: '🌍 Thematic Vocab', difficulty: 2 },
+    { id: 'irregular_verbs', label: '🔄 Irregular Verbs', difficulty: 2 },
     { id: 'articles', label: '📌 Articles', difficulty: 1 },
     { id: 'prepositions', label: '📍 Prepositions', difficulty: 2 },
     { id: 'conditional', label: '🔀 Conditional', difficulty: 3 },
     { id: 'passive', label: '🔄 Passive Voice', difficulty: 3 },
     { id: 'relative', label: '🔗 Relative Clauses', difficulty: 3 },
+    { id: 'reported_speech', label: '💬 Reported Speech', difficulty: 3 },
+    { id: 'modal_verbs', label: '⚡ Modal Verbs', difficulty: 2 },
   ];
 
   let currentExercise = null;
@@ -3649,6 +5368,117 @@ const EnglishEngine = (() => {
     return Brain.checkAnswer(userAnswer, currentExercise.answer, currentExercise.type);
   };
 
+  generators.vocab_advanced = () => {
+    const vocab = [
+      { q: 'What does "inevitable" mean?', a: 'unvermeidlich|unausweichlich|zwangsläufig', h: 'in- (not) + evitable → cannot be avoided' },
+      { q: 'What does "ambiguous" mean?', a: 'zweideutig|mehrdeutig|unklar|doppeldeutig', h: 'ambi- = both → can be interpreted in more than one way' },
+      { q: 'What does "persevere" mean?', a: 'durchhalten|beharren|weitermachen|nicht aufgeben', h: 'per- (through) + severe → to keep going despite difficulties' },
+      { q: 'What does "contemplate" mean?', a: 'nachdenken|überlegen|betrachten|erwägen', h: 'To think deeply about something' },
+      { q: 'What does "elaborate" mean as an adjective?', a: 'ausgearbeitet|detailliert|aufwendig|komplex', h: 'Carefully worked out, with many details' },
+      { q: 'What does "concise" mean?', a: 'prägnant|kurz und bündig|knapp|kurz gefasst', h: 'Opposite of verbose/wordy – short but complete' },
+      { q: 'What does "advocate" mean as a verb?', a: 'befürworten|eintreten für|vertreten|unterstützen', h: '"I advocate for human rights" = Ich trete für Menschenrechte ein' },
+      { q: 'What does "predominantly" mean?', a: 'überwiegend|hauptsächlich|vorwiegend|größtenteils', h: 'Mostly, for the most part' },
+      { q: 'What does "reinforce" mean?', a: 'verstärken|bekräftigen|stärken|untermauern', h: 'To make stronger or support' },
+      { q: 'What does "coherent" mean?', a: 'kohärent|zusammenhängend|logisch|schlüssig', h: 'Logical and consistent, fitting together well' },
+      { q: 'What does "imply" mean?', a: 'andeuten|implizieren|nahelegen|bedeuten', h: 'To suggest without saying directly' },
+      { q: 'What does "substantial" mean?', a: 'erheblich|beträchtlich|wesentlich|bedeutend', h: 'Large in size, amount, or importance' },
+      { q: 'What does "undermine" mean?', a: 'untergraben|schwächen|aushöhlen|sabotieren', h: 'To weaken or damage gradually' },
+      { q: 'What is the noun form of "develop"?', a: 'development', h: 'develop → development (-ment suffix for nouns)' },
+      { q: 'What is the adjective form of "rely"?', a: 'reliable', h: 'rely → reliable (-able suffix)' },
+    ];
+    const pair = vocab[Math.floor(Math.random() * vocab.length)];
+    return { question: pair.q, answer: pair.a, hint: pair.h, type: 'contains', topic: 'Vocabulary Advanced' };
+  };
+
+  generators.vocab_thematic = () => {
+    const themes = [
+      { theme: '🌍 Environment', words: [
+        { q: 'What is the English word for "Klimawandel"?', a: 'climate change', h: 'One of the biggest global challenges' },
+        { q: 'What does "sustainable" mean?', a: 'nachhaltig', h: 'sustainable development = nachhaltige Entwicklung' },
+        { q: 'What does "renewable energy" mean?', a: 'erneuerbare energie', h: 'Solar, wind, water → renewable' },
+        { q: 'What is "deforestation"?', a: 'abholzung|entwaldung', h: 'de- (remove) + forest → removing trees' },
+        { q: 'What does "carbon footprint" mean?', a: 'co2-fußabdruck|kohlenstoff-fußabdruck', h: 'The amount of CO₂ you produce' },
+      ]},
+      { theme: '🏙️ Society', words: [
+        { q: 'What does "inequality" mean?', a: 'ungleichheit', h: 'in- (not) + equality' },
+        { q: 'What does "migration" mean?', a: 'migration|einwanderung|auswanderung', h: 'Moving from one place/country to another' },
+        { q: 'What does "discrimination" mean?', a: 'diskriminierung|benachteiligung', h: 'Treating people differently/unfairly' },
+        { q: 'What does "integration" mean?', a: 'integration|eingliederung', h: 'Becoming part of a group/society' },
+        { q: 'What does "poverty" mean?', a: 'armut', h: 'poor (adjective) → poverty (noun)' },
+      ]},
+      { theme: '💻 Technology', words: [
+        { q: 'What does "artificial intelligence" mean?', a: 'künstliche intelligenz|ki', h: 'AI = Artificial Intelligence = KI' },
+        { q: 'What does "privacy" mean in a digital context?', a: 'datenschutz|privatsphäre', h: 'Your right to control your personal data' },
+        { q: 'What does "algorithm" mean?', a: 'algorithmus', h: 'A set of rules/instructions for solving a problem' },
+        { q: 'What does "cyberbullying" mean?', a: 'cybermobbing|online mobbing', h: 'Bullying that takes place online' },
+        { q: 'What does "digital footprint" mean?', a: 'digitale spur|digitaler fußabdruck', h: 'The data trail you leave online' },
+      ]},
+      { theme: '🎓 School & Education', words: [
+        { q: 'What does "curriculum" mean?', a: 'lehrplan', h: 'The subjects studied at school' },
+        { q: 'What does "compulsory" mean?', a: 'pflicht|verpflichtend|obligatorisch', h: 'compulsory education = Schulpflicht' },
+        { q: 'What does "scholarship" mean?', a: 'stipendium', h: 'Money given to a student to pay for studies' },
+        { q: 'What does "graduate" mean as a verb?', a: 'abschließen|abschluss machen|graduieren', h: 'To complete a course of study successfully' },
+        { q: 'What is "peer pressure"?', a: 'gruppenzwang', h: 'Pressure from people your own age to do something' },
+      ]},
+    ];
+    const theme = themes[Math.floor(Math.random() * themes.length)];
+    const pair = theme.words[Math.floor(Math.random() * theme.words.length)];
+    return { question: `[${theme.theme}]\n${pair.q}`, answer: pair.a, hint: pair.h, type: 'contains', topic: 'Vocabulary Thematic' };
+  };
+
+  generators.irregular_verbs = () => {
+    const verbs = [
+      ['begin', 'began', 'begun'], ['break', 'broke', 'broken'], ['bring', 'brought', 'brought'],
+      ['build', 'built', 'built'], ['buy', 'bought', 'bought'], ['catch', 'caught', 'caught'],
+      ['choose', 'chose', 'chosen'], ['come', 'came', 'come'], ['cut', 'cut', 'cut'],
+      ['do', 'did', 'done'], ['drink', 'drank', 'drunk'], ['drive', 'drove', 'driven'],
+      ['eat', 'ate', 'eaten'], ['fall', 'fell', 'fallen'], ['feel', 'felt', 'felt'],
+      ['find', 'found', 'found'], ['fly', 'flew', 'flown'], ['forget', 'forgot', 'forgotten'],
+      ['get', 'got', 'gotten/got'], ['give', 'gave', 'given'], ['go', 'went', 'gone'],
+      ['grow', 'grew', 'grown'], ['have', 'had', 'had'], ['hear', 'heard', 'heard'],
+      ['hold', 'held', 'held'], ['keep', 'kept', 'kept'], ['know', 'knew', 'known'],
+      ['leave', 'left', 'left'], ['lose', 'lost', 'lost'], ['make', 'made', 'made'],
+      ['meet', 'met', 'met'], ['put', 'put', 'put'], ['read', 'read', 'read'],
+      ['run', 'ran', 'run'], ['say', 'said', 'said'], ['see', 'saw', 'seen'],
+      ['sell', 'sold', 'sold'], ['send', 'sent', 'sent'], ['sit', 'sat', 'sat'],
+      ['sleep', 'slept', 'slept'], ['speak', 'spoke', 'spoken'], ['spend', 'spent', 'spent'],
+      ['stand', 'stood', 'stood'], ['steal', 'stole', 'stolen'], ['swim', 'swam', 'swum'],
+      ['take', 'took', 'taken'], ['teach', 'taught', 'taught'], ['tell', 'told', 'told'],
+      ['think', 'thought', 'thought'], ['throw', 'threw', 'thrown'], ['understand', 'understood', 'understood'],
+      ['wake', 'woke', 'woken'], ['wear', 'wore', 'worn'], ['win', 'won', 'won'], ['write', 'wrote', 'written'],
+    ];
+    const verb = verbs[Math.floor(Math.random() * verbs.length)];
+    const type = Math.floor(Math.random() * 3);
+    if (type === 0) return { question: `What is the **Past Simple** of "${verb[0]}"?`, answer: verb[1], hint: `Infinitive: ${verb[0]} | Past: ? | Past Participle: ${verb[2]}`, type: 'exact', topic: 'Irregular Verbs' };
+    if (type === 1) return { question: `What is the **Past Participle** of "${verb[0]}"?`, answer: verb[2], hint: `Infinitive: ${verb[0]} | Past: ${verb[1]} | PP: ?`, type: 'contains', topic: 'Irregular Verbs' };
+    return { question: `Complete: Infinitive → Past → Past Participle\n"${verb[0]}" → ??? → ???`, answer: `${verb[1]}|${verb[2]}`, hint: 'Learn all three forms!', type: 'contains', topic: 'Irregular Verbs' };
+  };
+
+  generators.reported_speech = () => {
+    const exercises = [
+      { question: 'Change to reported speech:\n"I am happy," she said.', answer: 'she said (that) she was happy|she said she was happy', hint: 'am → was (Backshift: Present Simple → Past Simple)', type: 'contains', topic: 'Reported Speech' },
+      { question: 'Change to reported speech:\n"I will come tomorrow," he said.', answer: 'he said (that) he would come|he said he would come', hint: 'will → would | tomorrow → the next day', type: 'contains', topic: 'Reported Speech' },
+      { question: 'Change to reported speech:\n"I have finished my homework," she said.', answer: 'she said (that) she had finished|she said she had finished', hint: 'Present Perfect → Past Perfect (Backshift)', type: 'contains', topic: 'Reported Speech' },
+      { question: 'Change the question to reported speech:\n"Where do you live?" he asked.', answer: 'he asked where i lived|he asked where she lived', hint: 'Questions: no question mark, normal word order, tense backshift', type: 'contains', topic: 'Reported Speech' },
+      { question: 'What happens to "now" in reported speech?', answer: 'then|at that time', h: 'Time expressions change: now → then, today → that day, tomorrow → the next day', type: 'contains', topic: 'Reported Speech' },
+      { question: 'Change to reported speech:\n"Don\'t touch that!" she told him.', answer: 'she told him not to touch|she told him to not touch', hint: 'Commands: tell + object + (not) to + infinitive', type: 'contains', topic: 'Reported Speech' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  };
+
+  generators.modal_verbs = () => {
+    const exercises = [
+      { question: 'Choose the correct modal verb:\n"You ___ wear a seatbelt. It\'s the law!"\n(must / should / could)', answer: 'must', hint: 'must = obligation (legal/strong) | should = advice', type: 'exact', topic: 'Modal Verbs' },
+      { question: 'Choose the correct modal verb:\n"She ___ speak five languages!" (ability)', answer: 'can', hint: 'can = ability in the present', type: 'exact', topic: 'Modal Verbs' },
+      { question: 'Choose the correct modal verb:\n"It ___ rain today. The sky is dark." (possibility)', answer: 'might|may|could', hint: 'might/may/could = possibility (not certain)', type: 'contains', topic: 'Modal Verbs' },
+      { question: 'What is the difference between "must" and "have to"?', answer: 'must: internal obligation|have to: external|must: personal|have to: rules|both: obligation', hint: 'must = personal feeling/decision | have to = external rule/necessity', type: 'contains', topic: 'Modal Verbs' },
+      { question: '"You ___ smoke here. It\'s forbidden!"\nChoose: must not / don\'t have to', answer: 'must not|mustn\'t', hint: 'must not = forbidden! | don\'t have to = not necessary (but allowed)', type: 'contains', topic: 'Modal Verbs' },
+      { question: '"You ___ come if you don\'t want to."\nChoose: must not / don\'t have to', answer: 'don\'t have to', hint: 'don\'t have to = it\'s not necessary, but you CAN', type: 'contains', topic: 'Modal Verbs' },
+      { question: 'What does "should have done" express?', answer: 'hätte sollen|regret|bedauern|hätte machen sollen|past regret', hint: 'should have + past participle = Bedauern über Vergangenheit', type: 'contains', topic: 'Modal Verbs' },
+    ];
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  };
+
   const getHint = () => currentExercise ? currentExercise.hint : null;
   const getTopics = () => TOPICS;
   const getTopicLabel = (id) => { const t = TOPICS.find(t => t.id === id); return t ? t.label : id; };
@@ -3657,512 +5487,8 @@ const EnglishEngine = (() => {
   return { generate, checkAnswer, getHint, getSolutionSteps: () => null, getTopics, getTopicLabel, getKnowledgeName, current: () => currentExercise };
 })();
 
-/* === speech.js === */
-/* ============================================
-   Speech - Web Speech API
-   ============================================ */
 
-const Speech = (() => {
-  let recognition = null;
-  let synthesis = window.speechSynthesis;
-  let isListening = false;
-  let onResult = null;
-  let currentUtterance = null;
-
-  const isSupported = () => 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
-  const isSynthesisSupported = () => 'speechSynthesis' in window;
-
-  const initRecognition = () => {
-    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRec) return null;
-    const rec = new SpeechRec();
-    rec.continuous = false;
-    rec.interimResults = false;
-    rec.lang = 'de-DE';
-    return rec;
-  };
-
-  const startListening = (callback, lang = 'de-DE') => {
-    if (!isSupported()) {
-      if (callback) callback(null, 'Spracherkennung nicht unterstützt');
-      return false;
-    }
-
-    if (isListening) stopListening();
-
-    recognition = initRecognition();
-    recognition.lang = lang;
-
-    recognition.onstart = () => {
-      isListening = true;
-      document.getElementById('voice-status')?.classList.remove('hidden');
-    };
-
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      if (callback) callback(transcript, null);
-    };
-
-    recognition.onerror = (e) => {
-      isListening = false;
-      document.getElementById('voice-status')?.classList.add('hidden');
-      if (callback) callback(null, e.error);
-    };
-
-    recognition.onend = () => {
-      isListening = false;
-      document.getElementById('voice-status')?.classList.add('hidden');
-    };
-
-    try {
-      recognition.start();
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
-
-  const stopListening = () => {
-    if (recognition && isListening) {
-      recognition.stop();
-      isListening = false;
-    }
-    document.getElementById('voice-status')?.classList.add('hidden');
-  };
-
-  const speak = (text, options = {}) => {
-    if (!isSynthesisSupported()) return;
-
-    stop();
-
-    const cleanText = text.replace(/[*_`#~\[\]]/g, '').replace(/\*\*(.+?)\*\*/g, '$1').trim();
-
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = options.lang || 'de-DE';
-    utterance.rate = options.rate || 0.9;
-    utterance.pitch = options.pitch || 1.0;
-    utterance.volume = options.volume || 1.0;
-
-    // Stimme auswählen
-    const voices = synthesis.getVoices();
-    const preferredLang = options.lang || 'de-DE';
-    const voice = voices.find(v => v.lang.startsWith(preferredLang.split('-')[0])) || voices[0];
-    if (voice) utterance.voice = voice;
-
-    if (options.onEnd) utterance.onend = options.onEnd;
-
-    currentUtterance = utterance;
-    synthesis.speak(utterance);
-    return utterance;
-  };
-
-  const stop = () => {
-    if (synthesis && synthesis.speaking) {
-      synthesis.cancel();
-    }
-    currentUtterance = null;
-  };
-
-  const getIsListening = () => isListening;
-
-  // Warte auf Stimmen (async laden)
-  if (isSynthesisSupported()) {
-    if (synthesis.onvoiceschanged !== undefined) {
-      synthesis.onvoiceschanged = () => {};
-    }
-  }
-
-  return { startListening, stopListening, speak, stop, isSupported, isSynthesisSupported, getIsListening };
-})();
-
-/* === flashcards.js === */
-/* ============================================
-   Flashcards - Lernkartensystem
-   ============================================ */
-
-const Flashcards = (() => {
-  let reviewQueue = [];
-  let currentCard = null;
-  let reviewStats = { correct: 0, wrong: 0 };
-  let filter = 'all';
-
-  const init = () => {
-    document.getElementById('fc-filter').addEventListener('change', (e) => {
-      filter = e.target.value;
-      render();
-    });
-
-    document.getElementById('fc-add-btn').addEventListener('click', () => {
-      document.getElementById('fc-modal').classList.remove('hidden');
-    });
-
-    document.getElementById('fc-modal-cancel').addEventListener('click', () => {
-      document.getElementById('fc-modal').classList.add('hidden');
-    });
-
-    document.getElementById('fc-modal-save').addEventListener('click', saveNewCard);
-
-    document.getElementById('fc-current-card').addEventListener('click', () => {
-      document.getElementById('fc-current-card').classList.toggle('flipped');
-    });
-
-    document.getElementById('fc-correct-btn').addEventListener('click', () => rateCard(true, 'correct'));
-    document.getElementById('fc-wrong-btn').addEventListener('click', () => rateCard(false, 'wrong'));
-    document.getElementById('fc-ok-btn').addEventListener('click', () => rateCard(true, 'ok'));
-  };
-
-  const render = () => {
-    const cards = Storage.getFlashcards();
-    const filtered = filter === 'all' ? cards : cards.filter(c => c.subject === filter);
-
-    const grid = document.getElementById('fc-grid');
-    const empty = document.getElementById('fc-empty');
-
-    if (filtered.length === 0) {
-      grid.innerHTML = '';
-      empty.classList.remove('hidden');
-      document.getElementById('fc-review-mode').classList.add('hidden');
-      return;
-    }
-
-    empty.classList.add('hidden');
-
-    // Start review button
-    if (!document.getElementById('fc-start-review-btn')) {
-      const startBtn = document.createElement('button');
-      startBtn.id = 'fc-start-review-btn';
-      startBtn.className = 'btn btn-primary';
-      startBtn.style.marginBottom = '1rem';
-      startBtn.textContent = `▶ Lernsession starten (${filtered.length} Karten)`;
-      startBtn.addEventListener('click', () => startReview(filtered));
-      grid.parentElement.insertBefore(startBtn, grid);
-    } else {
-      document.getElementById('fc-start-review-btn').textContent = `▶ Lernsession starten (${filtered.length} Karten)`;
-      document.getElementById('fc-start-review-btn').onclick = () => startReview(filtered);
-    }
-
-    grid.innerHTML = '';
-    filtered.forEach(card => {
-      const div = document.createElement('div');
-      div.className = 'fc-grid-card';
-      const subjectColors = { math: '#3b82f6', deutsch: '#ec4899', english: '#10b981', general: '#6366f1' };
-      div.innerHTML = `
-        <div class="fc-grid-subject" style="color:${subjectColors[card.subject] || '#6366f1'}">${card.subject.toUpperCase()}</div>
-        <div class="fc-grid-question">${card.question}</div>
-        <div class="fc-grid-score">✓ ${card.correct || 0} / ${card.seen || 0} Mal</div>
-      `;
-      div.addEventListener('click', () => quickFlip(card));
-      grid.appendChild(div);
-    });
-  };
-
-  const startReview = (cards) => {
-    // Sortiere: Karten mit niedrigerer Erfolgsrate zuerst
-    reviewQueue = [...cards].sort((a, b) => {
-      const scoreA = a.seen > 0 ? a.correct / a.seen : 0;
-      const scoreB = b.seen > 0 ? b.correct / b.seen : 0;
-      return scoreA - scoreB;
-    });
-
-    reviewStats = { correct: 0, wrong: 0 };
-    document.getElementById('fc-review-mode').classList.remove('hidden');
-    document.getElementById('fc-grid-view').style.display = 'none';
-    showNextCard();
-  };
-
-  const showNextCard = () => {
-    if (reviewQueue.length === 0) {
-      endReview();
-      return;
-    }
-
-    currentCard = reviewQueue[0];
-    document.getElementById('fc-current-card').classList.remove('flipped');
-
-    const subjectNames = { math: 'Mathematik', deutsch: 'Deutsch', english: 'Englisch', general: 'Allgemein' };
-    document.getElementById('fc-card-subject').textContent = subjectNames[currentCard.subject] || currentCard.subject;
-    document.getElementById('fc-card-question').textContent = currentCard.question;
-    document.getElementById('fc-card-answer').textContent = currentCard.answer;
-
-    updateReviewStats();
-  };
-
-  const rateCard = (correct, rating) => {
-    if (!currentCard) return;
-
-    Storage.updateFlashcard(currentCard.id, {
-      seen: (currentCard.seen || 0) + 1,
-      correct: (currentCard.correct || 0) + (correct ? 1 : 0),
-      lastSeen: Date.now()
-    });
-
-    if (correct) reviewStats.correct++;
-    else { reviewStats.wrong++; reviewQueue.push({ ...currentCard }); }
-
-    reviewQueue.shift();
-    showNextCard();
-  };
-
-  const endReview = () => {
-    const total = reviewStats.correct + reviewStats.wrong;
-    const pct = total > 0 ? Math.round((reviewStats.correct / total) * 100) : 0;
-
-    document.getElementById('fc-review-mode').classList.add('hidden');
-    document.getElementById('fc-grid-view').style.display = '';
-
-    const points = reviewStats.correct * 3;
-    Progress.addPoints(points, 'Lernkarten-Session');
-    Animations.showToast(`✓ Session beendet! ${pct}% korrekt · +${points} Punkte`, 'success');
-
-    if (pct === 100) Animations.celebrate('🎉', 'Perfekt!');
-    render();
-  };
-
-  const updateReviewStats = () => {
-    document.getElementById('fc-remaining').textContent = `${reviewQueue.length} verbleibend`;
-    document.getElementById('fc-score').textContent = `✓ ${reviewStats.correct} / ✗ ${reviewStats.wrong}`;
-  };
-
-  const quickFlip = (card) => {
-    // Quick preview - kann hier erweitert werden
-  };
-
-  const saveNewCard = () => {
-    const subject = document.getElementById('fc-new-subject').value;
-    const question = document.getElementById('fc-new-question').value.trim();
-    const answer = document.getElementById('fc-new-answer').value.trim();
-
-    if (!question || !answer) {
-      Animations.showToast('Bitte Frage und Antwort ausfüllen', 'error');
-      return;
-    }
-
-    Storage.addFlashcard({ subject, topic: 'Manuell', question, answer });
-    document.getElementById('fc-modal').classList.add('hidden');
-    document.getElementById('fc-new-question').value = '';
-    document.getElementById('fc-new-answer').value = '';
-
-    Animations.showToast('✓ Lernkarte erstellt!', 'success');
-    render();
-  };
-
-  return { init, render };
-})();
-
-/* === notes.js === */
-/* ============================================
-   Notes - Lernzettel System
-   ============================================ */
-
-const Notes = (() => {
-  let currentNoteId = null;
-
-  const init = () => {
-    document.getElementById('create-note-btn').addEventListener('click', createNew);
-    document.getElementById('note-save-btn').addEventListener('click', save);
-    document.getElementById('note-delete-btn').addEventListener('click', deleteNote);
-    document.getElementById('auto-gen-note-btn').addEventListener('click', autoGenerate);
-    document.getElementById('note-speak-btn').addEventListener('click', speak);
-    document.getElementById('note-ai-enhance-btn').addEventListener('click', aiEnhance);
-    document.getElementById('note-ai-summary-btn').addEventListener('click', aiSummary);
-    document.getElementById('note-to-flash-btn').addEventListener('click', toFlashcards);
-  };
-
-  const render = () => {
-    const notes = Storage.getNotes();
-    const list = document.getElementById('notes-list');
-
-    if (notes.length === 0) {
-      list.innerHTML = '<p class="empty-state" style="font-size:0.8rem">Noch keine Lernzettel</p>';
-    } else {
-      list.innerHTML = '';
-      notes.forEach(note => {
-        const item = document.createElement('div');
-        item.className = `note-item${currentNoteId === note.id ? ' active' : ''}`;
-
-        const subjectIcons = { math: '🔢', deutsch: '📝', english: '🇬🇧', general: '📋' };
-        item.innerHTML = `
-          <div class="note-item-title">${subjectIcons[note.subject] || '📋'} ${note.title || 'Unbenannt'}</div>
-          <div class="note-item-meta">${new Date(note.updatedAt).toLocaleDateString('de-DE')}</div>
-        `;
-        item.addEventListener('click', () => open(note.id));
-        list.appendChild(item);
-      });
-    }
-  };
-
-  const createNew = () => {
-    currentNoteId = null;
-    showEditor();
-    document.getElementById('note-title').value = '';
-    document.getElementById('note-content').value = '';
-    document.getElementById('note-subject').value = 'general';
-  };
-
-  const open = (id) => {
-    const notes = Storage.getNotes();
-    const note = notes.find(n => n.id === id);
-    if (!note) return;
-
-    currentNoteId = id;
-    showEditor();
-    document.getElementById('note-title').value = note.title || '';
-    document.getElementById('note-content').value = note.content || '';
-    document.getElementById('note-subject').value = note.subject || 'general';
-    render();
-  };
-
-  const showEditor = () => {
-    document.getElementById('note-empty').classList.add('hidden');
-    document.getElementById('note-editor').classList.remove('hidden');
-  };
-
-  const save = () => {
-    const title = document.getElementById('note-title').value.trim() || 'Unbenannt';
-    const content = document.getElementById('note-content').value;
-    const subject = document.getElementById('note-subject').value;
-
-    const saved = Storage.saveNote({ id: currentNoteId, title, content, subject });
-    currentNoteId = saved.id || currentNoteId;
-
-    Animations.showToast('✓ Lernzettel gespeichert', 'success');
-    render();
-  };
-
-  const deleteNote = () => {
-    if (!currentNoteId) return;
-    if (!confirm('Lernzettel wirklich löschen?')) return;
-
-    Storage.deleteNote(currentNoteId);
-    currentNoteId = null;
-    document.getElementById('note-empty').classList.remove('hidden');
-    document.getElementById('note-editor').classList.add('hidden');
-
-    Animations.showToast('Lernzettel gelöscht', 'info');
-    render();
-  };
-
-  const speak = () => {
-    const content = document.getElementById('note-content').value;
-    if (!content) return;
-    Speech.speak(content);
-    Animations.showToast('🔊 Lese Lernzettel vor...', 'info');
-  };
-
-  const autoGenerate = () => {
-    const progress = Storage.getProgress();
-    const brain = Storage.getBrain();
-    const concepts = brain.concepts || {};
-
-    if (Object.keys(concepts).length === 0) {
-      Animations.showToast('Lerne erst etwas, dann generiere ich Lernzettel!', 'info');
-      return;
-    }
-
-    // Finde häufigste Themen aus heutigem Lernen
-    const topicsBySubject = {};
-    Object.entries(concepts).forEach(([key, data]) => {
-      const [subject, topic] = key.split(':');
-      if (!topicsBySubject[subject]) topicsBySubject[subject] = [];
-      if (!topicsBySubject[subject].includes(topic)) topicsBySubject[subject].push(topic);
-    });
-
-    let content = `# Auto-Lernzettel – ${new Date().toLocaleDateString('de-DE')}\n\n`;
-
-    Object.entries(topicsBySubject).forEach(([subject, topics]) => {
-      const subjectName = { math: 'Mathematik', deutsch: 'Deutsch', english: 'Englisch' }[subject] || subject;
-      content += `## ${subjectName}\n\n`;
-
-      topics.slice(0, 3).forEach(topic => {
-        const kb = Brain.getKnowledge(subject, topic);
-        if (kb) {
-          content += `### ${topic}\n`;
-          kb.rules.forEach(r => { content += `• ${r}\n`; });
-          content += '\n';
-        }
-      });
-    });
-
-    content += '\n---\n_Automatisch aus deiner Lernsession erstellt_';
-
-    Storage.saveNote({
-      title: `Auto-Lernzettel ${new Date().toLocaleDateString('de-DE')}`,
-      content,
-      subject: 'general'
-    });
-
-    render();
-    Animations.showToast('✓ Auto-Lernzettel erstellt!', 'success');
-
-    // Zeige den neuen Zettel
-    const notes = Storage.getNotes();
-    if (notes.length > 0) open(notes[0].id);
-  };
-
-  const aiEnhance = () => {
-    const content = document.getElementById('note-content').value;
-    if (!content) return;
-
-    // Füge Struktur hinzu
-    let enhanced = content;
-    if (!enhanced.startsWith('#')) {
-      const title = document.getElementById('note-title').value || 'Lernzettel';
-      enhanced = `# ${title}\n\n${enhanced}`;
-    }
-
-    // Füge Trennlinien zwischen Abschnitten ein
-    enhanced = enhanced.replace(/\n\n([A-Z])/g, '\n\n---\n\n$1');
-
-    document.getElementById('note-content').value = enhanced;
-    Animations.showToast('✓ Lernzettel verbessert', 'success');
-  };
-
-  const aiSummary = () => {
-    const content = document.getElementById('note-content').value;
-    if (!content || content.length < 50) {
-      Animations.showToast('Schreibe mehr Inhalt für eine Zusammenfassung', 'info');
-      return;
-    }
-
-    const lines = content.split('\n').filter(l => l.trim() && !l.startsWith('#'));
-    const keyLines = lines.slice(0, 5);
-    const summary = `\n\n---\n## 📌 Zusammenfassung\n${keyLines.map(l => `• ${l.replace(/^[•▸★→✓\-\d.]\s*/, '').trim()}`).join('\n')}`;
-
-    document.getElementById('note-content').value = content + summary;
-    Animations.showToast('✓ Zusammenfassung hinzugefügt', 'success');
-  };
-
-  const toFlashcards = () => {
-    const content = document.getElementById('note-content').value;
-    const subject = document.getElementById('note-subject').value;
-
-    const lines = content.split('\n').filter(l => l.includes(':') && l.length > 5 && l.length < 200);
-    let created = 0;
-
-    lines.forEach(line => {
-      const parts = line.split(':');
-      if (parts.length >= 2) {
-        const q = parts[0].replace(/^[#•▸★→✓\-\d.\s]+/, '').trim();
-        const a = parts.slice(1).join(':').trim();
-        if (q && a && q.length > 2) {
-          Storage.addFlashcard({ subject: subject === 'general' ? 'math' : subject, topic: 'Lernzettel', question: q, answer: a });
-          created++;
-        }
-      }
-    });
-
-    if (created > 0) {
-      Animations.showToast(`✓ ${created} Lernkarten aus Lernzettel erstellt!`, 'success');
-      Storage.addActivity('🗂️', `${created} Lernkarten aus Lernzettel erstellt`, 'general');
-    } else {
-      Animations.showToast('Füge Definitionen im Format "Begriff: Erklärung" hinzu', 'info');
-    }
-  };
-
-  return { init, render, autoGenerate };
-})();
-
-/* === chat-ai.js === */
+// === chat-ai.js ===
 /* ============================================
    Chat AI - Konversationsinterface
    ============================================ */
@@ -4388,7 +5714,397 @@ const ChatAI = (() => {
   return { init, sendMessage, sendSuggestion, appendMessage };
 })();
 
-/* === progress.js === */
+
+// === flashcards.js ===
+/* ============================================
+   Flashcards - Lernkartensystem
+   ============================================ */
+
+const Flashcards = (() => {
+  let reviewQueue = [];
+  let currentCard = null;
+  let reviewStats = { correct: 0, wrong: 0 };
+  let filter = 'all';
+
+  const init = () => {
+    document.getElementById('fc-filter').addEventListener('change', (e) => {
+      filter = e.target.value;
+      render();
+    });
+
+    document.getElementById('fc-add-btn').addEventListener('click', () => {
+      document.getElementById('fc-modal').classList.remove('hidden');
+    });
+
+    document.getElementById('fc-modal-cancel').addEventListener('click', () => {
+      document.getElementById('fc-modal').classList.add('hidden');
+    });
+
+    document.getElementById('fc-modal-save').addEventListener('click', saveNewCard);
+
+    document.getElementById('fc-current-card').addEventListener('click', () => {
+      document.getElementById('fc-current-card').classList.toggle('flipped');
+    });
+
+    document.getElementById('fc-correct-btn').addEventListener('click', () => rateCard(true, 'correct'));
+    document.getElementById('fc-wrong-btn').addEventListener('click', () => rateCard(false, 'wrong'));
+    document.getElementById('fc-ok-btn').addEventListener('click', () => rateCard(true, 'ok'));
+  };
+
+  const render = () => {
+    const cards = Storage.getFlashcards();
+    const filtered = filter === 'all' ? cards : cards.filter(c => c.subject === filter);
+
+    const grid = document.getElementById('fc-grid');
+    const empty = document.getElementById('fc-empty');
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '';
+      empty.classList.remove('hidden');
+      document.getElementById('fc-review-mode').classList.add('hidden');
+      return;
+    }
+
+    empty.classList.add('hidden');
+
+    // Start review button
+    if (!document.getElementById('fc-start-review-btn')) {
+      const startBtn = document.createElement('button');
+      startBtn.id = 'fc-start-review-btn';
+      startBtn.className = 'btn btn-primary';
+      startBtn.style.marginBottom = '1rem';
+      startBtn.textContent = `▶ Lernsession starten (${filtered.length} Karten)`;
+      startBtn.addEventListener('click', () => startReview(filtered));
+      grid.parentElement.insertBefore(startBtn, grid);
+    } else {
+      document.getElementById('fc-start-review-btn').textContent = `▶ Lernsession starten (${filtered.length} Karten)`;
+      document.getElementById('fc-start-review-btn').onclick = () => startReview(filtered);
+    }
+
+    grid.innerHTML = '';
+    filtered.forEach(card => {
+      const div = document.createElement('div');
+      div.className = 'fc-grid-card';
+      const subjectColors = { math: '#3b82f6', deutsch: '#ec4899', english: '#10b981', general: '#6366f1' };
+      div.innerHTML = `
+        <div class="fc-grid-subject" style="color:${subjectColors[card.subject] || '#6366f1'}">${card.subject.toUpperCase()}</div>
+        <div class="fc-grid-question">${card.question}</div>
+        <div class="fc-grid-score">✓ ${card.correct || 0} / ${card.seen || 0} Mal</div>
+      `;
+      div.addEventListener('click', () => quickFlip(card));
+      grid.appendChild(div);
+    });
+  };
+
+  const startReview = (cards) => {
+    // Sortiere: Karten mit niedrigerer Erfolgsrate zuerst
+    reviewQueue = [...cards].sort((a, b) => {
+      const scoreA = a.seen > 0 ? a.correct / a.seen : 0;
+      const scoreB = b.seen > 0 ? b.correct / b.seen : 0;
+      return scoreA - scoreB;
+    });
+
+    reviewStats = { correct: 0, wrong: 0 };
+    document.getElementById('fc-review-mode').classList.remove('hidden');
+    document.getElementById('fc-grid-view').style.display = 'none';
+    showNextCard();
+  };
+
+  const showNextCard = () => {
+    if (reviewQueue.length === 0) {
+      endReview();
+      return;
+    }
+
+    currentCard = reviewQueue[0];
+    document.getElementById('fc-current-card').classList.remove('flipped');
+
+    const subjectNames = { math: 'Mathematik', deutsch: 'Deutsch', english: 'Englisch', general: 'Allgemein' };
+    document.getElementById('fc-card-subject').textContent = subjectNames[currentCard.subject] || currentCard.subject;
+    document.getElementById('fc-card-question').textContent = currentCard.question;
+    document.getElementById('fc-card-answer').textContent = currentCard.answer;
+
+    updateReviewStats();
+  };
+
+  const rateCard = (correct, rating) => {
+    if (!currentCard) return;
+
+    Storage.updateFlashcard(currentCard.id, {
+      seen: (currentCard.seen || 0) + 1,
+      correct: (currentCard.correct || 0) + (correct ? 1 : 0),
+      lastSeen: Date.now()
+    });
+
+    if (correct) reviewStats.correct++;
+    else { reviewStats.wrong++; reviewQueue.push({ ...currentCard }); }
+
+    reviewQueue.shift();
+    showNextCard();
+  };
+
+  const endReview = () => {
+    const total = reviewStats.correct + reviewStats.wrong;
+    const pct = total > 0 ? Math.round((reviewStats.correct / total) * 100) : 0;
+
+    document.getElementById('fc-review-mode').classList.add('hidden');
+    document.getElementById('fc-grid-view').style.display = '';
+
+    const points = reviewStats.correct * 3;
+    Progress.addPoints(points, 'Lernkarten-Session');
+    Animations.showToast(`✓ Session beendet! ${pct}% korrekt · +${points} Punkte`, 'success');
+
+    if (pct === 100) Animations.celebrate('🎉', 'Perfekt!');
+    render();
+  };
+
+  const updateReviewStats = () => {
+    document.getElementById('fc-remaining').textContent = `${reviewQueue.length} verbleibend`;
+    document.getElementById('fc-score').textContent = `✓ ${reviewStats.correct} / ✗ ${reviewStats.wrong}`;
+  };
+
+  const quickFlip = (card) => {
+    // Quick preview - kann hier erweitert werden
+  };
+
+  const saveNewCard = () => {
+    const subject = document.getElementById('fc-new-subject').value;
+    const question = document.getElementById('fc-new-question').value.trim();
+    const answer = document.getElementById('fc-new-answer').value.trim();
+
+    if (!question || !answer) {
+      Animations.showToast('Bitte Frage und Antwort ausfüllen', 'error');
+      return;
+    }
+
+    Storage.addFlashcard({ subject, topic: 'Manuell', question, answer });
+    document.getElementById('fc-modal').classList.add('hidden');
+    document.getElementById('fc-new-question').value = '';
+    document.getElementById('fc-new-answer').value = '';
+
+    Animations.showToast('✓ Lernkarte erstellt!', 'success');
+    render();
+  };
+
+  return { init, render };
+})();
+
+
+// === notes.js ===
+/* ============================================
+   Notes - Lernzettel System
+   ============================================ */
+
+const Notes = (() => {
+  let currentNoteId = null;
+
+  const init = () => {
+    document.getElementById('create-note-btn').addEventListener('click', createNew);
+    document.getElementById('note-save-btn').addEventListener('click', save);
+    document.getElementById('note-delete-btn').addEventListener('click', deleteNote);
+    document.getElementById('auto-gen-note-btn').addEventListener('click', autoGenerate);
+    document.getElementById('note-speak-btn').addEventListener('click', speak);
+    document.getElementById('note-ai-enhance-btn').addEventListener('click', aiEnhance);
+    document.getElementById('note-ai-summary-btn').addEventListener('click', aiSummary);
+    document.getElementById('note-to-flash-btn').addEventListener('click', toFlashcards);
+  };
+
+  const render = () => {
+    const notes = Storage.getNotes();
+    const list = document.getElementById('notes-list');
+
+    if (notes.length === 0) {
+      list.innerHTML = '<p class="empty-state" style="font-size:0.8rem">Noch keine Lernzettel</p>';
+    } else {
+      list.innerHTML = '';
+      notes.forEach(note => {
+        const item = document.createElement('div');
+        item.className = `note-item${currentNoteId === note.id ? ' active' : ''}`;
+
+        const subjectIcons = { math: '🔢', deutsch: '📝', english: '🇬🇧', general: '📋' };
+        item.innerHTML = `
+          <div class="note-item-title">${subjectIcons[note.subject] || '📋'} ${note.title || 'Unbenannt'}</div>
+          <div class="note-item-meta">${new Date(note.updatedAt).toLocaleDateString('de-DE')}</div>
+        `;
+        item.addEventListener('click', () => open(note.id));
+        list.appendChild(item);
+      });
+    }
+  };
+
+  const createNew = () => {
+    currentNoteId = null;
+    showEditor();
+    document.getElementById('note-title').value = '';
+    document.getElementById('note-content').value = '';
+    document.getElementById('note-subject').value = 'general';
+  };
+
+  const open = (id) => {
+    const notes = Storage.getNotes();
+    const note = notes.find(n => n.id === id);
+    if (!note) return;
+
+    currentNoteId = id;
+    showEditor();
+    document.getElementById('note-title').value = note.title || '';
+    document.getElementById('note-content').value = note.content || '';
+    document.getElementById('note-subject').value = note.subject || 'general';
+    render();
+  };
+
+  const showEditor = () => {
+    document.getElementById('note-empty').classList.add('hidden');
+    document.getElementById('note-editor').classList.remove('hidden');
+  };
+
+  const save = () => {
+    const title = document.getElementById('note-title').value.trim() || 'Unbenannt';
+    const content = document.getElementById('note-content').value;
+    const subject = document.getElementById('note-subject').value;
+
+    const saved = Storage.saveNote({ id: currentNoteId, title, content, subject });
+    currentNoteId = saved.id || currentNoteId;
+
+    Animations.showToast('✓ Lernzettel gespeichert', 'success');
+    render();
+  };
+
+  const deleteNote = () => {
+    if (!currentNoteId) return;
+    if (!confirm('Lernzettel wirklich löschen?')) return;
+
+    Storage.deleteNote(currentNoteId);
+    currentNoteId = null;
+    document.getElementById('note-empty').classList.remove('hidden');
+    document.getElementById('note-editor').classList.add('hidden');
+
+    Animations.showToast('Lernzettel gelöscht', 'info');
+    render();
+  };
+
+  const speak = () => {
+    const content = document.getElementById('note-content').value;
+    if (!content) return;
+    Speech.speak(content);
+    Animations.showToast('🔊 Lese Lernzettel vor...', 'info');
+  };
+
+  const autoGenerate = () => {
+    const progress = Storage.getProgress();
+    const brain = Storage.getBrain();
+    const concepts = brain.concepts || {};
+
+    if (Object.keys(concepts).length === 0) {
+      Animations.showToast('Lerne erst etwas, dann generiere ich Lernzettel!', 'info');
+      return;
+    }
+
+    // Finde häufigste Themen aus heutigem Lernen
+    const topicsBySubject = {};
+    Object.entries(concepts).forEach(([key, data]) => {
+      const [subject, topic] = key.split(':');
+      if (!topicsBySubject[subject]) topicsBySubject[subject] = [];
+      if (!topicsBySubject[subject].includes(topic)) topicsBySubject[subject].push(topic);
+    });
+
+    let content = `# Auto-Lernzettel – ${new Date().toLocaleDateString('de-DE')}\n\n`;
+
+    Object.entries(topicsBySubject).forEach(([subject, topics]) => {
+      const subjectName = { math: 'Mathematik', deutsch: 'Deutsch', english: 'Englisch' }[subject] || subject;
+      content += `## ${subjectName}\n\n`;
+
+      topics.slice(0, 3).forEach(topic => {
+        const kb = Brain.getKnowledge(subject, topic);
+        if (kb) {
+          content += `### ${topic}\n`;
+          kb.rules.forEach(r => { content += `• ${r}\n`; });
+          content += '\n';
+        }
+      });
+    });
+
+    content += '\n---\n_Automatisch aus deiner Lernsession erstellt_';
+
+    Storage.saveNote({
+      title: `Auto-Lernzettel ${new Date().toLocaleDateString('de-DE')}`,
+      content,
+      subject: 'general'
+    });
+
+    render();
+    Animations.showToast('✓ Auto-Lernzettel erstellt!', 'success');
+
+    // Zeige den neuen Zettel
+    const notes = Storage.getNotes();
+    if (notes.length > 0) open(notes[0].id);
+  };
+
+  const aiEnhance = () => {
+    const content = document.getElementById('note-content').value;
+    if (!content) return;
+
+    // Füge Struktur hinzu
+    let enhanced = content;
+    if (!enhanced.startsWith('#')) {
+      const title = document.getElementById('note-title').value || 'Lernzettel';
+      enhanced = `# ${title}\n\n${enhanced}`;
+    }
+
+    // Füge Trennlinien zwischen Abschnitten ein
+    enhanced = enhanced.replace(/\n\n([A-Z])/g, '\n\n---\n\n$1');
+
+    document.getElementById('note-content').value = enhanced;
+    Animations.showToast('✓ Lernzettel verbessert', 'success');
+  };
+
+  const aiSummary = () => {
+    const content = document.getElementById('note-content').value;
+    if (!content || content.length < 50) {
+      Animations.showToast('Schreibe mehr Inhalt für eine Zusammenfassung', 'info');
+      return;
+    }
+
+    const lines = content.split('\n').filter(l => l.trim() && !l.startsWith('#'));
+    const keyLines = lines.slice(0, 5);
+    const summary = `\n\n---\n## 📌 Zusammenfassung\n${keyLines.map(l => `• ${l.replace(/^[•▸★→✓\-\d.]\s*/, '').trim()}`).join('\n')}`;
+
+    document.getElementById('note-content').value = content + summary;
+    Animations.showToast('✓ Zusammenfassung hinzugefügt', 'success');
+  };
+
+  const toFlashcards = () => {
+    const content = document.getElementById('note-content').value;
+    const subject = document.getElementById('note-subject').value;
+
+    const lines = content.split('\n').filter(l => l.includes(':') && l.length > 5 && l.length < 200);
+    let created = 0;
+
+    lines.forEach(line => {
+      const parts = line.split(':');
+      if (parts.length >= 2) {
+        const q = parts[0].replace(/^[#•▸★→✓\-\d.\s]+/, '').trim();
+        const a = parts.slice(1).join(':').trim();
+        if (q && a && q.length > 2) {
+          Storage.addFlashcard({ subject: subject === 'general' ? 'math' : subject, topic: 'Lernzettel', question: q, answer: a });
+          created++;
+        }
+      }
+    });
+
+    if (created > 0) {
+      Animations.showToast(`✓ ${created} Lernkarten aus Lernzettel erstellt!`, 'success');
+      Storage.addActivity('🗂️', `${created} Lernkarten aus Lernzettel erstellt`, 'general');
+    } else {
+      Animations.showToast('Füge Definitionen im Format "Begriff: Erklärung" hinzu', 'info');
+    }
+  };
+
+  return { init, render, autoGenerate };
+})();
+
+
+// === progress.js ===
 /* ============================================
    Progress - Punkte, Level, Achievements
    ============================================ */
@@ -4788,268 +6504,8 @@ const Progress = (() => {
   return { addPoints, addExerciseResult, updateUI, updateDashboard, renderProgressPage, renderBrainPage, ACHIEVEMENTS };
 })();
 
-/* === animations.js === */
-/* ============================================
-   Animations - Partikel, Konfetti, UI-Effekte
-   ============================================ */
 
-const Animations = (() => {
-  let particles = [];
-  let animFrame = null;
-  let canvas, ctx;
-
-  const init = () => {
-    canvas = document.createElement('canvas');
-    canvas.id = 'particle-canvas';
-    canvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;';
-    document.body.appendChild(canvas);
-
-    resize();
-    window.addEventListener('resize', resize);
-    initParticles();
-    animate();
-  };
-
-  const resize = () => {
-    if (!canvas) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    ctx = canvas.getContext('2d');
-  };
-
-  const initParticles = () => {
-    particles = [];
-    const count = Math.min(window.innerWidth / 15, 80);
-    for (let i = 0; i < count; i++) {
-      particles.push(createParticle());
-    }
-  };
-
-  const createParticle = (x, y) => {
-    const colors = ['rgba(99,102,241,', 'rgba(168,85,247,', 'rgba(6,182,212,', 'rgba(16,185,129,'];
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    return {
-      x: x || Math.random() * (canvas?.width || window.innerWidth),
-      y: y || Math.random() * (canvas?.height || window.innerHeight),
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
-      radius: Math.random() * 2 + 0.5,
-      alpha: Math.random() * 0.4 + 0.1,
-      color,
-      twinkle: Math.random() * Math.PI * 2,
-      twinkleSpeed: 0.02 + Math.random() * 0.03
-    };
-  };
-
-  const animate = () => {
-    animFrame = requestAnimationFrame(animate);
-    if (!ctx || !canvas) return;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.twinkle += p.twinkleSpeed;
-
-      const alpha = p.alpha * (0.7 + 0.3 * Math.sin(p.twinkle));
-
-      if (p.x < 0) p.x = canvas.width;
-      if (p.x > canvas.width) p.x = 0;
-      if (p.y < 0) p.y = canvas.height;
-      if (p.y > canvas.height) p.y = 0;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = p.color + alpha + ')';
-      ctx.fill();
-    });
-
-    // Draw connections
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(99,102,241,${0.05 * (1 - dist / 120)})`;
-          ctx.lineWidth = 0.5;
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-  };
-
-  // Toast Benachrichtigungen
-  const showToast = (message, type = 'info', duration = 3000) => {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
-
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-
-    const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
-    toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${message}</span>`;
-
-    container.appendChild(toast);
-
-    setTimeout(() => {
-      toast.classList.add('fade-out');
-      setTimeout(() => toast.remove(), 300);
-    }, duration);
-  };
-
-  // Konfetti
-  const launchConfetti = (count = 60) => {
-    const colors = ['#6366f1', '#a855f7', '#06b6d4', '#10b981', '#f59e0b', '#ef4444'];
-    const shapes = ['circle', 'square', 'triangle'];
-
-    for (let i = 0; i < count; i++) {
-      setTimeout(() => {
-        const piece = document.createElement('div');
-        piece.className = 'confetti-piece';
-
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        const shape = shapes[Math.floor(Math.random() * shapes.length)];
-        const startX = Math.random() * window.innerWidth;
-        const duration = 2000 + Math.random() * 2000;
-        const size = 8 + Math.random() * 8;
-
-        piece.style.cssText = `
-          left: ${startX}px;
-          top: -20px;
-          width: ${size}px;
-          height: ${size}px;
-          background: ${color};
-          border-radius: ${shape === 'circle' ? '50%' : shape === 'triangle' ? '0' : '2px'};
-          animation-duration: ${duration}ms;
-          transform: rotate(${Math.random() * 360}deg);
-        `;
-
-        document.body.appendChild(piece);
-        setTimeout(() => piece.remove(), duration + 100);
-      }, i * 30);
-    }
-  };
-
-  // Celebration overlay
-  const celebrate = (emoji = '🎉', text = 'Super!') => {
-    const cel = document.getElementById('celebration');
-    const celEmoji = document.getElementById('celebration-emoji');
-    const celText = document.getElementById('celebration-text');
-
-    if (!cel) return;
-
-    celEmoji.textContent = emoji;
-    celText.textContent = text;
-    cel.classList.remove('hidden');
-
-    launchConfetti(50);
-
-    setTimeout(() => {
-      cel.classList.add('hidden');
-    }, 2500);
-  };
-
-  // Answer feedback animation
-  const showAnswerFeedback = (element, correct) => {
-    element.classList.add(correct ? 'correct-flash' : 'wrong-flash');
-
-    // Add CSS dynamically
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes correct-flash-anim {
-        0% { border-color: var(--border); }
-        50% { border-color: var(--success); box-shadow: 0 0 20px rgba(16,185,129,0.4); }
-        100% { border-color: var(--border); }
-      }
-      @keyframes wrong-flash-anim {
-        0% { border-color: var(--border); }
-        25% { border-color: var(--danger); transform: translateX(-5px); }
-        75% { border-color: var(--danger); transform: translateX(5px); }
-        100% { border-color: var(--border); transform: translateX(0); }
-      }
-      .correct-flash { animation: correct-flash-anim 0.6s ease; }
-      .wrong-flash { animation: wrong-flash-anim 0.5s ease; }
-    `;
-    if (!document.getElementById('feedback-styles')) {
-      style.id = 'feedback-styles';
-      document.head.appendChild(style);
-    }
-
-    setTimeout(() => {
-      element.classList.remove('correct-flash', 'wrong-flash');
-    }, 600);
-  };
-
-  // Points popup
-  const showPointsPopup = (points, x, y) => {
-    const popup = document.createElement('div');
-    popup.style.cssText = `
-      position: fixed;
-      left: ${x}px;
-      top: ${y}px;
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: ${points > 0 ? '#10b981' : '#ef4444'};
-      pointer-events: none;
-      z-index: 1000;
-      animation: points-float 1.2s ease forwards;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    `;
-    popup.textContent = (points > 0 ? '+' : '') + points + ' Punkte';
-
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes points-float {
-        0% { opacity: 1; transform: translateY(0) scale(0.8); }
-        50% { opacity: 1; transform: translateY(-30px) scale(1.1); }
-        100% { opacity: 0; transform: translateY(-60px) scale(1); }
-      }
-    `;
-    if (!document.getElementById('points-float-style')) {
-      style.id = 'points-float-style';
-      document.head.appendChild(style);
-    }
-
-    document.body.appendChild(popup);
-    setTimeout(() => popup.remove(), 1300);
-  };
-
-  // Splash screen ausblenden
-  const hideSplash = () => {
-    setTimeout(() => {
-      const splash = document.getElementById('splash-screen');
-      if (splash) {
-        splash.classList.add('fade-out');
-        setTimeout(() => splash.remove(), 600);
-      }
-    }, 2200);
-  };
-
-  // Motivational quotes
-  const QUOTES = [
-    'Bildung ist nicht das Füllen eines Eimers, sondern das Entzünden eines Feuers.',
-    'Jeder Tag ist eine neue Chance zu lernen!',
-    'Wiederholung ist die Mutter des Lernens.',
-    'Wer aufhört zu lernen, ist alt, ob mit 20 oder 80.',
-    'Der Weg zu Wissen führt durch Fehler – mach weiter!',
-    'Eine Stunde Lernen heute ist eine Stunde Freiheit morgen.',
-    'Disziplin ist die Brücke zwischen Zielen und Erfolg.',
-    'Du bist heute klüger als gestern! 🧠',
-    'Klein anfangen, groß denken, immer lernen!',
-    'Fehler sind Beweise dafür, dass du es versuchst!',
-  ];
-
-  const getQuote = () => QUOTES[Math.floor(Math.random() * QUOTES.length)];
-
-  return { init, showToast, celebrate, launchConfetti, showAnswerFeedback, showPointsPopup, hideSplash, getQuote };
-})();
-
-/* === app.js === */
+// === app.js ===
 /* ============================================
    App - Hauptcontroller
    ============================================ */
@@ -5208,6 +6664,173 @@ const App = (() => {
     document.getElementById('math-answer').addEventListener('keydown', (e) => {
       if (e.key === 'Enter') checkMathAnswer();
     });
+
+    // Math tab switching
+    document.querySelectorAll('.math-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.math-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.math-tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        const target = document.getElementById('math-tab-' + tab.dataset.tab);
+        if (target) target.classList.add('active');
+        if (tab.dataset.tab === 'plotter') {
+          setTimeout(() => Plotter.init('plotter-canvas'), 100);
+        }
+        if (tab.dataset.tab === 'probability') {
+          initProbabilityButtons();
+          loadProbabilityExercise();
+        }
+      });
+    });
+
+    // Plotter controls
+    const plotterInput = document.getElementById('plotter-input');
+    document.getElementById('plotter-add-btn')?.addEventListener('click', () => {
+      const expr = plotterInput?.value.trim();
+      if (!expr) return;
+      const info = Plotter.addFunction(expr);
+      const list = document.getElementById('plotter-fn-list');
+      if (list && info) {
+        const item = document.createElement('div');
+        item.className = 'plotter-fn-item';
+        let details = `<span class="fn-expr">${expr}</span>`;
+        if (info.zeros?.length) details += ` <span class="fn-zeros">Nullstellen: ${info.zeros.map(z => z.toFixed(2)).join(', ')}</span>`;
+        if (info.extrema?.length) details += ` <span class="fn-extrema">Extrema: ${info.extrema.map(e => `(${e.x.toFixed(2)}|${e.y.toFixed(2)})`).join(', ')}</span>`;
+        item.innerHTML = details;
+        list.appendChild(item);
+      }
+      if (plotterInput) plotterInput.value = '';
+    });
+    plotterInput?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('plotter-add-btn')?.click();
+    });
+
+    document.getElementById('plotter-clear-btn')?.addEventListener('click', () => {
+      Plotter.clearFunctions();
+      const list = document.getElementById('plotter-fn-list');
+      if (list) list.innerHTML = '';
+    });
+    document.getElementById('plotter-zoom-in')?.addEventListener('click', () => Plotter.zoom(0.7));
+    document.getElementById('plotter-zoom-out')?.addEventListener('click', () => Plotter.zoom(1.4));
+    document.getElementById('plotter-reset')?.addEventListener('click', () => {
+      Plotter.setRange(-10, 10, -10, 10);
+    });
+
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (plotterInput) plotterInput.value = btn.dataset.fn;
+        document.getElementById('plotter-add-btn')?.click();
+      });
+    });
+
+    // Probability buttons wired in initProbabilityButtons (called when tab opens)
+  };
+
+  let probMode = 'basic';
+  let currentProbExercise = null;
+
+  const initProbabilityButtons = () => {
+    const basicBtn = document.getElementById('prob-basic-btn');
+    const treeBtn = document.getElementById('prob-tree-btn');
+    const tableBtn = document.getElementById('prob-table-btn');
+    if (!basicBtn || basicBtn._wired) return;
+    basicBtn._wired = true;
+
+    const switchView = (mode) => {
+      probMode = mode;
+      document.getElementById('prob-basic-view').classList.toggle('hidden', mode !== 'basic');
+      document.getElementById('prob-tree-view').classList.toggle('hidden', mode !== 'tree');
+      document.getElementById('prob-table-view').classList.toggle('hidden', mode !== 'table');
+      [basicBtn, treeBtn, tableBtn].forEach(b => b.classList.remove('active'));
+      if (mode === 'basic') basicBtn.classList.add('active');
+      if (mode === 'tree') treeBtn.classList.add('active');
+      if (mode === 'table') tableBtn.classList.add('active');
+      loadProbabilityExercise();
+    };
+
+    basicBtn.addEventListener('click', () => switchView('basic'));
+    treeBtn.addEventListener('click', () => switchView('tree'));
+    tableBtn.addEventListener('click', () => switchView('table'));
+
+    document.getElementById('prob-check-btn')?.addEventListener('click', checkProbabilityAnswer);
+    document.getElementById('prob-next-btn')?.addEventListener('click', loadProbabilityExercise);
+    document.getElementById('prob-hint-btn')?.addEventListener('click', () => {
+      const hint = document.getElementById('prob-hint');
+      if (hint && currentProbExercise?.hint) {
+        hint.textContent = '💡 ' + currentProbExercise.hint;
+        hint.classList.remove('hidden');
+      }
+    });
+    document.getElementById('prob-answer')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkProbabilityAnswer();
+    });
+    document.getElementById('prob-tree-next')?.addEventListener('click', loadProbabilityExercise);
+    document.getElementById('prob-table-next')?.addEventListener('click', loadProbabilityExercise);
+  };
+
+  const loadProbabilityExercise = () => {
+    if (probMode === 'basic') {
+      const exercises = Probability.generateBasicProbability();
+      if (!exercises?.length) return;
+      currentProbExercise = exercises[Math.floor(Math.random() * exercises.length)];
+      document.getElementById('prob-question').textContent = currentProbExercise.question;
+      document.getElementById('prob-answer').value = '';
+      document.getElementById('prob-feedback').className = 'feedback-area hidden';
+      document.getElementById('prob-hint').classList.add('hidden');
+      document.getElementById('prob-steps').classList.add('hidden');
+    } else if (probMode === 'tree') {
+      const result = Probability.generateTreeProblem();
+      if (!result) return;
+      document.getElementById('prob-tree-context').innerHTML = result.scenario;
+      const canvas = document.getElementById('tree-canvas');
+      if (canvas) {
+        canvas.width = 600; canvas.height = 300;
+        setTimeout(() => Probability.drawTree('tree-canvas', result.treeData), 100);
+      }
+      document.getElementById('prob-tree-questions').innerHTML = result.questions.map(q =>
+        `<div class="prob-card"><div class="prob-q">${q.question}</div>
+        <button class="btn btn-ghost" style="margin-top:.5rem" onclick="this.nextElementSibling.classList.toggle('hidden')">Lösung</button>
+        <div class="prob-a hidden" style="margin-top:.5rem;color:var(--success)">${q.answer}</div></div>`
+      ).join('');
+    } else if (probMode === 'table') {
+      const result = Probability.generateVierfeldertafel();
+      if (!result) return;
+      document.getElementById('prob-table-context').innerHTML = result.scenario;
+      const canvas = document.getElementById('table-canvas');
+      if (canvas) {
+        canvas.width = 500; canvas.height = 200;
+        setTimeout(() => Probability.drawVierfeldertafel('table-canvas', result.tableData), 100);
+      }
+      document.getElementById('prob-table-questions').innerHTML = result.questions.map(q =>
+        `<div class="prob-card"><div class="prob-q">${q.question}</div>
+        <button class="btn btn-ghost" style="margin-top:.5rem" onclick="this.nextElementSibling.classList.toggle('hidden')">Lösung</button>
+        <div class="prob-a hidden" style="margin-top:.5rem;color:var(--success)">${q.answer}</div></div>`
+      ).join('');
+    }
+  };
+
+  const checkProbabilityAnswer = () => {
+    if (!currentProbExercise) return;
+    const answer = document.getElementById('prob-answer').value.trim();
+    if (!answer) return;
+    const correct = Brain.checkAnswer(answer, currentProbExercise.answer, currentProbExercise.type || 'number');
+    const fb = document.getElementById('prob-feedback');
+    if (correct) {
+      fb.className = 'feedback-area correct';
+      fb.innerHTML = `✅ <strong>Richtig!</strong>`;
+      Progress.addExerciseResult('math', true, false);
+      Animations.showToast('✓ Richtig! +10 Punkte', 'success');
+      setTimeout(loadProbabilityExercise, 2000);
+    } else {
+      fb.className = 'feedback-area wrong';
+      fb.innerHTML = `❌ Nicht ganz. Richtig: <strong>${currentProbExercise.answer}</strong>`;
+      if (currentProbExercise.explanation) {
+        const steps = document.getElementById('prob-steps');
+        steps.innerHTML = currentProbExercise.explanation;
+        steps.classList.remove('hidden');
+      }
+    }
+    fb.classList.remove('hidden');
   };
 
   const loadMathExercise = (topicId, btn) => {
@@ -5434,6 +7057,8 @@ const App = (() => {
 document.addEventListener('DOMContentLoaded', () => {
   App.init();
 });
+
+
 
 </script>
 </body>
