@@ -3,882 +3,627 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>PROVITEC® PROaqua 4700 – Reines Trinkwasser direkt aus dem Hahn</title>
+<title>panadress – Ihr führender Qualitätsdaten-Anbieter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;background:#fff}
-
 :root{
-  --navy:#0C1D52;
-  --navy2:#07122E;
-  --navy3:#1a3070;
-  --blue:#2563EB;
-  --blue2:#1d4ed8;
-  --off:#F4F7FF;
-  --off2:#EBF0FF;
-  --border:#E2E8F0;
-  --border2:rgba(12,29,82,.1);
-  --text:#1e293b;
-  --muted:#64748b;
-  --light:#f8fafc;
+  --y:#F5C400;--y2:#FFD740;--o:#FF8C00;
+  --bg:#08080F;--bg2:#0D0D18;--bg3:#121220;
+  --card:rgba(255,255,255,.04);--cb:rgba(245,196,0,.14);
+  --t:#fff;--m:rgba(255,255,255,.55);--m2:rgba(255,255,255,.3);
+  --g:linear-gradient(135deg,#F5C400 0%,#FF8C00 100%);
 }
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#D4A800;border-radius:2px}
 
-/* ══════════ NAV ══════════ */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:400;
-  height:68px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 56px;
-  background:rgba(255,255,255,.96);
-  backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--border);
-  box-shadow:0 1px 0 rgba(0,0,0,.03);
-}
-.nav-logo{display:flex;align-items:center;text-decoration:none}
-.nav-logo img{height:32px;display:block}
-.nav-tabs{display:flex;align-items:center;gap:1px}
-.nt{
-  position:relative;padding:8px 16px;border-radius:8px;border:none;
-  font-family:inherit;font-size:13.5px;font-weight:500;
-  color:var(--muted);background:none;cursor:pointer;
-  transition:color .15s,background .15s;white-space:nowrap;
-}
-.nt:hover{color:var(--navy);background:var(--off)}
-.nt.on{color:var(--navy);font-weight:700}
-.nt.on::after{
-  content:'';position:absolute;bottom:-1px;left:16px;right:16px;
-  height:2px;border-radius:2px;background:var(--navy);
-}
-.nt-cta{
-  margin-left:12px;padding:9px 22px;border-radius:8px;border:none;
-  font-family:inherit;font-size:13.5px;font-weight:700;
-  background:var(--navy);color:#fff;cursor:pointer;
-  transition:background .15s,transform .15s,box-shadow .15s;
-}
-.nt-cta:hover{background:var(--navy3);transform:translateY(-1px);box-shadow:0 6px 20px rgba(12,29,82,.22)}
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:900;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 60px;background:rgba(8,8,15,.7);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border-bottom:1px solid rgba(245,196,0,.07);transition:.3s}
+#nav.up{background:rgba(8,8,15,.97);border-bottom-color:rgba(245,196,0,.14);box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.logo{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.5px;color:#fff;text-decoration:none}
+.logo b{color:var(--y)}
+.nl{display:flex;align-items:center;gap:4px}
+.nl a{padding:8px 15px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--m);text-decoration:none;transition:.2s}
+.nl a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.ncta{margin-left:12px;padding:10px 24px;border-radius:9px;background:var(--g);font-size:13.5px;font-weight:700;color:#000;text-decoration:none;transition:.25s;box-shadow:0 4px 20px rgba(245,196,0,.2)}
+.ncta:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(245,196,0,.4)}
 
-/* ══════════ PAGES ══════════ */
-.page{
-  position:fixed;inset:0;top:68px;
-  overflow-y:auto;overflow-x:hidden;
-  opacity:0;pointer-events:none;
-  transition:opacity .28s ease;
-  scrollbar-width:thin;scrollbar-color:rgba(12,29,82,.12) transparent;
-}
-.page.on{opacity:1;pointer-events:all}
+/* HERO */
+#hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:130px 60px 90px;overflow:hidden}
+.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(245,196,0,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(245,196,0,.035) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 10%,transparent 100%)}
+.hb1{position:absolute;width:900px;height:900px;top:-300px;right:-200px;border-radius:50%;background:radial-gradient(circle,rgba(245,196,0,.1) 0%,rgba(255,140,0,.05) 40%,transparent 70%);animation:bl 9s ease-in-out infinite;pointer-events:none}
+.hb2{position:absolute;width:600px;height:600px;bottom:-200px;left:50px;border-radius:50%;background:radial-gradient(circle,rgba(245,196,0,.07) 0%,transparent 70%);animation:bl 13s ease-in-out infinite reverse;pointer-events:none}
+@keyframes bl{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.08) translateY(-20px)}}
+.hc{position:relative;z-index:2;max-width:820px}
+.hbadge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:100px;background:rgba(245,196,0,.1);border:1px solid rgba(245,196,0,.25);font-size:11.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--y);margin-bottom:28px}
+.hdot{width:7px;height:7px;border-radius:50%;background:var(--y);animation:pu 2s ease infinite;flex-shrink:0}
+@keyframes pu{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(46px,6.5vw,90px);font-weight:700;line-height:1.03;letter-spacing:-2.5px;margin-bottom:26px}
+h1 .hl{background:var(--g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hsub{font-size:18px;line-height:1.7;color:var(--m);max-width:580px;margin-bottom:46px}
+.hacts{display:flex;gap:14px;flex-wrap:wrap}
+.btn{padding:15px 34px;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;transition:.25s;display:inline-block;cursor:pointer;border:none;font-family:inherit}
+.btn-p{background:var(--g);color:#000;box-shadow:0 4px 24px rgba(245,196,0,.22)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 12px 44px rgba(245,196,0,.4)}
+.btn-s{border:1px solid rgba(255,255,255,.15);color:#fff;backdrop-filter:blur(10px)}
+.btn-s:hover{border-color:rgba(245,196,0,.4);background:rgba(245,196,0,.06);color:var(--y)}
+.hfloat{position:absolute;right:60px;top:50%;transform:translateY(-50%);z-index:2;display:flex;flex-direction:column;gap:14px;pointer-events:none}
+.fc{background:rgba(255,255,255,.04);border:1px solid rgba(245,196,0,.18);border-radius:16px;padding:20px 26px;backdrop-filter:blur(20px);min-width:220px;animation:fca 6s ease-in-out infinite}
+.fc:nth-child(2){animation-delay:-2s}.fc:nth-child(3){animation-delay:-4s}
+@keyframes fca{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.fcn{font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:700;color:var(--y);line-height:1}
+.fcl{font-size:12px;color:var(--m);margin-top:4px}
 
-/* ══════════ HOME ══════════ */
-#pg-home{background:#fff}
+/* TRUST STRIP */
+#trust{padding:36px 60px;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);background:rgba(255,255,255,.015)}
+.tl{text-align:center;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--m2);margin-bottom:24px}
+.tlogos{display:flex;align-items:center;justify-content:center;gap:56px;flex-wrap:wrap}
+.tlogo{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:var(--m2);letter-spacing:-.3px;transition:.2s}
+.tlogo:hover{color:var(--y)}
 
-.home-wrap{
-  display:grid;
-  grid-template-columns:1fr 480px;
-  min-height:calc(100vh - 68px);
-  max-width:1360px;
-  margin:0 auto;
-  padding:0 56px;
-  gap:56px;
-  align-items:center;
-}
+/* STATS */
+#stats{padding:90px 60px;background:var(--bg2)}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;max-width:1200px;margin:0 auto;background:rgba(245,196,0,.07);border-radius:20px;overflow:hidden}
+.si{padding:48px 36px;background:var(--bg2);text-align:center;position:relative;transition:background .3s;cursor:default}
+.si:hover{background:var(--bg3)}
+.si::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background:var(--g);transition:width .4s}
+.si:hover::after{width:70%}
+.sn{font-family:'Space Grotesk',sans-serif;font-size:54px;font-weight:700;background:var(--g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:10px}
+.sl{font-size:13.5px;color:var(--m);line-height:1.45}
 
-/* Hero left */
-.hero-l{padding:72px 0}
+/* SECTION COMMONS */
+.sec-wrap{max-width:1200px;margin:0 auto}
+.sh{text-align:center;max-width:680px;margin:0 auto 64px}
+.stag{display:inline-block;padding:5px 14px;border-radius:100px;background:rgba(245,196,0,.1);border:1px solid rgba(245,196,0,.22);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--y);margin-bottom:16px}
+.sti{font-family:'Space Grotesk',sans-serif;font-size:clamp(30px,4vw,52px);font-weight:700;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px}
+.sd{font-size:16px;line-height:1.72;color:var(--m)}
 
-.hero-eyebrow{
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:28px;
-}
-.hero-eyebrow-badge{
-  display:inline-flex;align-items:center;gap:7px;
-  background:var(--off2);border:1px solid rgba(12,29,82,.12);
-  border-radius:100px;padding:5px 13px 5px 8px;
-}
-.badge-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:var(--navy);
-  animation:pulse 2.5s infinite;
-}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-.hero-eyebrow-badge span{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--navy);opacity:.75}
+/* SERVICES */
+#services{padding:110px 60px;background:var(--bg)}
+.svgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;max-width:1200px;margin:0 auto}
+.sv{position:relative;overflow:hidden;background:var(--card);border:1px solid var(--cb);border-radius:22px;padding:40px 34px;transition:all .4s cubic-bezier(.34,1.56,.64,1)}
+.sv:hover{transform:translateY(-8px);border-color:rgba(245,196,0,.38);box-shadow:0 28px 64px rgba(0,0,0,.45),0 0 0 1px rgba(245,196,0,.1)}
+.sv::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--g);transform:scaleX(0);transition:.4s}
+.sv:hover::before{transform:scaleX(1)}
+.sv-glow{position:absolute;top:-80px;right:-80px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(245,196,0,.09) 0%,transparent 70%);opacity:0;transition:.4s}
+.sv:hover .sv-glow{opacity:1}
+.sv-icon{width:52px;height:52px;border-radius:13px;background:rgba(245,196,0,.1);border:1px solid rgba(245,196,0,.22);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:22px}
+.sv-t{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:12px}
+.sv-d{font-size:14px;line-height:1.72;color:var(--m);margin-bottom:26px}
+.sv-list{display:flex;flex-direction:column;gap:9px;margin-bottom:26px}
+.sv-item{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--m)}
+.sv-item::before{content:'';width:16px;height:16px;flex-shrink:0;border-radius:50%;background:rgba(245,196,0,.12) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8l2.5 2.5L12 5' stroke='%23F5C400' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E") center/contain;border:1px solid rgba(245,196,0,.28)}
+.sv-link{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--y);text-decoration:none;transition:gap .2s}
+.sv-link:hover{gap:11px}
 
-.hero-h1{
-  font-size:clamp(44px,5.2vw,76px);
-  font-weight:900;color:var(--navy2);
-  line-height:.96;letter-spacing:-.04em;
-  margin-bottom:24px;
-}
-.hero-h1 em{font-style:normal;color:var(--blue)}
-.hero-h1 .dim{color:rgba(12,29,82,.22)}
+/* DIVIDER */
+.gdiv{height:1px;background:linear-gradient(90deg,transparent 0%,rgba(245,196,0,.3) 30%,rgba(255,140,0,.3) 70%,transparent 100%)}
 
-.hero-sub{
-  font-size:17px;font-weight:400;
-  color:var(--muted);line-height:1.72;
-  max-width:520px;margin-bottom:36px;
-}
-.hero-sub strong{color:var(--text);font-weight:600}
+/* SPLIT */
+.sp{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1200px;margin:0 auto}
+.sp.rev{direction:rtl}.sp.rev>*{direction:ltr}
+.sp-img{position:relative;border-radius:24px;overflow:hidden}
+.sp-img img{width:100%;height:480px;object-fit:cover;display:block}
+.sp-ov{position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,196,0,.18) 0%,rgba(255,140,0,.09) 100%)}
+.sp-badge{position:absolute;bottom:20px;left:20px;right:20px;background:rgba(8,8,15,.88);backdrop-filter:blur(20px);border:1px solid rgba(245,196,0,.2);border-radius:13px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.sp-bv{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:var(--y)}
+.sp-bl{font-size:11.5px;color:var(--m);margin-top:2px}
+.sp-bdiv{width:1px;height:40px;background:rgba(255,255,255,.1)}
+.sp-ti{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.5vw,44px);font-weight:700;letter-spacing:-1px;line-height:1.1;margin-bottom:18px}
+.sp-d{font-size:16px;line-height:1.75;color:var(--m);margin-bottom:34px}
+.fl{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:36px}
+.fi{display:flex;align-items:center;gap:9px;padding:13px 15px;border-radius:10px;background:rgba(245,196,0,.04);border:1px solid rgba(245,196,0,.1)}
+.fi-t{font-size:13px;font-weight:500;color:rgba(255,255,255,.82)}
 
-/* USP pills */
-.usps{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px}
-.usp{
-  display:inline-flex;align-items:center;gap:7px;
-  background:var(--off);border:1px solid var(--border);
-  border-radius:100px;padding:7px 14px 7px 9px;
-  font-size:12.5px;font-weight:600;color:var(--text);
-}
-.usp-ico{
-  width:18px;height:18px;border-radius:50%;
-  background:var(--navy);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.usp-ico svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+/* ANALYTICS */
+#analytics{padding:110px 60px;background:var(--bg2);position:relative;overflow:hidden}
+#analytics::before{content:'';position:absolute;top:-250px;left:50%;transform:translateX(-50%);width:1100px;height:700px;background:radial-gradient(ellipse,rgba(245,196,0,.05) 0%,transparent 65%);pointer-events:none}
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:1200px;margin:0 auto}
+.ac{background:var(--card);border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:36px;position:relative;overflow:hidden;transition:.3s}
+.ac:hover{border-color:rgba(245,196,0,.22);background:rgba(255,255,255,.055)}
+.ac.feat{grid-column:span 2;background:linear-gradient(135deg,rgba(245,196,0,.07) 0%,rgba(255,140,0,.04) 100%);border-color:rgba(245,196,0,.2);display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.ac-ico{font-size:34px;margin-bottom:18px}
+.ac-t{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:12px}
+.ac-d{font-size:14.5px;line-height:1.72;color:var(--m)}
+.ac-kpi{background:rgba(245,196,0,.07);border:1px solid rgba(245,196,0,.15);border-radius:14px;padding:24px;margin-bottom:14px}
+.ac-kpi:last-child{margin-bottom:0}
+.ac-kv{font-family:'Space Grotesk',sans-serif;font-size:40px;font-weight:700;color:var(--y);margin-bottom:4px}
+.ac-kl{font-size:13px;color:var(--m)}
+
+/* GALLERY */
+#gallery{padding:80px 0;background:var(--bg);overflow:hidden}
+.gal-t{text-align:center;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--m2);margin-bottom:36px}
+.gal-track{display:flex;gap:20px;animation:gscroll 32s linear infinite;width:max-content}
+.gal-track:hover{animation-play-state:paused}
+.gi{flex-shrink:0;width:340px;height:220px;border-radius:18px;overflow:hidden;position:relative;border:1px solid rgba(245,196,0,.1)}
+.gi img{width:100%;height:100%;object-fit:cover;transition:.4s;display:block}
+.gi:hover img{transform:scale(1.06)}
+.gi-ov{position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,196,0,.2) 0%,rgba(255,140,0,.1) 100%);opacity:0;transition:.3s}
+.gi:hover .gi-ov{opacity:1}
+@keyframes gscroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* GEO */
+#geo{padding:110px 60px;background:var(--bg)}
+.geo-g{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1200px;margin:0 auto}
+.geo-map{position:relative;border-radius:24px;overflow:hidden;aspect-ratio:1;background:var(--bg2);border:1px solid rgba(245,196,0,.12)}
+.geo-map img{width:100%;height:100%;object-fit:cover;opacity:.5;display:block}
+.geo-mov{position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,196,0,.18) 0%,rgba(255,140,0,.09) 100%)}
+.geo-gov{position:absolute;inset:0;background-image:linear-gradient(rgba(245,196,0,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(245,196,0,.12) 1px,transparent 1px);background-size:28px 28px}
+.geo-dot{position:absolute;border-radius:50%}
+.geo-badge{position:absolute;bottom:20px;left:20px;right:20px;background:rgba(8,8,15,.9);backdrop-filter:blur(20px);border:1px solid rgba(245,196,0,.2);border-radius:12px;padding:15px 18px}
+.geo-feat{display:flex;gap:16px;align-items:flex-start;padding:18px;border-radius:12px;background:rgba(245,196,0,.04);border:1px solid rgba(245,196,0,.1);margin-top:12px}
+.geo-feat-ico{width:44px;height:44px;border-radius:11px;background:rgba(245,196,0,.1);border:1px solid rgba(245,196,0,.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.geo-feat-t{font-size:14.5px;font-weight:600;margin-bottom:4px}
+.geo-feat-d{font-size:13px;color:var(--m);line-height:1.5}
+
+/* ABOUT */
+#about{padding:110px 60px;background:var(--bg2)}
+.about-kpi{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+.kpi-box{padding:18px 24px;border-radius:12px;background:rgba(245,196,0,.06);border:1px solid rgba(245,196,0,.15);text-align:center}
+.kpi-v{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--y)}
+.kpi-l{font-size:12px;color:var(--m);margin-top:3px}
 
 /* CTA */
-.cta-row{margin-bottom:48px}
-.cta-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-.cta-micro{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-.cmic{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:500}
-.cmic svg{width:13px;height:13px;stroke:var(--navy);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.6}
+#cta{padding:120px 60px;background:var(--bg2);text-align:center;position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 0%,rgba(245,196,0,.08) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 50% 100%,rgba(255,140,0,.06) 0%,transparent 70%)}
+.cta-in{position:relative;z-index:1;max-width:680px;margin:0 auto}
+.cta-t{font-family:'Space Grotesk',sans-serif;font-size:clamp(38px,5.5vw,68px);font-weight:700;letter-spacing:-2px;line-height:1.04;margin-bottom:20px}
+.cta-hl{background:var(--g);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cta-d{font-size:17px;color:var(--m);line-height:1.65;margin-bottom:44px}
+.cta-form{display:flex;gap:12px;max-width:460px;margin:0 auto 16px}
+.cta-inp{flex:1;padding:14px 18px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:14px;font-family:inherit;outline:none;transition:.2s}
+.cta-inp:focus{border-color:rgba(245,196,0,.42)}
+.cta-inp::placeholder{color:var(--m2)}
+.cta-note{font-size:12px;color:var(--m2)}
 
-/* Trust bar */
-.trust-bar{
-  display:flex;flex-wrap:wrap;gap:0;
-  padding-top:32px;border-top:1px solid var(--border);
+/* FOOTER */
+footer{padding:64px 60px 36px;background:var(--bg);border-top:1px solid rgba(255,255,255,.06)}
+.ft{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.fl-logo{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:14px}
+.fl-logo b{color:var(--y)}
+.fl-tag{font-size:13.5px;color:var(--m);line-height:1.65;max-width:260px;margin-bottom:22px}
+.fl-addr{font-size:13px;color:var(--m2);line-height:1.85}
+.fc-t{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--m2);margin-bottom:17px}
+.fc-links{display:flex;flex-direction:column;gap:10px}
+.fc-link{font-size:13.5px;color:var(--m);text-decoration:none;transition:.2s}
+.fc-link:hover{color:var(--y)}
+.fb{display:flex;align-items:center;justify-content:space-between;padding-top:26px;border-top:1px solid rgba(255,255,255,.06);font-size:12.5px;color:var(--m2)}
+.fb-leg{display:flex;gap:20px}
+.fb-leg a{color:var(--m2);text-decoration:none;transition:.2s}
+.fb-leg a:hover{color:var(--m)}
+
+/* ANIMATIONS */
+.fu{opacity:0;transform:translateY(36px);transition:opacity .7s ease,transform .7s ease}
+.fu.vis{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .svgrid{grid-template-columns:1fr 1fr}
+  .hfloat{display:none}
+  .sp,.sp.rev{grid-template-columns:1fr;direction:ltr;gap:48px}
+  .ft{grid-template-columns:1fr 1fr}
+  .ac.feat{grid-column:span 1;grid-template-columns:1fr}
+  .sgrid{grid-template-columns:1fr 1fr}
+  .geo-g{grid-template-columns:1fr;gap:48px}
+  .agrid{grid-template-columns:1fr}
 }
-.tb{display:flex;align-items:center;gap:10px;padding-right:28px}
-.tb-ico{
-  width:38px;height:38px;flex-shrink:0;border-radius:10px;
-  background:var(--off);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-}
-.tb-ico svg{width:17px;height:17px;stroke:var(--navy);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.tb-txt strong{display:block;color:var(--navy2);font-size:13px;font-weight:700;line-height:1.2}
-.tb-txt span{color:var(--muted);font-size:11.5px}
-.tb-sep{width:1px;height:36px;background:var(--border);margin-right:28px;flex-shrink:0;align-self:center}
-
-/* Stars */
-.strow{display:flex;align-items:center;gap:2px;margin-bottom:2px}
-.star{width:12px;height:12px;fill:#f59e0b}
-
-/* ══════════ QUIZ CARD ══════════ */
-.quiz-wrap{
-  padding:40px 0;
-  display:flex;flex-direction:column;
-}
-.quiz-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:24px;
-  overflow:hidden;
-  box-shadow:
-    0 0 0 1px rgba(12,29,82,.04),
-    0 8px 24px rgba(12,29,82,.06),
-    0 32px 80px rgba(12,29,82,.1);
-}
-
-/* Card top label */
-.qc-top{
-  background:var(--navy2);
-  padding:20px 28px;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.qc-top-l h3{color:#fff;font-size:15px;font-weight:700;letter-spacing:-.01em;margin-bottom:2px}
-.qc-top-l p{color:rgba(255,255,255,.45);font-size:12px}
-.pips{display:flex;gap:5px}
-.pip{width:32px;height:3px;border-radius:3px;background:rgba(255,255,255,.14);transition:background .3s}
-.pip.on{background:#fff}
-
-/* Progress bar */
-.qprog{height:3px;background:var(--off2);position:relative}
-.qprog-fill{height:100%;background:var(--navy);transition:width .4s cubic-bezier(.4,0,.2,1)}
-
-/* Body */
-.qbody{padding:28px 28px 24px}
-.qstep{display:none}.qstep.on{display:block}
-.qno{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
-.qq{color:var(--navy2);font-size:19px;font-weight:800;line-height:1.28;margin-bottom:20px;letter-spacing:-.025em}
-
-.qopts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
-.qopt{
-  background:var(--off);border:1.5px solid var(--border);
-  border-radius:12px;padding:14px 12px;
-  color:var(--text);font-size:13px;font-weight:600;
-  cursor:pointer;font-family:inherit;
-  text-align:center;line-height:1.35;
-  transition:all .15s;
-}
-.qopt small{display:block;font-weight:400;font-size:11px;color:var(--muted);margin-top:3px}
-.qopt:hover{background:var(--off2);border-color:rgba(12,29,82,.25)}
-.qopt.sel{background:var(--off2);border-color:var(--navy);color:var(--navy2)}
-.qopt.sel small{color:var(--blue)}
-
-.qa{display:flex;gap:8px}
-.qb{flex:1;padding:13px 16px;border-radius:9px;font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;border:none;transition:all .15s;text-align:center}
-.qnx{background:var(--navy);color:#fff}.qnx:hover{background:var(--navy3);transform:translateY(-1px);box-shadow:0 6px 18px rgba(12,29,82,.22)}
-.qbk{background:var(--off);color:var(--muted);border:1px solid var(--border)}.qbk:hover{background:var(--off2)}
-
-/* Slider step */
-.msl{margin-bottom:14px}
-.msl label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500}
-.msl label b{color:var(--navy2);font-weight:800;font-size:13px}
-input[type=range]{width:100%;accent-color:var(--navy);cursor:pointer;height:4px}
-.mres{
-  background:var(--off2);border:1.5px solid rgba(12,29,82,.14);
-  border-radius:12px;padding:18px 20px;
-  display:flex;justify-content:space-between;align-items:center;
-  margin:6px 0 18px;
-}
-.mres p{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
-.mres b{color:var(--navy);font-size:34px;font-weight:900;letter-spacing:-.04em}
-
-/* Lead */
-.qlead{display:none}.qlead.on{display:block}
-.qsucc{display:none;text-align:center;padding:48px 28px}
-.qsucc.on{display:block}
-.qcheck{
-  width:56px;height:56px;border-radius:50%;
-  background:var(--off2);border:2px solid rgba(12,29,82,.2);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 18px;
-}
-.qcheck svg{width:24px;height:24px;stroke:var(--navy);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-.qinp{
-  width:100%;background:var(--off);border:1.5px solid var(--border);
-  border-radius:10px;padding:13px 15px;
-  color:var(--text);font-size:14px;font-family:inherit;
-  margin-bottom:10px;outline:none;transition:border-color .15s,background .15s;
-}
-.qinp::placeholder{color:#b0b8cc}
-.qinp:focus{border-color:var(--navy);background:#fff;box-shadow:0 0 0 3px rgba(12,29,82,.06)}
-
-/* Card footer trust */
-.qfoot{
-  padding:14px 28px;
-  border-top:1px solid var(--border);
-  background:var(--light);
-  display:flex;align-items:center;justify-content:center;gap:18px;
-}
-.qft{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);font-weight:500}
-.qft svg{width:13px;height:13px;stroke:var(--navy);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.5}
-.qft-sep{width:3px;height:3px;border-radius:50%;background:var(--border)}
-
-/* ══════════ SHARED BTN ══════════ */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;border:none;cursor:pointer;text-decoration:none;transition:all .18s;white-space:nowrap}
-.btn-navy{background:var(--navy);color:#fff}.btn-navy:hover{background:var(--navy3);transform:translateY(-1px);box-shadow:0 8px 24px rgba(12,29,82,.22)}
-.btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--border2)}.btn-outline:hover{background:var(--off);border-color:var(--navy)}
-.btn-outline-w{background:transparent;color:rgba(255,255,255,.8);border:1.5px solid rgba(255,255,255,.2)}.btn-outline-w:hover{color:#fff;border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.07)}
-.btn-full{width:100%}
-
-/* ══════════ SHARED LAYOUT ══════════ */
-.wrap{max-width:1180px;margin:0 auto;padding:80px 56px}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:center;min-height:calc(100vh - 68px)}
-.tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
-h2{font-size:clamp(30px,3.8vw,52px);font-weight:800;line-height:1.07;letter-spacing:-.03em;margin-bottom:16px}
-h2.dk{color:var(--navy2)}
-h2.lt{color:#fff}
-.lead{font-size:16px;line-height:1.75}
-.lead.dk{color:var(--muted)}
-.lead.lt{color:rgba(255,255,255,.45)}
-
-/* feature list */
-.flist{display:flex;flex-direction:column;margin-top:36px}
-.fi{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--border)}
-.fi:last-child{border:none}
-.fn{font-size:10px;font-weight:700;color:rgba(12,29,82,.18);letter-spacing:.1em;min-width:22px;padding-top:2px}
-.ft strong{display:block;font-weight:700;font-size:14.5px;margin-bottom:3px;color:var(--navy2)}
-.ft p{font-size:13.5px;line-height:1.62;color:var(--muted)}
-
-/* step list dark */
-.slist{display:flex;flex-direction:column;margin-top:36px}
-.si{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-.si:last-child{border:none}
-.sn{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff}
-.stxt strong{display:block;color:#fff;font-weight:700;font-size:14.5px;margin-bottom:3px}
-.stxt p{color:rgba(255,255,255,.4);font-size:13.5px;line-height:1.58}
-
-/* hotspot */
-.hsw{position:relative}
-.hsw img{width:100%;border-radius:20px;display:block;box-shadow:0 40px 100px rgba(7,18,46,.12)}
-.hs{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--navy);border:2.5px solid #fff;box-shadow:0 4px 16px rgba(12,29,82,.35);cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;transition:transform .18s;z-index:5}
-.hs::after{content:'';position:absolute;width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(12,29,82,.25);animation:hsp 2.5s infinite}
-@keyframes hsp{0%{transform:scale(.65);opacity:1}100%{transform:scale(1.8);opacity:0}}
-.hs:hover{transform:scale(1.2)}
-.hs-tip{position:absolute;background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px 18px;width:210px;box-shadow:0 20px 52px rgba(7,18,46,.12);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:10;left:42px;top:50%;transform:translateY(-50%) translateX(6px)}
-.hs-tip.vis{opacity:1;transform:translateY(-50%) translateX(0)}
-.hs-tip.lt{left:auto;right:42px;transform:translateY(-50%) translateX(-6px)}.hs-tip.lt.vis{transform:translateY(-50%) translateX(0)}
-.hs-tip strong{display:block;color:var(--navy2);font-size:13px;font-weight:800;margin-bottom:4px}
-.hs-tip p{color:var(--muted);font-size:12.5px;line-height:1.55}
-
-/* vorteile grid */
-.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:18px;overflow:hidden;margin-top:52px}
-.vc{background:#fff;padding:40px 34px;transition:background .22s;cursor:default}
-.vc:hover{background:var(--navy2)}
-.vc-n{font-size:10.5px;font-weight:700;color:rgba(12,29,82,.15);letter-spacing:.1em;margin-bottom:14px;transition:color .22s}
-.vc-t{font-size:16.5px;font-weight:700;color:var(--navy2);margin-bottom:9px;line-height:1.28;transition:color .22s}
-.vc-b{font-size:13.5px;color:var(--muted);line-height:1.65;transition:color .22s}
-.vc:hover .vc-n{color:rgba(255,255,255,.2)}.vc:hover .vc-t{color:#fff}.vc:hover .vc-b{color:rgba(255,255,255,.44)}
-
-/* testimonials */
-.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
-.tc{background:#fff;border-radius:16px;padding:32px;border:1px solid var(--border);transition:box-shadow .22s,transform .22s}
-.tc:hover{box-shadow:0 20px 60px rgba(12,29,82,.09);transform:translateY(-3px)}
-.tstars{color:#f59e0b;font-size:13px;letter-spacing:3px;margin-bottom:14px}
-.ttext{font-size:14px;line-height:1.72;color:#374151;margin-bottom:20px}
-.tauth{display:flex;align-items:center;gap:12px}
-.tav{width:40px;height:40px;border-radius:50%;flex-shrink:0;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
-.tname{font-weight:700;color:var(--navy2);font-size:13.5px}
-.tloc{color:#9ca3af;font-size:12.5px}
-
-/* kalkulator */
-.kcard{background:#fff;border-radius:20px;padding:44px;border:1px solid var(--border);box-shadow:0 4px 40px rgba(12,29,82,.06)}
-.kcard h3{font-size:20px;font-weight:800;color:var(--navy2);margin-bottom:28px;letter-spacing:-.025em}
-.rrow{margin-bottom:18px}
-.rrow label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:500}
-.rrow label b{color:var(--navy2);font-weight:700;font-size:13px}
-.kres{background:var(--off);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin-top:8px}
-.kr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-.kr:last-child{margin:0}
-.kr span{color:var(--muted);font-size:12.5px;font-weight:500}
-.kr b{color:var(--navy2);font-size:16px;font-weight:800}
-.krbig{padding-top:14px;margin-top:8px;border-top:1px solid var(--border)}
-.krbig b{font-size:34px;letter-spacing:-.04em;color:var(--navy) !important}
-
-/* kontakt */
-.kform{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:44px}
-.kform h3{color:#fff;font-size:20px;font-weight:700;margin-bottom:6px}
-.kform>p{color:rgba(255,255,255,.38);font-size:13.5px;margin-bottom:24px}
-.kinp{width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.1);border-radius:9px;padding:12px 15px;color:#fff;font-size:14px;font-family:inherit;margin-bottom:11px;outline:none;transition:border-color .15s}
-.kinp::placeholder{color:rgba(255,255,255,.25)}
-.kinp:focus{border-color:rgba(255,255,255,.4)}
-textarea.kinp{resize:vertical;min-height:100px}
-.kinfo-list{list-style:none;display:flex;flex-direction:column;gap:24px;margin-top:40px}
-.kinfo-item{display:flex;gap:16px;align-items:flex-start}
-.kico{width:44px;height:44px;flex-shrink:0;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:18px}
-.kitxt strong{display:block;color:#fff;font-weight:600;font-size:14px;margin-bottom:2px}
-.kitxt p{color:rgba(255,255,255,.38);font-size:13.5px}
-
-/* modal */
-.ov{display:none;position:fixed;inset:0;background:rgba(7,18,46,.7);z-index:900;align-items:center;justify-content:center;backdrop-filter:blur(12px)}
-.ov.on{display:flex}
-.mbox{background:#fff;border:1px solid var(--border);border-radius:20px;padding:48px;width:100%;max-width:440px;position:relative;box-shadow:0 48px 120px rgba(0,0,0,.2)}
-.mx{position:absolute;top:14px;right:14px;background:var(--off);border:1px solid var(--border);width:32px;height:32px;border-radius:50%;color:var(--muted);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:inherit}
-.mx:hover{background:var(--off2);color:var(--navy)}
-.mbox h2{color:var(--navy2);font-size:22px;font-weight:800;margin-bottom:8px;letter-spacing:-.025em}
-.mbox>p{color:var(--muted);font-size:13.5px;margin-bottom:24px;line-height:1.62}
-.cph{background:var(--off);border:1px dashed var(--border);border-radius:12px;padding:44px 24px;text-align:center;color:var(--muted);font-size:14px}
-
-/* ══════════ RESPONSIVE ══════════ */
-@media(max-width:960px){
-  html,body{overflow:auto}
-  .page{position:relative;inset:auto;top:auto;overflow:visible;height:auto}
-  nav{padding:0 20px}
-  .nt{display:none}
-  .home-wrap{grid-template-columns:1fr;padding:0 20px;gap:0}
-  .hero-l{padding:48px 0 32px}
-  .quiz-wrap{padding:0 0 48px}
-  .two-col{grid-template-columns:1fr;min-height:auto;gap:48px}
-  .wrap{padding:52px 20px}
-  .vgrid,.tgrid{grid-template-columns:1fr}
-  .trust-bar{gap:16px}
+@media(max-width:768px){
+  #nav{padding:0 24px}
+  .nl{display:none}
+  #hero,#trust,#stats,#services,#data-sec,#mailing-sec,#analytics,#geo,#about,#cta{padding-left:24px;padding-right:24px}
+  .svgrid,.fl{grid-template-columns:1fr}
+  .cta-form{flex-direction:column}
+  footer{padding:48px 24px 28px}
+  .ft{grid-template-columns:1fr}
+  .fb{flex-direction:column;gap:14px;text-align:center}
 }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo" onclick="go('home');return false">
-    <img src="images/Logo_provitec_2023-01.webp" alt="PROVITEC"/>
-  </a>
-  <div class="nav-tabs">
-    <button class="nt on" data-p="home"       onclick="go('home')">Start</button>
-    <button class="nt"    data-p="produkt"    onclick="go('produkt')">Produkt</button>
-    <button class="nt"    data-p="vorteile"   onclick="go('vorteile')">Vorteile</button>
-    <button class="nt"    data-p="einbau"     onclick="go('einbau')">Einbau</button>
-    <button class="nt"    data-p="kalkulator" onclick="go('kalkulator')">Kalkulator</button>
-    <button class="nt-cta"                    onclick="go('kontakt')">Kontakt</button>
+<!-- ═ NAV ═ -->
+<nav id="nav">
+  <a href="#hero" class="logo"><b>pan</b>adress</a>
+  <div class="nl">
+    <a href="#services">Leistungen</a>
+    <a href="#data-sec">Data</a>
+    <a href="#analytics">Analytics</a>
+    <a href="#geo">Geomarketing</a>
+    <a href="#about">Über uns</a>
+    <a href="#cta" class="ncta">Beratung anfragen</a>
   </div>
 </nav>
 
-<!-- ═══════ HOME ═══════ -->
-<div class="page on" id="pg-home">
-  <div class="home-wrap">
+<!-- ═ HERO ═ -->
+<section id="hero">
+  <canvas id="pc" style="position:absolute;inset:0;pointer-events:none;z-index:1"></canvas>
+  <div class="hgrid"></div>
+  <div class="hb1"></div>
+  <div class="hb2"></div>
 
-    <!-- HERO LEFT -->
-    <div class="hero-l">
-
-      <div class="hero-eyebrow">
-        <div class="hero-eyebrow-badge">
-          <div class="badge-dot"></div>
-          <span>Ueber 2.400 Haushalte vertrauen PROVITEC&#174;</span>
-        </div>
-      </div>
-
-      <h1 class="hero-h1">
-        Reines Wasser.<br>
-        Direkt aus<br>
-        <em>Ihrem Hahn.</em>
-      </h1>
-
-      <p class="hero-sub">
-        Das PROaqua 4700 eliminiert <strong>99&nbsp;% aller Schadstoffe</strong> &#8212;
-        Keime, Kalk, Chlor, Mikroplastik. Kristallklares Trinkwasser auf Knopfdruck,
-        still oder sprudelnd. Ohne Schleppen. Ohne Plastik. Ohne Kompromisse.
-      </p>
-
-      <div class="usps">
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>5-Stufen-Filtration</div>
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>99% Keimreduktion</div>
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>Bis zu 70% guenstiger</div>
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>30 Min. Installation</div>
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>10 Jahre Garantie</div>
-        <div class="usp"><div class="usp-ico"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></div>Kein Plastikmull</div>
-      </div>
-
-      <div class="cta-row">
-        <div class="cta-btns">
-          <button class="btn btn-navy" style="padding:16px 32px;font-size:15px" onclick="openAngebot()">
-            Kostenlos beraten lassen
-          </button>
-          <button class="btn btn-outline" onclick="go('kalkulator')">
-            Meine Ersparnis berechnen
-          </button>
-        </div>
-        <div class="cta-micro">
-          <div class="cmic"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg>Kostenlos &amp; unverbindlich</div>
-          <div class="cmic"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg>Antwort innerhalb 24h</div>
-          <div class="cmic"><svg viewBox="0 0 14 14"><polyline points="2,7 6,11 12,3"/></svg>Kein Spam</div>
-        </div>
-      </div>
-
-      <!-- Trust bar -->
-      <div class="trust-bar">
-        <div class="tb">
-          <div class="tb-ico">
-            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div class="tb-txt">
-            <strong>TUV-zertifiziert</strong>
-            <span>Geprueft &amp; zugelassen</span>
-          </div>
-        </div>
-        <div class="tb-sep"></div>
-        <div class="tb">
-          <div class="tb-ico">
-            <svg viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-          </div>
-          <div class="tb-txt">
-            <div class="strow">
-              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-              <svg class="star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
-              <strong style="color:var(--navy2);font-size:13px;margin-left:5px">4.9</strong>
-            </div>
-            <span>847 verifizierte Bewertungen</span>
-          </div>
-        </div>
-        <div class="tb-sep"></div>
-        <div class="tb">
-          <div class="tb-ico">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          </div>
-          <div class="tb-txt">
-            <strong>Made in Germany</strong>
-            <span>Hergestellt seit 2003</span>
-          </div>
-        </div>
-        <div class="tb-sep"></div>
-        <div class="tb">
-          <div class="tb-ico">
-            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9,12 11,14 15,10"/></svg>
-          </div>
-          <div class="tb-txt">
-            <strong>10 Jahre Garantie</strong>
-            <span>Volle Herstellergarantie</span>
-          </div>
-        </div>
-      </div>
-
+  <div class="hc">
+    <div class="hbadge"><span class="hdot"></span>Führender Qualitätsdaten-Anbieter Deutschland</div>
+    <h1>Daten, die<br><span class="hl">Märkte<br>bewegen.</span></h1>
+    <p class="hsub">panadress transformiert präzise Adressdaten, mikrogeografische Insights und KI-basierte Analysen in messbaren Geschäftserfolg — für Deutschland und darüber hinaus.</p>
+    <div class="hacts">
+      <a href="#cta" class="btn btn-p">Jetzt Beratung anfragen</a>
+      <a href="#services" class="btn btn-s">Alle Lösungen entdecken</a>
     </div>
+  </div>
 
-    <!-- QUIZ CARD -->
-    <div class="quiz-wrap">
-      <div class="quiz-card">
+  <div class="hfloat">
+    <div class="fc"><div class="fcn">55 Mio.</div><div class="fcl">B2C Premium-Adressen</div></div>
+    <div class="fc"><div class="fcn">4,3 Mio.</div><div class="fcl">B2B Firmenadressen</div></div>
+    <div class="fc"><div class="fcn">480.000</div><div class="fcl">PoS / PoI Standorte</div></div>
+  </div>
+</section>
 
-        <div class="qc-top">
-          <div class="qc-top-l">
-            <h3>Ihre persoenliche Einspar-Analyse</h3>
-            <p>Kostenlos &#183; 60 Sekunden &#183; Sofortergebnis</p>
-          </div>
-          <div class="pips">
-            <div class="pip on" id="pp0"></div>
-            <div class="pip"    id="pp1"></div>
-            <div class="pip"    id="pp2"></div>
-            <div class="pip"    id="pp3"></div>
-          </div>
-        </div>
-
-        <div class="qprog">
-          <div class="qprog-fill" id="qprogfill" style="width:25%"></div>
-        </div>
-
-        <!-- STEPS -->
-        <div id="qsteps">
-          <div class="qbody">
-
-            <div class="qstep on" id="qs0">
-              <div class="qno">Frage 1 von 4</div>
-              <p class="qq">Wie viele Flaschen kaufen Sie pro Monat?</p>
-              <div class="qopts">
-                <button class="qopt" onclick="pick(this)">1 &#8211; 20<small>Gelegentlich</small></button>
-                <button class="qopt" onclick="pick(this)">20 &#8211; 50<small>Regelmaessig</small></button>
-                <button class="qopt" onclick="pick(this)">50 &#8211; 100<small>Oft</small></button>
-                <button class="qopt" onclick="pick(this)">100+<small>Sehr oft</small></button>
-              </div>
-              <div class="qa"><button class="qb qnx" onclick="qgo(1)">Weiter &rarr;</button></div>
-            </div>
-
-            <div class="qstep" id="qs1">
-              <div class="qno">Frage 2 von 4</div>
-              <p class="qq">Warum kaufen Sie Flaschenwasser?</p>
-              <div class="qopts">
-                <button class="qopt" onclick="pick(this)">Geschmack<small>Leitungswasser schmeckt</small></button>
-                <button class="qopt" onclick="pick(this)">Hygiene<small>Sicherheitsbedenken</small></button>
-                <button class="qopt" onclick="pick(this)">Kalk<small>Hartes Wasser</small></button>
-                <button class="qopt" onclick="pick(this)">Gewohnheit<small>Immer so gemacht</small></button>
-              </div>
-              <div class="qa">
-                <button class="qb qbk" onclick="qgo(0)">&larr;</button>
-                <button class="qb qnx" onclick="qgo(2)">Weiter &rarr;</button>
-              </div>
-            </div>
-
-            <div class="qstep" id="qs2">
-              <div class="qno">Frage 3 von 4</div>
-              <p class="qq">Wie wichtig ist Ihnen Nachhaltigkeit?</p>
-              <div class="qopts">
-                <button class="qopt" onclick="pick(this)">Sehr wichtig<small>Kein Plastik</small></button>
-                <button class="qopt" onclick="pick(this)">Wichtig<small>Moechte reduzieren</small></button>
-                <button class="qopt" onclick="pick(this)">Eher nicht<small>Kein Fokus</small></button>
-                <button class="qopt" onclick="pick(this)">Egal<small>Nur Qualitaet</small></button>
-              </div>
-              <div class="qa">
-                <button class="qb qbk" onclick="qgo(1)">&larr;</button>
-                <button class="qb qnx" onclick="qgo(3)">Weiter &rarr;</button>
-              </div>
-            </div>
-
-            <div class="qstep" id="qs3">
-              <div class="qno">Frage 4 von 4 &#8212; Ihr Ergebnis</div>
-              <p class="qq">Passen Sie Ihre Zahlen an:</p>
-              <div class="msl">
-                <label>Personen im Haushalt <b id="qcPers">2</b></label>
-                <input type="range" min="1" max="6" value="2" oninput="G('qcPers').textContent=this.value;qres()">
-              </div>
-              <div class="msl">
-                <label>Flaschen pro Woche <b id="qcB">10</b></label>
-                <input type="range" min="1" max="60" value="10" oninput="G('qcB').textContent=this.value;qres()">
-              </div>
-              <div class="msl">
-                <label>Preis pro Flasche <b id="qcP">0.50</b> &#8364;</label>
-                <input type="range" min="30" max="200" value="50" oninput="G('qcP').textContent=(this.value/100).toFixed(2);qres()">
-              </div>
-              <div class="mres">
-                <p>Ihre Ersparnis / Jahr</p>
-                <b id="qcR">390 &#8364;</b>
-              </div>
-              <div class="qa">
-                <button class="qb qbk" onclick="qgo(2)">&larr;</button>
-                <button class="qb qnx" onclick="showLead()">Jetzt Ergebnis sehen &rarr;</button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- LEAD FORM -->
-        <div class="qlead" id="qlead">
-          <div class="qc-top" style="background:var(--navy)">
-            <div class="qc-top-l">
-              <h3>Letzter Schritt!</h3>
-              <p>Wohin senden wir Ihre Analyse?</p>
-            </div>
-          </div>
-          <div class="qbody">
-            <p style="color:var(--muted);font-size:13px;margin-bottom:18px;line-height:1.65">
-              Ihre individuelle Einsparrechnung &#8212; kostenlos, kein Spam, jederzeit abmeldbar.
-            </p>
-            <input class="qinp" id="lName" type="text"  placeholder="Ihr vollstaendiger Name"/>
-            <input class="qinp" id="lMail" type="email" placeholder="Ihre E-Mail-Adresse"/>
-            <input class="qinp" id="lTel"  type="tel"   placeholder="Telefonnummer (optional)"/>
-            <button class="btn btn-navy btn-full" style="font-size:15px;padding:16px" onclick="qsub()">
-              Kostenlose Analyse erhalten &rarr;
-            </button>
-            <p style="color:#b0b8cc;font-size:11px;text-align:center;margin-top:12px">
-              Mit dem Absenden stimmen Sie unserer Datenschutzerklaerung zu.
-            </p>
-          </div>
-        </div>
-
-        <!-- SUCCESS -->
-        <div class="qsucc" id="qsucc">
-          <div class="qcheck">
-            <svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>
-          </div>
-          <h3 style="color:var(--navy2);font-size:22px;font-weight:800;margin-bottom:10px">Vielen Dank!</h3>
-          <p style="color:var(--muted);max-width:280px;margin:0 auto 28px;font-size:14.5px;line-height:1.65">
-            Wir melden uns innerhalb von 24 Stunden mit Ihrer persoenlichen Einsparanalyse.
-          </p>
-          <button class="btn btn-navy btn-full" onclick="openCal()">Beratungsgespraech buchen</button>
-          <p style="color:#b0b8cc;font-size:12px;margin-top:12px">Kostenlos &amp; unverbindlich</p>
-        </div>
-
-        <!-- Card footer -->
-        <div class="qfoot">
-          <div class="qft"><svg viewBox="0 0 14 14"><path d="M7 1a6 6 0 100 12A6 6 0 007 1zM7 4v4M7 10h.01"/></svg>100% kostenlos</div>
-          <div class="qft-sep"></div>
-          <div class="qft"><svg viewBox="0 0 14 14"><path d="M12 2l-7 7-3-3"/></svg>Kein Spam</div>
-          <div class="qft-sep"></div>
-          <div class="qft"><svg viewBox="0 0 14 14"><rect x="2" y="3" width="10" height="8" rx="1"/><path d="M5 3V2M9 3V2M2 6h10"/></svg>Antwort in 24h</div>
-        </div>
-
-      </div>
-    </div>
-
+<!-- ═ TRUST ═ -->
+<div id="trust">
+  <p class="tl">Vertrauen von führenden Unternehmen</p>
+  <div class="tlogos">
+    <div class="tlogo">Deutsche Post</div>
+    <div class="tlogo">Axel Springer</div>
+    <div class="tlogo">Allianz</div>
+    <div class="tlogo">ADAC</div>
+    <div class="tlogo">Bertelsmann</div>
+    <div class="tlogo">Volkswagen</div>
+    <div class="tlogo">Burda</div>
   </div>
 </div>
 
-<!-- ═══════ PRODUKT ═══════ -->
-<div class="page" id="pg-produkt" style="background:var(--off)">
-  <div class="wrap">
-    <div class="two-col">
-      <div class="hsw">
-        <img src="images/PROaqua_4700.webp" alt="PROVITEC PROaqua 4700"/>
-        <div class="hs" style="left:66%;top:9%"  onmouseenter="ht(1)" onmouseleave="hh(1)">1<div class="hs-tip lt" id="ht1"><strong>Sedimentfilter</strong><p>Entfernt Rost, Sand und Schwebstoffe ab 5 Mikrometer.</p></div></div>
-        <div class="hs" style="left:66%;top:24%" onmouseenter="ht(2)" onmouseleave="hh(2)">2<div class="hs-tip lt" id="ht2"><strong>Aktivkohle-Block</strong><p>Bindet Chlor, Pestizide und organische Verbindungen zuverlaessig.</p></div></div>
-        <div class="hs" style="left:66%;top:40%" onmouseenter="ht(3)" onmouseleave="hh(3)">3<div class="hs-tip lt" id="ht3"><strong>UF-Membran (0,02 &#181;m)</strong><p>Haelt Bakterien, Viren und Mikroplastik sicher zurueck.</p></div></div>
-        <div class="hs" style="left:66%;top:55%" onmouseenter="ht(4)" onmouseleave="hh(4)">4<div class="hs-tip lt" id="ht4"><strong>Mineralisierung</strong><p>Fuegt Calcium &amp; Magnesium in optimaler Dosierung hinzu.</p></div></div>
-        <div class="hs" style="left:66%;top:70%" onmouseenter="ht(5)" onmouseleave="hh(5)">5<div class="hs-tip lt" id="ht5"><strong>Aktivkohle-Granulat</strong><p>Finale Politur fuer perfekten Geschmack und Geruch.</p></div></div>
-        <div class="hs" style="left:66%;top:84%" onmouseenter="ht(6)" onmouseleave="hh(6)">6<div class="hs-tip lt" id="ht6"><strong>Druckgehaeuse</strong><p>Bis 10 bar druckstabil, TUV-geprueft, lebensmittelecht.</p></div></div>
+<!-- ═ STATS ═ -->
+<section id="stats">
+  <div class="sgrid">
+    <div class="si fu"><div class="sn" data-val="55" data-suf=" Mio.+">0</div><div class="sl">B2C Premium-Adressen mit 300+ Selektionskriterien</div></div>
+    <div class="si fu d1"><div class="sn" data-val="4.3" data-suf=" Mio." data-dec>0</div><div class="sl">B2B Firmenadressen, DSGVO-konform &amp; aktuell</div></div>
+    <div class="si fu d2"><div class="sn" data-val="480" data-suf=".000">0</div><div class="sl">PoS/PoI-Standorte bundesweit inkl. E-Ladestationen</div></div>
+    <div class="si fu d3"><div class="sn" data-val="5000" data-suf="+">0</div><div class="sl">Selektionsmöglichkeiten im B2B-Bereich</div></div>
+  </div>
+</section>
+
+<!-- ═ SERVICES ═ -->
+<section id="services">
+  <div class="sh fu">
+    <div class="stag">Leistungen</div>
+    <h2 class="sti">Drei Säulen für<br>Ihren Datenerfolg</h2>
+    <p class="sd">Von hochwertigen Adressdaten über Direct Mailing bis zu intelligenter Kundenanalyse — das vollständige Spektrum für datengetriebenes Marketing.</p>
+  </div>
+  <div class="svgrid">
+    <div class="sv fu">
+      <div class="sv-glow"></div>
+      <div class="sv-icon">📊</div>
+      <div class="sv-t">panadress DATA</div>
+      <div class="sv-d">Hochwertige B2C- und B2B-Adressdaten sowie Marktdaten für gezielte Ansprache und tiefgreifende Marktanalysen.</div>
+      <div class="sv-list">
+        <div class="sv-item">55 Mio. B2C Premium-Adressen</div>
+        <div class="sv-item">4,3 Mio. B2B Firmenadressen</div>
+        <div class="sv-item">Mikrogeografische Marktdaten</div>
+        <div class="sv-item">PoS/PoI-Datenbank bundesweit</div>
+      </div>
+      <a href="#data-sec" class="sv-link">Mehr erfahren →</a>
+    </div>
+    <div class="sv fu d1">
+      <div class="sv-glow"></div>
+      <div class="sv-icon">✉️</div>
+      <div class="sv-t">Direct Mailing</div>
+      <div class="sv-d">Präzise Zielgruppenansprache durch qualifizierte Adressen für maximale Response-Raten und effiziente Kampagnen.</div>
+      <div class="sv-list">
+        <div class="sv-item">Zielgenaue Selektion &amp; Beratung</div>
+        <div class="sv-item">Multi-Channel Kampagnen</div>
+        <div class="sv-item">B2C &amp; B2B Mailings</div>
+        <div class="sv-item">ManagerPrivat-Datenbank</div>
+      </div>
+      <a href="#mailing-sec" class="sv-link">Mehr erfahren →</a>
+    </div>
+    <div class="sv fu d2">
+      <div class="sv-glow"></div>
+      <div class="sv-icon">🧠</div>
+      <div class="sv-t">Customer Intelligence</div>
+      <div class="sv-d">KI-basierte Score-Modelle, dynamische Personas und Neukundengewinnung für fundierte Entscheidungen.</div>
+      <div class="sv-list">
+        <div class="sv-item">KI-Score-Modelle</div>
+        <div class="sv-item">Dynamische Personas (AI)</div>
+        <div class="sv-item">Neukundenakquise &amp; Lookalike</div>
+        <div class="sv-item">Customer Lifetime Value</div>
+      </div>
+      <a href="#analytics" class="sv-link">Mehr erfahren →</a>
+    </div>
+  </div>
+</section>
+
+<div class="gdiv"></div>
+
+<!-- ═ DATA ═ -->
+<section id="data-sec" style="padding:110px 60px;background:var(--bg)">
+  <div class="sp" style="margin-bottom:0">
+    <div class="sp-img fu">
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=80" alt="Datenanalyse"/>
+      <div class="sp-ov"></div>
+      <div class="sp-badge">
+        <div><div class="sp-bv">55 Mio.+</div><div class="sp-bl">B2C-Adressen</div></div>
+        <div class="sp-bdiv"></div>
+        <div><div class="sp-bv">300+</div><div class="sp-bl">Kriterien</div></div>
+        <div class="sp-bdiv"></div>
+        <div><div class="sp-bv">DSGVO</div><div class="sp-bl">Konform</div></div>
+      </div>
+    </div>
+    <div class="fu d1">
+      <div class="stag">B2C &amp; B2B Adressen</div>
+      <h2 class="sp-ti">Deutschlands umfassendste Adressdatenbank</h2>
+      <p class="sp-d">Ob Privat- oder Geschäftsadressen — panadress liefert DSGVO-konforme Premium-Daten mit höchster Qualität und Aktualität für jede Zielgruppe und jeden Kanal.</p>
+      <div class="fl">
+        <div class="fi"><div class="fi-t">Alter &amp; Kaufkraft</div></div>
+        <div class="fi"><div class="fi-t">Konsuminteressen</div></div>
+        <div class="fi"><div class="fi-t">Regionale Selektion</div></div>
+        <div class="fi"><div class="fi-t">Typologien &amp; Motive</div></div>
+        <div class="fi"><div class="fi-t">Branche &amp; Umsatz</div></div>
+        <div class="fi"><div class="fi-t">Top-Entscheider direkt</div></div>
+      </div>
+      <a href="#cta" class="btn btn-p">Daten anfragen</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═ DIRECT MAILING ═ -->
+<section id="mailing-sec" style="padding:80px 60px 110px;background:var(--bg)">
+  <div class="sp rev">
+    <div class="fu">
+      <div class="stag">Direct Mailing</div>
+      <h2 class="sp-ti">Zielgenaue Kampagnen mit maximaler Wirkung</h2>
+      <p class="sp-d">Mit präzise selektierten panadress-Adressen erreichen Sie exakt die Entscheider und Konsumenten, die für Ihr Angebot relevant sind — physisch und digital.</p>
+      <div class="fl">
+        <div class="fi"><div class="fi-t">Kampagnenberatung</div></div>
+        <div class="fi"><div class="fi-t">Multi-Channel</div></div>
+        <div class="fi"><div class="fi-t">Response-Optimierung</div></div>
+        <div class="fi"><div class="fi-t">ManagerPrivat</div></div>
+      </div>
+      <a href="#cta" class="btn btn-p">Jetzt anfragen</a>
+    </div>
+    <div class="sp-img fu d1">
+      <img src="https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=900&q=80" alt="Direct Mailing"/>
+      <div class="sp-ov"></div>
+    </div>
+  </div>
+</section>
+
+<div class="gdiv"></div>
+
+<!-- ═ ANALYTICS ═ -->
+<section id="analytics">
+  <div class="sh fu">
+    <div class="stag">Customer Intelligence</div>
+    <h2 class="sti">Wissen, das Ihre<br>Kunden wachsen lässt</h2>
+    <p class="sd">panadress transferiert Kundenwissen durch Analytics und mikrogeografische Daten in erfolgreiche Neukundengewinnung.</p>
+  </div>
+  <div class="agrid">
+    <div class="ac feat fu">
+      <div>
+        <div class="ac-ico">🤖</div>
+        <div class="ac-t">KI-basierte Score-Modelle</div>
+        <div class="ac-d" style="margin-bottom:28px">panadress entwickelt individuelle, valide Score-Modelle auf Basis mikrogeografischer Qualitätsdaten. So evaluieren Sie Ihren Kundenstamm und prognostizieren Präferenzen mit hoher Präzision — für gezielteres Marketing und höheren ROI.</div>
+        <a href="#cta" class="btn btn-p">Score-Modell anfragen</a>
       </div>
       <div>
-        <span class="tag">Das System</span>
-        <h2 class="dk">PROaqua 4700 &#8212;<br>5 Stufen. Perfektes Wasser.</h2>
-        <p class="lead dk">Bewegen Sie die Maus ueber die blauen Punkte, um jede Filterstufe zu erkunden. Modernste Technologie im kompakten Untertischschformat.</p>
-        <div class="flist">
-          <div class="fi"><span class="fn">01</span><div class="ft"><strong>Kristallklares Wasser auf Knopfdruck</strong><p>Still oder sprudelnd &#8212; direkt aus dem Hahn. Kein Schleppen, kein Plastikmull, kein Aufwand.</p></div></div>
-          <div class="fi"><span class="fn">02</span><div class="ft"><strong>3.000 Liter pro Kartusche</strong><p>Das entspricht 6.000 Einliterflaschen. Kartuschen-Wechsel in unter 2 Minuten ohne Werkzeug.</p></div></div>
-          <div class="fi"><span class="fn">03</span><div class="ft"><strong>TUV-zertifiziert &amp; Made in Germany</strong><p>Jede Charge im akkreditierten Labor geprueft. Entspricht der deutschen Trinkwasserverordnung.</p></div></div>
-          <div class="fi"><span class="fn">04</span><div class="ft"><strong>Amortisiert sich im ersten Jahr</strong><p>Mit einer Ersparnis von bis zu 70% gegenueber Flaschenwasser rechnet sich das System schnell.</p></div></div>
-        </div>
-        <div style="display:flex;gap:12px;margin-top:32px;flex-wrap:wrap">
-          <button class="btn btn-navy" onclick="openAngebot()">Angebot anfragen</button>
-          <button class="btn btn-outline" onclick="go('einbau')">Zur Installation &rarr;</button>
-        </div>
+        <div class="ac-kpi"><div class="ac-kv">+38%</div><div class="ac-kl">Ø Steigerung Conversion-Rate durch KI-Scoring</div></div>
+        <div class="ac-kpi"><div class="ac-kv">−52%</div><div class="ac-kl">Ø Reduzierung der Streuverluste</div></div>
+        <div class="ac-kpi"><div class="ac-kv">3×</div><div class="ac-kl">Höhere Trefferquote bei Neukundengewinnung</div></div>
       </div>
     </div>
+    <div class="ac fu d1">
+      <div class="ac-ico">👥</div>
+      <div class="ac-t">Dynamische Personas</div>
+      <div class="ac-d">KI-generierte, lebendige Zielgruppenprofile, die sich kontinuierlich an Marktveränderungen anpassen. Verstehen Sie Ihre Kunden tiefer als je zuvor — mit Echtzeit-Insights.</div>
+    </div>
+    <div class="ac fu d2">
+      <div class="ac-ico">🎯</div>
+      <div class="ac-t">Neukundengewinnung</div>
+      <div class="ac-d">Identifizieren Sie Lookalike-Audiences und potenzielle Neukunden mit höchster Kaufwahrscheinlichkeit — präzise, skalierbar und 100% DSGVO-konform.</div>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- ═══════ VORTEILE ═══════ -->
-<div class="page" id="pg-vorteile" style="background:#fff">
-  <div class="wrap">
-    <div style="max-width:660px">
-      <span class="tag">Warum PROVITEC&#174;</span>
-      <h2 class="dk">Was das PROaqua 4700<br>einzigartig macht.</h2>
-      <p class="lead dk">Sechs Gruende, warum tausende Haushalte in Deutschland auf PROVITEC&#174; vertrauen &#8212; und nie wieder zurueck wollen.</p>
-    </div>
-    <div class="vgrid">
-      <div class="vc"><div class="vc-n">01</div><div class="vc-t">Bis zu 70% guenstiger</div><div class="vc-b">Im Vergleich zu Flaschenwasser amortisiert sich das System bereits im ersten Jahr. Ab dann pure Ersparnis.</div></div>
-      <div class="vc"><div class="vc-n">02</div><div class="vc-t">1.200 Flaschen weniger / Jahr</div><div class="vc-b">Eine vierkoepfige Familie vermeidet durchschnittlich 1.200 Plastikflaschen jaehrlich &#8212; messbarer Klimaschutz.</div></div>
-      <div class="vc"><div class="vc-n">03</div><div class="vc-t">99% Keimreduktion</div><div class="vc-b">Die UF-Membran filtert auf 0,02 Mikrometer &#8212; Bakterien, Viren und Mikroplastik haben keine Chance.</div></div>
-      <div class="vc"><div class="vc-n">04</div><div class="vc-t">Laborgetestete Qualitaet</div><div class="vc-b">Jede Charge wird im akkreditierten Labor analysiert und entspricht der deutschen Trinkwasserverordnung.</div></div>
-      <div class="vc"><div class="vc-n">05</div><div class="vc-t">Installation in 30 Minuten</div><div class="vc-b">Kein Klempner, kein Umbau &#8212; unser System ist so konstruiert, dass Sie es selbst installieren koennen.</div></div>
-      <div class="vc"><div class="vc-n">06</div><div class="vc-t">10 Jahre Herstellergarantie</div><div class="vc-b">PROVITEC&#174; steht mit 10 Jahren Garantie und deutschem Kundendienst langfristig hinter jedem Geraet.</div></div>
-    </div>
-    <div style="margin-top:80px">
-      <span class="tag" style="color:var(--muted)">Kundenstimmen</span>
-      <h2 class="dk">Das sagen unsere Kunden.</h2>
-      <div class="tgrid">
-        <div class="tc"><div class="tstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="ttext">"Seit der Installation trinken wir nur noch unser eigenes Wasser. Geschmack besser als jedes Flaschenwasser. Wir sparen 45 &#8364; im Monat &#8212; 540 &#8364; im Jahr."</p><div class="tauth"><div class="tav">MK</div><div><div class="tname">Michael K.</div><div class="tloc">Muenchen, Familie mit 3 Kindern</div></div></div></div>
-        <div class="tc"><div class="tstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="ttext">"Installation in 25 Minuten, kein Handwerker noetig. Kein Kalk, kein Chlorgeschmack. Das Wasser schmeckt wirklich gut &#8212; und kein Plastikmull mehr."</p><div class="tauth"><div class="tav">SB</div><div><div class="tname">Sandra B.</div><div class="tloc">Hamburg, 2-Personen-Haushalt</div></div></div></div>
-        <div class="tc"><div class="tstars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="ttext">"Amortisiert nach 8 Monaten. Seitdem reine Ersparnis. Beste Investition des Jahres &#8212; und kein Schleppen mehr von schweren Wasserkisten."</p><div class="tauth"><div class="tav">TF</div><div><div class="tname">Thomas F.</div><div class="tloc">Frankfurt, Ehepaar</div></div></div></div>
-      </div>
+<!-- ═ GALLERY ═ -->
+<section id="gallery">
+  <p class="gal-t">Datengetriebenes Marketing in Aktion</p>
+  <div style="overflow:hidden">
+    <div class="gal-track">
+      <div class="gi"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
+      <div class="gi"><img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
+      <div class="gi"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
+      <div class="gi"><img src="https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
+      <div class="gi"><img src="https://images.unsplash.com/photo-1543286386-713bdd548da4?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
+      <div class="gi"><img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
+      <div class="gi"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
+      <div class="gi"><img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
+      <div class="gi"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
+      <div class="gi"><img src="https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
+      <div class="gi"><img src="https://images.unsplash.com/photo-1543286386-713bdd548da4?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
+      <div class="gi"><img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=500&q=75" alt=""/><div class="gi-ov"></div></div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ═══════ EINBAU ═══════ -->
-<div class="page" id="pg-einbau" style="background:var(--navy2)">
-  <div class="wrap">
-    <div class="two-col">
-      <div>
-        <img src="images/einbau.png" alt="Einbau" style="width:100%;border-radius:20px;display:block;box-shadow:0 52px 100px rgba(0,0,0,.5)"/>
+<!-- ═ GEOMARKETING ═ -->
+<section id="geo">
+  <div class="geo-g">
+    <div class="fu">
+      <div class="stag">Geomarketing &amp; PoS/PoI</div>
+      <h2 class="sp-ti">Regionale Marktdaten für präzise Standortanalysen</h2>
+      <p class="sp-d" style="margin-bottom:24px">Die panadress PoS/PoI-Datenbank umfasst 480.000 Standorte bundesweit — von Einzelhändlern bis zu E-Ladestationen.</p>
+      <div class="geo-feat">
+        <div class="geo-feat-ico">📍</div>
+        <div><div class="geo-feat-t">480.000+ Standorte</div><div class="geo-feat-d">Vollständige bundesweite Abdeckung aller relevanten Touchpoints</div></div>
       </div>
-      <div>
-        <span class="tag">Installation</span>
-        <h2 class="lt">In 30 Minuten<br>startklar.</h2>
-        <p class="lead lt">Kein Klempner, kein Aufwand &#8212; das PROaqua 4700 ist so konstruiert, dass jeder es selbst installieren kann.</p>
-        <div class="slist">
-          <div class="si"><div class="sn">1</div><div class="stxt"><strong>Kaltwasserhahn absperren</strong><p>Den Hahn unter der Spuele schliessen &#8212; dauert 10 Sekunden.</p></div></div>
-          <div class="si"><div class="sn">2</div><div class="stxt"><strong>T-Stueck einsetzen</strong><p>Das mitgelieferte T-Stueck in die Kaltwasserzuleitung einschrauben.</p></div></div>
-          <div class="si"><div class="sn">3</div><div class="stxt"><strong>Filter montieren</strong><p>Gehaeuse am Schrankboden befestigen &#8212; zwei Schrauben genuegen.</p></div></div>
-          <div class="si"><div class="sn">4</div><div class="stxt"><strong>Filterhahn einbauen</strong><p>Ein kleines Loch in der Spuele &#8212; passend fuer alle gaengigen Modelle.</p></div></div>
-          <div class="si"><div class="sn">5</div><div class="stxt"><strong>Fertig &#8212; Wasser geniessen</strong><p>System kurz spuelen, Qualitaet pruefen &#8212; reines Wasser direkt ab jetzt.</p></div></div>
-        </div>
-        <div style="display:flex;gap:12px;margin-top:32px;flex-wrap:wrap">
-          <button class="btn btn-navy" style="background:#fff;color:var(--navy2)" onclick="openCal()">Termin buchen</button>
-          <button class="btn btn-outline-w" onclick="go('kalkulator')">Ersparnis berechnen</button>
-        </div>
+      <div class="geo-feat">
+        <div class="geo-feat-ico">⚡</div>
+        <div><div class="geo-feat-t">E-Ladeinfrastruktur</div><div class="geo-feat-d">Aktuelle Daten zu Elektromobilitäts-Standorten deutschlandweit</div></div>
+      </div>
+      <div class="geo-feat">
+        <div class="geo-feat-ico">🗺️</div>
+        <div><div class="geo-feat-t">Mikro-geografische Segmentierung</div><div class="geo-feat-d">Kaufkraft, Demografie &amp; Konsumverhalten auf Rasterebene</div></div>
+      </div>
+      <a href="#cta" class="btn btn-p" style="margin-top:32px;display:inline-block">Geomarketing anfragen</a>
+    </div>
+    <div class="geo-map fu d1">
+      <img src="https://images.unsplash.com/photo-1548438294-1ad5d5f4f063?w=700&q=80" alt="Geomarketing"/>
+      <div class="geo-mov"></div>
+      <div class="geo-gov"></div>
+      <div class="geo-dot" style="top:28%;left:44%;width:13px;height:13px;background:var(--y);box-shadow:0 0 22px rgba(245,196,0,.9)"></div>
+      <div class="geo-dot" style="top:52%;left:28%;width:9px;height:9px;background:var(--o);box-shadow:0 0 16px rgba(255,140,0,.9)"></div>
+      <div class="geo-dot" style="top:38%;left:66%;width:11px;height:11px;background:var(--y);box-shadow:0 0 18px rgba(245,196,0,.8)"></div>
+      <div class="geo-dot" style="top:65%;left:58%;width:8px;height:8px;background:var(--o);box-shadow:0 0 14px rgba(255,140,0,.8)"></div>
+      <div class="geo-dot" style="top:22%;left:22%;width:10px;height:10px;background:var(--y);box-shadow:0 0 16px rgba(245,196,0,.7)"></div>
+      <div class="geo-dot" style="top:72%;left:36%;width:7px;height:7px;background:var(--y);box-shadow:0 0 12px rgba(245,196,0,.7)"></div>
+      <div class="geo-badge">
+        <div style="font-size:13px;font-weight:700;color:var(--y)">480.000 Standorte</div>
+        <div style="font-size:11.5px;color:var(--m);margin-top:2px">Vollständige bundesweite PoS/PoI-Abdeckung</div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ═══════ KALKULATOR ═══════ -->
-<div class="page" id="pg-kalkulator" style="background:var(--off)">
-  <div class="wrap">
-    <div class="two-col">
-      <div>
-        <span class="tag">Sparrechner</span>
-        <h2 class="dk">Wie viel kostet Sie<br>Flaschenwasser wirklich?</h2>
-        <p class="lead dk" style="margin-bottom:36px">Die meisten unterschaetzen ihre jaehrlichen Ausgaben massiv. Unser Rechner zeigt Ihnen das volle Bild &#8212; inklusive Schleppaufwand.</p>
-        <img src="images/Provitec-Einsparung.webp" alt="Einsparungsvergleich" style="width:100%;border-radius:18px;display:block;box-shadow:0 24px 64px rgba(12,29,82,.09)"/>
+<!-- ═ ABOUT ═ -->
+<section id="about">
+  <div class="sp">
+    <div class="fu">
+      <div class="stag">Über panadress</div>
+      <h2 class="sp-ti">Münchener Datenkompetenz seit Jahrzehnten</h2>
+      <p class="sp-d">panadress marketing intelligence GmbH gehört zu Deutschlands führenden Marketing-Data-Providern. Mit Sitz in München entwickeln wir präzise Marketingdaten — von regionalen Marktdaten und Mikrogeografie bis zu KI-basierten dynamischen Personas.</p>
+      <p class="sp-d">Wir unterstützen Unternehmen dabei, Marketing und Vertrieb kundenzentrisch auszurichten — für eine stärkere Marktposition und nachhaltiges Wachstum.</p>
+      <div class="about-kpi">
+        <div class="kpi-box"><div class="kpi-v">München</div><div class="kpi-l">Hauptsitz</div></div>
+        <div class="kpi-box"><div class="kpi-v">DSGVO</div><div class="kpi-l">100% konform</div></div>
+        <div class="kpi-box"><div class="kpi-v">DE #1</div><div class="kpi-l">Datenqualität</div></div>
       </div>
-      <div class="kcard">
-        <h3>Ihr persoenliches Sparpotenzial</h3>
-        <div class="rrow"><label>Personen im Haushalt <b id="rP">2</b></label><input type="range" min="1" max="6" value="2" oninput="G('rP').textContent=this.value;fc()"></div>
-        <div class="rrow"><label>Flaschen pro Woche <b id="rB">10</b></label><input type="range" min="1" max="60" value="10" oninput="G('rB').textContent=this.value;fc()"></div>
-        <div class="rrow"><label>Preis pro Flasche <b id="rPr">0.50</b> &#8364;</label><input type="range" min="30" max="250" value="50" oninput="G('rPr').textContent=(this.value/100).toFixed(2);fc()"></div>
-        <div class="rrow"><label>Schleppaufwand / Monat <b id="rM">60</b> Min.</label><input type="range" min="0" max="300" value="60" oninput="G('rM').textContent=this.value;fc()"></div>
-        <div class="kres">
-          <div class="kr"><span>Jahreskosten Flaschenwasser</span><b id="rC">260 &#8364;</b></div>
-          <div class="kr krbig"><span>Ihre Ersparnis mit PROVITEC&#174;</span><b id="rS">195 &#8364;</b></div>
-        </div>
-        <button class="btn btn-navy btn-full" style="margin-top:22px" onclick="openAngebot()">Jetzt Angebot anfragen</button>
-        <p style="color:var(--muted);font-size:12px;text-align:center;margin-top:12px">Kostenlos &amp; unverbindlich &#8212; Rueckmeldung innerhalb 24h</p>
+    </div>
+    <div class="sp-img fu d1">
+      <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80" alt="Team panadress"/>
+      <div class="sp-ov"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═ CTA ═ -->
+<section id="cta">
+  <div class="cta-in">
+    <div class="stag" style="margin-bottom:20px">Kontakt</div>
+    <h2 class="cta-t">Bereit für<br><span class="cta-hl">datengetriebenen<br>Erfolg?</span></h2>
+    <p class="cta-d">Sprechen Sie mit unseren Experten und erfahren Sie, wie panadress Ihre Marketing- und Vertriebsziele mit präzisen Daten erreicht.</p>
+    <div class="cta-form">
+      <input type="email" class="cta-inp" placeholder="Ihre E-Mail-Adresse"/>
+      <button class="btn btn-p" style="white-space:nowrap">Beratung anfragen</button>
+    </div>
+    <div class="cta-note">Nymphenburger Straße 14 · 80335 München · <a href="mailto:info@panadress.de" style="color:var(--m);text-decoration:none">info@panadress.de</a></div>
+  </div>
+</section>
+
+<!-- ═ FOOTER ═ -->
+<footer>
+  <div class="ft">
+    <div>
+      <div class="fl-logo"><b>pan</b>adress</div>
+      <div class="fl-tag">Ihr führender Qualitätsdaten-Anbieter in Deutschland. Präzise Daten für erfolgreiches Marketing und nachhaltiges Wachstum.</div>
+      <div class="fl-addr">Nymphenburger Straße 14<br>80335 München<br>info@panadress.de</div>
+    </div>
+    <div>
+      <div class="fc-t">Leistungen</div>
+      <div class="fc-links">
+        <a href="#data-sec" class="fc-link">panadress DATA</a>
+        <a href="#mailing-sec" class="fc-link">Direct Mailing</a>
+        <a href="#analytics" class="fc-link">Customer Intelligence</a>
+        <a href="#geo" class="fc-link">Geomarketing</a>
+      </div>
+    </div>
+    <div>
+      <div class="fc-t">Daten</div>
+      <div class="fc-links">
+        <a href="#data-sec" class="fc-link">B2C Adressen</a>
+        <a href="#data-sec" class="fc-link">B2B Adressen</a>
+        <a href="#geo" class="fc-link">Marktdaten</a>
+        <a href="#geo" class="fc-link">PoS/PoI-Datenbank</a>
+        <a href="#mailing-sec" class="fc-link">ManagerPrivat</a>
+      </div>
+    </div>
+    <div>
+      <div class="fc-t">Unternehmen</div>
+      <div class="fc-links">
+        <a href="#about" class="fc-link">Über uns</a>
+        <a href="#" class="fc-link">Team</a>
+        <a href="#" class="fc-link">Blog</a>
+        <a href="#cta" class="fc-link">Kontakt</a>
       </div>
     </div>
   </div>
-</div>
-
-<!-- ═══════ KONTAKT ═══════ -->
-<div class="page" id="pg-kontakt" style="background:var(--navy2)">
-  <div class="wrap">
-    <div class="two-col">
-      <div>
-        <span class="tag">Kontakt</span>
-        <h2 class="lt">Bereit fuer sauberes<br>Wasser aus dem Hahn?</h2>
-        <p class="lead lt">Lassen Sie sich kostenlos und unverbindlich beraten. Unser Team meldet sich innerhalb von 24 Stunden.</p>
-        <ul class="kinfo-list">
-          <li class="kinfo-item"><div class="kico">&#128222;</div><div class="kitxt"><strong>Telefon</strong><p>+49 (0) 800 123 456 7</p></div></li>
-          <li class="kinfo-item"><div class="kico">&#128140;</div><div class="kitxt"><strong>E-Mail</strong><p>info@provitec.de</p></div></li>
-          <li class="kinfo-item"><div class="kico">&#128337;</div><div class="kitxt"><strong>Erreichbar</strong><p>Mo&#8211;Fr, 8:00&#8211;18:00 Uhr</p></div></li>
-        </ul>
-        <button class="btn" style="margin-top:36px;background:#fff;color:var(--navy2)" onclick="openCal()">Beratungsgespraech vereinbaren</button>
-      </div>
-      <div class="kform">
-        <h3>Nachricht senden</h3>
-        <p>Wir antworten innerhalb von 24 Stunden.</p>
-        <input  class="kinp" id="kNm" type="text"  placeholder="Ihr vollstaendiger Name"/>
-        <input  class="kinp" id="kMl" type="email" placeholder="Ihre E-Mail-Adresse"/>
-        <input  class="kinp" id="kTl" type="tel"   placeholder="Telefonnummer (optional)"/>
-        <textarea class="kinp" id="kMs" rows="4"   placeholder="Ihre Nachricht oder Frage..."></textarea>
-        <button class="btn" style="width:100%;background:#fff;color:var(--navy2)" onclick="ksub()">Nachricht senden</button>
-      </div>
+  <div class="fb">
+    <div>© 2025 panadress marketing intelligence GmbH · München</div>
+    <div class="fb-leg">
+      <a href="#">Impressum</a>
+      <a href="#">Datenschutz</a>
+      <a href="#">AGB</a>
     </div>
   </div>
-</div>
-
-<!-- MODAL: Angebot -->
-<div class="ov" id="ovA">
-  <div class="mbox">
-    <button class="mx" onclick="G('ovA').classList.remove('on')">&#215;</button>
-    <h2>Angebot anfragen</h2>
-    <p>Individuell, kostenlos &amp; unverbindlich. Wir melden uns innerhalb von 24 Stunden.</p>
-    <input class="qinp" id="mN" type="text"  placeholder="Ihr vollstaendiger Name"/>
-    <input class="qinp" id="mM" type="email" placeholder="Ihre E-Mail-Adresse"/>
-    <input class="qinp" id="mT" type="tel"   placeholder="Ihre Telefonnummer"/>
-    <button class="btn btn-navy btn-full" style="margin-top:10px;font-size:14.5px;padding:15px" onclick="msub()">Jetzt Angebot anfordern &rarr;</button>
-    <p style="color:#b0b8cc;font-size:11px;text-align:center;margin-top:12px">Datenschutz garantiert. Kein Spam.</p>
-  </div>
-</div>
-
-<!-- MODAL: Kalender -->
-<div class="ov" id="ovC">
-  <div class="mbox">
-    <button class="mx" onclick="G('ovC').classList.remove('on')">&#215;</button>
-    <h2>Termin vereinbaren</h2>
-    <p>Kostenloses Beratungsgespraech &#8212; telefonisch oder vor Ort.</p>
-    <div class="cph">Kalender-Integration folgt<br><small style="opacity:.5">(Calendly / Cal.com)</small></div>
-    <button class="btn btn-outline btn-full" style="margin-top:14px" onclick="G('ovC').classList.remove('on')">Schliessen</button>
-  </div>
-</div>
+</footer>
 
 <script>
-const G = x => document.getElementById(x);
+// NAV
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('up',scrollY>30),{passive:true});
 
-function go(p){
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('on'));
-  document.querySelectorAll('.nt[data-p]').forEach(el => el.classList.toggle('on', el.dataset.p === p));
-  const pg = G('pg-' + p);
-  if(pg){ pg.classList.add('on'); pg.scrollTop = 0; }
+// PARTICLE CANVAS
+const cv=document.getElementById('pc'),cx=cv.getContext('2d');
+let W,H,pts=[];
+function rsz(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight}
+rsz();window.addEventListener('resize',rsz,{passive:true});
+class Pt{
+  constructor(){this.r()}
+  r(){this.x=Math.random()*W;this.y=Math.random()*H;this.s=Math.random()*1.4+.4;this.vx=(Math.random()-.5)*.28;this.vy=(Math.random()-.5)*.28;this.a=Math.random()*.35+.08;this.c=Math.random()>.5?'245,196,0':'255,140,0'}
+  u(){this.x+=this.vx;this.y+=this.vy;if(this.x<0||this.x>W||this.y<0||this.y>H)this.r()}
+  d(){cx.beginPath();cx.arc(this.x,this.y,this.s,0,Math.PI*2);cx.fillStyle=`rgba(${this.c},${this.a})`;cx.fill()}
 }
-
-const progPct = [25, 50, 75, 100];
-function qgo(n){
-  document.querySelectorAll('.qstep').forEach(s => s.classList.remove('on'));
-  G('qs' + n).classList.add('on');
-  [0,1,2,3].forEach(i => G('pp' + i).classList.toggle('on', i <= n));
-  G('qprogfill').style.width = progPct[n] + '%';
+for(let i=0;i<100;i++)pts.push(new Pt());
+function anim(){
+  cx.clearRect(0,0,W,H);
+  for(let i=0;i<pts.length;i++){
+    pts[i].u();pts[i].d();
+    for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<90){cx.beginPath();cx.moveTo(pts[i].x,pts[i].y);cx.lineTo(pts[j].x,pts[j].y);cx.strokeStyle=`rgba(245,196,0,${.055*(1-d/90)})`;cx.lineWidth=.5;cx.stroke()}
+    }
+  }
+  requestAnimationFrame(anim)
 }
+anim();
 
-function pick(el){
-  el.closest('.qopts').querySelectorAll('.qopt').forEach(o => o.classList.remove('sel'));
-  el.classList.add('sel');
-}
-
-function showLead(){
-  G('qsteps').style.display = 'none';
-  G('qlead').classList.add('on');
-}
-
-function qsub(){
-  if(!G('lName').value.trim() || !G('lMail').value.trim()){ alert('Bitte Name und E-Mail angeben.'); return; }
-  G('qlead').classList.remove('on');
-  G('qsucc').classList.add('on');
-}
-
-function qres(){
-  const b = parseInt(G('qcB').textContent) || 10;
-  const p = parseFloat(G('qcP').textContent) || 0.5;
-  G('qcR').innerHTML = Math.round(b * 52 * p * .75) + ' &#8364;';
-}
-
-function fc(){
-  const b = parseInt(G('rB').textContent) || 10;
-  const p = parseFloat(G('rPr').textContent) || 0.5;
-  const c = Math.round(b * 52 * p);
-  G('rC').innerHTML = c + ' &#8364;';
-  G('rS').innerHTML = Math.round(c * .75) + ' &#8364;';
+// COUNTER
+function counter(el,target,suf,dec){
+  const dur=1800,s=performance.now();
+  (function u(now){
+    const p=Math.min((now-s)/dur,1),e=1-Math.pow(1-p,3),v=e*target;
+    el.textContent=(dec?v.toFixed(1):Math.round(v))+suf;
+    if(p<1)requestAnimationFrame(u);
+  })(s);
 }
 
-function ht(n){ G('ht'+n).classList.add('vis') }
-function hh(n){ G('ht'+n).classList.remove('vis') }
-function openAngebot(){ G('ovA').classList.add('on') }
-function openCal(){ G('ovA').classList.remove('on'); G('ovC').classList.add('on') }
-function msub(){
-  if(!G('mN').value.trim() || !G('mM').value.trim()){ alert('Bitte Name und E-Mail angeben.'); return; }
-  G('ovA').classList.remove('on');
-  alert('Danke! Wir melden uns innerhalb von 24 Stunden.');
-}
-function ksub(){
-  if(!G('kNm').value.trim() || !G('kMl').value.trim()){ alert('Bitte Name und E-Mail angeben.'); return; }
-  alert('Nachricht gesendet. Wir antworten innerhalb von 24 Stunden.');
-}
+// OBSERVER
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(!en.isIntersecting)return;
+    en.target.classList.add('vis');
+    const sn=en.target.querySelector?.('.sn[data-val]');
+    if(sn&&!sn._done){
+      sn._done=true;
+      counter(sn,parseFloat(sn.dataset.val),sn.dataset.suf,sn.hasAttribute('data-dec'));
+    }
+  });
+},{threshold:.15});
+document.querySelectorAll('.fu,.si').forEach(el=>obs.observe(el));
 </script>
 </body>
 </html>
