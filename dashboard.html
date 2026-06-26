@@ -729,31 +729,136 @@ select.inp option { background: var(--s2); }
 
     <!-- ══ ANGEBOT ══ -->
     <div class="panel" id="panel-offer">
-      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Angebots-Builder</div><div class="ph-sub">Pakete auswählen, Preis berechnen, Text kopieren</div></div>
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Services & Angebots-Builder</div><div class="ph-sub">Services auswählen, Preis berechnen, Angebotstext kopieren</div></div>
       <div class="p" style="padding-top:0;">
+
+        <!-- SERVICE KARTEN -->
+        <div class="g3" style="margin-bottom:20px;">
+
+          <!-- Service 1 -->
+          <div class="card" style="border-top:2px solid var(--accent);position:relative;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Service 1</div>
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Lead-Eingang Automation</div>
+            <div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:16px;">
+              Formular auf der Landingpage wird ausgefüllt &rarr; Kunde bekommt sofort eine Bestätigungsmail &rarr; du bekommst intern eine Benachrichtigung mit allen Daten &rarr; Lead landet automatisch in Google Sheets oder CRM.<br><br>
+              <span style="color:var(--text);font-weight:600;">Das braucht jeder Betrieb, der online Anfragen bekommt.</span>
+            </div>
+            <div style="background:var(--s2);border-radius:var(--r);padding:12px;margin-bottom:12px;">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;">Was du lieferst</div>
+              <div style="font-size:12px;color:var(--muted2);line-height:2;">
+                &rarr; n8n Webhook der die Formulardaten empfängt<br>
+                &rarr; Automatische Bestätigungsmail an den Kunden<br>
+                &rarr; Sofort-Benachrichtigung an den Inhaber<br>
+                &rarr; Eintrag in Google Sheets (Name, Mail, Tel, Datum, Quelle)
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:18px;font-weight:900;color:var(--gold2);">800 – 1.200 €</div>
+                <div style="font-size:11px;color:var(--muted);">einmalig + optional 200 €/Mo Retainer</div>
+              </div>
+              <div style="font-size:11px;color:var(--muted);text-align:right;">Lieferzeit<br><span style="color:var(--text);font-weight:700;">2–3 Tage</span></div>
+            </div>
+          </div>
+
+          <!-- Service 2 -->
+          <div class="card" style="border-top:2px solid var(--green);position:relative;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px;">Service 2</div>
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Follow-up Sequenz</div>
+            <div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:16px;">
+              Lead kommt rein &rarr; Tag 0 Bestätigung &rarr; Tag 1 erste Follow-up-Mail &rarr; Tag 3 Social Proof &rarr; Tag 7 letzter Reminder. Kein manuelles Nachfassen mehr.<br><br>
+              <span style="color:var(--text);font-weight:600;">Hat der Lead geantwortet oder gebucht, stoppt die Sequenz automatisch.</span>
+            </div>
+            <div style="background:var(--s2);border-radius:var(--r);padding:12px;margin-bottom:12px;">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;">Die 4 Mails</div>
+              <div style="font-size:12px;color:var(--muted2);line-height:2;">
+                <span style="color:var(--accent);font-weight:600;">Tag 0</span> &rarr; Sofortige Bestätigung nach Eintrag<br>
+                <span style="color:var(--accent);font-weight:600;">Tag 1</span> &rarr; "Haben Sie noch Fragen?" + Mehrwert<br>
+                <span style="color:var(--accent);font-weight:600;">Tag 3</span> &rarr; Kundenstimme + konkretes Angebot<br>
+                <span style="color:var(--accent);font-weight:600;">Tag 7</span> &rarr; Letzter Reminder — Termin oder Angebot
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:18px;font-weight:900;color:var(--gold2);">1.000 – 1.800 €</div>
+                <div style="font-size:11px;color:var(--muted);">einmalig + optional 300 €/Mo Retainer</div>
+              </div>
+              <div style="font-size:11px;color:var(--muted);text-align:right;">Lieferzeit<br><span style="color:var(--text);font-weight:700;">3–5 Tage</span></div>
+            </div>
+          </div>
+
+          <!-- Service 3 -->
+          <div class="card" style="border-top:2px solid var(--gold);position:relative;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Service 3</div>
+            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Wöchentlicher Performance-Report</div>
+            <div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:16px;">
+              Dein Kunde bekommt jeden Montag automatisch eine Übersicht: wie viele Leads diese Woche, woher, wer hat auf Follow-up reagiert, wer ist noch offen.<br><br>
+              <span style="color:var(--text);font-weight:600;">Der Kunde sieht schwarz auf weiß, was sein System leistet — das rechtfertigt den Retainer monatlich neu.</span>
+            </div>
+            <div style="background:var(--s2);border-radius:var(--r);padding:12px;margin-bottom:12px;">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;">Inhalt des Reports</div>
+              <div style="font-size:12px;color:var(--muted2);line-height:2;">
+                &rarr; Leads diese Woche: Anzahl, Namen, Quelle<br>
+                &rarr; Conversion: Wer hat auf Follow-up reagiert?<br>
+                &rarr; Offene Leads: Wer hat noch nicht geantwortet?<br>
+                &rarr; KPI-Übersicht aus Google Sheets<br>
+                &rarr; Versand: HTML-Mail, automatisch, jeden Montag 8 Uhr
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:18px;font-weight:900;color:var(--gold2);">800 – 1.500 €</div>
+                <div style="font-size:11px;color:var(--muted);">einmalig + optional 250 €/Mo Retainer</div>
+              </div>
+              <div style="font-size:11px;color:var(--muted);text-align:right;">Lieferzeit<br><span style="color:var(--text);font-weight:700;">2–3 Tage</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RETAINER ERKLÄRUNG -->
+        <div class="card" style="margin-bottom:20px;border:1px solid rgba(201,168,76,.25);background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(201,168,76,.02));">
+          <div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;">
+            <div style="background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);border-radius:var(--r);padding:14px 18px;white-space:nowrap;text-align:center;">
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:4px;">Retainer</div>
+              <div style="font-size:22px;font-weight:900;color:var(--gold2);">300–500 €</div>
+              <div style="font-size:11px;color:var(--muted);">pro Monat</div>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--gold2);margin-bottom:8px;">Was ist ein Retainer — und warum zahlt der Kunde das?</div>
+              <div style="font-size:12px;color:var(--muted2);line-height:1.9;">
+                Ein Retainer ist eine monatliche Pauschalgebühr, die der Kunde ab Monat 2 zahlt — dafür, dass du das System weiter betreust, optimierst und am Laufen hältst.<br><br>
+                <span style="color:var(--text);font-weight:600;">Was du dafür lieferst:</span> A/B-Tests auf der Landingpage, Anpassung der Follow-up-Texte, neue Leads-Quellen einbinden, Report auswerten, technische Pflege. Im Schnitt 2–4 Stunden Arbeit pro Monat pro Kunde.<br><br>
+                <span style="color:var(--text);font-weight:600;">Warum zahlt der Kunde?</span> Weil das System läuft und Leads bringt — er zahlt nicht für deine Zeit, sondern für das Ergebnis. Der wöchentliche Report (Service 3) macht das jeden Montag sichtbar. Kein Report = kein Beweis = kein Retainer. Mit Report = klarer ROI = Retainer selbstverständlich.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ANGEBOTS-BUILDER -->
         <div class="g2">
           <div class="card">
-            <div class="card-title">Pakete</div>
-            <div class="price-row"><div class="price-name">Starter Landingpage<small>1 Seite, Formular, 5 Tage</small></div><div class="price-amt">1.500 €</div><div class="toggle" data-val="1500" onclick="tp(this)"></div></div>
-            <div class="price-row"><div class="price-name">Performance Landingpage<small>Quiz + Kalkulator, 7 Tage</small></div><div class="price-amt">3.500 €</div><div class="toggle on" data-val="3500" onclick="tp(this)"></div></div>
-            <div class="price-row"><div class="price-name">Automation 1 — Lead-Eingang<small>Webhook, Mail, Google Sheets</small></div><div class="price-amt">800 €</div><div class="toggle on" data-val="800" onclick="tp(this)"></div></div>
-            <div class="price-row"><div class="price-name">Automation 2 — Follow-up Sequenz<small>4-Mail-Serie, 7 Tage Abstand</small></div><div class="price-amt">1.000 €</div><div class="toggle on" data-val="1000" onclick="tp(this)"></div></div>
-            <div class="price-row"><div class="price-name">Automation 3 — Performance-Report<small>Wöchentlicher KPI-Report per Mail</small></div><div class="price-amt">800 €</div><div class="toggle" data-val="800" onclick="tp(this)"></div></div>
-            <div class="price-row"><div class="price-name">Monatlicher Retainer<small>Updates, A/B-Tests, Support</small></div><div class="price-amt">500 €/Mo</div><div class="toggle on" data-val="500" data-mo="1" onclick="tp(this)"></div></div>
-            <div class="total-row"><div><div class="total-lbl">Gesamtpreis (netto)</div><div style="font-size:11px;color:var(--muted);margin-top:2px;" id="moNote">+ 500 €/Monat ab Monat 2</div></div><div class="total-val" id="offerTotal">5.300 €</div></div>
+            <div class="card-title">Angebots-Builder — Pakete auswählen</div>
+            <div class="price-row"><div class="price-name">Starter Landingpage<small>1 Seite, Kontaktformular, 5 Tage Lieferzeit</small></div><div class="price-amt">1.500 €</div><div class="toggle" data-val="1500" onclick="tp(this)"></div></div>
+            <div class="price-row"><div class="price-name">Performance Landingpage<small>Quiz-Funnel + Kalkulator + Social Proof, 7 Tage</small></div><div class="price-amt">3.500 €</div><div class="toggle on" data-val="3500" onclick="tp(this)"></div></div>
+            <div class="price-row"><div class="price-name">Service 1 — Lead-Eingang Automation<small>Webhook &rarr; Bestätigungsmail &rarr; Benachrichtigung &rarr; Sheets</small></div><div class="price-amt">1.000 €</div><div class="toggle on" data-val="1000" onclick="tp(this)"></div></div>
+            <div class="price-row"><div class="price-name">Service 2 — Follow-up Sequenz<small>4 automatische Mails: Tag 0, 1, 3, 7 &rarr; stoppt bei Antwort</small></div><div class="price-amt">1.400 €</div><div class="toggle on" data-val="1400" onclick="tp(this)"></div></div>
+            <div class="price-row"><div class="price-name">Service 3 — Wöchentlicher Performance-Report<small>Automatischer KPI-Bericht jeden Montag per Mail</small></div><div class="price-amt">1.200 €</div><div class="toggle" data-val="1200" onclick="tp(this)"></div></div>
+            <div class="price-row"><div class="price-name">Monatlicher Retainer<small>Pflege, A/B-Tests, Optimierungen, technischer Support</small></div><div class="price-amt">500 €/Mo</div><div class="toggle on" data-val="500" data-mo="1" onclick="tp(this)"></div></div>
+            <div class="total-row"><div><div class="total-lbl">Gesamtpreis (netto, einmalig)</div><div style="font-size:11px;color:var(--muted);margin-top:2px;" id="moNote">+ 500 €/Monat ab Monat 2</div></div><div class="total-val" id="offerTotal">5.900 €</div></div>
           </div>
           <div class="card">
-            <div class="card-title">Vorschau</div>
+            <div class="card-title">Angebots-Vorschau</div>
             <div style="background:var(--s2);border-radius:var(--r);padding:16px;font-size:12px;line-height:2;margin-bottom:12px;">
               <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);">Angebot — Flowmatic</div>
               <div id="offerLines" style="color:var(--muted2);"></div>
               <div class="div"></div>
               <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">Gesamt (netto)</span><span style="color:var(--gold2);font-weight:700;" id="offerTotalB">0 €</span></div>
-              <div style="font-size:10px;color:var(--muted);margin-top:6px;">zzgl. 19 % MwSt. &middot; 50 % Anzahlung &middot; Zahlungsziel 14 Tage</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:6px;">zzgl. 19 % MwSt. &middot; 50 % Anzahlung bei Auftragserteilung &middot; Zahlungsziel 14 Tage</div>
             </div>
             <button class="btn btn-primary" style="width:100%;" onclick="copyOffer()">Angebotstext kopieren</button>
           </div>
         </div>
+
       </div>
     </div>
 
