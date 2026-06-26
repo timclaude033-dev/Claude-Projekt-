@@ -840,63 +840,88 @@ select.inp option { background: var(--s2); }
             <div class="card-title" style="margin-bottom:12px;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted2);">Paket auswählen</div>
 
             <!-- Paket 1 -->
-            <div class="pkg-card" id="pkg1" onclick="selectPkg(1)" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:18px;margin-bottom:10px;cursor:pointer;transition:all .15s;position:relative;">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <div class="pkg-radio" id="pkgr1" style="width:16px;height:16px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
+            <div id="pkg1" onclick="selectPkg(1)" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:8px;cursor:pointer;transition:all .15s;position:relative;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div id="pkgr1" style="width:15px;height:15px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
                 <div style="font-size:13px;font-weight:800;color:var(--text);">Paket 1 — Lead-Eingang</div>
-                <div style="margin-left:auto;font-size:16px;font-weight:900;color:var(--gold2);">2.500 €</div>
+                <div style="margin-left:auto;font-size:15px;font-weight:900;color:var(--gold2);">2.500 €</div>
               </div>
-              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:26px;">
-                <span style="color:var(--accent);">+</span> Starter Landingpage (1 Seite, Formular)<br>
-                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Mail an Kunden &rarr; Benachrichtigung &rarr; Google Sheets<br>
-                <span style="color:var(--gold);">+</span> Retainer 200 €/Mo ab Monat 2
+              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:25px;">
+                <span style="color:var(--accent);">+</span> Starter Landingpage (1 Seite, Kontaktformular)<br>
+                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Bestätigungsmail &rarr; Benachrichtigung &rarr; Google Sheets<br>
+                <span style="color:var(--muted);">+</span> Retainer 200 €/Mo ab Monat 2 (optional)
               </div>
             </div>
 
             <!-- Paket 2 -->
-            <div class="pkg-card" id="pkg2" onclick="selectPkg(2)" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:18px;margin-bottom:10px;cursor:pointer;transition:all .15s;position:relative;">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <div class="pkg-radio" id="pkgr2" style="width:16px;height:16px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
+            <div id="pkg2" onclick="selectPkg(2)" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:8px;cursor:pointer;transition:all .15s;position:relative;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div id="pkgr2" style="width:15px;height:15px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
                 <div style="font-size:13px;font-weight:800;color:var(--text);">Paket 2 — Lead-Eingang + Follow-up</div>
-                <div style="margin-left:auto;font-size:16px;font-weight:900;color:var(--gold2);">4.500 €</div>
+                <div style="margin-left:auto;font-size:15px;font-weight:900;color:var(--gold2);">4.500 €</div>
               </div>
-              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:26px;">
+              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:25px;">
                 <span style="color:var(--accent);">+</span> Performance Landingpage (Quiz-Funnel + Kalkulator)<br>
-                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Mail &rarr; Benachrichtigung &rarr; Google Sheets<br>
+                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Bestätigungsmail &rarr; Benachrichtigung &rarr; Google Sheets<br>
                 <span style="color:var(--accent);">+</span> Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7 &rarr; stoppt bei Antwort<br>
-                <span style="color:var(--gold);">+</span> Retainer 350 €/Mo ab Monat 2
+                <span style="color:var(--muted);">+</span> Retainer 350 €/Mo ab Monat 2 (optional)
               </div>
             </div>
 
             <!-- Paket 3 -->
-            <div class="pkg-card" id="pkg3" onclick="selectPkg(3)" style="background:var(--s1);border:1px solid rgba(201,168,76,.3);border-radius:var(--r2);padding:18px;margin-bottom:10px;cursor:pointer;transition:all .15s;position:relative;">
-              <div style="position:absolute;top:-1px;right:16px;background:var(--gold);color:var(--bg);font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:0 0 6px 6px;">Empfohlen</div>
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-                <div class="pkg-radio" id="pkgr3" style="width:16px;height:16px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
-                <div style="font-size:13px;font-weight:800;color:var(--text);">Paket 3 — Komplett-System</div>
-                <div style="margin-left:auto;font-size:16px;font-weight:900;color:var(--gold2);">6.200 €</div>
+            <div id="pkg3" onclick="selectPkg(3)" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:8px;cursor:pointer;transition:all .15s;position:relative;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div id="pkgr3" style="width:15px;height:15px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
+                <div style="font-size:13px;font-weight:800;color:var(--text);">Paket 3 — Komplett mit Report</div>
+                <div style="margin-left:auto;font-size:15px;font-weight:900;color:var(--gold2);">6.200 €</div>
               </div>
-              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:26px;">
+              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:25px;">
                 <span style="color:var(--accent);">+</span> Performance Landingpage (Quiz-Funnel + Kalkulator)<br>
-                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Mail &rarr; Benachrichtigung &rarr; Google Sheets<br>
+                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Bestätigungsmail &rarr; Benachrichtigung &rarr; Google Sheets<br>
                 <span style="color:var(--accent);">+</span> Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7<br>
-                <span style="color:var(--accent);">+</span> Service 3: Wöchentlicher Performance-Report jeden Montag<br>
-                <span style="color:var(--gold);">+</span> Retainer 500 €/Mo ab Monat 2
+                <span style="color:var(--accent);">+</span> Service 3: Wöchentlicher Performance-Report (jeden Montag per Mail)<br>
+                <span style="color:var(--muted);">+</span> Retainer 500 €/Mo ab Monat 2 (optional)
+              </div>
+            </div>
+
+            <!-- Paket 4 -->
+            <div id="pkg4" onclick="selectPkg(4)" style="background:var(--s1);border:2px solid var(--gold);border-radius:var(--r2);padding:16px 18px;margin-bottom:8px;cursor:pointer;transition:all .15s;position:relative;">
+              <div style="position:absolute;top:-1px;right:16px;background:var(--gold);color:var(--bg);font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:0 0 6px 6px;">Gesamtsystem</div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div id="pkgr4" style="width:15px;height:15px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
+                <div style="font-size:13px;font-weight:800;color:var(--gold2);">Paket 4 — Gesamtsystem + Performance Pricing</div>
+                <div style="margin-left:auto;font-size:15px;font-weight:900;color:var(--gold2);">6.200 €</div>
+              </div>
+              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:25px;">
+                <span style="color:var(--accent);">+</span> Performance Landingpage (Quiz-Funnel + Kalkulator)<br>
+                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Bestätigungsmail &rarr; Benachrichtigung &rarr; Google Sheets<br>
+                <span style="color:var(--accent);">+</span> Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7<br>
+                <span style="color:var(--accent);">+</span> Service 3: Wöchentlicher Performance-Report (jeden Montag per Mail)<br>
+                <span style="color:var(--green);">+</span> Performance Pricing: <span style="color:var(--text);font-weight:700;">15 € pro qualifiziertem Lead</span> statt Retainer<br>
+                <span style="color:var(--muted);font-style:italic;">&nbsp;&nbsp; Kein Lead = keine Zusatzkosten. Mehr Leads = mehr Einnahmen für dich.</span>
+              </div>
+              <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:16px;padding-left:25px;">
+                <div style="font-size:11px;color:var(--muted);">Leads/Mo anpassen:</div>
+                <input type="number" id="ppLeads" value="20" min="1" max="500"
+                  onclick="event.stopPropagation()"
+                  oninput="event.stopPropagation();updatePP()"
+                  style="width:70px;background:var(--s3);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:5px 8px;font-size:12px;outline:none;">
+                <div style="font-size:12px;color:var(--muted);">× 15 € = <span id="ppMonthly" style="color:var(--green);font-weight:700;">300 €/Mo</span></div>
               </div>
             </div>
           </div>
 
           <div class="card">
             <div class="card-title">Angebots-Vorschau</div>
-            <div style="background:var(--s2);border-radius:var(--r);padding:18px;font-size:12px;line-height:1.9;margin-bottom:12px;min-height:220px;">
+            <div style="background:var(--s2);border-radius:var(--r);padding:18px;font-size:12px;line-height:1.9;margin-bottom:12px;min-height:240px;">
               <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);">Angebot — Flowmatic</div>
               <div id="offerLines" style="color:var(--muted2);">Bitte Paket auswählen...</div>
-              <div id="offerRetainer" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">
-                Monatlicher Retainer ab Monat 2: <span id="retainerAmt" style="color:var(--gold2);font-weight:700;"></span>
+              <div id="offerRetainer" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;">
+                <span id="retainerAmt" style="color:var(--gold2);font-weight:700;"></span>
               </div>
               <div class="div"></div>
               <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="color:var(--muted);">Einmaliger Setup-Preis (netto)</span>
+                <span style="color:var(--muted);">Setup-Preis (netto, einmalig)</span>
                 <span style="color:var(--gold2);font-weight:800;font-size:15px;" id="offerTotalB">—</span>
               </div>
               <div style="font-size:10px;color:var(--muted);margin-top:8px;">zzgl. 19 % MwSt. &middot; 50 % Anzahlung bei Auftragserteilung &middot; Zahlungsziel 14 Tage</div>
@@ -1270,6 +1295,19 @@ const PAKETE = {
       'Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7 → stoppt automatisch bei Antwort',
       'Service 3: Wöchentlicher Performance-Report (Leads, Conversions, offene Kontakte)',
     ]
+  },
+  4: {
+    name: 'Paket 4 — Gesamtsystem + Performance Pricing',
+    price: 6200,
+    performancePricing: true,
+    pricePerLead: 15,
+    items: [
+      'Performance Landingpage (Quiz-Funnel + Kalkulator)',
+      'Service 1: Formular → Bestätigungsmail → Inhaber-Benachrichtigung → Google Sheets',
+      'Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7 → stoppt automatisch bei Antwort',
+      'Service 3: Wöchentlicher Performance-Report (Leads, Conversions, offene Kontakte)',
+      'Performance Pricing: 15 € pro qualifiziertem Lead — kein Retainer',
+    ]
   }
 };
 
@@ -1277,17 +1315,19 @@ let selectedPkg = null;
 
 function selectPkg(n) {
   selectedPkg = n;
-  [1,2,3].forEach(i => {
+  [1,2,3,4].forEach(i => {
     const card = document.getElementById('pkg'+i);
     const radio = document.getElementById('pkgr'+i);
+    if (!card) return;
+    const isGold = i === 3 || i === 4;
     if (i === n) {
-      card.style.borderColor = i === 3 ? 'var(--gold)' : 'var(--accent)';
+      card.style.borderColor = isGold ? 'var(--gold)' : 'var(--accent)';
       card.style.background = 'var(--s2)';
-      radio.style.borderColor = i === 3 ? 'var(--gold)' : 'var(--accent)';
-      radio.style.background = i === 3 ? 'var(--gold)' : 'var(--accent)';
-      radio.style.boxShadow = i === 3 ? '0 0 8px var(--gold)' : '0 0 8px var(--accent)';
+      radio.style.borderColor = isGold ? 'var(--gold)' : 'var(--accent)';
+      radio.style.background = isGold ? 'var(--gold)' : 'var(--accent)';
+      radio.style.boxShadow = isGold ? '0 0 8px var(--gold)' : '0 0 8px var(--accent)';
     } else {
-      card.style.borderColor = i === 3 ? 'rgba(201,168,76,.3)' : 'var(--border)';
+      card.style.borderColor = isGold ? 'rgba(201,168,76,.3)' : 'var(--border)';
       card.style.background = 'var(--s1)';
       radio.style.borderColor = 'var(--muted)';
       radio.style.background = 'transparent';
@@ -1300,19 +1340,38 @@ function selectPkg(n) {
   ).join('');
   document.getElementById('offerLines').innerHTML = lines;
   document.getElementById('offerTotalB').textContent = p.price.toLocaleString('de-DE') + ' €';
-  document.getElementById('offerRetainer').style.display = 'block';
-  document.getElementById('retainerAmt').textContent = p.retainer.toLocaleString('de-DE') + ' €/Monat';
+  if (p.performancePricing) {
+    document.getElementById('offerRetainer').style.display = 'block';
+    document.getElementById('retainerAmt').textContent = 'Performance Pricing: ' + p.pricePerLead + ' €/Lead statt Retainer';
+    updatePP();
+  } else {
+    document.getElementById('offerRetainer').style.display = 'block';
+    document.getElementById('retainerAmt').textContent = p.retainer.toLocaleString('de-DE') + ' €/Monat';
+  }
+}
+
+function updatePP() {
+  const leads = parseInt(document.getElementById('ppLeads').value) || 0;
+  const monthly = leads * 15;
+  document.getElementById('ppMonthly').textContent = monthly.toLocaleString('de-DE') + ' €/Mo';
+  if (selectedPkg === 4) {
+    document.getElementById('retainerAmt').textContent = 'Performance Pricing: 15 €/Lead → ca. ' + monthly.toLocaleString('de-DE') + ' €/Monat bei ' + leads + ' Leads';
+  }
 }
 
 function copyOffer() {
   if (!selectedPkg) { alert('Bitte zuerst ein Paket auswählen.'); return; }
   const p = PAKETE[selectedPkg];
   const items = p.items.map(i => '- ' + i).join('\n');
+  const leads = parseInt((document.getElementById('ppLeads') || {}).value) || 20;
+  const recurring = p.performancePricing
+    ? 'Performance Pricing: ' + p.pricePerLead + ' € pro qualifiziertem Lead (ca. ' + (leads * p.pricePerLead).toLocaleString('de-DE') + ' €/Monat bei ' + leads + ' Leads)'
+    : 'Monatlicher Retainer ab Monat 2: ' + p.retainer.toLocaleString('de-DE') + ' €/Monat';
   const txt =
     'ANGEBOT — FLOWMATIC\n\n' +
     p.name + '\n\n' +
     'Leistungsumfang:\n' + items + '\n\n' +
-    'Monatlicher Retainer ab Monat 2: ' + p.retainer.toLocaleString('de-DE') + ' €/Monat\n\n' +
+    recurring + '\n\n' +
     'Setup-Preis (netto): ' + p.price.toLocaleString('de-DE') + ' €\n' +
     'zzgl. 19 % MwSt.\n' +
     '50 % Anzahlung bei Auftragserteilung\n' +
