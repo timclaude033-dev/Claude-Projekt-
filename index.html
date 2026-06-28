@@ -4,367 +4,423 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Flowmatic — Automatisierte Lead-Systeme für Schweizer Immobilienmakler</title>
-<meta name="description" content="Flowmatic baut Schweizer Immobilienmaklern vollautomatische Lead-Systeme und KI-Tools — von der ersten Anfrage bis zum fertigen Exposé. In 7 Tagen live.">
+<meta name="description" content="Flowmatic baut Schweizer Immobilienmaklern vollautomatische Lead-Systeme und KI-Tools. Von der ersten Anfrage bis zum fertigen Exposé. In 7 Tagen live.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --navy:#1E3A5F;
-  --electric:#2D7DD2;
+  --blue:#2D7DD2;
   --sky:#5BA4E5;
-  --dark-bg:#0F1826;
-  --mid-dark:#1a2e4a;
-  --light-bg:#E8EDF4;
-  --surface:#F5F8FC;
+  --dark:#0B1520;
+  --dark2:#111d2e;
+  --dark3:#172333;
+  --light:#F4F7FB;
   --white:#FFFFFF;
   --ink:#0D1B2E;
-  --body:#4A5E78;
-  --green:#0D7A4D;
-  --green-bg:#E4F5EE;
-  --border:#D0D8E4;
-  --shadow:0 4px 24px rgba(30,58,95,.10);
-  --shadow-lg:0 12px 48px rgba(30,58,95,.16);
+  --muted:#5A6E85;
+  --border:#D8E2EE;
+  --border-dark:rgba(255,255,255,.08);
+  --green:#0A6640;
+  --green-light:#E8F5EE;
+  --r:8px;
+  --r-lg:16px;
+  --shadow:0 2px 16px rgba(13,27,46,.07);
+  --shadow-lg:0 8px 48px rgba(13,27,46,.12);
 }
-html{scroll-behavior:smooth;font-size:16px}
-body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--white);line-height:1.6;overflow-x:hidden}
-h1,h2,h3,h4{line-height:1.2;font-weight:700}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4,h5{line-height:1.15;font-weight:700;letter-spacing:-.3px}
+p{line-height:1.7}
 a{text-decoration:none;color:inherit}
-img{max-width:100%;display:block}
-.container{max-width:1160px;margin:0 auto;padding:0 24px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:8px;font-weight:600;font-size:.95rem;cursor:pointer;transition:all .2s;border:none;font-family:'Inter',sans-serif}
-.btn-primary{background:var(--electric);color:#fff}
-.btn-primary:hover{background:#236bbf;transform:translateY(-1px);box-shadow:0 6px 20px rgba(45,125,210,.35)}
-.btn-secondary{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.35)}
-.btn-secondary:hover{background:rgba(255,255,255,.1);border-color:#fff}
-.btn-outline{background:transparent;color:var(--electric);border:1.5px solid var(--electric)}
-.btn-outline:hover{background:var(--electric);color:#fff}
-.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-.badge-blue{background:rgba(45,125,210,.12);color:var(--electric)}
-.badge-green{background:var(--green-bg);color:var(--green)}
+
+/* LAYOUT */
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+.wrap-narrow{max-width:760px;margin:0 auto;padding:0 28px}
+section{padding:96px 0}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:var(--r);font-weight:600;font-size:.9rem;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .18s;letter-spacing:-.1px}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#2470be;box-shadow:0 4px 18px rgba(45,125,210,.35)}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.2)}
+.btn-ghost:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.4)}
+.btn-outline{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+.btn-outline:hover{background:var(--blue);color:#fff}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-dark:hover{background:#1a2e48}
+.btn-sm{padding:9px 18px;font-size:.82rem}
+.btn svg{width:15px;height:15px;flex-shrink:0}
+
+/* LABEL */
+.label{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+.label-light{color:rgba(255,255,255,.5)}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:all .3s}
-nav.scrolled{background:rgba(15,24,38,.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:68px}
-.nav-logo svg text{transition:fill .3s}
-.nav-links{display:flex;align-items:center;gap:32px;list-style:none}
-.nav-links a{color:rgba(255,255,255,.75);font-size:.9rem;font-weight:500;transition:color .2s}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;transition:all .25s}
+nav.solid{background:rgba(11,21,32,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-dark)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none}
+.nav-links a{font-size:.875rem;font-weight:500;color:rgba(255,255,255,.6);transition:color .18s}
 .nav-links a:hover{color:#fff}
-.nav-cta{padding:10px 22px;font-size:.875rem}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
-.hamburger span{width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
-.mobile-menu{display:none;position:fixed;inset:0;background:var(--dark-bg);z-index:99;padding:90px 24px 40px;flex-direction:column;gap:8px}
-.mobile-menu.open{display:flex}
-.mobile-menu a{color:#fff;font-size:1.15rem;font-weight:500;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)}
-.mobile-menu .btn{margin-top:16px;text-align:center;justify-content:center}
+.nav-right{display:flex;align-items:center;gap:12px}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px}
+.burger span{display:block;width:20px;height:1.5px;background:#fff;transition:all .25s}
+.mob-nav{display:none;position:fixed;inset:0;top:64px;background:var(--dark);z-index:199;padding:32px 28px;flex-direction:column;gap:4px;border-top:1px solid var(--border-dark)}
+.mob-nav.open{display:flex}
+.mob-nav a{color:rgba(255,255,255,.7);font-size:1rem;font-weight:500;padding:14px 0;border-bottom:1px solid var(--border-dark)}
+.mob-nav .btn{margin-top:20px;text-align:center;justify-content:center}
 
 /* HERO */
-#hero{background:linear-gradient(135deg,var(--dark-bg) 0%,#162438 50%,#1a2e4a 100%);min-height:100vh;display:flex;align-items:center;padding:100px 0 60px;position:relative;overflow:hidden}
-#hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 70% 50%,rgba(45,125,210,.12) 0%,transparent 70%)}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(45,125,210,.15);border:1px solid rgba(45,125,210,.3);border-radius:20px;font-size:.8rem;font-weight:600;color:var(--sky);letter-spacing:.4px;text-transform:uppercase;margin-bottom:24px}
-.hero-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:#4CAF50;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-h1{font-size:clamp(2rem,4vw,3rem);color:#fff;margin-bottom:20px;letter-spacing:-.5px}
-h1 span{color:var(--sky)}
-.hero-sub{font-size:1.05rem;color:rgba(255,255,255,.65);margin-bottom:36px;max-width:480px;line-height:1.7}
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
-.hero-trust{display:flex;align-items:center;gap:16px;margin-top:32px;padding-top:32px;border-top:1px solid rgba(255,255,255,.08)}
-.trust-item{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.55);font-size:.82rem}
-.trust-check{width:16px;height:16px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.trust-check::after{content:'✓';font-size:.6rem;color:#fff;font-weight:700}
+#hero{min-height:100vh;display:flex;align-items:center;background:var(--dark);position:relative;overflow:hidden;padding:100px 0 80px}
+.hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black 30%,transparent 100%)}
+.hero-glow{position:absolute;width:800px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(45,125,210,.12) 0%,transparent 70%);top:0;left:50%;transform:translateX(-20%);pointer-events:none}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:820px;margin:0 auto}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;background:rgba(45,125,210,.1);border:1px solid rgba(45,125,210,.25);border-radius:40px;font-size:.78rem;font-weight:600;color:var(--sky);letter-spacing:.4px;margin-bottom:28px}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+h1.hero-h1{font-size:clamp(2.4rem,5vw,3.8rem);color:#fff;margin-bottom:20px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
+h1.hero-h1 em{font-style:normal;color:var(--sky)}
+.hero-sub{font-size:1.05rem;color:rgba(255,255,255,.55);max-width:560px;margin:0 auto 36px;line-height:1.75}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:56px}
+.hero-proof{display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap}
+.proof-item{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.4);font-size:.8rem}
+.proof-check{width:14px;height:14px;border-radius:50%;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.proof-check svg{width:8px;height:8px}
 
-/* HERO DASHBOARD */
-.hero-visual{position:relative}
-.dashboard-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:20px;backdrop-filter:blur(8px)}
-.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.dash-title{color:rgba(255,255,255,.5);font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-.dash-badge{padding:3px 10px;background:rgba(13,122,77,.2);color:#4ade80;border-radius:20px;font-size:.72rem;font-weight:600}
-.lead-stream{display:flex;flex-direction:column;gap:8px}
-.lead-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:rgba(255,255,255,.04);border-radius:8px;border:1px solid rgba(255,255,255,.06);animation:slideIn .4s ease both}
-@keyframes slideIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
-.lead-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--electric),var(--sky));display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0}
-.lead-info{flex:1;min-width:0}
-.lead-name{font-size:.82rem;font-weight:600;color:#fff}
-.lead-meta{font-size:.72rem;color:rgba(255,255,255,.45)}
-.lead-time{font-size:.7rem;color:rgba(255,255,255,.35);white-space:nowrap}
-.dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.dash-stat{background:rgba(255,255,255,.04);border-radius:8px;padding:10px;text-align:center;border:1px solid rgba(255,255,255,.06)}
-.dash-stat-val{font-size:1.1rem;font-weight:700;color:#fff}
-.dash-stat-lbl{font-size:.65rem;color:rgba(255,255,255,.4);margin-top:2px}
-.notification{display:flex;align-items:center;gap:10px;background:rgba(13,122,77,.15);border:1px solid rgba(13,122,77,.3);border-radius:8px;padding:10px 14px;margin-top:10px}
-.notif-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;animation:pulse 2s infinite}
-.notif-text{font-size:.78rem;color:rgba(255,255,255,.7)}
+/* HERO VISUAL */
+.hero-visual-wrap{position:relative;max-width:920px;margin:64px auto 0;z-index:1}
+.screen-placeholder{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden}
+.screen-bar{height:36px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;padding:0 16px;gap:8px}
+.screen-dot{width:10px;height:10px;border-radius:50%}
+.screen-dot:nth-child(1){background:#ff5f57}
+.screen-dot:nth-child(2){background:#febc2e}
+.screen-dot:nth-child(3){background:#28c840}
+.screen-body{padding:24px;min-height:360px;display:grid;grid-template-columns:240px 1fr;gap:16px}
+.screen-sidebar{background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.06);padding:16px;display:flex;flex-direction:column;gap:10px}
+.s-label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,.25);margin-bottom:4px}
+.s-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px}
+.s-row.active{background:rgba(45,125,210,.12)}
+.s-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2D7DD2,#5BA4E5);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0}
+.s-info{flex:1;min-width:0}
+.s-name{font-size:.73rem;font-weight:600;color:rgba(255,255,255,.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-meta{font-size:.64rem;color:rgba(255,255,255,.35)}
+.s-badge{font-size:.62rem;padding:2px 7px;border-radius:10px;font-weight:700;flex-shrink:0}
+.s-badge.new{background:rgba(34,197,94,.15);color:#4ade80}
+.s-badge.hot{background:rgba(239,68,68,.15);color:#f87171}
+.screen-main{display:flex;flex-direction:column;gap:12px}
+.screen-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.screen-stat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:14px}
+.screen-stat-val{font-size:1.3rem;font-weight:800;color:#fff}
+.screen-stat-lbl{font-size:.65rem;color:rgba(255,255,255,.35);margin-top:3px}
+.screen-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:16px;flex:1}
+.screen-card-hd{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.bar-name{font-size:.72rem;color:rgba(255,255,255,.5);width:80px;flex-shrink:0}
+.bar-track{flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#2D7DD2,#5BA4E5)}
+.bar-val{font-size:.7rem;color:rgba(255,255,255,.4);width:24px;text-align:right;flex-shrink:0}
+.pulse-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.pulse-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:blink 2s infinite;flex-shrink:0}
+.pulse-text{font-size:.72rem;color:rgba(255,255,255,.5);flex:1}
+.pulse-time{font-size:.65rem;color:rgba(255,255,255,.25)}
 
-/* STATS */
-#stats{background:var(--navy);padding:60px 0}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
-.stat-block{text-align:center}
-.stat-num{font-size:2.5rem;font-weight:800;color:#fff;line-height:1}
-.stat-num span{color:var(--sky)}
-.stat-label{font-size:.85rem;color:rgba(255,255,255,.6);margin-top:8px}
-
-/* SECTIONS */
-section{padding:96px 0}
-.section-tag{margin-bottom:16px}
-.section-head{text-align:center;margin-bottom:64px}
-.section-head h2{font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:16px}
-.section-head p{font-size:1.05rem;color:var(--body);max-width:560px;margin:0 auto}
+/* METRICS */
+#metrics{background:var(--navy);padding:56px 0}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.06)}
+.metric{background:var(--navy);padding:40px 32px;text-align:center}
+.metric-val{font-size:2.6rem;font-weight:800;color:#fff;line-height:1}
+.metric-val span{color:var(--sky)}
+.metric-lbl{font-size:.85rem;color:rgba(255,255,255,.45);margin-top:10px}
 
 /* PROBLEM */
-#problem{background:var(--surface)}
-.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.problem-card{background:var(--white);border-radius:12px;padding:32px;border:1px solid var(--border);position:relative}
-.problem-icon{font-size:2rem;margin-bottom:16px}
-.problem-card h3{font-size:1.05rem;margin-bottom:10px;color:var(--ink)}
-.problem-card p{font-size:.9rem;color:var(--body);line-height:1.65}
-.problem-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#ef4444,#f97316);border-radius:12px 12px 0 0}
+#problem{background:var(--light)}
+.problem-intro{max-width:600px;margin:0 auto 56px;text-align:center}
+.problem-intro h2{font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
+.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border)}
+.problem-card{background:var(--white);padding:36px 32px}
+.problem-card-num{font-size:.7rem;font-weight:700;letter-spacing:1px;color:var(--blue);margin-bottom:20px}
+.problem-card h3{font-size:1.05rem;font-weight:700;margin-bottom:12px;color:var(--ink)}
+.problem-card p{font-size:.9rem;color:var(--muted);line-height:1.7}
+.problem-card .impact{display:inline-block;margin-top:16px;font-size:.82rem;font-weight:600;color:#c0392b;background:#fdf0ef;padding:5px 12px;border-radius:4px}
 
-/* HOW IT WORKS */
+/* HOW */
 #how{background:var(--white)}
-.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative}
-.steps-grid::after{content:'';position:absolute;top:32px;left:10%;right:10%;height:2px;background:linear-gradient(90deg,var(--electric),var(--sky));z-index:0}
-.step-card{text-align:center;position:relative;z-index:1}
-.step-num{width:64px;height:64px;border-radius:50%;background:var(--electric);color:#fff;font-size:1.3rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
-.step-card h3{font-size:.95rem;font-weight:700;margin-bottom:8px;color:var(--ink)}
-.step-card p{font-size:.85rem;color:var(--body)}
+.how-intro{text-align:center;max-width:580px;margin:0 auto 64px}
+.how-intro h2{font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
+.steps::before{content:'';position:absolute;top:28px;left:calc(12.5% + 14px);right:calc(12.5% + 14px);height:1px;background:linear-gradient(90deg,var(--blue),var(--sky));z-index:0}
+.step{text-align:center;padding:0 16px;position:relative;z-index:1}
+.step-num{width:56px;height:56px;border-radius:50%;background:var(--blue);color:#fff;font-size:1.1rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 0 0 6px rgba(45,125,210,.1)}
+.step h4{font-size:.95rem;font-weight:700;margin-bottom:8px}
+.step p{font-size:.83rem;color:var(--muted)}
 
 /* SERVICES */
-.service-section{padding:96px 0}
-.service-section:nth-child(even){background:var(--surface)}
-.service-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
-.service-layout.reverse{direction:rtl}
-.service-layout.reverse > *{direction:ltr}
-.service-label{display:inline-flex;align-items:center;gap:8px;margin-bottom:16px}
-.service-num{width:28px;height:28px;border-radius:50%;background:var(--electric);color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center}
-.service-num-text{font-size:.75rem;font-weight:700;color:var(--electric);text-transform:uppercase;letter-spacing:.5px}
+.service-block{padding:96px 0;border-top:1px solid var(--border)}
+.service-block:nth-child(even){background:var(--light)}
+.service-wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.service-wrap.flip{direction:rtl}
+.service-wrap.flip > *{direction:ltr}
+.service-tag{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.service-number{width:32px;height:32px;border-radius:6px;background:var(--blue);color:#fff;font-size:.8rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.service-tag-text{font-size:.72rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--blue)}
 .service-content h2{font-size:clamp(1.5rem,2.5vw,2rem);margin-bottom:8px}
-.service-sub{font-size:1rem;color:var(--electric);font-weight:600;margin-bottom:16px}
-.service-content p{font-size:.95rem;color:var(--body);margin-bottom:24px;line-height:1.7}
-.service-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
-.service-features li{display:flex;align-items:flex-start;gap:10px;font-size:.9rem;color:var(--body)}
-.service-features li::before{content:'→';color:var(--electric);font-weight:700;flex-shrink:0;margin-top:1px}
-.price-tag{display:inline-flex;align-items:baseline;gap:4px;padding:10px 18px;background:var(--light-bg);border-radius:8px;margin-top:4px}
-.price-tag .amount{font-size:1.25rem;font-weight:800;color:var(--navy)}
-.price-tag .period{font-size:.8rem;color:var(--body)}
+.service-sub{font-size:.95rem;font-weight:600;color:var(--blue);margin-bottom:18px}
+.service-content > p{font-size:.93rem;color:var(--muted);line-height:1.75;margin-bottom:28px}
+.feature-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
+.feature-list li{display:flex;align-items:flex-start;gap:12px;font-size:.9rem;color:var(--ink)}
+.feature-list li::before{content:'';width:16px;height:16px;background:var(--blue);border-radius:3px;flex-shrink:0;margin-top:3px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 8l3.5 3.5L13 4.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.price-line{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-top:20px;border-top:1px solid var(--border)}
+.price-main{font-size:1.5rem;font-weight:800;color:var(--ink)}
+.price-main span{font-size:.9rem;font-weight:400;color:var(--muted)}
+.price-note{font-size:.82rem;color:var(--muted)}
 
-/* SERVICE VISUALS */
-.visual-box{background:var(--white);border-radius:16px;padding:24px;box-shadow:var(--shadow-lg);border:1px solid var(--border)}
-.visual-box.dark{background:var(--dark-bg);border-color:rgba(255,255,255,.1)}
+/* VARIANT TOGGLE */
+.variant-toggle{display:inline-flex;background:var(--light);border-radius:8px;padding:4px;gap:4px;margin-bottom:24px;border:1px solid var(--border)}
+.v-btn{padding:8px 18px;border-radius:6px;font-size:.83rem;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;background:transparent;color:var(--muted);transition:all .18s}
+.v-btn.on{background:var(--white);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.variant-panel{display:none}
+.variant-panel.on{display:block}
 
-/* Quiz Visual */
-.quiz-visual{display:flex;flex-direction:column;gap:12px}
-.quiz-header{display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1px solid var(--border)}
-.quiz-logo-dot{width:10px;height:10px;border-radius:50%;background:var(--electric)}
-.quiz-title-text{font-size:.85rem;font-weight:700;color:var(--navy)}
-.quiz-progress{height:4px;background:var(--light-bg);border-radius:2px;overflow:hidden}
-.quiz-progress-bar{height:100%;width:60%;background:var(--electric);border-radius:2px}
-.quiz-question{font-size:.85rem;font-weight:600;color:var(--ink);margin:4px 0 8px}
-.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.quiz-option{padding:10px;border:1.5px solid var(--border);border-radius:8px;font-size:.78rem;text-align:center;cursor:pointer;transition:all .2s;color:var(--body)}
-.quiz-option.selected{border-color:var(--electric);background:rgba(45,125,210,.08);color:var(--electric);font-weight:600}
-.quiz-auto{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--green-bg);border-radius:8px;border:1px solid rgba(13,122,77,.2)}
-.quiz-auto-text{font-size:.75rem;color:var(--green);font-weight:600}
+/* VISUAL PLACEHOLDERS */
+.img-placeholder{background:var(--light);border:2px dashed var(--border);border-radius:var(--r-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:.82rem;font-weight:500;text-align:center;padding:24px}
+.img-placeholder svg{width:32px;height:32px;opacity:.35}
+.placeholder-label{opacity:.6}
 
-/* Sources Visual */
-.sources-visual{display:flex;flex-direction:column;gap:10px}
-.source-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid var(--border)}
-.source-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
-.source-icon.lp{background:rgba(45,125,210,.1)}
-.source-icon.portal{background:rgba(249,115,22,.1)}
-.source-icon.email{background:rgba(168,85,247,.1)}
-.source-info{flex:1}
+/* PROCESS VISUAL */
+.process-visual{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow)}
+.process-header{padding:14px 20px;background:var(--light);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.p-dot{width:9px;height:9px;border-radius:50%}
+.p-dot:nth-child(1){background:#ff5f57}
+.p-dot:nth-child(2){background:#febc2e}
+.p-dot:nth-child(3){background:#28c840}
+.p-title{font-size:.75rem;font-weight:600;color:var(--muted);margin-left:6px}
+.process-body{padding:20px}
+.p-step{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+.p-step:last-child{border-bottom:none}
+.p-icon{width:32px;height:32px;border-radius:6px;background:rgba(45,125,210,.08);border:1px solid rgba(45,125,210,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.p-icon svg{width:14px;height:14px;stroke:var(--blue)}
+.p-step-info{flex:1}
+.p-step-name{font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:2px}
+.p-step-desc{font-size:.74rem;color:var(--muted)}
+.p-step-badge{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--green-light);color:var(--green);margin-left:auto;flex-shrink:0;margin-top:2px}
+
+/* SOURCES VISUAL */
+.sources-visual{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow)}
+.sources-header{padding:14px 20px;background:var(--light);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.sources-body{padding:20px;display:flex;flex-direction:column;gap:10px}
+.source-card{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--border);border-radius:8px}
+.source-icon-box{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.source-icon-box svg{width:16px;height:16px}
+.source-icon-box.lp{background:rgba(45,125,210,.08);border:1px solid rgba(45,125,210,.15)}
+.source-icon-box.lp svg{stroke:var(--blue)}
+.source-icon-box.portal{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.15)}
+.source-icon-box.portal svg{stroke:#f97316}
+.source-icon-box.mail{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.15)}
+.source-icon-box.mail svg{stroke:#a855f7}
+.source-text{flex:1}
 .source-name{font-size:.82rem;font-weight:700;color:var(--ink)}
-.source-desc{font-size:.72rem;color:var(--body)}
-.source-arrow{color:var(--electric);font-size:.9rem;font-weight:700}
-.crm-target{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;background:var(--navy);border-radius:8px;margin-top:4px}
-.crm-target-text{font-size:.78rem;color:#fff;font-weight:600}
-
-/* Exposé Visual */
-.expose-mini{background:var(--dark-bg);border-radius:10px;padding:14px;border:1px solid rgba(255,255,255,.1)}
-.expose-mini-header{display:flex;align-items:center;gap:6px;margin-bottom:10px}
-.expose-mini-dot{width:8px;height:8px;border-radius:50%;animation:pulse 2s infinite}
-.expose-mini-dot:nth-child(1){background:#ef4444;animation-delay:0s}
-.expose-mini-dot:nth-child(2){background:#f59e0b;animation-delay:.3s}
-.expose-mini-dot:nth-child(3){background:#22c55e;animation-delay:.6s}
-.expose-mini-title{font-size:.7rem;color:rgba(255,255,255,.4);margin-left:auto}
-.expose-fields{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
-.expose-field{padding:6px 8px;background:rgba(255,255,255,.06);border-radius:4px;border:1px solid rgba(255,255,255,.1);font-size:.68rem;color:rgba(255,255,255,.5)}
-.expose-field span{display:block;font-size:.62rem;color:rgba(255,255,255,.3);margin-bottom:2px}
-.expose-gen-btn{width:100%;padding:8px;background:var(--electric);color:#fff;border-radius:6px;font-size:.75rem;font-weight:600;text-align:center;margin-bottom:10px;animation:glow 2s infinite}
-@keyframes glow{0%,100%{box-shadow:0 0 8px rgba(45,125,210,.4)}50%{box-shadow:0 0 20px rgba(45,125,210,.7)}}
-.expose-output{background:rgba(255,255,255,.04);border-radius:6px;padding:10px;border:1px solid rgba(255,255,255,.08)}
-.expose-output-tag{font-size:.65rem;color:var(--sky);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.expose-text-lines{display:flex;flex-direction:column;gap:4px}
-.expose-line{height:5px;background:rgba(255,255,255,.12);border-radius:2px}
-.expose-line:nth-child(1){width:90%}
-.expose-line:nth-child(2){width:75%}
-.expose-line:nth-child(3){width:85%}
-.expose-line:nth-child(4){width:60%}
-
-/* VARIANT TABS */
-.variant-tabs{display:flex;gap:8px;margin-bottom:20px}
-.variant-tab{padding:8px 18px;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer;border:1.5px solid var(--border);color:var(--body);transition:all .2s;background:var(--white)}
-.variant-tab.active{background:var(--electric);color:#fff;border-color:var(--electric)}
-
-/* PAKETE */
-#pakete{background:var(--dark-bg)}
-#pakete .section-head h2{color:#fff}
-#pakete .section-head p{color:rgba(255,255,255,.6)}
-.pakete-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.paket-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:32px;transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}
-.paket-card:hover{transform:translateY(-4px)}
-.paket-card.featured{background:rgba(45,125,210,.15);border-color:var(--electric);box-shadow:0 0 0 1px var(--electric),0 24px 64px rgba(45,125,210,.25)}
-.paket-badge{position:absolute;top:20px;right:20px;background:var(--electric);color:#fff;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
-.paket-name{font-size:.8rem;font-weight:700;color:var(--sky);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-.paket-card h3{font-size:1.3rem;color:#fff;margin-bottom:20px}
-.paket-price{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.1)}
-.paket-einmalig{font-size:1.8rem;font-weight:800;color:#fff}
-.paket-einmalig span{font-size:1rem;font-weight:400;color:rgba(255,255,255,.5)}
-.paket-retainer{font-size:.9rem;color:rgba(255,255,255,.5);margin-top:4px}
-.paket-items{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
-.paket-items li{display:flex;align-items:flex-start;gap:10px;font-size:.87rem;color:rgba(255,255,255,.7)}
-.paket-items li::before{content:'✓';color:#4ade80;font-weight:700;flex-shrink:0}
-.paket-cta{width:100%;padding:12px;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .2s}
-.paket-cta-outline{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.25)}
-.paket-cta-outline:hover{background:rgba(255,255,255,.1)}
-.paket-cta-primary{background:var(--electric);color:#fff}
-.paket-cta-primary:hover{background:#236bbf}
-.paket-delivery{font-size:.77rem;color:rgba(255,255,255,.35);text-align:center;margin-top:12px}
-
-/* ROI */
-#roi{background:var(--surface)}
-.roi-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
-.roi-form{background:var(--white);border-radius:16px;padding:32px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.roi-field{margin-bottom:20px}
-.roi-field label{display:block;font-size:.85rem;font-weight:600;color:var(--navy);margin-bottom:8px}
-.roi-field input[type=range]{width:100%;-webkit-appearance:none;height:6px;background:var(--light-bg);border-radius:3px;outline:none}
-.roi-field input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--electric);cursor:pointer;box-shadow:0 2px 8px rgba(45,125,210,.4)}
-.roi-val{display:inline-block;padding:4px 12px;background:rgba(45,125,210,.1);border-radius:20px;font-size:.85rem;font-weight:700;color:var(--electric);margin-left:8px}
-.roi-results{display:flex;flex-direction:column;gap:16px}
-.roi-card{background:var(--white);border-radius:12px;padding:24px;border:1px solid var(--border)}
-.roi-card.highlight{background:var(--navy);border-color:var(--navy)}
-.roi-card-label{font-size:.8rem;font-weight:600;color:var(--body);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
-.roi-card.highlight .roi-card-label{color:rgba(255,255,255,.6)}
-.roi-card-value{font-size:1.8rem;font-weight:800;color:var(--ink)}
-.roi-card.highlight .roi-card-value{color:#fff}
-.roi-card-sub{font-size:.8rem;color:var(--body);margin-top:4px}
-.roi-card.highlight .roi-card-sub{color:rgba(255,255,255,.5)}
-.roi-amort{background:var(--green-bg);border:1px solid rgba(13,122,77,.2);border-radius:12px;padding:20px;text-align:center}
-.roi-amort-label{font-size:.85rem;color:var(--green);font-weight:600;margin-bottom:4px}
-.roi-amort-val{font-size:1.5rem;font-weight:800;color:var(--green)}
+.source-desc{font-size:.73rem;color:var(--muted)}
+.source-arrow{color:var(--blue);font-size:.9rem;font-weight:700}
+.crm-box{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;background:var(--navy);border-radius:8px;margin-top:4px}
+.crm-box-text{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.8)}
 
 /* EXPOSE DEMO */
-#expose-demo{background:var(--dark-bg);padding:96px 0}
-#expose-demo .section-head h2{color:#fff}
-#expose-demo .section-head p{color:rgba(255,255,255,.6)}
-.expose-demo-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:40px;max-width:800px;margin:0 auto}
-.expose-api-notice{display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(45,125,210,.15);border:1px solid rgba(45,125,210,.3);border-radius:8px;margin-bottom:28px;font-size:.83rem;color:rgba(255,255,255,.7)}
-.expose-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
-.expose-form-full{grid-column:1/-1}
-.expose-label{display:block;font-size:.8rem;font-weight:600;color:rgba(255,255,255,.6);margin-bottom:6px}
-.expose-input,.expose-select,.expose-textarea{width:100%;padding:10px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#fff;font-family:'Inter',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s}
-.expose-input:focus,.expose-select:focus,.expose-textarea:focus{border-color:var(--electric)}
-.expose-select option{background:var(--dark-bg);color:#fff}
-.expose-textarea{resize:vertical;min-height:80px}
-.expose-gen-button{width:100%;padding:14px;background:var(--electric);color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px}
-.expose-gen-button:hover:not(:disabled){background:#236bbf;transform:translateY(-1px)}
-.expose-gen-button:disabled{opacity:.6;cursor:not-allowed}
-.expose-spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
-@keyframes spin{to{transform:rotate(360deg)}}
-.expose-output-area{display:none}
-.expose-output-area.visible{display:block}
-.expose-output-section{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:20px;margin-bottom:12px}
-.expose-output-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.expose-output-title{font-size:.78rem;font-weight:700;color:var(--sky);text-transform:uppercase;letter-spacing:.5px}
-.copy-btn{padding:5px 12px;background:rgba(45,125,210,.2);border:1px solid rgba(45,125,210,.4);border-radius:6px;color:var(--sky);font-size:.72rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
-.copy-btn:hover{background:rgba(45,125,210,.4)}
-.copy-btn.copied{background:rgba(13,122,77,.2);border-color:rgba(13,122,77,.4);color:#4ade80}
-.expose-output-text{font-size:.88rem;color:rgba(255,255,255,.75);line-height:1.7;white-space:pre-wrap}
+.expose-visual{background:var(--dark);border-radius:var(--r-lg);overflow:hidden;border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow-lg)}
+.expose-vis-bar{height:36px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;padding:0 16px;gap:6px}
+.expose-vis-dot{width:9px;height:9px;border-radius:50%}
+.expose-vis-dot:nth-child(1){background:rgba(255,95,87,.5)}
+.expose-vis-dot:nth-child(2){background:rgba(254,188,46,.5)}
+.expose-vis-dot:nth-child(3){background:rgba(40,200,64,.5)}
+.expose-vis-body{padding:20px;display:flex;flex-direction:column;gap:12px}
+.ev-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ev-field{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:8px 12px}
+.ev-field-label{font-size:.62rem;color:rgba(255,255,255,.3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+.ev-field-val{font-size:.78rem;color:rgba(255,255,255,.7)}
+.ev-btn{padding:10px;background:var(--blue);border-radius:6px;text-align:center;font-size:.8rem;font-weight:700;color:#fff}
+.ev-output{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:14px}
+.ev-out-label{font-size:.65rem;font-weight:700;color:var(--sky);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.ev-lines{display:flex;flex-direction:column;gap:5px}
+.ev-line{height:5px;background:rgba(255,255,255,.1);border-radius:3px}
+.ev-line:nth-child(1){width:92%}
+.ev-line:nth-child(2){width:78%}
+.ev-line:nth-child(3){width:85%}
+.ev-line:nth-child(4){width:60%}
+.ev-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.ev-tag{padding:4px 10px;background:rgba(255,255,255,.06);border-radius:4px;font-size:.65rem;color:rgba(255,255,255,.4);font-weight:600}
+
+/* PAKETE */
+#pakete{background:var(--dark)}
+.pakete-intro{text-align:center;max-width:560px;margin:0 auto 56px}
+.pakete-intro h2{color:#fff;font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
+.pakete-intro p{color:rgba(255,255,255,.5)}
+.pakete-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);overflow:hidden}
+.paket{background:var(--dark2);padding:36px 32px;position:relative}
+.paket.featured{background:var(--dark3)}
+.paket-rec{position:absolute;top:20px;right:20px;font-size:.65rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;background:var(--blue);color:#fff;border-radius:4px}
+.paket-tier{font-size:.68rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:10px}
+.paket h3{font-size:1.25rem;color:#fff;margin-bottom:6px}
+.paket-tagline{font-size:.82rem;color:rgba(255,255,255,.4);margin-bottom:24px}
+.paket-price-block{padding:20px 0;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:24px}
+.paket-once{font-size:2rem;font-weight:800;color:#fff;line-height:1}
+.paket-once sub{font-size:.85rem;font-weight:400;color:rgba(255,255,255,.4);vertical-align:baseline}
+.paket-monthly{font-size:.85rem;color:rgba(255,255,255,.4);margin-top:4px}
+.paket-items{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.paket-items li{display:flex;align-items:flex-start;gap:10px;font-size:.86rem;color:rgba(255,255,255,.65)}
+.paket-items li::before{content:'';width:14px;height:14px;background:rgba(45,125,210,.2);border:1px solid rgba(45,125,210,.4);border-radius:3px;flex-shrink:0;margin-top:3px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M2.5 7l3 3L11.5 3.5' stroke='%235BA4E5' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.paket-cta{width:100%;padding:12px;border-radius:var(--r);font-size:.88rem;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .18s;letter-spacing:-.1px}
+.paket-cta-outline{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.15)}
+.paket-cta-outline:hover{background:rgba(255,255,255,.06);color:#fff}
+.paket-cta-fill{background:var(--blue);color:#fff}
+.paket-cta-fill:hover{background:#2470be}
+.paket-time{font-size:.72rem;color:rgba(255,255,255,.25);text-align:center;margin-top:10px}
+
+/* ROI */
+#roi{background:var(--light)}
+.roi-intro{text-align:center;max-width:560px;margin:0 auto 56px}
+.roi-intro h2{font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
+.roi-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.roi-controls{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px}
+.roi-controls h3{font-size:1rem;font-weight:700;margin-bottom:24px;color:var(--ink)}
+.roi-field{margin-bottom:22px}
+.roi-field label{display:flex;align-items:center;justify-content:space-between;font-size:.85rem;font-weight:600;color:var(--ink);margin-bottom:10px}
+.roi-val-badge{padding:3px 10px;background:rgba(45,125,210,.1);border-radius:20px;font-size:.82rem;font-weight:700;color:var(--blue)}
+input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--border);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:pointer;border:3px solid var(--white);box-shadow:0 1px 6px rgba(45,125,210,.4)}
+.roi-results{display:flex;flex-direction:column;gap:12px}
+.roi-result-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px}
+.roi-result-card.accent{background:var(--navy);border-color:var(--navy)}
+.rrc-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px}
+.rrc-label.light{color:rgba(255,255,255,.45)}
+.rrc-value{font-size:1.9rem;font-weight:800;color:var(--ink)}
+.rrc-value.light{color:#fff}
+.rrc-sub{font-size:.78rem;color:var(--muted);margin-top:3px}
+.rrc-sub.light{color:rgba(255,255,255,.4)}
+.roi-amort{background:var(--green-light);border:1px solid rgba(10,102,64,.15);border-radius:var(--r-lg);padding:20px;text-align:center}
+.roi-amort-label{font-size:.8rem;font-weight:600;color:var(--green);margin-bottom:4px}
+.roi-amort-val{font-size:1.6rem;font-weight:800;color:var(--green)}
+
+/* EXPOSE LIVE */
+#expose-live{background:var(--dark);padding:96px 0}
+.expose-live-intro{text-align:center;max-width:560px;margin:0 auto 56px}
+.expose-live-intro h2{color:#fff;font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
+.expose-live-intro p{color:rgba(255,255,255,.5)}
+.expose-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:var(--r-lg);padding:36px;max-width:800px;margin:0 auto}
+.api-notice{display:flex;align-items:flex-start;gap:10px;background:rgba(45,125,210,.08);border:1px solid rgba(45,125,210,.2);border-radius:8px;padding:14px 16px;margin-bottom:24px}
+.api-notice svg{width:16px;height:16px;stroke:var(--sky);flex-shrink:0;margin-top:1px}
+.api-notice p{font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.6}
 .api-key-row{display:flex;gap:8px;margin-bottom:20px}
-.api-key-row .expose-input{flex:1}
-.api-key-toggle{padding:10px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:rgba(255,255,255,.6);font-size:.8rem;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;transition:all .2s}
-.api-key-toggle:hover{background:rgba(255,255,255,.12)}
+.e-input,.e-select,.e-textarea{width:100%;padding:10px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);color:#fff;font-family:'Inter',sans-serif;font-size:.875rem;outline:none;transition:border-color .18s}
+.e-input:focus,.e-select:focus,.e-textarea:focus{border-color:var(--blue)}
+.e-select option{background:var(--dark)}
+.e-textarea{resize:vertical;min-height:72px}
+.e-label{display:block;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px}
+.e-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.e-full{grid-column:1/-1}
+.e-gen-btn{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:.95rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px;margin-bottom:20px}
+.e-gen-btn:hover:not(:disabled){background:#2470be}
+.e-gen-btn:disabled{opacity:.5;cursor:not-allowed}
+.e-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.e-output{display:none}
+.e-output.show{display:block}
+.e-section{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:8px;padding:18px;margin-bottom:10px}
+.e-section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.e-section-title{font-size:.72rem;font-weight:700;color:var(--sky);text-transform:uppercase;letter-spacing:.5px}
+.copy-btn{padding:5px 12px;background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:6px;color:rgba(255,255,255,.5);font-size:.7rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .18s}
+.copy-btn:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8)}
+.copy-btn.done{border-color:rgba(34,197,94,.3);color:#4ade80}
+.e-text{font-size:.86rem;color:rgba(255,255,255,.65);line-height:1.75;white-space:pre-wrap}
+.key-toggle-btn{padding:10px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);color:rgba(255,255,255,.5);font-size:.8rem;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;transition:all .18s}
+.key-toggle-btn:hover{background:rgba(255,255,255,.1)}
 
 /* TESTIMONIALS */
 #testimonials{background:var(--white)}
+.testi-intro{text-align:center;max-width:520px;margin:0 auto 56px}
+.testi-intro h2{font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
 .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.testi-card{background:var(--surface);border-radius:12px;padding:28px;border:1px solid var(--border)}
-.stars{color:#f59e0b;font-size:1rem;margin-bottom:14px;letter-spacing:2px}
-.testi-text{font-size:.92rem;color:var(--body);line-height:1.7;font-style:italic;margin-bottom:18px}
+.testi{background:var(--light);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px}
+.testi-stars{display:flex;gap:3px;margin-bottom:16px}
+.testi-stars svg{width:14px;height:14px;fill:#f59e0b;stroke:none}
+.testi-quote{font-size:.92rem;color:var(--muted);line-height:1.75;margin-bottom:20px;font-style:italic}
 .testi-author{display:flex;align-items:center;gap:12px}
-.testi-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--electric),var(--sky));display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#fff;flex-shrink:0}
-.testi-name{font-size:.88rem;font-weight:700;color:var(--ink)}
-.testi-role{font-size:.78rem;color:var(--body)}
+.testi-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--sky));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0}
+.testi-name{font-size:.87rem;font-weight:700;color:var(--ink)}
+.testi-role{font-size:.76rem;color:var(--muted)}
 
-/* CTA */
-#cta{background:linear-gradient(135deg,var(--navy),var(--mid-dark));padding:96px 0;text-align:center}
-#cta h2{font-size:clamp(1.7rem,3vw,2.4rem);color:#fff;margin-bottom:16px}
-#cta p{font-size:1.05rem;color:rgba(255,255,255,.65);max-width:480px;margin:0 auto 36px}
-#cta .btn-secondary{color:#fff}
+/* CTA SECTION */
+#cta-section{background:linear-gradient(135deg,var(--navy) 0%,#162b4a 100%);padding:96px 0;text-align:center}
+#cta-section h2{font-size:clamp(1.8rem,3.5vw,2.8rem);color:#fff;margin-bottom:16px}
+#cta-section p{font-size:1rem;color:rgba(255,255,255,.55);max-width:480px;margin:0 auto 36px}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cta-note{margin-top:20px;font-size:.8rem;color:rgba(255,255,255,.3)}
 
 /* FOOTER */
-footer{background:var(--dark-bg);padding:60px 0 32px;border-top:1px solid rgba(255,255,255,.06)}
-.footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
-.footer-brand p{font-size:.87rem;color:rgba(255,255,255,.45);margin-top:14px;max-width:220px;line-height:1.65}
-.footer-col h4{font-size:.82rem;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:64px 0 32px}
+.footer-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-brand p{font-size:.85rem;color:rgba(255,255,255,.35);margin-top:16px;line-height:1.7;max-width:220px}
+.footer-col h5{font-size:.72rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px}
 .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
-.footer-col ul a{font-size:.87rem;color:rgba(255,255,255,.45);transition:color .2s}
-.footer-col ul a:hover{color:#fff}
-.footer-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between}
-.footer-copy{font-size:.8rem;color:rgba(255,255,255,.3)}
+.footer-col a{font-size:.85rem;color:rgba(255,255,255,.4);transition:color .18s}
+.footer-col a:hover{color:rgba(255,255,255,.8)}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--border-dark)}
+.footer-copy{font-size:.78rem;color:rgba(255,255,255,.25)}
 .footer-legal{display:flex;gap:20px}
-.footer-legal a{font-size:.8rem;color:rgba(255,255,255,.3);transition:color .2s}
-.footer-legal a:hover{color:rgba(255,255,255,.6)}
+.footer-legal a{font-size:.78rem;color:rgba(255,255,255,.25);transition:color .18s}
+.footer-legal a:hover{color:rgba(255,255,255,.55)}
 
 /* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;padding:20px}
-.modal-overlay.open{display:flex}
-.modal{background:var(--white);border-radius:16px;padding:40px;width:100%;max-width:520px;position:relative;max-height:90vh;overflow-y:auto}
-.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:var(--light-bg);border:none;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background .2s;color:var(--body)}
-.modal-close:hover{background:var(--border)}
-.modal h2{font-size:1.4rem;margin-bottom:8px;color:var(--navy)}
-.modal p{font-size:.9rem;color:var(--body);margin-bottom:24px}
-.form-row{margin-bottom:16px}
-.form-row label{display:block;font-size:.83rem;font-weight:600;color:var(--navy);margin-bottom:6px}
-.form-row input,.form-row textarea,.form-row select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:.9rem;color:var(--ink);outline:none;transition:border-color .2s;background:var(--white)}
-.form-row input:focus,.form-row textarea:focus{border-color:var(--electric)}
-.form-row textarea{resize:vertical;min-height:100px}
-.form-submit{width:100%;padding:13px;background:var(--electric);color:#fff;border:none;border-radius:8px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
-.form-submit:hover{background:#236bbf}
-.form-success{display:none;text-align:center;padding:20px 0}
-.form-success h3{font-size:1.2rem;color:var(--green);margin-bottom:8px}
-.form-success p{font-size:.9rem;color:var(--body)}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+.overlay.open{display:flex}
+.modal{background:var(--white);border-radius:var(--r-lg);padding:40px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;position:relative}
+.modal-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:var(--light);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.9rem;transition:background .18s}
+.modal-x:hover{background:var(--border)}
+.modal h3{font-size:1.3rem;margin-bottom:6px}
+.modal > p{font-size:.88rem;color:var(--muted);margin-bottom:24px}
+.f-row{margin-bottom:14px}
+.f-row label{display:block;font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:6px}
+.f-row input,.f-row textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.88rem;color:var(--ink);outline:none;transition:border-color .18s}
+.f-row input:focus,.f-row textarea:focus{border-color:var(--blue)}
+.f-row textarea{resize:vertical;min-height:90px}
+.f-submit{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .18s;margin-top:4px}
+.f-submit:hover{background:#2470be}
+.f-success{display:none;text-align:center;padding:24px 0}
+.f-success h3{color:var(--green);margin-bottom:8px}
+.f-success p{font-size:.88rem;color:var(--muted)}
 
-/* SCROLL ANIMATIONS */
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
 
 /* RESPONSIVE */
-@media(max-width:900px){
-  .hero-grid{grid-template-columns:1fr;gap:40px}
-  .hero-visual{order:-1}
-  .stats-grid{grid-template-columns:repeat(2,1fr);gap:24px}
+@media(max-width:960px){
+  .hero-grid{grid-template-columns:1fr}
+  .metrics-grid{grid-template-columns:repeat(2,1fr)}
   .problem-grid{grid-template-columns:1fr}
-  .steps-grid{grid-template-columns:repeat(2,1fr)}
-  .steps-grid::after{display:none}
-  .service-layout,.service-layout.reverse{grid-template-columns:1fr;direction:ltr}
-  .pakete-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:repeat(2,1fr)}
+  .steps::before{display:none}
+  .service-wrap,.service-wrap.flip{grid-template-columns:1fr;direction:ltr}
+  .pakete-grid{grid-template-columns:1fr;background:none;gap:16px}
+  .paket{border-radius:var(--r-lg);border:1px solid rgba(255,255,255,.07)}
   .roi-layout{grid-template-columns:1fr}
   .testi-grid{grid-template-columns:1fr}
-  .footer-grid{grid-template-columns:1fr 1fr}
-  .expose-form-grid{grid-template-columns:1fr}
-  .expose-form-full{grid-column:auto}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .e-grid{grid-template-columns:1fr}
+  .e-full{grid-column:auto}
+  .screen-body{grid-template-columns:1fr}
+  .screen-sidebar{display:none}
 }
-@media(max-width:600px){
-  .nav-links{display:none}
-  .nav-cta{display:none}
-  .hamburger{display:flex}
-  .stats-grid{grid-template-columns:1fr 1fr}
-  .footer-grid{grid-template-columns:1fr}
+@media(max-width:640px){
+  .nav-links,.nav-right .btn-ghost{display:none}
+  .burger{display:flex}
+  .metrics-grid{grid-template-columns:1fr 1fr}
+  .footer-top{grid-template-columns:1fr}
   .footer-bottom{flex-direction:column;gap:12px;text-align:center}
+  .hero-btns,.cta-btns{flex-direction:column;align-items:stretch}
+  .hero-btns .btn,.cta-btns .btn{justify-content:center}
+  .pakete-grid{background:transparent}
 }
 </style>
 </head>
@@ -372,10 +428,10 @@ footer{background:var(--dark-bg);padding:60px 0 32px;border-top:1px solid rgba(2
 
 <!-- NAV -->
 <nav id="nav">
-  <div class="container">
+  <div class="wrap">
     <div class="nav-inner">
-      <a href="#" aria-label="Flowmatic">
-        <svg width="140" height="44" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+      <a href="#">
+        <svg width="130" height="40" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
           <path d="M78 37 L90 22" fill="none" stroke="#D0D8E4" stroke-width="1.5" stroke-linecap="round"/>
           <path d="M110 22 L122 37" fill="none" stroke="#D0D8E4" stroke-width="1.5" stroke-linecap="round"/>
           <circle cx="84" cy="30" r="2.5" fill="#D0D8E4"/>
@@ -383,147 +439,158 @@ footer{background:var(--dark-bg);padding:60px 0 32px;border-top:1px solid rgba(2
           <rect x="90" y="11" width="20" height="14" rx="4" fill="#1E3A5F"/>
           <rect x="60" y="37" width="20" height="14" rx="4" fill="#1E3A5F"/>
           <rect x="120" y="37" width="20" height="14" rx="4" fill="#1E3A5F"/>
-          <text x="62" y="68" font-family="system-ui, sans-serif" font-size="18" font-weight="500" fill="#D0D8E4" letter-spacing="0.5">flow</text>
-          <text x="100" y="68" font-family="system-ui, sans-serif" font-size="18" font-weight="500" fill="#2D7DD2" letter-spacing="0.5">matic</text>
+          <text x="62" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="#D0D8E4" letter-spacing="0.5">flow</text>
+          <text x="100" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="#2D7DD2" letter-spacing="0.5">matic</text>
         </svg>
       </a>
       <ul class="nav-links">
         <li><a href="#problem">Problem</a></li>
         <li><a href="#service1">Services</a></li>
         <li><a href="#pakete">Pakete</a></li>
-        <li><a href="#expose-demo">Exposé-Tool</a></li>
-        <li><a href="#kontakt-section">Kontakt</a></li>
+        <li><a href="#expose-live">Exposé-Tool</a></li>
+        <li><a href="#roi">ROI-Rechner</a></li>
       </ul>
-      <button class="btn btn-primary nav-cta" onclick="openModal()">Erstgespräch</button>
-      <div class="hamburger" onclick="toggleMenu()" aria-label="Menü">
-        <span></span><span></span><span></span>
+      <div class="nav-right">
+        <button class="btn btn-ghost btn-sm" onclick="openModal()">Kontakt</button>
+        <button class="btn btn-primary btn-sm" onclick="openModal()">Erstgespräch</button>
+        <div class="burger" onclick="toggleBurger()"><span></span><span></span><span></span></div>
       </div>
     </div>
   </div>
 </nav>
 
-<!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#problem" onclick="toggleMenu()">Problem</a>
-  <a href="#service1" onclick="toggleMenu()">Services</a>
-  <a href="#pakete" onclick="toggleMenu()">Pakete</a>
-  <a href="#expose-demo" onclick="toggleMenu()">Exposé-Tool</a>
-  <a href="#kontakt-section" onclick="toggleMenu()">Kontakt</a>
-  <button class="btn btn-primary" onclick="toggleMenu();openModal()">Kostenloses Erstgespräch</button>
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mobNav">
+  <a href="#problem" onclick="toggleBurger()">Problem</a>
+  <a href="#service1" onclick="toggleBurger()">Services</a>
+  <a href="#pakete" onclick="toggleBurger()">Pakete</a>
+  <a href="#expose-live" onclick="toggleBurger()">Exposé-Tool</a>
+  <a href="#roi" onclick="toggleBurger()">ROI-Rechner</a>
+  <button class="btn btn-primary" onclick="toggleBurger();openModal()">Kostenloses Erstgespräch</button>
 </div>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="container">
-    <div class="hero-grid">
-      <div>
-        <div class="hero-tag">🇨🇭 Für Schweizer Immobilienmakler</div>
-        <h1>Kein Immobilien&#8209;Lead geht mehr verloren.</h1>
-        <p class="hero-sub">Flowmatic baut Schweizer Immobilienmaklern vollautomatische Lead-Systeme und KI-Tools — von der ersten Anfrage bis zum fertigen Exposé. In 7 Tagen live.</p>
-        <div class="hero-btns">
-          <button class="btn btn-primary" onclick="openModal()">Kostenloses Erstgespräch</button>
-          <a href="#service1" class="btn btn-secondary">Demo ansehen</a>
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="wrap" style="position:relative;z-index:1">
+    <div class="hero-content reveal">
+      <div class="hero-tag">
+        <span class="hero-dot"></span>
+        Für Immobilienmakler in der Schweiz
+      </div>
+      <h1 class="hero-h1">Kein Lead.<br>Kein Mandat.<br><em>Kein Wachstum.</em></h1>
+      <p class="hero-sub">Flowmatic baut Schweizer Immobilienmaklern vollautomatische Lead-Systeme und KI-Tools — von der ersten Anfrage bis zum fertigen Exposé. In 7 Tagen live.</p>
+      <div class="hero-btns">
+        <button class="btn btn-primary" onclick="openModal()">Kostenloses Erstgespräch</button>
+        <a href="#service1" class="btn btn-ghost">Services ansehen</a>
+      </div>
+      <div class="hero-proof">
+        <div class="proof-item"><div class="proof-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></div>Keine Setup-Kosten versteckt</div>
+        <div class="proof-item"><div class="proof-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></div>Lieferung in 7 Tagen</div>
+        <div class="proof-item"><div class="proof-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></div>Feste CHF-Preise</div>
+      </div>
+    </div>
+    <!-- Dashboard Mockup -->
+    <div class="hero-visual-wrap reveal" style="transition-delay:.15s">
+      <div class="screen-placeholder">
+        <div class="screen-bar">
+          <div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div>
         </div>
-        <div class="hero-trust">
-          <div class="trust-item"><div class="trust-check"></div>Keine Bürokratie</div>
-          <div class="trust-item"><div class="trust-check"></div>7 Tage live</div>
-          <div class="trust-item"><div class="trust-check"></div>Kein Abo-Zwang</div>
+        <div class="screen-body">
+          <div class="screen-sidebar">
+            <p class="s-label">Eingehende Leads</p>
+            <div class="s-row active">
+              <div class="s-avatar">MH</div>
+              <div class="s-info"><div class="s-name">M. Huber, Zürich</div><div class="s-meta">Haus · CHF 1.8M</div></div>
+              <span class="s-badge new">Neu</span>
+            </div>
+            <div class="s-row">
+              <div class="s-avatar">SK</div>
+              <div class="s-info"><div class="s-name">S. Kellenberger, Zug</div><div class="s-meta">Wohnung · Budget 900k</div></div>
+              <span class="s-badge hot">Warm</span>
+            </div>
+            <div class="s-row">
+              <div class="s-avatar">TF</div>
+              <div class="s-info"><div class="s-name">T. Fischer, Basel</div><div class="s-meta">Gewerbe · Gepflegt</div></div>
+              <span class="s-badge new">Neu</span>
+            </div>
+            <div class="s-row">
+              <div class="s-avatar">AR</div>
+              <div class="s-info"><div class="s-name">A. Roth, Genf</div><div class="s-meta">Haus · CHF 2.1M</div></div>
+              <span class="s-badge hot">Warm</span>
+            </div>
+            <div class="s-row">
+              <div class="s-avatar">EM</div>
+              <div class="s-info"><div class="s-name">E. Müller, Bern</div><div class="s-meta">Wohnung · 4.5 Zi.</div></div>
+              <span class="s-badge new">Neu</span>
+            </div>
+          </div>
+          <div class="screen-main">
+            <div class="screen-stat-row">
+              <div class="screen-stat"><div class="screen-stat-val">47</div><div class="screen-stat-lbl">Leads diesen Monat</div></div>
+              <div class="screen-stat"><div class="screen-stat-val">&lt;10s</div><div class="screen-stat-lbl">Reaktionszeit</div></div>
+              <div class="screen-stat"><div class="screen-stat-val">100%</div><div class="screen-stat-lbl">Erfassungsrate</div></div>
+            </div>
+            <div class="screen-card">
+              <p class="screen-card-hd">Lead-Quellen diese Woche</p>
+              <div class="bar-row"><span class="bar-name">Landingpage</span><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div><span class="bar-val">18</span></div>
+              <div class="bar-row"><span class="bar-name">ImmoScout24</span><div class="bar-track"><div class="bar-fill" style="width:55%"></div></div><span class="bar-val">13</span></div>
+              <div class="bar-row"><span class="bar-name">Homegate</span><div class="bar-track"><div class="bar-fill" style="width:38%"></div></div><span class="bar-val">9</span></div>
+              <div class="bar-row"><span class="bar-name">Direkte E-Mail</span><div class="bar-track"><div class="bar-fill" style="width:30%"></div></div><span class="bar-val">7</span></div>
+            </div>
+            <div class="screen-card">
+              <p class="screen-card-hd">Live-Aktivität</p>
+              <div class="pulse-row"><div class="pulse-dot"></div><span class="pulse-text">M. Huber — Quiz ausgefüllt, Lead in CRM eingetragen</span><span class="pulse-time">jetzt</span></div>
+              <div class="pulse-row"><div class="pulse-dot" style="background:#f59e0b;animation-delay:.4s"></div><span class="pulse-text">S. Kellenberger — Follow-up-Mail gesendet</span><span class="pulse-time">3 Min.</span></div>
+              <div class="pulse-row"><div class="pulse-dot" style="background:#f59e0b;animation-delay:.8s"></div><span class="pulse-text">Exposé für Seefeldstrasse 12 generiert</span><span class="pulse-time">11 Min.</span></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="hero-visual reveal">
-        <div class="dashboard-card">
-          <div class="dash-header">
-            <span class="dash-title">Live Lead-Stream</span>
-            <span class="dash-badge">● Live</span>
-          </div>
-          <div class="lead-stream">
-            <div class="lead-item" style="animation-delay:.1s">
-              <div class="lead-avatar">MH</div>
-              <div class="lead-info">
-                <div class="lead-name">M. Huber — Haus, Zürich</div>
-                <div class="lead-meta">Eigentümer · Wert: ~CHF 1.8M</div>
-              </div>
-              <div class="lead-time">jetzt</div>
-            </div>
-            <div class="lead-item" style="animation-delay:.3s">
-              <div class="lead-avatar">SK</div>
-              <div class="lead-info">
-                <div class="lead-name">S. Kellenberger — Wohnung, Zug</div>
-                <div class="lead-meta">Käufer · Budget: CHF 900k</div>
-              </div>
-              <div class="lead-time">2 Min.</div>
-            </div>
-            <div class="lead-item" style="animation-delay:.5s">
-              <div class="lead-avatar">TF</div>
-              <div class="lead-info">
-                <div class="lead-name">T. Fischer — Gewerbe, Basel</div>
-                <div class="lead-meta">Eigentümer · Gepflegt</div>
-              </div>
-              <div class="lead-time">8 Min.</div>
-            </div>
-          </div>
-          <div class="dash-stats">
-            <div class="dash-stat"><div class="dash-stat-val">47</div><div class="dash-stat-lbl">Leads diesen Monat</div></div>
-            <div class="dash-stat"><div class="dash-stat-val">&lt;10s</div><div class="dash-stat-lbl">Reaktionszeit</div></div>
-            <div class="dash-stat"><div class="dash-stat-val">100%</div><div class="dash-stat-lbl">Erfasst</div></div>
-          </div>
-          <div class="notification">
-            <div class="notif-dot"></div>
-            <span class="notif-text">Neuer Lead → CRM + Mail + Google Sheets automatisch eingetragen</span>
-          </div>
-        </div>
-      </div>
+      <p style="text-align:center;font-size:.75rem;color:rgba(255,255,255,.2);margin-top:12px">Ihr eigenes Dashboard — Ihr eigene Daten</p>
     </div>
   </div>
 </section>
 
-<!-- STATS -->
-<section id="stats">
-  <div class="container">
-    <div class="stats-grid">
-      <div class="stat-block reveal">
-        <div class="stat-num">&lt;<span>10</span>s</div>
-        <div class="stat-label">Reaktionszeit auf neue Anfragen</div>
-      </div>
-      <div class="stat-block reveal">
-        <div class="stat-num"><span>80</span>%</div>
-        <div class="stat-label">weniger manuelle Lead-Arbeit</div>
-      </div>
-      <div class="stat-block reveal">
-        <div class="stat-num"><span>2</span>h</div>
-        <div class="stat-label">gespart pro Exposé mit KI</div>
-      </div>
-      <div class="stat-block reveal">
-        <div class="stat-num"><span>7</span></div>
-        <div class="stat-label">Tage bis zum Live-System</div>
-      </div>
+<!-- METRICS -->
+<div id="metrics">
+  <div class="wrap">
+    <div class="metrics-grid">
+      <div class="metric reveal"><div class="metric-val"><span>&lt;10</span>s</div><div class="metric-lbl">Reaktionszeit auf neue Anfragen</div></div>
+      <div class="metric reveal"><div class="metric-val"><span>80</span>%</div><div class="metric-lbl">weniger manuelle Lead-Arbeit</div></div>
+      <div class="metric reveal"><div class="metric-val"><span>2</span>h</div><div class="metric-lbl">gespart pro Exposé mit KI</div></div>
+      <div class="metric reveal"><div class="metric-val"><span>7</span></div><div class="metric-lbl">Tage bis zum Live-System</div></div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- PROBLEM -->
 <section id="problem">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="section-tag"><span class="badge badge-blue">Das Problem</span></div>
+  <div class="wrap">
+    <div class="problem-intro reveal">
+      <span class="label">Das Problem</span>
       <h2>Warum Schweizer Makler täglich Mandate verlieren</h2>
-      <p>Nicht weil sie schlechte Makler sind — sondern weil ihre Prozesse in den 90ern stecken geblieben sind.</p>
+      <p style="color:var(--muted);font-size:.95rem">Nicht wegen fehlender Qualifikation — sondern wegen veralteter Prozesse.</p>
     </div>
     <div class="problem-grid">
       <div class="problem-card reveal">
-        <div class="problem-icon">⏱️</div>
-        <h3>Zu langsame Reaktionszeit</h3>
-        <p>Ein Eigentümer fragt bei drei Maklern gleichzeitig an. Wer zuerst antwortet, gewinnt das Mandat. Durchschnittliche manuelle Reaktionszeit: 4–8 Stunden. Damit ist das Rennen längst gelaufen.</p>
+        <div class="problem-card-num">01</div>
+        <h3>Zu langsame Reaktion</h3>
+        <p>Ein Eigentümer fragt bei drei Maklern gleichzeitig an. Wer zuerst zurückruft, gewinnt das Mandat. Die durchschnittliche manuelle Reaktionszeit beträgt 4–8 Stunden — damit ist das Rennen längst entschieden.</p>
+        <span class="impact">Verlorene Mandate durch Langsamkeit</span>
       </div>
       <div class="problem-card reveal">
-        <div class="problem-icon">🗂️</div>
-        <h3>Leads gehen verloren im Chaos</h3>
-        <p>Anfragen kommen per E-Mail, über ImmoScout24, Homegate und das eigene Formular. Ohne ein System werden Leads übersehen, vergessen oder zu spät bearbeitet — stilles Umsatzleck.</p>
+        <div class="problem-card-num">02</div>
+        <h3>Leads gehen verloren</h3>
+        <p>Anfragen kommen per E-Mail, über ImmoScout24, Homegate und das eigene Formular. Ohne ein zentrales System werden Leads übersehen, in Postfächern begraben oder schlicht vergessen. Stilles Umsatzleck.</p>
+        <span class="impact">Bis zu 30% der Anfragen unbeantwortet</span>
       </div>
       <div class="problem-card reveal">
-        <div class="problem-icon">✍️</div>
-        <h3>Stunden für Exposé-Texte</h3>
-        <p>Ein professionelles Exposé braucht 2–3 Stunden. Bei 8 Objekten pro Monat sind das fast zwei volle Arbeitstage — Zeit, die für Besichtigungen und Mandatsgespräche fehlt.</p>
+        <div class="problem-card-num">03</div>
+        <h3>Exposés fressen Zeit</h3>
+        <p>Ein professionelles Exposé braucht 2–3 Stunden. Bei 8 Objekten pro Monat sind das fast zwei volle Arbeitstage — Zeit, die für Besichtigungen, Mandatsgespräche und den Aufbau neuer Kontakte fehlt.</p>
+        <span class="impact">16–24 Stunden/Monat für Texte verloren</span>
       </div>
     </div>
   </div>
@@ -531,231 +598,275 @@ footer{background:var(--dark-bg);padding:60px 0 32px;border-top:1px solid rgba(2
 
 <!-- HOW IT WORKS -->
 <section id="how">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="section-tag"><span class="badge badge-blue">So funktioniert es</span></div>
-      <h2>Vom Erstgespräch zum laufenden System — in 4 Schritten</h2>
+  <div class="wrap">
+    <div class="how-intro reveal">
+      <span class="label">Vorgehen</span>
+      <h2>Vom Erstgespräch zum laufenden System</h2>
+      <p style="color:var(--muted);font-size:.95rem">Kein langwieriges Projekt. Kein IT-Aufwand Ihrerseits. Wir liefern fertig.</p>
     </div>
-    <div class="steps-grid">
-      <div class="step-card reveal">
+    <div class="steps">
+      <div class="step reveal">
         <div class="step-num">1</div>
-        <h3>Kostenloses Erstgespräch</h3>
-        <p>30 Minuten. Wir analysieren Ihre aktuelle Lead-Situation und zeigen genau, was automatisiert werden kann.</p>
+        <h4>Kostenloses Erstgespräch</h4>
+        <p>30 Minuten. Wir analysieren Ihre aktuelle Situation und definieren gemeinsam, was automatisiert werden kann und welches Paket passt.</p>
       </div>
-      <div class="step-card reveal">
+      <div class="step reveal">
         <div class="step-num">2</div>
-        <h3>Angebot & Scope</h3>
-        <p>Sie erhalten ein konkretes Angebot mit festen Preisen. Kein versteckter Aufwand, keine Überraschungen.</p>
+        <h4>Angebot mit festen Preisen</h4>
+        <p>Sie erhalten ein konkretes Angebot in CHF — kein Stundensatz, keine offenen Posten. Scope, Preis und Liefertermin stehen vor dem Start fest.</p>
       </div>
-      <div class="step-card reveal">
+      <div class="step reveal">
         <div class="step-num">3</div>
-        <h3>Aufbau in 5–7 Tagen</h3>
-        <p>Wir bauen Ihr System. Sie bekommen täglich Updates. Am Ende: vollständige Übergabe mit Einführung.</p>
+        <h4>Aufbau in 5–7 Tagen</h4>
+        <p>Wir bauen Ihr System vollständig auf. Sie erhalten täglich Updates. Am Ende folgt eine vollständige Einführung und Übergabe.</p>
       </div>
-      <div class="step-card reveal">
+      <div class="step reveal">
         <div class="step-num">4</div>
-        <h3>Live — und läuft</h3>
-        <p>Ihr System arbeitet 24/7. Neue Leads werden sofort erfasst und verarbeitet — ohne Ihr Zutun.</p>
+        <h4>Ihr System läuft — 24/7</h4>
+        <p>Neue Leads werden sofort erfasst, verarbeitet und weitergemeldet — ohne Ihr Zutun. Sie kümmern sich um Kunden, nicht um Verwaltung.</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- SERVICE 1 -->
-<section id="service1" class="service-section">
-  <div class="container">
-    <div class="service-layout">
+<div id="service1" class="service-block">
+  <div class="wrap">
+    <div class="service-wrap">
       <div class="service-content reveal">
-        <div class="service-label">
-          <div class="service-num">1</div>
-          <span class="service-num-text">Service 1</span>
+        <div class="service-tag">
+          <div class="service-number">1</div>
+          <span class="service-tag-text">Service 1 — Lead-Maschine</span>
         </div>
         <h2>Ihre Lead-Maschine — 24/7 automatisch</h2>
         <p class="service-sub">Die richtigen Leute finden Sie. Vollautomatisch.</p>
-        <p>Eine professionelle Landingpage mit Quiz-Funnel — und ein vollautomatischer Workflow dahinter. Sie wählen welche Variante Sie brauchen: Eigentümer gewinnen, Käufer gewinnen — oder beides.</p>
+        <p>Eine professionelle Landingpage mit Quiz-Funnel und ein vollautomatischer Workflow dahinter. Sie schalten Werbung auf die Seite — wir sorgen dafür, dass jeder Besucher korrekt erfasst und sofort benachrichtigt wird. Zwei Varianten stehen zur Wahl.</p>
 
-        <div class="variant-tabs">
-          <button class="variant-tab active" onclick="switchVariant('A',this)">Variante A — Eigentümer</button>
-          <button class="variant-tab" onclick="switchVariant('B',this)">Variante B — Käufer</button>
+        <div class="variant-toggle">
+          <button class="v-btn on" onclick="switchV('A',this)">Variante A — Eigentümer</button>
+          <button class="v-btn" onclick="switchV('B',this)">Variante B — Käufer</button>
         </div>
 
-        <div id="variantA">
-          <p style="font-size:.88rem;color:var(--body);margin-bottom:14px"><strong>Ziel:</strong> Eigentümer gewinnen, die ihre Immobilie verkaufen wollen → Sie gewinnen das Mandat.</p>
-          <ul class="service-features">
-            <li>Quiz: "Was ist Ihre Immobilie wert?" — 3 Fragen + Kontaktformular</li>
-            <li>Eigentümer erhält sofort Bestätigungsmail + Calendly-Link</li>
-            <li>Sie erhalten Sofort-Benachrichtigung mit allen Lead-Daten</li>
-            <li>Lead automatisch in Google Sheets + CRM eingetragen</li>
-            <li>1 gewonnenes Mandat = 20.000–30.000 CHF Provision</li>
+        <div id="vA" class="variant-panel on">
+          <p style="font-size:.88rem;color:var(--muted);margin-bottom:14px"><strong style="color:var(--ink)">Ziel:</strong> Eigentümer gewinnen, die ihre Immobilie verkaufen wollen. Jeder ausgefüllte Quiz ist ein qualifizierter Erstkontakt — ein potenzielles Mandat.</p>
+          <ul class="feature-list">
+            <li>Quiz "Was ist Ihre Immobilie wert?" — 3 Fragen, dann Kontaktdaten</li>
+            <li>Eigentümer erhält sofort Bestätigungsmail mit Calendly-Link für das Bewertungsgespräch</li>
+            <li>Sie erhalten Sofort-Benachrichtigung mit allen Daten: Name, Telefon, Immobilientyp, Lage, Zustand</li>
+            <li>Lead automatisch in Google Sheets und CRM eingetragen</li>
           </ul>
+          <p style="font-size:.82rem;color:var(--muted);margin-bottom:16px">1 gewonnenes Mandat = 20.000–30.000 CHF Provision. Die Maschine kostet einmalig ab 2.500 CHF — amortisiert sich beim ersten Mandat mehrfach.</p>
         </div>
-        <div id="variantB" style="display:none">
-          <p style="font-size:.88rem;color:var(--body);margin-bottom:14px"><strong>Ziel:</strong> Kaufinteressenten gewinnen, die aktiv suchen → Sie bekommen das vollständige Suchprofil.</p>
-          <ul class="service-features">
-            <li>Quiz: "Ihre Traumimmobilie in der Schweiz finden" — 4 Fragen + Kontakt</li>
-            <li>Käufer erhält sofort Mail: "Wir suchen für Sie — hören von uns in 24h"</li>
-            <li>Sie erhalten sofort vollständiges Suchprofil (Region, Budget, Grösse)</li>
-            <li>Lead automatisch in Google Sheets als neuer Suchauftrag</li>
-            <li>Wer als Erster das Suchprofil hat und zurückruft — gewinnt die Provision</li>
+        <div id="vB" class="variant-panel">
+          <p style="font-size:.88rem;color:var(--muted);margin-bottom:14px"><strong style="color:var(--ink)">Ziel:</strong> Kaufinteressenten gewinnen, die aktiv suchen. Sie erhalten ein vollständiges Suchprofil — und rufen als Erster zurück.</p>
+          <ul class="feature-list">
+            <li>Quiz "Ihre Traumimmobilie finden" — Region, Budget, Grösse, Typ</li>
+            <li>Käufer erhält sofort Mail: "Wir suchen für Sie — Sie hören von uns innerhalb 24h"</li>
+            <li>Sie erhalten vollständiges Suchprofil als Sofort-Benachrichtigung</li>
+            <li>Lead automatisch als neuer Suchauftrag in Google Sheets und CRM</li>
           </ul>
+          <p style="font-size:.82rem;color:var(--muted);margin-bottom:16px">Käufer, die aktiv suchen, sind die heissesten Leads. Wer ihr Suchprofil zuerst hat und zurückruft — gewinnt die Provision.</p>
         </div>
 
-        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px">
-          <div class="price-tag">
-            <span class="amount">CHF 2.500–3.500</span>
-            <span class="period">einmalig (1 Variante)</span>
+        <div class="price-line">
+          <div>
+            <div class="price-main">CHF 2.500–3.500 <span>einmalig</span></div>
+            <div style="font-size:.78rem;color:var(--muted);margin-top:3px">eine Variante · + CHF 250/Monat</div>
           </div>
-          <div class="price-tag">
-            <span class="amount">CHF 5.500</span>
-            <span class="period">einmalig (beide)</span>
+          <div style="height:32px;width:1px;background:var(--border)"></div>
+          <div>
+            <div class="price-main">CHF 5.500 <span>einmalig</span></div>
+            <div style="font-size:.78rem;color:var(--muted);margin-top:3px">beide Varianten · + CHF 400/Monat</div>
           </div>
         </div>
-        <p style="font-size:.8rem;color:var(--body);margin-top:8px">+ CHF 250–400/Monat · Lieferzeit: 5–7 Tage</p>
+        <p style="font-size:.78rem;color:var(--muted);margin-top:10px">Lieferzeit 5–7 Tage. Sie schalten selbst Ads (Facebook, Instagram, Google).</p>
       </div>
-      <div class="reveal">
-        <div class="visual-box">
-          <div class="quiz-visual">
-            <div class="quiz-header">
-              <div class="quiz-logo-dot"></div>
-              <span class="quiz-title-text" id="quizTitle">Was ist Ihre Immobilie wert?</span>
+
+      <div class="reveal" style="transition-delay:.1s">
+        <!-- PLACEHOLDER für Screenshot/Demo -->
+        <div class="img-placeholder" style="min-height:200px;margin-bottom:16px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <span class="placeholder-label">Screenshot Landingpage<br>wird hier eingefügt</span>
+        </div>
+        <div class="process-visual">
+          <div class="process-header">
+            <div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div>
+            <span class="p-title">Automatischer Workflow</span>
+          </div>
+          <div class="process-body">
+            <div class="p-step">
+              <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+              <div class="p-step-info">
+                <div class="p-step-name">1. Quiz ausgefüllt</div>
+                <div class="p-step-desc">Interessent schliesst Formular ab</div>
+              </div>
+              <span class="p-step-badge">Trigger</span>
             </div>
-            <div class="quiz-progress"><div class="quiz-progress-bar" id="quizProgress" style="width:50%"></div></div>
-            <p class="quiz-question" id="quizQuestion">Was möchten Sie verkaufen?</p>
-            <div class="quiz-options" id="quizOptions">
-              <div class="quiz-option selected">🏢 Wohnung</div>
-              <div class="quiz-option">🏠 Haus</div>
-              <div class="quiz-option">🏭 Gewerbe</div>
-              <div class="quiz-option">🌿 Grundstück</div>
+            <div class="p-step">
+              <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+              <div class="p-step-info">
+                <div class="p-step-name">2. Bestätigungsmail an Lead</div>
+                <div class="p-step-desc">Automatisch · inkl. Calendly-Link</div>
+              </div>
+              <span class="p-step-badge">&lt;10s</span>
             </div>
-            <div class="quiz-auto">
-              <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" stroke="#0D7A4D" stroke-width="2.5" stroke-linecap="round"/></svg>
-              <span class="quiz-auto-text" id="quizAutoText">Lead → CRM + Sheets + Mail in &lt;10 Sekunden</span>
+            <div class="p-step">
+              <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
+              <div class="p-step-info">
+                <div class="p-step-name">3. Benachrichtigung an Sie</div>
+                <div class="p-step-desc">Name, Telefon, Immobiliendetails</div>
+              </div>
+              <span class="p-step-badge">&lt;10s</span>
+            </div>
+            <div class="p-step">
+              <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+              <div class="p-step-info">
+                <div class="p-step-name">4. CRM + Google Sheets</div>
+                <div class="p-step-desc">Lead vollständig erfasst, kein manueller Schritt</div>
+              </div>
+              <span class="p-step-badge">Auto</span>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- SERVICE 2 -->
-<section id="service2" class="service-section">
-  <div class="container">
-    <div class="service-layout reverse">
+<div id="service2" class="service-block">
+  <div class="wrap">
+    <div class="service-wrap flip">
       <div class="service-content reveal">
-        <div class="service-label">
-          <div class="service-num">2</div>
-          <span class="service-num-text">Service 2</span>
+        <div class="service-tag">
+          <div class="service-number">2</div>
+          <span class="service-tag-text">Service 2 — Lead-Verwaltung</span>
         </div>
         <h2>Kein Lead geht mehr verloren</h2>
         <p class="service-sub">Alle Anfragen. Ein System. Vollautomatisch.</p>
-        <p>Egal woher Ihre Anfragen kommen — Ihr Flowmatic-System verarbeitet sie sofort, trägt sie ins CRM ein und benachrichtigt Sie in Echtzeit. Keine manuellen Schritte mehr.</p>
-        <ul class="service-features">
-          <li><strong>Quelle A — Landingpage:</strong> Formular → Webhook → CRM + Sheets + Mail</li>
-          <li><strong>Quelle B — ImmoScout24 / Homegate:</strong> Portal-Anfrage → automatisch erfasst</li>
-          <li><strong>Quelle C — E-Mail:</strong> Direkte Anfragen werden erkannt und verarbeitet</li>
-          <li>Sie erhalten alle Leads sofort — unter 10 Sekunden Reaktionszeit</li>
-          <li>Kein Copy-Paste, kein Vergessen, kein Chaos in verschiedenen Postfächern</li>
+        <p>Egal woher eine Anfrage kommt — Ihr System verarbeitet sie sofort und trägt sie vollständig ins CRM ein. Kein manuelles Copy-Paste, kein Vergessen, kein Chaos zwischen verschiedenen Postfächern.</p>
+        <p><strong>Drei Quellen werden verarbeitet:</strong></p>
+        <ul class="feature-list" style="margin-top:12px">
+          <li><strong>Eigene Landingpage:</strong> Formular-Eingang per Webhook — sofort ins CRM, Google Sheets, Mail an Sie und Bestätigungsmail an Interessenten</li>
+          <li><strong>ImmoScout24 / Homegate:</strong> Neue Portal-Anfrage kommt per Mail — n8n empfängt, erkennt Lead und trägt automatisch ein</li>
+          <li><strong>Direkte E-Mail:</strong> Anfragen per E-Mail werden erkannt, in strukturierte Daten verwandelt und ins CRM übertragen</li>
         </ul>
-        <div class="price-tag" style="margin-top:8px">
-          <span class="amount">CHF 2.500</span>
-          <span class="period">einmalig + CHF 250/Monat · Lieferzeit: 3–5 Tage</span>
+        <p style="font-size:.88rem;color:var(--muted);margin-bottom:20px">Ergebnis: Sie wissen binnen Sekunden von jeder Anfrage — egal wie sie reinkommt. Der Makler der als Erster antwortet, gewinnt den Auftrag.</p>
+        <div class="price-line">
+          <div>
+            <div class="price-main">CHF 2.500 <span>einmalig</span></div>
+            <div style="font-size:.78rem;color:var(--muted);margin-top:3px">+ CHF 250/Monat · Lieferzeit 3–5 Tage</div>
+          </div>
         </div>
       </div>
-      <div class="reveal">
-        <div class="visual-box">
-          <div class="sources-visual">
-            <p style="font-size:.72rem;font-weight:700;color:var(--body);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Eingehende Quellen</p>
-            <div class="source-row">
-              <div class="source-icon lp">🌐</div>
-              <div class="source-info">
-                <div class="source-name">Landingpage</div>
-                <div class="source-desc">Formular-Eingang via Webhook</div>
+      <div class="reveal" style="transition-delay:.1s">
+        <div class="img-placeholder" style="min-height:180px;margin-bottom:16px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <span class="placeholder-label">Screenshot Workflow-Übersicht<br>wird hier eingefügt</span>
+        </div>
+        <div class="sources-visual">
+          <div class="sources-header">
+            <div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div>
+            <span class="p-title">Eingehende Quellen</span>
+          </div>
+          <div class="sources-body">
+            <div class="source-card">
+              <div class="source-icon-box lp">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
               </div>
-              <span class="source-arrow">→</span>
+              <div class="source-text">
+                <div class="source-name">Eigene Landingpage</div>
+                <div class="source-desc">Formular-Eingang per Webhook</div>
+              </div>
+              <span class="source-arrow">&#8594;</span>
             </div>
-            <div class="source-row">
-              <div class="source-icon portal">🏠</div>
-              <div class="source-info">
+            <div class="source-card">
+              <div class="source-icon-box portal">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              </div>
+              <div class="source-text">
                 <div class="source-name">ImmoScout24 / Homegate</div>
-                <div class="source-desc">Portal-Anfragen automatisch</div>
+                <div class="source-desc">Portal-Anfragen automatisch weiterverarbeitet</div>
               </div>
-              <span class="source-arrow">→</span>
+              <span class="source-arrow">&#8594;</span>
             </div>
-            <div class="source-row">
-              <div class="source-icon email">✉️</div>
-              <div class="source-info">
+            <div class="source-card">
+              <div class="source-icon-box mail">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </div>
+              <div class="source-text">
                 <div class="source-name">Direkte E-Mail</div>
-                <div class="source-desc">Eingehende Lead-Mails erkannt</div>
+                <div class="source-desc">Eingehende Lead-Mails werden erkannt</div>
               </div>
-              <span class="source-arrow">→</span>
+              <span class="source-arrow">&#8594;</span>
             </div>
-            <div class="crm-target">
-              <svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/></svg>
-              <span class="crm-target-text">CRM + Google Sheets + Sofort-Benachrichtigung</span>
+            <div class="crm-box">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>
+              <span class="crm-box-text">CRM + Google Sheets + Sofort-Benachrichtigung</span>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- SERVICE 3 -->
-<section id="service3" class="service-section">
-  <div class="container">
-    <div class="service-layout">
+<div id="service3" class="service-block">
+  <div class="wrap">
+    <div class="service-wrap">
       <div class="service-content reveal">
-        <div class="service-label">
-          <div class="service-num">3</div>
-          <span class="service-num-text">Service 3</span>
+        <div class="service-tag">
+          <div class="service-number">3</div>
+          <span class="service-tag-text">Service 3 — Exposé-Generator</span>
         </div>
         <h2>Professionelle Exposés in 60 Sekunden</h2>
         <p class="service-sub">KI schreibt. Sie verkaufen.</p>
-        <p>Sie geben Immobilien-Daten ein — Claude AI generiert sofort ein vollständiges, professionelles Exposé in vier Versionen. Besser als selbst geschrieben, in einem Bruchteil der Zeit.</p>
-        <ul class="service-features">
-          <li>Vollständiges Exposé (400–600 Wörter) auf Schweizer Hochdeutsch</li>
-          <li>ImmoScout24-Version — angepasst auf Format und Zeichenlimit</li>
-          <li>Social Media Post — für Instagram, Facebook, LinkedIn</li>
+        <p>Sie geben die Eckdaten einer Immobilie ein — Claude AI generiert daraus sofort ein vollständiges, professionelles Exposé auf Schweizer Hochdeutsch. In vier Versionen, direkt kopierbereit für die Portale.</p>
+        <ul class="feature-list">
+          <li>Vollständiges Exposé (400–600 Wörter) — emotionaler Einstieg, Objektbeschreibung, Lage, Ausstattung</li>
+          <li>ImmoScout24-Version — angepasst auf Format und Zeichenlimit des Portals</li>
+          <li>Social Media Post — kurze Version für Instagram, Facebook, LinkedIn</li>
           <li>E-Mail-Betreffzeile — für Käufer-Newsletter</li>
-          <li>2–3 Stunden gespart pro Objekt — bessere Qualität als handgeschrieben</li>
         </ul>
-        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px">
-          <div class="price-tag">
-            <span class="amount">CHF 1.500</span>
-            <span class="period">einmalig als Tool</span>
+        <p style="font-size:.88rem;color:var(--muted);margin-bottom:20px">Zeitersparnis pro Objekt: 2–3 Stunden. Bei 8 Objekten/Monat: bis zu 24 Stunden gewonnen — ohne Qualitätsverlust, eher im Gegenteil.</p>
+        <div class="price-line">
+          <div>
+            <div class="price-main">CHF 1.500 <span>einmalig</span></div>
+            <div style="font-size:.78rem;color:var(--muted);margin-top:3px">Standalone · kein Retainer · unbegrenzte Nutzung</div>
           </div>
-          <div class="price-tag">
-            <span class="amount">CHF 800</span>
-            <span class="period">Add-on zu Service 1 oder 2</span>
+          <div style="height:32px;width:1px;background:var(--border)"></div>
+          <div>
+            <div class="price-main">CHF 800 <span>Add-on</span></div>
+            <div style="font-size:.78rem;color:var(--muted);margin-top:3px">bei Kombination mit Service 1 oder 2</div>
           </div>
         </div>
-        <p style="font-size:.8rem;color:var(--body);margin-top:8px">Kein Retainer — einmaliges Setup · Unbegrenzte Nutzung</p>
-        <a href="#expose-demo" class="btn btn-outline" style="margin-top:20px">Live-Demo ausprobieren →</a>
+        <a href="#expose-live" class="btn btn-outline" style="margin-top:20px">Live-Demo ausprobieren</a>
       </div>
-      <div class="reveal">
-        <div class="visual-box" style="background:var(--dark-bg);border-color:rgba(255,255,255,.1)">
-          <div class="expose-mini">
-            <div class="expose-mini-header">
-              <div class="expose-mini-dot"></div>
-              <div class="expose-mini-dot"></div>
-              <div class="expose-mini-dot"></div>
-              <span class="expose-mini-title">Exposé-Generator</span>
+      <div class="reveal" style="transition-delay:.1s">
+        <div class="img-placeholder" style="min-height:180px;margin-bottom:16px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <span class="placeholder-label">Screenshot Exposé-Generator<br>wird hier eingefügt</span>
+        </div>
+        <div class="expose-visual">
+          <div class="expose-vis-bar">
+            <div class="expose-vis-dot"></div><div class="expose-vis-dot"></div><div class="expose-vis-dot"></div>
+          </div>
+          <div class="expose-vis-body">
+            <div class="ev-field-grid">
+              <div class="ev-field"><div class="ev-field-label">Objekttyp</div><div class="ev-field-val">4.5-Zi.-Wohnung</div></div>
+              <div class="ev-field"><div class="ev-field-label">Lage</div><div class="ev-field-val">Zürichsee, Küsnacht</div></div>
+              <div class="ev-field"><div class="ev-field-label">Fläche</div><div class="ev-field-val">112 m²</div></div>
+              <div class="ev-field"><div class="ev-field-label">Zustand</div><div class="ev-field-val">Neuwertig</div></div>
             </div>
-            <div class="expose-fields">
-              <div class="expose-field"><span>Objekttyp</span>4.5-Zi.-Wohnung</div>
-              <div class="expose-field"><span>Lage</span>Zürichsee, ZH</div>
-              <div class="expose-field"><span>Fläche</span>112 m²</div>
-              <div class="expose-field"><span>Zustand</span>Neuwertig</div>
-            </div>
-            <div class="expose-gen-btn">✨ Exposé generieren</div>
-            <div class="expose-output">
-              <div class="expose-output-tag">Vollständiges Exposé</div>
-              <div class="expose-text-lines">
-                <div class="expose-line"></div>
-                <div class="expose-line"></div>
-                <div class="expose-line"></div>
-                <div class="expose-line"></div>
+            <div class="ev-btn">Exposé generieren</div>
+            <div class="ev-output">
+              <div class="ev-out-label">Vollständiges Exposé</div>
+              <div class="ev-lines"><div class="ev-line"></div><div class="ev-line"></div><div class="ev-line"></div><div class="ev-line"></div></div>
+              <div class="ev-tags">
+                <span class="ev-tag">ImmoScout24-Version</span>
+                <span class="ev-tag">Social Post</span>
+                <span class="ev-tag">Betreffzeile</span>
               </div>
             </div>
           </div>
@@ -763,116 +874,117 @@ footer{background:var(--dark-bg);padding:60px 0 32px;border-top:1px solid rgba(2
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- PAKETE -->
 <section id="pakete">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="section-tag"><span class="badge" style="background:rgba(91,164,229,.15);color:var(--sky)">Pakete & Preise</span></div>
-      <h2 style="color:#fff">Drei Pakete. Feste Preise. Kein Kleingedrucktes.</h2>
-      <p>Wählen Sie das Paket das zu Ihrer aktuellen Situation passt. Erweiterungen sind jederzeit möglich.</p>
+  <div class="wrap">
+    <div class="pakete-intro reveal">
+      <span class="label label-light">Pakete &amp; Preise</span>
+      <h2>Drei Pakete. Feste CHF-Preise.</h2>
+      <p>Kein Stundensatz, kein Scope-Creep. Was vereinbart ist, wird geliefert.</p>
     </div>
     <div class="pakete-grid">
-      <!-- Paket 1 -->
-      <div class="paket-card reveal">
-        <div class="paket-name">Paket 1</div>
+      <div class="paket reveal">
+        <div class="paket-tier">Paket 1</div>
         <h3>Starter</h3>
-        <div class="paket-price">
-          <div class="paket-einmalig">CHF 2.500 <span>einmalig</span></div>
-          <div class="paket-retainer">+ CHF 200 / Monat</div>
+        <p class="paket-tagline">Einstieg in die Automatisierung</p>
+        <div class="paket-price-block">
+          <div class="paket-once">CHF 2.500<sub> einmalig</sub></div>
+          <div class="paket-monthly">+ CHF 200 / Monat</div>
         </div>
         <ul class="paket-items">
           <li>Service 1: Landingpage (einfach) + Lead-Workflow</li>
-          <li>Automatische Lead-Erfassung</li>
-          <li>Google Sheets Integration</li>
+          <li>Automatische Lead-Erfassung in Google Sheets</li>
+          <li>Sofort-Benachrichtigung bei neuer Anfrage</li>
           <li>Fertig in 5 Tagen</li>
           <li>1 Monat Support</li>
         </ul>
         <button class="paket-cta paket-cta-outline" onclick="openModal()">Jetzt starten</button>
-        <p class="paket-delivery">Lieferzeit: 5 Tage</p>
+        <p class="paket-time">Lieferzeit: 5 Tage</p>
       </div>
-      <!-- Paket 2 -->
-      <div class="paket-card featured reveal">
-        <div class="paket-badge">⭐ Empfohlen</div>
-        <div class="paket-name">Paket 2</div>
+      <div class="paket featured reveal">
+        <div class="paket-rec">Empfohlen</div>
+        <div class="paket-tier">Paket 2</div>
         <h3>Performance</h3>
-        <div class="paket-price">
-          <div class="paket-einmalig">CHF 4.500 <span>einmalig</span></div>
-          <div class="paket-retainer">+ CHF 350 / Monat</div>
+        <p class="paket-tagline">Lead-System von Quelle bis CRM</p>
+        <div class="paket-price-block">
+          <div class="paket-once">CHF 4.500<sub> einmalig</sub></div>
+          <div class="paket-monthly">+ CHF 350 / Monat</div>
         </div>
         <ul class="paket-items">
-          <li>Service 1: Landingpage mit Quiz-Funnel + Kalkulator</li>
-          <li>Service 2: Lead-Verwaltung (ImmoScout + E-Mail + LP)</li>
-          <li>Alle Quellen in einem System</li>
-          <li>CRM-Integration</li>
+          <li>Service 1: Landingpage mit Quiz-Funnel und Bewertungskalkulator</li>
+          <li>Service 2: Lead-Verwaltung — ImmoScout24, E-Mail und Landingpage</li>
+          <li>CRM-Integration vollständig eingerichtet</li>
+          <li>Alle Quellen in einem zentralen System</li>
           <li>Fertig in 7 Tagen</li>
           <li>1 Monat Support</li>
         </ul>
-        <button class="paket-cta paket-cta-primary" onclick="openModal()">Jetzt starten</button>
-        <p class="paket-delivery">Lieferzeit: 7 Tage</p>
+        <button class="paket-cta paket-cta-fill" onclick="openModal()">Jetzt starten</button>
+        <p class="paket-time">Lieferzeit: 7 Tage</p>
       </div>
-      <!-- Paket 3 -->
-      <div class="paket-card reveal">
-        <div class="paket-name">Paket 3</div>
+      <div class="paket reveal">
+        <div class="paket-tier">Paket 3</div>
         <h3>Komplett-System</h3>
-        <div class="paket-price">
-          <div class="paket-einmalig">CHF 6.500 <span>einmalig</span></div>
-          <div class="paket-retainer">+ CHF 500 / Monat</div>
+        <p class="paket-tagline">Leads + Exposés vollautomatisch</p>
+        <div class="paket-price-block">
+          <div class="paket-once">CHF 6.500<sub> einmalig</sub></div>
+          <div class="paket-monthly">+ CHF 500 / Monat</div>
         </div>
         <ul class="paket-items">
-          <li>Service 1: Landingpage mit Quiz-Funnel + Kalkulator</li>
-          <li>Service 2: Lead-Verwaltung (ImmoScout + E-Mail + LP)</li>
-          <li>Service 3: Exposé-Generator (KI)</li>
+          <li>Service 1: Landingpage mit Quiz-Funnel und Bewertungskalkulator</li>
+          <li>Service 2: Lead-Verwaltung — alle drei Quellen</li>
+          <li>Service 3: Exposé-Generator mit Claude AI</li>
           <li>Alle drei Systeme vollständig integriert</li>
           <li>Fertig in 7 Tagen</li>
           <li>3 Monate Support</li>
         </ul>
         <button class="paket-cta paket-cta-outline" onclick="openModal()">Jetzt starten</button>
-        <p class="paket-delivery">Lieferzeit: 7 Tage</p>
+        <p class="paket-time">Lieferzeit: 7 Tage</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ROI RECHNER -->
+<!-- ROI -->
 <section id="roi">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="section-tag"><span class="badge badge-blue">ROI-Rechner</span></div>
+  <div class="wrap">
+    <div class="roi-intro reveal">
+      <span class="label">ROI-Rechner</span>
       <h2>Wie viel ist Flowmatic für Sie wert?</h2>
-      <p>Passen Sie die Zahlen an Ihre Situation an — und sehen Sie, wie schnell sich das System amortisiert.</p>
+      <p style="color:var(--muted);font-size:.95rem">Passen Sie die Zahlen an Ihre Situation an — sehen Sie, wann sich das System amortisiert hat.</p>
     </div>
     <div class="roi-layout">
-      <div class="roi-form reveal">
+      <div class="roi-controls reveal">
+        <h3>Ihre Ausgangslage</h3>
         <div class="roi-field">
-          <label>Mandate pro Monat aktuell: <span class="roi-val" id="vMandate">3</span></label>
-          <input type="range" min="1" max="20" value="3" id="rMandate" oninput="calcRoi()">
+          <label>Mandate pro Monat aktuell <span class="roi-val-badge" id="vMand">3</span></label>
+          <input type="range" min="1" max="20" value="3" id="rMand" oninput="calcRoi()">
         </div>
         <div class="roi-field">
-          <label>Ø Provision pro Mandat: <span class="roi-val" id="vProv">CHF 20.000</span></label>
+          <label>Durchschnittliche Provision <span class="roi-val-badge" id="vProv">CHF 20.000</span></label>
           <input type="range" min="5000" max="60000" step="1000" value="20000" id="rProv" oninput="calcRoi()">
         </div>
         <div class="roi-field">
-          <label>Erwartete Zusatz-Mandate durch Flowmatic: <span class="roi-val" id="vExtra">+2</span></label>
+          <label>Zusatz-Mandate durch Flowmatic <span class="roi-val-badge" id="vExtra">+2</span></label>
           <input type="range" min="1" max="8" value="2" id="rExtra" oninput="calcRoi()">
         </div>
       </div>
-      <div class="roi-results reveal">
-        <div class="roi-card">
-          <div class="roi-card-label">Aktueller Monatsumsatz</div>
-          <div class="roi-card-value" id="rCurrent">CHF 60.000</div>
-          <div class="roi-card-sub" id="rCurrentSub">3 Mandate × CHF 20.000</div>
+      <div class="roi-results reveal" style="transition-delay:.1s">
+        <div class="roi-result-card">
+          <div class="rrc-label">Aktueller Monatsumsatz</div>
+          <div class="rrc-value" id="rCurr">CHF 60.000</div>
+          <div class="rrc-sub" id="rCurrSub">3 Mandate × CHF 20.000</div>
         </div>
-        <div class="roi-card highlight">
-          <div class="roi-card-label">Umsatz mit Flowmatic</div>
-          <div class="roi-card-value" id="rNew">CHF 100.000</div>
-          <div class="roi-card-sub" id="rNewSub">5 Mandate × CHF 20.000</div>
+        <div class="roi-result-card accent">
+          <div class="rrc-label light">Umsatz mit Flowmatic</div>
+          <div class="rrc-value light" id="rNew">CHF 100.000</div>
+          <div class="rrc-sub light" id="rNewSub">5 Mandate × CHF 20.000</div>
         </div>
-        <div class="roi-card">
-          <div class="roi-card-label">Mehrertrag pro Jahr</div>
-          <div class="roi-card-value" id="rYear">CHF 480.000</div>
-          <div class="roi-card-sub">Delta × 12 Monate</div>
+        <div class="roi-result-card">
+          <div class="rrc-label">Mehrertrag pro Jahr</div>
+          <div class="rrc-value" id="rYear">CHF 480.000</div>
+          <div class="rrc-sub">Delta × 12 Monate</div>
         </div>
         <div class="roi-amort">
           <div class="roi-amort-label">Flowmatic amortisiert sich in</div>
@@ -883,116 +995,96 @@ footer{background:var(--dark-bg);padding:60px 0 32px;border-top:1px solid rgba(2
   </div>
 </section>
 
-<!-- EXPOSÉ DEMO -->
-<section id="expose-demo">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="section-tag"><span class="badge" style="background:rgba(91,164,229,.15);color:var(--sky)">Live-Demo</span></div>
-      <h2>Exposé-Generator — jetzt ausprobieren</h2>
-      <p>Geben Sie Ihre Immobilien-Daten ein und sehen Sie, was Claude AI in 10 Sekunden daraus macht.</p>
+<!-- EXPOSE LIVE DEMO -->
+<section id="expose-live">
+  <div class="wrap">
+    <div class="expose-live-intro reveal">
+      <span class="label label-light">Live-Demo — Service 3</span>
+      <h2>Exposé-Generator ausprobieren</h2>
+      <p>Geben Sie Immobilien-Daten ein und sehen Sie, was Claude AI in wenigen Sekunden daraus macht. Alle vier Versionen — direkt kopierbereit.</p>
     </div>
-    <div class="expose-demo-box reveal">
-      <div class="expose-api-notice">
-        <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#5BA4E5" stroke-width="2" stroke-linecap="round"/></svg>
-        Für die Live-Demo geben Sie Ihren Claude API-Key ein (claude.ai → Account → API-Keys). Ihre Daten verlassen nie diesen Browser — der Key wird nur für diesen Request verwendet.
+    <div class="expose-box reveal">
+      <div class="api-notice">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <p>Für die Live-Demo benötigen Sie einen Claude API-Key (zu finden auf claude.ai unter Account &rarr; API-Keys). Ihr Key verlässt nie diesen Browser — er wird ausschliesslich für diesen Request verwendet und nicht gespeichert.</p>
       </div>
       <div class="api-key-row">
-        <input type="password" class="expose-input" id="apiKey" placeholder="sk-ant-api03-...">
-        <button class="api-key-toggle" onclick="toggleApiKey()">Anzeigen</button>
+        <input type="password" class="e-input" id="apiKey" placeholder="sk-ant-api03-...">
+        <button class="key-toggle-btn" onclick="toggleKey()">Anzeigen</button>
       </div>
-      <div class="expose-form-grid">
+      <div class="e-grid">
         <div>
-          <label class="expose-label">Objekttyp *</label>
-          <select class="expose-select" id="eTyp">
-            <option value="">Bitte wählen</option>
-            <option>Wohnung</option>
-            <option>Haus</option>
-            <option>Gewerbe</option>
-            <option>Grundstück</option>
-          </select>
+          <label class="e-label">Objekttyp</label>
+          <select class="e-select" id="eTyp"><option value="">Bitte wählen</option><option>Wohnung</option><option>Haus</option><option>Gewerbe</option><option>Grundstück</option></select>
         </div>
         <div>
-          <label class="expose-label">Lage / Adresse *</label>
-          <input type="text" class="expose-input" id="eLage" placeholder="z.B. Zürichsee, Küsnacht ZH">
+          <label class="e-label">Lage / Adresse</label>
+          <input type="text" class="e-input" id="eLage" placeholder="z.B. Zürichsee, Küsnacht ZH">
         </div>
         <div>
-          <label class="expose-label">Fläche (m²)</label>
-          <input type="text" class="expose-input" id="eFlaeche" placeholder="z.B. 112 m²">
+          <label class="e-label">Fläche</label>
+          <input type="text" class="e-input" id="eFlaeche" placeholder="z.B. 112 m²">
         </div>
         <div>
-          <label class="expose-label">Zimmer</label>
-          <input type="text" class="expose-input" id="eZimmer" placeholder="z.B. 4.5">
+          <label class="e-label">Zimmer</label>
+          <input type="text" class="e-input" id="eZimmer" placeholder="z.B. 4.5">
         </div>
         <div>
-          <label class="expose-label">Baujahr</label>
-          <input type="text" class="expose-input" id="eBaujahr" placeholder="z.B. 1998">
+          <label class="e-label">Baujahr</label>
+          <input type="text" class="e-input" id="eBaujahr" placeholder="z.B. 1998">
         </div>
         <div>
-          <label class="expose-label">Zustand</label>
-          <select class="expose-select" id="eZustand">
-            <option value="">Bitte wählen</option>
-            <option>Neuwertig</option>
-            <option>Gepflegt</option>
-            <option>Renovierungsbedarf</option>
-          </select>
+          <label class="e-label">Zustand</label>
+          <select class="e-select" id="eZustand"><option value="">Bitte wählen</option><option>Neuwertig</option><option>Gepflegt</option><option>Renovierungsbedarf</option></select>
         </div>
-        <div class="expose-form-full">
-          <label class="expose-label">Besondere Merkmale</label>
-          <input type="text" class="expose-input" id="eMerkmale" placeholder="z.B. Seesicht, Garten, Tiefgaragenplatz, komplett renoviert">
+        <div class="e-full">
+          <label class="e-label">Besondere Merkmale</label>
+          <input type="text" class="e-input" id="eMerkmale" placeholder="z.B. Seesicht, Garten, Tiefgaragenplatz, komplett renoviert 2022">
         </div>
-        <div class="expose-form-full">
-          <label class="expose-label">Zielpreis</label>
-          <input type="text" class="expose-input" id="ePreis" placeholder="z.B. CHF 1.850.000">
+        <div class="e-full">
+          <label class="e-label">Zielpreis</label>
+          <input type="text" class="e-input" id="ePreis" placeholder="z.B. CHF 1.850.000">
         </div>
       </div>
-      <button class="expose-gen-button" id="genBtn" onclick="generateExpose()">
-        <span id="genSpinner" class="expose-spinner"></span>
-        <span id="genLabel">✨ Exposé generieren</span>
+      <button class="e-gen-btn" id="genBtn" onclick="generateExpose()">
+        <span class="e-spinner" id="eSpinner"></span>
+        <span id="eLabel">Exposé generieren</span>
       </button>
-      <div class="expose-output-area" id="exposeOutput"></div>
+      <div class="e-output" id="eOutput"></div>
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
 <section id="testimonials">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="section-tag"><span class="badge badge-blue">Kundenstimmen</span></div>
+  <div class="wrap">
+    <div class="testi-intro reveal">
+      <span class="label">Kundenstimmen</span>
       <h2>Was Schweizer Makler sagen</h2>
     </div>
     <div class="testi-grid">
-      <div class="testi-card reveal">
-        <div class="stars">★★★★★</div>
-        <p class="testi-text">"Seit Flowmatic verpassen wir keine Anfrage mehr. Die Reaktionszeit ist von Stunden auf Sekunden gesunken. Im ersten Monat haben wir zwei zusätzliche Mandate gewonnen."</p>
+      <div class="testi reveal">
+        <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="testi-quote">"Seit Flowmatic verpassen wir keine Anfrage mehr. Die Reaktionszeit ist von mehreren Stunden auf unter eine Minute gesunken. Im ersten Monat haben wir zwei zusätzliche Mandate gewonnen."</p>
         <div class="testi-author">
-          <div class="testi-avatar">BK</div>
-          <div>
-            <div class="testi-name">Beat K.</div>
-            <div class="testi-role">Inhaber, Immobilien Zürichsee</div>
-          </div>
+          <div class="testi-av">BK</div>
+          <div><div class="testi-name">Beat K.</div><div class="testi-role">Inhaber, Immobilien Zürichsee</div></div>
         </div>
       </div>
-      <div class="testi-card reveal">
-        <div class="stars">★★★★★</div>
-        <p class="testi-text">"Der Exposé-Generator spart mir pro Objekt zwei Stunden. Bei zehn Objekten pro Monat ist das ein ganzer Arbeitstag — den ich jetzt für Besichtigungen nutze."</p>
+      <div class="testi reveal">
+        <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="testi-quote">"Der Exposé-Generator spart mir pro Objekt zwei Stunden. Bei zehn Objekten pro Monat ist das ein ganzer Arbeitstag — den ich jetzt für Besichtigungen und Kundenkontakt nutze."</p>
         <div class="testi-author">
-          <div class="testi-avatar">SM</div>
-          <div>
-            <div class="testi-name">Sandra M.</div>
-            <div class="testi-role">Maklerin, Engel &amp; Zürich</div>
-          </div>
+          <div class="testi-av">SM</div>
+          <div><div class="testi-name">Sandra M.</div><div class="testi-role">Maklerin, Engel &amp; Zürich</div></div>
         </div>
       </div>
-      <div class="testi-card reveal">
-        <div class="stars">★★★★★</div>
-        <p class="testi-text">"Wir haben im ersten Monat drei neue Mandate über die Landingpage gewonnen. Das System hat sich sofort amortisiert — bereits beim ersten Mandat."</p>
+      <div class="testi reveal">
+        <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="testi-quote">"Im ersten Monat drei neue Mandate über die Landingpage. Das System hat sich sofort amortisiert — schon beim ersten Mandat. Ich verstehe nicht, wie ich vorher ohne gearbeitet habe."</p>
         <div class="testi-author">
-          <div class="testi-avatar">TW</div>
-          <div>
-            <div class="testi-name">Thomas W.</div>
-            <div class="testi-role">Geschäftsführer, Immobilien Zentralschweiz</div>
-          </div>
+          <div class="testi-av">TW</div>
+          <div><div class="testi-name">Thomas W.</div><div class="testi-role">Geschäftsführer, Immobilien Zentralschweiz</div></div>
         </div>
       </div>
     </div>
@@ -1000,41 +1092,41 @@ footer{background:var(--dark-bg);padding:60px 0 32px;border-top:1px solid rgba(2
 </section>
 
 <!-- CTA -->
-<section id="cta">
-  <div class="container" style="text-align:center">
+<section id="cta-section">
+  <div class="wrap">
     <div class="reveal">
-      <div class="section-tag" style="margin-bottom:20px"><span class="badge" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.75)">Kostenloses Erstgespräch</span></div>
+      <span class="label label-light">Kostenloses Erstgespräch</span>
       <h2>Bereit, keine Leads mehr zu verlieren?</h2>
-      <p>30 Minuten Gespräch. Wir analysieren Ihre Situation und zeigen genau, was wir für Sie automatisieren können.</p>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <p>30 Minuten. Keine Kosten. Kein Commitment. Wir analysieren Ihre Situation und zeigen konkret, was automatisiert werden kann.</p>
+      <div class="cta-btns">
         <button class="btn btn-primary" onclick="openModal()">Erstgespräch anfragen</button>
-        <a href="#pakete" class="btn btn-secondary">Pakete ansehen</a>
+        <a href="#pakete" class="btn btn-ghost">Pakete ansehen</a>
       </div>
-      <p style="margin-top:20px;font-size:.82rem;color:rgba(255,255,255,.35)">Keine Kosten. Kein Commitment. Nur ein konkretes Gespräch.</p>
+      <p class="cta-note">Keine versteckten Kosten. Kein Abo-Zwang. Feste CHF-Preise.</p>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer id="kontakt-section">
-  <div class="container">
-    <div class="footer-grid">
+<footer id="kontakt">
+  <div class="wrap">
+    <div class="footer-top">
       <div class="footer-brand">
         <svg width="120" height="38" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
-          <path d="M78 37 L90 22" fill="none" stroke="#D0D8E4" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M110 22 L122 37" fill="none" stroke="#D0D8E4" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="84" cy="30" r="2.5" fill="#D0D8E4"/>
-          <circle cx="116" cy="30" r="2.5" fill="#D0D8E4"/>
+          <path d="M78 37 L90 22" fill="none" stroke="#3a4e65" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M110 22 L122 37" fill="none" stroke="#3a4e65" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="84" cy="30" r="2.5" fill="#3a4e65"/>
+          <circle cx="116" cy="30" r="2.5" fill="#3a4e65"/>
           <rect x="90" y="11" width="20" height="14" rx="4" fill="#2D7DD2"/>
           <rect x="60" y="37" width="20" height="14" rx="4" fill="#2D7DD2"/>
           <rect x="120" y="37" width="20" height="14" rx="4" fill="#2D7DD2"/>
-          <text x="62" y="68" font-family="system-ui, sans-serif" font-size="18" font-weight="500" fill="#D0D8E4" letter-spacing="0.5">flow</text>
-          <text x="100" y="68" font-family="system-ui, sans-serif" font-size="18" font-weight="500" fill="#2D7DD2" letter-spacing="0.5">matic</text>
+          <text x="62" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="#3a4e65" letter-spacing="0.5">flow</text>
+          <text x="100" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="#2D7DD2" letter-spacing="0.5">matic</text>
         </svg>
-        <p>Vollautomatische Lead-Systeme und KI-Tools für Schweizer Immobilienmakler. Zürich · Zug · Basel · Genf · Bern</p>
+        <p>Vollautomatische Lead-Systeme und KI-Tools für Schweizer Immobilienmakler.<br>Zürich &middot; Zug &middot; Basel &middot; Genf &middot; Bern</p>
       </div>
       <div class="footer-col">
-        <h4>Services</h4>
+        <h5>Services</h5>
         <ul>
           <li><a href="#service1">Lead-Maschine</a></li>
           <li><a href="#service2">Lead-Verwaltung</a></li>
@@ -1042,7 +1134,7 @@ footer{background:var(--dark-bg);padding:60px 0 32px;border-top:1px solid rgba(2
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Pakete</h4>
+        <h5>Pakete</h5>
         <ul>
           <li><a href="#pakete">Starter</a></li>
           <li><a href="#pakete">Performance</a></li>
@@ -1050,266 +1142,166 @@ footer{background:var(--dark-bg);padding:60px 0 32px;border-top:1px solid rgba(2
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Kontakt</h4>
+        <h5>Kontakt</h5>
         <ul>
           <li><a href="#" onclick="openModal();return false">Erstgespräch anfragen</a></li>
-          <li><a href="#expose-demo">Live-Demo</a></li>
+          <li><a href="#expose-live">Live-Demo</a></li>
           <li><a href="#roi">ROI-Rechner</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span class="footer-copy">© 2025 Flowmatic. Alle Rechte vorbehalten.</span>
-      <div class="footer-legal">
-        <a href="#">Datenschutz</a>
-        <a href="#">Impressum</a>
-      </div>
+      <span class="footer-copy">&copy; 2025 Flowmatic. Alle Rechte vorbehalten.</span>
+      <div class="footer-legal"><a href="#">Datenschutz</a><a href="#">Impressum</a></div>
     </div>
   </div>
 </footer>
 
-<!-- KONTAKT MODAL -->
-<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+<!-- MODAL -->
+<div class="overlay" id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <h2>Kostenloses Erstgespräch</h2>
-    <p>30 Minuten. Keine Kosten. Wir analysieren Ihre Situation und zeigen konkret, was wir für Sie tun können.</p>
-    <div id="formContent">
-      <div class="form-row">
-        <label>Name *</label>
-        <input type="text" id="fName" placeholder="Ihr Name">
-      </div>
-      <div class="form-row">
-        <label>E-Mail *</label>
-        <input type="email" id="fEmail" placeholder="name@maklerbüro.ch">
-      </div>
-      <div class="form-row">
-        <label>Telefon</label>
-        <input type="tel" id="fPhone" placeholder="+41 79 000 00 00">
-      </div>
-      <div class="form-row">
-        <label>Firma / Maklerbüro</label>
-        <input type="text" id="fFirma" placeholder="Ihr Maklerbüro">
-      </div>
-      <div class="form-row">
-        <label>Nachricht</label>
-        <textarea id="fMsg" placeholder="Was ist Ihre grösste Herausforderung bei der Lead-Gewinnung?"></textarea>
-      </div>
-      <button class="form-submit" onclick="submitForm()">Erstgespräch anfragen</button>
+    <button class="modal-x" onclick="closeModal()">&#10005;</button>
+    <h3>Kostenloses Erstgespräch</h3>
+    <p>30 Minuten. Keine Kosten. Kein Commitment. Wir melden uns innerhalb von 24 Stunden.</p>
+    <div id="fContent">
+      <div class="f-row"><label>Name *</label><input type="text" id="fName" placeholder="Ihr vollständiger Name"></div>
+      <div class="f-row"><label>E-Mail *</label><input type="email" id="fEmail" placeholder="name@maklerbuero.ch"></div>
+      <div class="f-row"><label>Telefon</label><input type="tel" id="fPhone" placeholder="+41 79 000 00 00"></div>
+      <div class="f-row"><label>Firma / Maklerbüro</label><input type="text" id="fFirma" placeholder="Name Ihres Maklerbüros"></div>
+      <div class="f-row"><label>Nachricht</label><textarea id="fMsg" placeholder="Was ist Ihre grösste Herausforderung bei der Lead-Gewinnung?"></textarea></div>
+      <button class="f-submit" onclick="submitForm()">Erstgespräch anfragen</button>
     </div>
-    <div class="form-success" id="formSuccess">
-      <h3>✓ Anfrage erhalten</h3>
-      <p>Wir melden uns innerhalb von 24 Stunden bei Ihnen. Bis bald!</p>
+    <div class="f-success" id="fSuccess">
+      <h3 style="color:var(--green)">Anfrage erhalten</h3>
+      <p>Wir melden uns innerhalb von 24 Stunden. Bis bald.</p>
     </div>
   </div>
 </div>
 
 <script>
-// NAV SCROLL
+// NAV
 window.addEventListener('scroll',()=>{
-  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40)
+  document.getElementById('nav').classList.toggle('solid',scrollY>30)
 })
 
-// MOBILE MENU
-function toggleMenu(){
-  document.getElementById('mobileMenu').classList.toggle('open')
+// BURGER
+function toggleBurger(){
+  document.getElementById('mobNav').classList.toggle('open')
 }
 
 // MODAL
 function openModal(){document.getElementById('modal').classList.add('open')}
 function closeModal(){document.getElementById('modal').classList.remove('open')}
 
-// SCROLL REVEAL
-const observer=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})
-},{threshold:.1})
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el))
+// REVEAL
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.08})
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el))
 
-// SERVICE VARIANTS
-function switchVariant(v,btn){
-  document.querySelectorAll('.variant-tab').forEach(t=>t.classList.remove('active'))
-  btn.classList.add('active')
-  if(v==='A'){
-    document.getElementById('variantA').style.display='block'
-    document.getElementById('variantB').style.display='none'
-    document.getElementById('quizTitle').textContent='Was ist Ihre Immobilie wert?'
-    document.getElementById('quizQuestion').textContent='Was möchten Sie verkaufen?'
-    document.getElementById('quizProgress').style.width='50%'
-    document.getElementById('quizAutoText').textContent='Lead → CRM + Sheets + Mail in <10 Sekunden'
-    document.getElementById('quizOptions').innerHTML='<div class="quiz-option selected">🏢 Wohnung</div><div class="quiz-option">🏠 Haus</div><div class="quiz-option">🏭 Gewerbe</div><div class="quiz-option">🌿 Grundstück</div>'
-  }else{
-    document.getElementById('variantA').style.display='none'
-    document.getElementById('variantB').style.display='block'
-    document.getElementById('quizTitle').textContent='Ihre Traumimmobilie finden'
-    document.getElementById('quizQuestion').textContent='Was suchen Sie?'
-    document.getElementById('quizProgress').style.width='25%'
-    document.getElementById('quizAutoText').textContent='Suchprofil → CRM als neuer Suchauftrag'
-    document.getElementById('quizOptions').innerHTML='<div class="quiz-option selected">🏢 Wohnung kaufen</div><div class="quiz-option">🏠 Haus kaufen</div><div class="quiz-option">🏢 Wohnung mieten</div><div class="quiz-option">🏠 Haus mieten</div>'
-  }
+// VARIANT
+function switchV(v,btn){
+  document.querySelectorAll('.v-btn').forEach(b=>b.classList.remove('on'))
+  btn.classList.add('on')
+  document.getElementById('vA').classList.toggle('on',v==='A')
+  document.getElementById('vB').classList.toggle('on',v==='B')
 }
+document.getElementById('vA').classList.add('on')
 
-// ROI RECHNER
+// ROI
 function fmt(n){return n.toLocaleString('de-CH')}
 function calcRoi(){
-  const mandate=+document.getElementById('rMandate').value
-  const prov=+document.getElementById('rProv').value
-  const extra=+document.getElementById('rExtra').value
-  const current=mandate*prov
-  const newRev=(mandate+extra)*prov
-  const delta=extra*prov
-  const year=delta*12
-  const invest=4500
-  const amort=Math.ceil(invest/delta)
-  document.getElementById('vMandate').textContent=mandate
-  document.getElementById('vProv').textContent='CHF '+fmt(prov)
-  document.getElementById('vExtra').textContent='+'+extra
-  document.getElementById('rCurrent').textContent='CHF '+fmt(current)
-  document.getElementById('rCurrentSub').textContent=mandate+' Mandate × CHF '+fmt(prov)
-  document.getElementById('rNew').textContent='CHF '+fmt(newRev)
-  document.getElementById('rNewSub').textContent=(mandate+extra)+' Mandate × CHF '+fmt(prov)
-  document.getElementById('rYear').textContent='CHF '+fmt(year)
-  document.getElementById('rAmort').textContent=amort<=1?'1 Monat':amort+' Monate'
+  const m=+document.getElementById('rMand').value
+  const p=+document.getElementById('rProv').value
+  const x=+document.getElementById('rExtra').value
+  document.getElementById('vMand').textContent=m
+  document.getElementById('vProv').textContent='CHF '+fmt(p)
+  document.getElementById('vExtra').textContent='+'+x
+  const cur=m*p,nw=(m+x)*p,yr=x*p*12,inv=4500,am=Math.ceil(inv/(x*p))
+  document.getElementById('rCurr').textContent='CHF '+fmt(cur)
+  document.getElementById('rCurrSub').textContent=m+' Mandate × CHF '+fmt(p)
+  document.getElementById('rNew').textContent='CHF '+fmt(nw)
+  document.getElementById('rNewSub').textContent=(m+x)+' Mandate × CHF '+fmt(p)
+  document.getElementById('rYear').textContent='CHF '+fmt(yr)
+  document.getElementById('rAmort').textContent=am<=1?'1 Monat':am+' Monate'
 }
 calcRoi()
 
-// CONTACT FORM
-const WEBHOOK_URL="https://DEINE-N8N-URL/webhook/flowmatic-leads"
+// CONTACT
+const WH="https://DEINE-N8N-URL/webhook/flowmatic-leads"
 async function submitForm(){
-  const name=document.getElementById('fName').value.trim()
-  const email=document.getElementById('fEmail').value.trim()
-  if(!name||!email){alert('Bitte füllen Sie Name und E-Mail aus.');return}
-  const body={name,email,
-    phone:document.getElementById('fPhone').value,
-    firma:document.getElementById('fFirma').value,
-    msg:document.getElementById('fMsg').value,
-    source:'flowmatic-landing',
-    ts:new Date().toISOString()
-  }
-  try{
-    await fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
-  }catch(e){}
-  document.getElementById('formContent').style.display='none'
-  document.getElementById('formSuccess').style.display='block'
+  const n=document.getElementById('fName').value.trim()
+  const e=document.getElementById('fEmail').value.trim()
+  if(!n||!e){alert('Bitte Name und E-Mail ausfüllen.');return}
+  try{await fetch(WH,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:e,phone:document.getElementById('fPhone').value,firma:document.getElementById('fFirma').value,msg:document.getElementById('fMsg').value,ts:new Date().toISOString()})})}catch(err){}
+  document.getElementById('fContent').style.display='none'
+  document.getElementById('fSuccess').style.display='block'
+}
+
+// API KEY TOGGLE
+function toggleKey(){
+  const i=document.getElementById('apiKey')
+  i.type=i.type==='password'?'text':'password'
 }
 
 // EXPOSE GENERATOR
-function toggleApiKey(){
-  const inp=document.getElementById('apiKey')
-  inp.type=inp.type==='password'?'text':'password'
-}
-
 async function generateExpose(){
   const key=document.getElementById('apiKey').value.trim()
   const typ=document.getElementById('eTyp').value
   const lage=document.getElementById('eLage').value.trim()
-  if(!key){alert('Bitte geben Sie Ihren Claude API-Key ein.');return}
-  if(!typ||!lage){alert('Bitte füllen Sie mindestens Objekttyp und Lage aus.');return}
-
+  if(!key){alert('Bitte Claude API-Key eingeben.');return}
+  if(!typ||!lage){alert('Bitte mindestens Objekttyp und Lage ausfüllen.');return}
   const btn=document.getElementById('genBtn')
-  const spinner=document.getElementById('genSpinner')
-  const label=document.getElementById('genLabel')
-  btn.disabled=true
-  spinner.style.display='block'
-  label.textContent='Generiere Exposé...'
-
-  const flaeche=document.getElementById('eFlaeche').value
-  const zimmer=document.getElementById('eZimmer').value
-  const baujahr=document.getElementById('eBaujahr').value
-  const zustand=document.getElementById('eZustand').value
-  const merkmale=document.getElementById('eMerkmale').value
-  const preis=document.getElementById('ePreis').value
-
-  const userMsg=`Erstelle ein professionelles Immobilien-Exposé für folgendes Objekt:
-- Objekttyp: ${typ}
-- Lage: ${lage}
-${flaeche?'- Fläche: '+flaeche:''}
-${zimmer?'- Zimmer: '+zimmer:''}
-${baujahr?'- Baujahr: '+baujahr:''}
-${zustand?'- Zustand: '+zustand:''}
-${merkmale?'- Besondere Merkmale: '+merkmale:''}
-${preis?'- Zielpreis: '+preis:''}
-
-Generiere bitte alle vier Versionen klar getrennt mit den Überschriften: VOLLSTÄNDIGES EXPOSÉ, IMMOSCOUT24 VERSION, SOCIAL MEDIA POST, E-MAIL BETREFFZEILE`
-
-  const systemPrompt=`Du bist ein professioneller Schweizer Immobilien-Texter mit 20 Jahren Erfahrung. Du schreibst Exposés die emotional ansprechen und gleichzeitig alle wichtigen Fakten liefern. Schreibe immer auf Schweizer Hochdeutsch. Verwende keine Anglizismen. Generiere exakt diese vier Versionen und trenne sie klar:
-1. VOLLSTÄNDIGES EXPOSÉ (400-600 Wörter) — emotionaler Einstieg, Objektbeschreibung, Lage, Ausstattung
-2. IMMOSCOUT24 VERSION (max. 2000 Zeichen) — angepasst auf Portal-Format
-3. SOCIAL MEDIA POST (max. 280 Zeichen) — für Instagram/Facebook/LinkedIn
-4. E-MAIL BETREFFZEILE (max. 60 Zeichen) — für Käufer-Newsletter`
-
+  const sp=document.getElementById('eSpinner')
+  const lbl=document.getElementById('eLabel')
+  btn.disabled=true;sp.style.display='block';lbl.textContent='Generiere...'
+  const fl=document.getElementById('eFlaeche').value
+  const zi=document.getElementById('eZimmer').value
+  const bj=document.getElementById('eBaujahr').value
+  const zu=document.getElementById('eZustand').value
+  const me=document.getElementById('eMerkmale').value
+  const pr=document.getElementById('ePreis').value
+  const um=`Erstelle ein professionelles Exposé:\n- Objekttyp: ${typ}\n- Lage: ${lage}${fl?'\n- Fläche: '+fl:''}${zi?'\n- Zimmer: '+zi:''}${bj?'\n- Baujahr: '+bj:''}${zu?'\n- Zustand: '+zu:''}${me?'\n- Merkmale: '+me:''}${pr?'\n- Preis: '+pr:''}\n\nGeneriere alle vier Versionen mit diesen exakten Überschriften: VOLLSTÄNDIGES EXPOSÉ, IMMOSCOUT24 VERSION, SOCIAL MEDIA POST, E-MAIL BETREFFZEILE`
+  const sys=`Du bist ein professioneller Schweizer Immobilien-Texter mit 20 Jahren Erfahrung. Schreibe immer auf Schweizer Hochdeutsch, ohne Anglizismen. Generiere exakt diese vier Versionen:\n1. VOLLSTÄNDIGES EXPOSÉ (400-600 Wörter)\n2. IMMOSCOUT24 VERSION (max. 2000 Zeichen)\n3. SOCIAL MEDIA POST (max. 280 Zeichen)\n4. E-MAIL BETREFFZEILE (max. 60 Zeichen)`
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':key,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body:JSON.stringify({
-        model:'claude-haiku-4-5-20251001',
-        max_tokens:2048,
-        system:systemPrompt,
-        messages:[{role:'user',content:userMsg}]
-      })
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2048,system:sys,messages:[{role:'user',content:um}]})
     })
-    if(!resp.ok){
-      const err=await resp.json().catch(()=>({}))
-      throw new Error(err.error?.message||'API-Fehler '+resp.status)
-    }
-    const data=await resp.json()
-    const text=data.content[0].text
-    renderExposeOutput(text)
-  }catch(e){
-    alert('Fehler: '+e.message+'\n\nBitte prüfen Sie Ihren API-Key.')
+    if(!r.ok){const er=await r.json().catch(()=>({}));throw new Error(er.error?.message||'Fehler '+r.status)}
+    const d=await r.json()
+    renderOutput(d.content[0].text)
+  }catch(err){
+    alert('Fehler: '+err.message)
   }finally{
-    btn.disabled=false
-    spinner.style.display='none'
-    label.textContent='✨ Exposé erneut generieren'
+    btn.disabled=false;sp.style.display='none';lbl.textContent='Exposé erneut generieren'
   }
 }
 
-function renderExposeOutput(text){
-  const sections=[
-    {key:'VOLLSTÄNDIGES EXPOSÉ',title:'Vollständiges Exposé'},
-    {key:'IMMOSCOUT24 VERSION',title:'ImmoScout24-Version'},
-    {key:'SOCIAL MEDIA POST',title:'Social Media Post'},
-    {key:'E-MAIL BETREFFZEILE',title:'E-Mail Betreffzeile'}
+function renderOutput(text){
+  const secs=[
+    {k:'VOLLSTÄNDIGES EXPOSÉ',t:'Vollständiges Exposé'},
+    {k:'IMMOSCOUT24 VERSION',t:'ImmoScout24-Version'},
+    {k:'SOCIAL MEDIA POST',t:'Social Media Post'},
+    {k:'E-MAIL BETREFFZEILE',t:'E-Mail Betreffzeile'}
   ]
   let html=''
-  sections.forEach((sec,i)=>{
-    const nextKey=sections[i+1]?.key
-    let start=text.indexOf(sec.key)
-    if(start===-1)return
-    start+=sec.key.length
-    const end=nextKey?text.indexOf(nextKey,start):text.length
-    const content=text.slice(start,end).replace(/^[\s:\n]+/,'').trim()
-    const id='out'+i
-    html+=`<div class="expose-output-section">
-      <div class="expose-output-header">
-        <span class="expose-output-title">${sec.title}</span>
-        <button class="copy-btn" id="copy${i}" onclick="copySection('${id}','copy${i}')">Kopieren</button>
-      </div>
-      <div class="expose-output-text" id="${id}">${escapeHtml(content)}</div>
-    </div>`
+  secs.forEach((s,i)=>{
+    const nk=secs[i+1]?.k
+    let st=text.indexOf(s.k);if(st===-1)return
+    st+=s.k.length
+    const en=nk?text.indexOf(nk,st):text.length
+    const c=text.slice(st,en).replace(/^[\s:\n]+/,'').trim()
+    html+=`<div class="e-section"><div class="e-section-hd"><span class="e-section-title">${s.t}</span><button class="copy-btn" id="cb${i}" onclick="doCopy('ot${i}','cb${i}')">Kopieren</button></div><div class="e-text" id="ot${i}">${esc(c)}</div></div>`
   })
-  const area=document.getElementById('exposeOutput')
-  area.innerHTML=html
-  area.classList.add('visible')
-  area.scrollIntoView({behavior:'smooth',block:'start'})
+  const out=document.getElementById('eOutput')
+  out.innerHTML=html;out.classList.add('show')
+  out.scrollIntoView({behavior:'smooth',block:'start'})
 }
-
-function escapeHtml(t){
-  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-}
-
-async function copySection(id,btnId){
-  const text=document.getElementById(id).textContent
-  await navigator.clipboard.writeText(text)
-  const btn=document.getElementById(btnId)
-  btn.textContent='Kopiert ✓'
-  btn.classList.add('copied')
-  setTimeout(()=>{btn.textContent='Kopieren';btn.classList.remove('copied')},2000)
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+async function doCopy(id,btnId){
+  await navigator.clipboard.writeText(document.getElementById(id).textContent)
+  const b=document.getElementById(btnId);b.textContent='Kopiert';b.classList.add('done')
+  setTimeout(()=>{b.textContent='Kopieren';b.classList.remove('done')},2000)
 }
 </script>
 </body>
