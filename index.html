@@ -246,45 +246,56 @@ h1.h1 em{font-style:normal;color:var(--sky)}
 
 /* ========= ANGEBOTE ========= */
 #angebote{background:var(--dark);padding:88px 0}
-.ang-head{text-align:center;margin-bottom:48px}
+.ang-head{text-align:center;margin-bottom:52px}
 .ang-head h2{color:#fff;font-size:clamp(1.6rem,3vw,2.2rem);margin-top:10px;margin-bottom:10px}
 .ang-head p{color:rgba(255,255,255,.45);font-size:.92rem}
-.ang-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:36px}
-.ang-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:var(--r-lg);padding:24px;cursor:pointer;transition:all .2s;position:relative}
-.ang-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.18)}
-.ang-card.selected{background:rgba(45,125,210,.12);border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
-.ang-card-badge{position:absolute;top:14px;right:14px;font-size:.63rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:3px 8px;background:var(--blue);color:#fff;border-radius:4px}
-.ang-tier{font-size:.67rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:8px}
-.ang-card h3{font-size:1.05rem;color:#fff;margin-bottom:4px}
-.ang-tagline{font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:18px}
-.ang-price-sm{font-size:1.4rem;font-weight:800;color:#fff}
-.ang-price-sm sub{font-size:.75rem;font-weight:400;color:rgba(255,255,255,.4)}
-.ang-monthly-sm{font-size:.75rem;color:rgba(255,255,255,.35);margin-top:3px}
-.ang-detail{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);padding:0;overflow:hidden;display:none}
-.ang-detail.show{display:block}
-.ang-detail-hd{display:flex;align-items:center;justify-content:space-between;padding:24px 32px;border-bottom:1px solid rgba(255,255,255,.08)}
-.ang-detail-title{color:#fff}
-.ang-detail-title h3{font-size:1.25rem;margin-bottom:3px}
-.ang-detail-title p{font-size:.83rem;color:rgba(255,255,255,.4)}
-.ang-detail-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.ang-detail-left{padding:28px 32px;border-right:1px solid rgba(255,255,255,.08)}
-.ang-detail-right{padding:28px 32px}
-.ang-section-title{font-size:.68rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px}
-.ang-items{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
-.ang-items li{display:flex;align-items:flex-start;gap:9px;font-size:.84rem;color:rgba(255,255,255,.65)}
-.ang-items li::before{content:'';width:14px;height:14px;background:rgba(45,125,210,.25) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M2.5 7l3 3L11.5 3.5' stroke='%235BA4E5' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat;border-radius:3px;flex-shrink:0;margin-top:2px}
-.ang-cost-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-.ang-cost-row:last-of-type{border-bottom:none}
-.ang-cost-label{font-size:.83rem;color:rgba(255,255,255,.5)}
-.ang-cost-val{font-size:.9rem;font-weight:700;color:#fff}
-.ang-total-box{background:rgba(45,125,210,.1);border:1px solid rgba(45,125,210,.25);border-radius:8px;padding:14px 16px;margin-top:14px}
-.ang-total-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
-.ang-total-label{font-size:.78rem;color:rgba(255,255,255,.5)}
-.ang-total-once{font-size:1.5rem;font-weight:800;color:#fff}
-.ang-total-mo{font-size:.83rem;color:rgba(255,255,255,.4);margin-top:2px}
-.ang-detail-footer{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-top:1px solid rgba(255,255,255,.08);flex-wrap:wrap;gap:12px}
-.ang-delivery{font-size:.8rem;color:rgba(255,255,255,.35)}
-.ang-delivery strong{color:rgba(255,255,255,.7)}
+/* Service info row */
+.svc-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.07);border-radius:var(--r-lg);overflow:hidden;margin-bottom:48px}
+.svc-info-card{background:var(--dark2);padding:28px 24px}
+.svc-info-num{font-size:.65rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:10px}
+.svc-info-card h3{font-size:.95rem;color:#fff;margin-bottom:8px}
+.svc-info-card p{font-size:.8rem;color:rgba(255,255,255,.4);line-height:1.65;margin-bottom:14px}
+.svc-info-prices{display:flex;flex-direction:column;gap:4px}
+.svc-info-price{font-size:.78rem;color:rgba(255,255,255,.5)}
+.svc-info-price strong{color:rgba(255,255,255,.8)}
+/* Configurator */
+.cfg-title{font-size:.68rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px}
+.cfg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:28px}
+.cfg-item{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.09);border-radius:var(--r-lg);padding:20px;cursor:pointer;transition:all .2s;display:flex;gap:14px;align-items:flex-start;position:relative}
+.cfg-item:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.16)}
+.cfg-item.on{background:rgba(45,125,210,.1);border-color:var(--blue)}
+.cfg-check{width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(255,255,255,.18);background:transparent;flex-shrink:0;margin-top:2px;transition:all .18s;display:flex;align-items:center;justify-content:center}
+.cfg-item.on .cfg-check{background:var(--blue);border-color:var(--blue)}
+.cfg-check svg{width:11px;height:11px;display:none}
+.cfg-item.on .cfg-check svg{display:block}
+.cfg-body{flex:1}
+.cfg-service-tag{font-size:.65rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:4px}
+.cfg-item.on .cfg-service-tag{color:var(--sky)}
+.cfg-name{font-size:.92rem;font-weight:700;color:#fff;margin-bottom:5px}
+.cfg-desc{font-size:.78rem;color:rgba(255,255,255,.4);line-height:1.6;margin-bottom:10px}
+.cfg-prices{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cfg-once{font-size:1rem;font-weight:800;color:#fff}
+.cfg-mo{font-size:.75rem;color:rgba(255,255,255,.4)}
+/* Total box */
+.ang-total-area{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:var(--r-lg);padding:28px 32px}
+.ang-total-area.has-items{border-color:rgba(45,125,210,.3)}
+.ang-empty-msg{text-align:center;padding:16px;color:rgba(255,255,255,.3);font-size:.85rem}
+.ang-total-content{display:none}
+.ang-total-content.show{display:block}
+.ang-selected-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ang-selected-list li{display:flex;align-items:center;justify-content:space-between;font-size:.83rem;color:rgba(255,255,255,.6)}
+.ang-selected-list li span:last-child{color:rgba(255,255,255,.8);font-weight:600;white-space:nowrap}
+.ang-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.ang-row-lbl{font-size:.83rem;color:rgba(255,255,255,.45)}
+.ang-row-val{font-size:.88rem;font-weight:700;color:#fff}
+.ang-row-sub{font-size:.75rem;color:rgba(255,255,255,.3)}
+.ang-grand{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding:16px 20px;background:rgba(45,125,210,.12);border:1px solid rgba(45,125,210,.25);border-radius:8px}
+.ang-grand-lbl{font-size:.8rem;color:rgba(255,255,255,.55)}
+.ang-grand-val{font-size:1.5rem;font-weight:800;color:#fff}
+.ang-grand-sub{font-size:.72rem;color:rgba(255,255,255,.35);margin-top:2px}
+.ang-total-footer{display:flex;align-items:center;justify-content:space-between;margin-top:20px;flex-wrap:wrap;gap:12px}
+.ang-tax-note{font-size:.73rem;color:rgba(255,255,255,.3)}
+.ang-combo-note{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 14px;margin-top:12px;font-size:.76rem;color:rgba(255,255,255,.35)}
 
 /* ========= ROI ========= */
 #roi{background:var(--light)}
@@ -377,9 +388,8 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:56
   .how-steps{grid-template-columns:repeat(2,1fr)}
   .how-steps::before{display:none}
   .svc-grid,.svc-grid.flip{grid-template-columns:1fr;direction:ltr}
-  .ang-selector{grid-template-columns:1fr}
-  .ang-detail-body{grid-template-columns:1fr}
-  .ang-detail-left{border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}
+  .svc-info-grid{grid-template-columns:1fr}
+  .cfg-grid{grid-template-columns:1fr}
   .roi-layout{grid-template-columns:1fr}
   .expose-inner{grid-template-columns:1fr}
   .testi-grid{grid-template-columns:1fr}
@@ -396,8 +406,7 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:56
   .foot-bottom{flex-direction:column;gap:10px;text-align:center}
   .cta-btns,.hero-btns{flex-direction:column;align-items:stretch}
   .cta-btns .btn,.hero-btns .btn{justify-content:center}
-  .ang-detail-hd{flex-direction:column;gap:12px;align-items:flex-start}
-  .ang-detail-footer{flex-direction:column}
+  .ang-total-footer{flex-direction:column}
 }
 </style>
 </head>
@@ -744,66 +753,101 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:56
   <div class="wrap">
     <div class="ang-head rv">
       <span class="label label-w">Angebote &amp; Preise</span>
-      <h2>Wählen Sie Ihr Angebot</h2>
-      <p>Feste CHF-Preise. Kein Stundensatz. Keine versteckten Kosten. Wählen Sie ein Angebot — und sehen Sie die vollständige Kostenübersicht.</p>
+      <h2>Was kostet was — und was bringt es?</h2>
+      <p>Jeder Service einzeln wählbar. Wählen Sie aus, was Sie brauchen — die Gesamtkosten inklusive MwSt. werden sofort berechnet.</p>
     </div>
-    <div class="ang-selector rv">
-      <div class="ang-card" onclick="selectAng(1,this)">
-        <div class="ang-tier">Angebot 1</div>
-        <h3>Starter</h3>
-        <p class="ang-tagline">Einstieg in die Automatisierung</p>
-        <div class="ang-price-sm">CHF 2.500<sub> einmalig</sub></div>
-        <div class="ang-monthly-sm">+ CHF 200 / Monat</div>
+
+    <!-- Service-Übersicht (Info) -->
+    <div class="svc-info-grid rv">
+      <div class="svc-info-card">
+        <div class="svc-info-num">Service 1</div>
+        <h3>Lead-Maschine</h3>
+        <p>Professionelle Landingpage mit Quiz-Funnel. Interessenten werden automatisch erfasst, ins CRM eingetragen und Sie sofort benachrichtigt — in unter 10 Sekunden.</p>
+        <div class="svc-info-prices">
+          <div class="svc-info-price">Eigentümer-Funnel: <strong>CHF 2.500 einmalig + CHF 200/Mo</strong></div>
+          <div class="svc-info-price">Käufer-Funnel: <strong>CHF 2.500 einmalig + CHF 200/Mo</strong></div>
+          <div class="svc-info-price">Beide Varianten: <strong>CHF 4.500 einmalig + CHF 350/Mo</strong></div>
+        </div>
       </div>
-      <div class="ang-card" onclick="selectAng(2,this)">
-        <div class="ang-card-badge">Empfohlen</div>
-        <div class="ang-tier">Angebot 2</div>
-        <h3>Performance</h3>
-        <p class="ang-tagline">Lead-System von Quelle bis CRM</p>
-        <div class="ang-price-sm">CHF 4.500<sub> einmalig</sub></div>
-        <div class="ang-monthly-sm">+ CHF 350 / Monat</div>
+      <div class="svc-info-card">
+        <div class="svc-info-num">Service 2</div>
+        <h3>Lead-Verwaltung</h3>
+        <p>Alle Anfragen — egal ob von ImmoScout24, Homegate, direkter E-Mail oder eigener Landingpage — landen automatisch im CRM. Kein manueller Schritt, keine vergessenen Leads.</p>
+        <div class="svc-info-prices">
+          <div class="svc-info-price">Alle Quellen: <strong>CHF 2.500 einmalig + CHF 250/Mo</strong></div>
+        </div>
       </div>
-      <div class="ang-card" onclick="selectAng(3,this)">
-        <div class="ang-tier">Angebot 3</div>
-        <h3>Komplett-System</h3>
-        <p class="ang-tagline">Leads + Exposés vollautomatisch</p>
-        <div class="ang-price-sm">CHF 6.500<sub> einmalig</sub></div>
-        <div class="ang-monthly-sm">+ CHF 500 / Monat</div>
+      <div class="svc-info-card">
+        <div class="svc-info-num">Service 3</div>
+        <h3>Exposé-Generator</h3>
+        <p>Immobilien-Daten eingeben, KI generiert sofort ein vollständiges Exposé in vier Versionen — ImmoScout24, Social Media, Newsletter-Betreff, vollständiger Text. 2–3 Stunden gespart pro Objekt.</p>
+        <div class="svc-info-prices">
+          <div class="svc-info-price">Standalone: <strong>CHF 1.500 einmalig, kein Retainer</strong></div>
+          <div class="svc-info-price">Als Add-on zu Service 1 oder 2: <strong>CHF 800 einmalig</strong></div>
+        </div>
       </div>
     </div>
 
-    <!-- Detail Panel -->
-    <div class="ang-detail" id="angDetail">
-      <div class="ang-detail-hd">
-        <div class="ang-detail-title">
-          <h3 id="adTitle">Angebot 1 — Starter</h3>
-          <p id="adTagline">Einstieg in die Automatisierung</p>
-        </div>
-        <button class="btn btn-primary" onclick="openModal()">Jetzt anfragen</button>
-      </div>
-      <div class="ang-detail-body">
-        <div class="ang-detail-left">
-          <div class="ang-section-title">Enthaltene Leistungen</div>
-          <ul class="ang-items" id="adItems"></ul>
-          <div class="ang-section-title" style="margin-top:8px">Lieferzeit</div>
-          <p style="font-size:.84rem;color:rgba(255,255,255,.6)" id="adDelivery"></p>
-          <p style="font-size:.84rem;color:rgba(255,255,255,.6);margin-top:6px" id="adSupport"></p>
-        </div>
-        <div class="ang-detail-right">
-          <div class="ang-section-title">Kostenübersicht</div>
-          <div class="ang-cost-row"><span class="ang-cost-label">Setup / Einmalig</span><span class="ang-cost-val" id="adOnce"></span></div>
-          <div class="ang-cost-row"><span class="ang-cost-label">Monatliche Betreuung</span><span class="ang-cost-val" id="adMo"></span></div>
-          <div class="ang-cost-row"><span class="ang-cost-label">Laufzeit 12 Monate (gesamt)</span><span class="ang-cost-val" id="adYear"></span></div>
-          <div class="ang-total-box">
-            <div class="ang-total-row"><span class="ang-total-label">Einmalig</span><span class="ang-total-once" id="adTotalOnce"></span></div>
-            <div class="ang-total-mo" id="adTotalMo"></div>
-          </div>
-          <p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-top:12px">Alle Preise exkl. MwSt. Fester Projektpreis — keine versteckten Kosten.</p>
+    <!-- Konfigurator -->
+    <p class="cfg-title rv">Wählen Sie Ihre Leistungen</p>
+    <div class="cfg-grid rv">
+      <div class="cfg-item" id="ci0" onclick="toggleCfg(0)">
+        <div class="cfg-check"><svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3L9.5 2" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="cfg-body">
+          <div class="cfg-service-tag">Service 1</div>
+          <div class="cfg-name">Lead-Maschine — Eigentümer-Funnel</div>
+          <div class="cfg-desc">Landingpage mit Quiz "Was ist Ihre Immobilie wert?" — vollautomatischer Workflow bis ins CRM. Eigentümer gewinnen, Mandate sichern.</div>
+          <div class="cfg-prices"><span class="cfg-once">CHF 2.500</span><span class="cfg-mo">einmalig + CHF 200/Mo</span></div>
         </div>
       </div>
-      <div class="ang-detail-footer">
-        <span class="ang-delivery">Lieferzeit: <strong id="adFootDelivery"></strong></span>
-        <button class="btn btn-primary" onclick="openModal()">Kostenloses Erstgespräch anfragen</button>
+      <div class="cfg-item" id="ci1" onclick="toggleCfg(1)">
+        <div class="cfg-check"><svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3L9.5 2" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="cfg-body">
+          <div class="cfg-service-tag">Service 1</div>
+          <div class="cfg-name">Lead-Maschine — Käufer-Funnel</div>
+          <div class="cfg-desc">Landingpage mit Quiz "Ihre Traumimmobilie finden" — Suchprofil sofort erfasst und weitergeleitet. Kaufinteressenten gewinnen, als Erster zurückrufen.</div>
+          <div class="cfg-prices"><span class="cfg-once">CHF 2.500</span><span class="cfg-mo">einmalig + CHF 200/Mo</span></div>
+        </div>
+      </div>
+      <div class="cfg-item" id="ci2" onclick="toggleCfg(2)">
+        <div class="cfg-check"><svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3L9.5 2" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="cfg-body">
+          <div class="cfg-service-tag">Service 2</div>
+          <div class="cfg-name">Lead-Verwaltung — Alle Quellen</div>
+          <div class="cfg-desc">ImmoScout24, Homegate, E-Mail und Landingpage in einem System. Jede Anfrage wird sofort erfasst — Reaktionszeit unter 10 Sekunden statt 4–8 Stunden.</div>
+          <div class="cfg-prices"><span class="cfg-once">CHF 2.500</span><span class="cfg-mo">einmalig + CHF 250/Mo</span></div>
+        </div>
+      </div>
+      <div class="cfg-item" id="ci3" onclick="toggleCfg(3)">
+        <div class="cfg-check"><svg viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3L9.5 2" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="cfg-body">
+          <div class="cfg-service-tag">Service 3</div>
+          <div class="cfg-name">Exposé-Generator — KI-Texte in 60 Sekunden</div>
+          <div class="cfg-desc">Objektdaten eingeben, Claude AI generiert sofort vollständiges Exposé in 4 Versionen. 2–3 Stunden gespart pro Objekt. Unbegrenzte Nutzung.</div>
+          <div class="cfg-prices"><span class="cfg-once">CHF 1.500</span><span class="cfg-mo">einmalig, kein Retainer</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gesamtkosten -->
+    <div class="ang-total-area rv" id="angTotal">
+      <div class="ang-empty-msg" id="angEmpty">Wählen Sie einen oder mehrere Services — die Kosten werden sofort berechnet.</div>
+      <div class="ang-total-content" id="angContent">
+        <p class="cfg-title" style="margin-bottom:14px">Ihre Auswahl</p>
+        <ul class="ang-selected-list" id="angSelectedList"></ul>
+        <div class="ang-row"><span class="ang-row-lbl">Setup / Einmalig (netto)</span><span class="ang-row-val" id="tOnce">—</span></div>
+        <div class="ang-row"><span class="ang-row-lbl">Monatliche Betreuung (netto)</span><span class="ang-row-val" id="tMo">—</span></div>
+        <div class="ang-row"><span class="ang-row-lbl">Jahreskosten (Einmalig + 12 × Monatlich)</span><span class="ang-row-val" id="tYear">—</span></div>
+        <div class="ang-row" style="border-bottom:none"><span class="ang-row-lbl">MwSt. 8,1 % auf Jahreskosten</span><span class="ang-row-val" id="tVat">—</span></div>
+        <div class="ang-grand">
+          <div><div class="ang-grand-lbl">Gesamtkosten Jahr 1 inkl. MwSt.</div><div class="ang-grand-sub" id="tGrandSub"></div></div>
+          <div class="ang-grand-val" id="tGrand">—</div>
+        </div>
+        <div class="ang-combo-note" id="angComboNote" style="display:none">Bei Kombination von Eigentümer- und Käufer-Funnel erhalten Sie auf Anfrage ein Kombi-Angebot mit Rabatt.</div>
+        <div class="ang-total-footer">
+          <span class="ang-tax-note">Alle Preise in CHF. MwSt. 8,1 % gemäss Schweizer Steuerrecht. Fester Projektpreis, keine versteckten Kosten.</span>
+          <button class="btn btn-primary" onclick="openModal()">Jetzt anfragen</button>
+        </div>
       </div>
     </div>
   </div>
@@ -949,55 +993,54 @@ function switchV(v,btn){
 }
 document.getElementById('vA').classList.add('on')
 
-// ANGEBOTE DATA
-const angebote={
-  1:{
-    title:'Angebot 1 — Starter',
-    tagline:'Einstieg in die Automatisierung',
-    items:['Service 1: Landingpage (einfacher Funnel) + Lead-Workflow','Automatische Lead-Erfassung in Google Sheets','Sofort-Benachrichtigung bei neuer Anfrage','Bestätigungsmail an Interessenten','1 Monat Support inklusive'],
-    once:'CHF 2.500',mo:'CHF 200 / Monat',
-    year:'CHF 4.900',
-    totalOnce:'CHF 2.500',totalMo:'+ CHF 200 / Monat',
-    delivery:'5 Tage',support:'1 Monat Support inklusive'
-  },
-  2:{
-    title:'Angebot 2 — Performance',
-    tagline:'Lead-System von Quelle bis CRM',
-    items:['Service 1: Landingpage mit Quiz-Funnel und Bewertungskalkulator','Service 2: Lead-Verwaltung — ImmoScout24, Homegate, E-Mail und Landingpage','CRM-Integration vollständig eingerichtet','Alle Quellen in einem zentralen System','1 Monat Support inklusive'],
-    once:'CHF 4.500',mo:'CHF 350 / Monat',
-    year:'CHF 8.700',
-    totalOnce:'CHF 4.500',totalMo:'+ CHF 350 / Monat',
-    delivery:'7 Tage',support:'1 Monat Support inklusive'
-  },
-  3:{
-    title:'Angebot 3 — Komplett-System',
-    tagline:'Leads + Exposés vollautomatisch',
-    items:['Service 1: Landingpage mit Quiz-Funnel und Bewertungskalkulator','Service 2: Lead-Verwaltung — alle drei Quellen vollständig','Service 3: Exposé-Generator mit Claude AI (unbegrenzte Nutzung)','Alle drei Systeme vollständig integriert','3 Monate Support inklusive'],
-    once:'CHF 6.500',mo:'CHF 500 / Monat',
-    year:'CHF 12.500',
-    totalOnce:'CHF 6.500',totalMo:'+ CHF 500 / Monat',
-    delivery:'7 Tage',support:'3 Monate Support inklusive'
-  }
+// KONFIGURATOR
+const cfgItems=[
+  {name:'Lead-Maschine — Eigentümer-Funnel',once:2500,mo:200,id:0},
+  {name:'Lead-Maschine — Käufer-Funnel',once:2500,mo:200,id:1},
+  {name:'Lead-Verwaltung — Alle Quellen',once:2500,mo:250,id:2},
+  {name:'Exposé-Generator',once:1500,mo:0,id:3}
+]
+const cfgSelected=new Set()
+
+function toggleCfg(idx){
+  const el=document.getElementById('ci'+idx)
+  if(cfgSelected.has(idx)){cfgSelected.delete(idx);el.classList.remove('on')}
+  else{cfgSelected.add(idx);el.classList.add('on')}
+  updateCfgTotal()
 }
 
-function selectAng(n,el){
-  document.querySelectorAll('.ang-card').forEach(c=>c.classList.remove('selected'))
-  el.classList.add('selected')
-  const d=angebote[n]
-  document.getElementById('adTitle').textContent=d.title
-  document.getElementById('adTagline').textContent=d.tagline
-  document.getElementById('adItems').innerHTML=d.items.map(i=>`<li>${i}</li>`).join('')
-  document.getElementById('adOnce').textContent=d.once
-  document.getElementById('adMo').textContent=d.mo
-  document.getElementById('adYear').textContent=d.year
-  document.getElementById('adTotalOnce').textContent=d.totalOnce
-  document.getElementById('adTotalMo').textContent=d.totalMo
-  document.getElementById('adDelivery').textContent='Fertig in '+d.delivery
-  document.getElementById('adSupport').textContent=d.support
-  document.getElementById('adFootDelivery').textContent=d.delivery
-  const det=document.getElementById('angDetail')
-  det.classList.add('show')
-  setTimeout(()=>det.scrollIntoView({behavior:'smooth',block:'start'}),80)
+function fmt(n){return n.toLocaleString('de-CH')}
+
+function updateCfgTotal(){
+  const empty=document.getElementById('angEmpty')
+  const content=document.getElementById('angContent')
+  if(cfgSelected.size===0){
+    empty.style.display='block';content.classList.remove('show')
+    document.getElementById('angTotal').classList.remove('has-items')
+    return
+  }
+  empty.style.display='none';content.classList.add('show')
+  document.getElementById('angTotal').classList.add('has-items')
+  let totalOnce=0,totalMo=0
+  const listItems=[]
+  cfgSelected.forEach(idx=>{
+    const it=cfgItems[idx]
+    totalOnce+=it.once;totalMo+=it.mo
+    const moText=it.mo>0?` + CHF ${fmt(it.mo)}/Mo`:' · kein Retainer'
+    listItems.push(`<li><span>${it.name}</span><span>CHF ${fmt(it.once)}${moText}</span></li>`)
+  })
+  document.getElementById('angSelectedList').innerHTML=listItems.join('')
+  const year=totalOnce+(totalMo*12)
+  const vat=Math.round(year*0.081)
+  const grand=year+vat
+  document.getElementById('tOnce').textContent='CHF '+fmt(totalOnce)
+  document.getElementById('tMo').textContent=totalMo>0?'CHF '+fmt(totalMo)+' / Monat':'—'
+  document.getElementById('tYear').textContent='CHF '+fmt(year)
+  document.getElementById('tVat').textContent='CHF '+fmt(vat)
+  document.getElementById('tGrand').textContent='CHF '+fmt(grand)
+  document.getElementById('tGrandSub').textContent=`Einmalig CHF ${fmt(totalOnce)} + CHF ${fmt(totalMo*12)} Jahresbetreuung`
+  const comboNote=document.getElementById('angComboNote')
+  comboNote.style.display=(cfgSelected.has(0)&&cfgSelected.has(1))?'block':'none'
 }
 
 // ROI
