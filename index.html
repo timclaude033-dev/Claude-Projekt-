@@ -15,412 +15,389 @@
   --blue:#2D7DD2;
   --sky:#5BA4E5;
   --dark:#0B1520;
-  --dark2:#111d2e;
-  --dark3:#172333;
+  --dark2:#0f1e30;
   --light:#F4F7FB;
   --white:#FFFFFF;
   --ink:#0D1B2E;
   --muted:#5A6E85;
-  --border:#D8E2EE;
+  --border:#DDE5EF;
   --border-dark:rgba(255,255,255,.08);
   --green:#0A6640;
-  --green-light:#E8F5EE;
+  --green-light:#E6F5EE;
   --r:8px;
-  --r-lg:16px;
+  --r-lg:14px;
   --shadow:0 2px 16px rgba(13,27,46,.07);
-  --shadow-lg:0 8px 48px rgba(13,27,46,.12);
+  --shadow-lg:0 12px 48px rgba(13,27,46,.14);
 }
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;color:var(--ink);background:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden}
-h1,h2,h3,h4,h5{line-height:1.15;font-weight:700;letter-spacing:-.3px}
+h1,h2,h3,h4{line-height:1.15;font-weight:700}
 p{line-height:1.7}
 a{text-decoration:none;color:inherit}
-
-/* LAYOUT */
-.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
-.wrap-narrow{max-width:760px;margin:0 auto;padding:0 28px}
-section{padding:96px 0}
+.wrap{max-width:1100px;margin:0 auto;padding:0 28px}
+section{padding:88px 0}
 
 /* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:var(--r);font-weight:600;font-size:.9rem;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .18s;letter-spacing:-.1px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:var(--r);font-weight:600;font-size:.88rem;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .18s;letter-spacing:-.1px}
 .btn-primary{background:var(--blue);color:#fff}
-.btn-primary:hover{background:#2470be;box-shadow:0 4px 18px rgba(45,125,210,.35)}
-.btn-ghost{background:transparent;color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.2)}
-.btn-ghost:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.4)}
-.btn-outline{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
-.btn-outline:hover{background:var(--blue);color:#fff}
+.btn-primary:hover{background:#2168be;box-shadow:0 4px 16px rgba(45,125,210,.3)}
 .btn-dark{background:var(--ink);color:#fff}
 .btn-dark:hover{background:#1a2e48}
-.btn-sm{padding:9px 18px;font-size:.82rem}
-.btn svg{width:15px;height:15px;flex-shrink:0}
+.btn-outline{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+.btn-outline:hover{background:var(--blue);color:#fff}
+.btn-white{background:#fff;color:var(--ink)}
+.btn-white:hover{background:var(--light)}
+.btn-ghost-dark{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2)}
+.btn-ghost-dark:hover{background:rgba(255,255,255,.08);color:#fff}
+.btn-sm{padding:9px 18px;font-size:.8rem}
 
 /* LABEL */
-.label{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
-.label-light{color:rgba(255,255,255,.5)}
+.label{font-size:.68rem;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--blue)}
+.label-w{color:rgba(255,255,255,.45)}
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;transition:all .25s}
-nav.solid{background:rgba(11,21,32,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-dark)}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
-.nav-links{display:flex;align-items:center;gap:28px;list-style:none}
-.nav-links a{font-size:.875rem;font-weight:500;color:rgba(255,255,255,.6);transition:color .18s}
-.nav-links a:hover{color:#fff}
-.nav-right{display:flex;align-items:center;gap:12px}
+/* ========= NAV ========= */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:var(--white);border-bottom:1px solid var(--border);transition:box-shadow .2s}
+nav.elevated{box-shadow:0 2px 20px rgba(13,27,46,.08)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:62px}
+.nav-logo-dark text:first-of-type{fill:var(--navy)}
+.nav-links{display:flex;align-items:center;list-style:none}
+.nav-item{position:relative}
+.nav-item > a{display:flex;align-items:center;gap:5px;padding:0 14px;height:62px;font-size:.84rem;font-weight:500;color:var(--muted);transition:color .18s;white-space:nowrap}
+.nav-item > a:hover,.nav-item.active > a{color:var(--ink)}
+.nav-item > a svg{width:12px;height:12px;transition:transform .2s}
+.nav-item:hover > a svg{transform:rotate(180deg)}
+.nav-dropdown{display:none;position:absolute;top:calc(100% + 0px);left:0;background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:8px;min-width:200px;box-shadow:var(--shadow-lg)}
+.nav-item:hover .nav-dropdown{display:flex;flex-direction:column;gap:2px}
+.nav-dd-link{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);font-size:.83rem;font-weight:500;color:var(--muted);transition:all .15s}
+.nav-dd-link:hover{background:var(--light);color:var(--ink)}
+.nav-dd-num{width:22px;height:22px;border-radius:5px;background:var(--blue);color:#fff;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-right{display:flex;align-items:center;gap:10px}
 .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px}
-.burger span{display:block;width:20px;height:1.5px;background:#fff;transition:all .25s}
-.mob-nav{display:none;position:fixed;inset:0;top:64px;background:var(--dark);z-index:199;padding:32px 28px;flex-direction:column;gap:4px;border-top:1px solid var(--border-dark)}
+.burger span{display:block;width:20px;height:1.5px;background:var(--ink);transition:all .25s}
+.mob-nav{display:none;position:fixed;inset:0;top:62px;background:var(--white);z-index:199;padding:24px 28px;flex-direction:column;gap:2px;border-top:1px solid var(--border);overflow-y:auto}
 .mob-nav.open{display:flex}
-.mob-nav a{color:rgba(255,255,255,.7);font-size:1rem;font-weight:500;padding:14px 0;border-bottom:1px solid var(--border-dark)}
-.mob-nav .btn{margin-top:20px;text-align:center;justify-content:center}
+.mob-nav a{color:var(--muted);font-size:.95rem;font-weight:500;padding:12px 4px;border-bottom:1px solid var(--border)}
+.mob-nav a:hover{color:var(--ink)}
+.mob-nav .btn{margin-top:16px;justify-content:center}
 
-/* HERO */
-#hero{min-height:100vh;display:flex;align-items:center;background:var(--dark);position:relative;overflow:hidden;padding:100px 0 80px}
-.hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black 30%,transparent 100%)}
-.hero-glow{position:absolute;width:800px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(45,125,210,.12) 0%,transparent 70%);top:0;left:50%;transform:translateX(-20%);pointer-events:none}
-.hero-content{position:relative;z-index:1;text-align:center;max-width:820px;margin:0 auto}
-.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;background:rgba(45,125,210,.1);border:1px solid rgba(45,125,210,.25);border-radius:40px;font-size:.78rem;font-weight:600;color:var(--sky);letter-spacing:.4px;margin-bottom:28px}
-.hero-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:blink 2s infinite}
+/* ========= HERO ========= */
+#hero{background:var(--dark);min-height:88vh;display:flex;align-items:center;padding:100px 0 80px;position:relative;overflow:hidden}
+.hero-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 100% at 50% 0,black 20%,transparent 80%)}
+.hero-glow{position:absolute;width:700px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(45,125,210,.13) 0%,transparent 70%);top:-100px;left:50%;transform:translateX(-10%)}
+.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(45,125,210,.1);border:1px solid rgba(45,125,210,.22);border-radius:40px;font-size:.75rem;font-weight:600;color:var(--sky);letter-spacing:.4px;margin-bottom:24px}
+.hdot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-h1.hero-h1{font-size:clamp(2.4rem,5vw,3.8rem);color:#fff;margin-bottom:20px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
-h1.hero-h1 em{font-style:normal;color:var(--sky)}
-.hero-sub{font-size:1.05rem;color:rgba(255,255,255,.55);max-width:560px;margin:0 auto 36px;line-height:1.75}
-.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:56px}
-.hero-proof{display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap}
-.proof-item{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,.4);font-size:.8rem}
-.proof-check{width:14px;height:14px;border-radius:50%;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.proof-check svg{width:8px;height:8px}
+h1.h1{font-size:clamp(2.2rem,4vw,3.4rem);color:#fff;margin-bottom:18px;font-weight:800;letter-spacing:-.5px;line-height:1.1}
+h1.h1 em{font-style:normal;color:var(--sky)}
+.hero-sub{font-size:.97rem;color:rgba(255,255,255,.5);margin-bottom:32px;line-height:1.8;max-width:460px}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:40px}
+.hero-facts{display:flex;flex-direction:column;gap:10px}
+.hfact{display:flex;align-items:center;gap:10px;font-size:.82rem;color:rgba(255,255,255,.45)}
+.hfact-check{width:16px;height:16px;border-radius:50%;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hfact-check svg{width:8px;height:8px}
 
-/* HERO VISUAL */
-.hero-visual-wrap{position:relative;max-width:920px;margin:64px auto 0;z-index:1}
-.screen-placeholder{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden}
-.screen-bar{height:36px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;padding:0 16px;gap:8px}
-.screen-dot{width:10px;height:10px;border-radius:50%}
-.screen-dot:nth-child(1){background:#ff5f57}
-.screen-dot:nth-child(2){background:#febc2e}
-.screen-dot:nth-child(3){background:#28c840}
-.screen-body{padding:24px;min-height:360px;display:grid;grid-template-columns:240px 1fr;gap:16px}
-.screen-sidebar{background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.06);padding:16px;display:flex;flex-direction:column;gap:10px}
-.s-label{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,.25);margin-bottom:4px}
-.s-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px}
-.s-row.active{background:rgba(45,125,210,.12)}
-.s-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2D7DD2,#5BA4E5);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:#fff;flex-shrink:0}
-.s-info{flex:1;min-width:0}
-.s-name{font-size:.73rem;font-weight:600;color:rgba(255,255,255,.75);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.s-meta{font-size:.64rem;color:rgba(255,255,255,.35)}
-.s-badge{font-size:.62rem;padding:2px 7px;border-radius:10px;font-weight:700;flex-shrink:0}
-.s-badge.new{background:rgba(34,197,94,.15);color:#4ade80}
-.s-badge.hot{background:rgba(239,68,68,.15);color:#f87171}
-.screen-main{display:flex;flex-direction:column;gap:12px}
-.screen-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.screen-stat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:14px}
-.screen-stat-val{font-size:1.3rem;font-weight:800;color:#fff}
-.screen-stat-lbl{font-size:.65rem;color:rgba(255,255,255,.35);margin-top:3px}
-.screen-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:16px;flex:1}
-.screen-card-hd{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.bar-name{font-size:.72rem;color:rgba(255,255,255,.5);width:80px;flex-shrink:0}
-.bar-track{flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
-.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#2D7DD2,#5BA4E5)}
-.bar-val{font-size:.7rem;color:rgba(255,255,255,.4);width:24px;text-align:right;flex-shrink:0}
-.pulse-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.pulse-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:blink 2s infinite;flex-shrink:0}
-.pulse-text{font-size:.72rem;color:rgba(255,255,255,.5);flex:1}
-.pulse-time{font-size:.65rem;color:rgba(255,255,255,.25)}
+/* HERO VISUAL — Lead Flow */
+.hero-visual{position:relative}
+.flow-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);padding:20px}
+.flow-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,.3);margin-bottom:16px}
+.flow-steps{display:flex;flex-direction:column;gap:6px}
+.fstep{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
+.fstep.active{background:rgba(45,125,210,.12);border-color:rgba(45,125,210,.25)}
+.fstep-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fstep-icon svg{width:14px;height:14px}
+.fstep-icon.blue{background:rgba(45,125,210,.2);border:1px solid rgba(45,125,210,.3)}
+.fstep-icon.blue svg{stroke:var(--sky)}
+.fstep-icon.green{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25)}
+.fstep-icon.green svg{stroke:#4ade80}
+.fstep-icon.gold{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25)}
+.fstep-icon.gold svg{stroke:#fbbf24}
+.fstep-body{flex:1}
+.fstep-name{font-size:.8rem;font-weight:600;color:rgba(255,255,255,.8)}
+.fstep-desc{font-size:.7rem;color:rgba(255,255,255,.35);margin-top:1px}
+.fstep-badge{font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0}
+.fbadge-green{background:rgba(34,197,94,.15);color:#4ade80}
+.fbadge-blue{background:rgba(45,125,210,.2);color:var(--sky)}
+.flow-divider{display:flex;align-items:center;gap:8px;padding:4px 14px}
+.flow-divider-line{flex:1;height:1px;background:rgba(255,255,255,.07)}
+.flow-divider-icon{color:rgba(255,255,255,.2);font-size:.7rem}
+.flow-results{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.fres{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:10px;text-align:center}
+.fres-val{font-size:1.05rem;font-weight:800;color:#fff}
+.fres-lbl{font-size:.62rem;color:rgba(255,255,255,.3);margin-top:2px}
+.live-line{display:flex;align-items:center;gap:8px;margin-top:10px;padding:9px 12px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:7px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:blink 2s infinite;flex-shrink:0}
+.live-text{font-size:.72rem;color:rgba(255,255,255,.5);flex:1}
+.live-time{font-size:.65rem;color:rgba(255,255,255,.25)}
 
-/* METRICS */
-#metrics{background:var(--navy);padding:56px 0}
-.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.06)}
-.metric{background:var(--navy);padding:40px 32px;text-align:center}
-.metric-val{font-size:2.6rem;font-weight:800;color:#fff;line-height:1}
-.metric-val span{color:var(--sky)}
-.metric-lbl{font-size:.85rem;color:rgba(255,255,255,.45);margin-top:10px}
+/* ========= METRICS ========= */
+#metrics{background:var(--navy);padding:52px 0}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,.07)}
+.met{background:var(--navy);padding:36px 28px;text-align:center}
+.met-val{font-size:2.4rem;font-weight:800;color:#fff;line-height:1}
+.met-val em{font-style:normal;color:var(--sky)}
+.met-lbl{font-size:.82rem;color:rgba(255,255,255,.4);margin-top:8px}
 
-/* PROBLEM */
-#problem{background:var(--light)}
-.problem-intro{max-width:600px;margin:0 auto 56px;text-align:center}
-.problem-intro h2{font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
-.problem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border)}
-.problem-card{background:var(--white);padding:36px 32px}
-.problem-card-num{font-size:.7rem;font-weight:700;letter-spacing:1px;color:var(--blue);margin-bottom:20px}
-.problem-card h3{font-size:1.05rem;font-weight:700;margin-bottom:12px;color:var(--ink)}
-.problem-card p{font-size:.9rem;color:var(--muted);line-height:1.7}
-.problem-card .impact{display:inline-block;margin-top:16px;font-size:.82rem;font-weight:600;color:#c0392b;background:#fdf0ef;padding:5px 12px;border-radius:4px}
+/* ========= URGENCY ========= */
+#urgency{background:var(--light);padding:52px 0}
+.urgency-inner{display:flex;align-items:center;gap:40px;background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px 40px;box-shadow:var(--shadow)}
+.urgency-icon{width:52px;height:52px;border-radius:10px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.urgency-icon svg{width:24px;height:24px;stroke:#ef4444}
+.urgency-text h3{font-size:1.05rem;margin-bottom:6px}
+.urgency-text p{font-size:.88rem;color:var(--muted)}
+.urgency-text strong{color:var(--ink)}
 
-/* HOW */
-#how{background:var(--white)}
-.how-intro{text-align:center;max-width:580px;margin:0 auto 64px}
-.how-intro h2{font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative}
-.steps::before{content:'';position:absolute;top:28px;left:calc(12.5% + 14px);right:calc(12.5% + 14px);height:1px;background:linear-gradient(90deg,var(--blue),var(--sky));z-index:0}
-.step{text-align:center;padding:0 16px;position:relative;z-index:1}
-.step-num{width:56px;height:56px;border-radius:50%;background:var(--blue);color:#fff;font-size:1.1rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 0 0 6px rgba(45,125,210,.1)}
-.step h4{font-size:.95rem;font-weight:700;margin-bottom:8px}
-.step p{font-size:.83rem;color:var(--muted)}
+/* ========= PROBLEM ========= */
+#problem{background:var(--white)}
+.section-head{margin-bottom:52px}
+.section-head h2{font-size:clamp(1.6rem,3vw,2.2rem);margin-top:10px;margin-bottom:12px}
+.section-head p{font-size:.95rem;color:var(--muted);max-width:520px}
+.section-head.center{text-align:center}
+.section-head.center p{margin:0 auto}
+.prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.prob-card{background:var(--white);padding:32px 28px;position:relative}
+.prob-num{font-size:.68rem;font-weight:700;letter-spacing:.8px;color:var(--blue);margin-bottom:16px}
+.prob-card h3{font-size:1rem;font-weight:700;margin-bottom:10px}
+.prob-card p{font-size:.87rem;color:var(--muted);line-height:1.7}
+.prob-impact{display:inline-block;margin-top:14px;font-size:.78rem;font-weight:600;color:#b91c1c;background:#fef2f2;padding:4px 10px;border-radius:4px}
 
-/* SERVICES */
-.service-block{padding:96px 0;border-top:1px solid var(--border)}
-.service-block:nth-child(even){background:var(--light)}
-.service-wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
-.service-wrap.flip{direction:rtl}
-.service-wrap.flip > *{direction:ltr}
-.service-tag{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-.service-number{width:32px;height:32px;border-radius:6px;background:var(--blue);color:#fff;font-size:.8rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.service-tag-text{font-size:.72rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--blue)}
-.service-content h2{font-size:clamp(1.5rem,2.5vw,2rem);margin-bottom:8px}
-.service-sub{font-size:.95rem;font-weight:600;color:var(--blue);margin-bottom:18px}
-.service-content > p{font-size:.93rem;color:var(--muted);line-height:1.75;margin-bottom:28px}
-.feature-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
-.feature-list li{display:flex;align-items:flex-start;gap:12px;font-size:.9rem;color:var(--ink)}
-.feature-list li::before{content:'';width:16px;height:16px;background:var(--blue);border-radius:3px;flex-shrink:0;margin-top:3px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 8l3.5 3.5L13 4.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
-.price-line{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-top:20px;border-top:1px solid var(--border)}
-.price-main{font-size:1.5rem;font-weight:800;color:var(--ink)}
-.price-main span{font-size:.9rem;font-weight:400;color:var(--muted)}
-.price-note{font-size:.82rem;color:var(--muted)}
+/* ========= HOW ========= */
+#how{background:var(--light)}
+.how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;position:relative;padding-top:24px}
+.how-steps::before{content:'';position:absolute;top:54px;left:calc(12.5% + 16px);right:calc(12.5% + 16px);height:1px;background:linear-gradient(90deg,var(--blue),var(--sky))}
+.how-step{text-align:center;position:relative}
+.how-num{width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;font-size:1rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative;z-index:1;box-shadow:0 0 0 5px rgba(45,125,210,.1)}
+.how-step h4{font-size:.9rem;font-weight:700;margin-bottom:7px}
+.how-step p{font-size:.82rem;color:var(--muted)}
+
+/* ========= SERVICES ========= */
+.svc{padding:80px 0;border-top:1px solid var(--border)}
+.svc:nth-child(even){background:var(--light)}
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+.svc-grid.flip{direction:rtl}
+.svc-grid.flip > *{direction:ltr}
+.svc-tag{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.svc-num{width:30px;height:30px;border-radius:6px;background:var(--blue);color:#fff;font-size:.78rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.svc-tag-text{font-size:.7rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--blue)}
+.svc-content h2{font-size:clamp(1.4rem,2.5vw,1.9rem);margin-bottom:6px}
+.svc-sub{font-size:.9rem;font-weight:600;color:var(--blue);margin-bottom:16px}
+.svc-content > p{font-size:.9rem;color:var(--muted);line-height:1.75;margin-bottom:20px}
+.feat-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.feat-list li{display:flex;align-items:flex-start;gap:10px;font-size:.87rem;color:var(--ink)}
+.feat-list li::before{content:'';width:15px;height:15px;background:var(--blue) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15' fill='none'%3E%3Cpath d='M2.5 7.5l3.5 3.5 6.5-6.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/13px no-repeat;border-radius:4px;flex-shrink:0;margin-top:2px}
+.price-bar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:16px 0;border-top:1px solid var(--border);margin-top:8px}
+.pb-main{font-size:1.35rem;font-weight:800;color:var(--ink)}
+.pb-main span{font-size:.85rem;font-weight:400;color:var(--muted)}
+.pb-note{font-size:.78rem;color:var(--muted)}
+.pb-sep{width:1px;height:28px;background:var(--border)}
 
 /* VARIANT TOGGLE */
-.variant-toggle{display:inline-flex;background:var(--light);border-radius:8px;padding:4px;gap:4px;margin-bottom:24px;border:1px solid var(--border)}
-.v-btn{padding:8px 18px;border-radius:6px;font-size:.83rem;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;background:transparent;color:var(--muted);transition:all .18s}
-.v-btn.on{background:var(--white);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.1)}
-.variant-panel{display:none}
-.variant-panel.on{display:block}
+.vtoggle{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:20px}
+.vbtn{padding:8px 18px;font-size:.8rem;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);font-family:'Inter',sans-serif;transition:all .18s;border-right:1px solid var(--border)}
+.vbtn:last-child{border-right:none}
+.vbtn.on{background:var(--blue);color:#fff}
+.vpanel{display:none}
+.vpanel.on{display:block}
 
-/* VISUAL PLACEHOLDERS */
-.img-placeholder{background:var(--light);border:2px dashed var(--border);border-radius:var(--r-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);font-size:.82rem;font-weight:500;text-align:center;padding:24px}
-.img-placeholder svg{width:32px;height:32px;opacity:.35}
-.placeholder-label{opacity:.6}
+/* IMAGE PLACEHOLDERS */
+.img-ph{background:var(--light);border:2px dashed var(--border);border-radius:var(--r-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);font-size:.78rem;font-weight:500;text-align:center;padding:20px}
+.img-ph svg{width:28px;height:28px;opacity:.3}
+.img-ph-label{opacity:.55;line-height:1.5}
 
 /* PROCESS VISUAL */
-.process-visual{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow)}
-.process-header{padding:14px 20px;background:var(--light);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
-.p-dot{width:9px;height:9px;border-radius:50%}
-.p-dot:nth-child(1){background:#ff5f57}
-.p-dot:nth-child(2){background:#febc2e}
-.p-dot:nth-child(3){background:#28c840}
-.p-title{font-size:.75rem;font-weight:600;color:var(--muted);margin-left:6px}
-.process-body{padding:20px}
-.p-step{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
-.p-step:last-child{border-bottom:none}
-.p-icon{width:32px;height:32px;border-radius:6px;background:rgba(45,125,210,.08);border:1px solid rgba(45,125,210,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.p-icon svg{width:14px;height:14px;stroke:var(--blue)}
-.p-step-info{flex:1}
-.p-step-name{font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:2px}
-.p-step-desc{font-size:.74rem;color:var(--muted)}
-.p-step-badge{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--green-light);color:var(--green);margin-left:auto;flex-shrink:0;margin-top:2px}
+.proc-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow)}
+.proc-hd{padding:13px 18px;background:var(--light);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
+.wdot{width:9px;height:9px;border-radius:50%}
+.wdot:nth-child(1){background:#ff5f57}.wdot:nth-child(2){background:#febc2e}.wdot:nth-child(3){background:#28c840}
+.proc-title{font-size:.72rem;font-weight:600;color:var(--muted);margin-left:4px}
+.proc-body{padding:16px}
+.prow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.prow:last-child{border-bottom:none}
+.prow-icon{width:30px;height:30px;border-radius:6px;background:rgba(45,125,210,.07);border:1px solid rgba(45,125,210,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.prow-icon svg{width:13px;height:13px;stroke:var(--blue)}
+.prow-body{flex:1}
+.prow-name{font-size:.8rem;font-weight:700;color:var(--ink)}
+.prow-desc{font-size:.71rem;color:var(--muted);margin-top:1px}
+.prow-badge{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:8px;background:var(--green-light);color:var(--green);flex-shrink:0}
 
-/* SOURCES VISUAL */
-.sources-visual{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow)}
-.sources-header{padding:14px 20px;background:var(--light);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
-.sources-body{padding:20px;display:flex;flex-direction:column;gap:10px}
-.source-card{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--border);border-radius:8px}
-.source-icon-box{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.source-icon-box svg{width:16px;height:16px}
-.source-icon-box.lp{background:rgba(45,125,210,.08);border:1px solid rgba(45,125,210,.15)}
-.source-icon-box.lp svg{stroke:var(--blue)}
-.source-icon-box.portal{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.15)}
-.source-icon-box.portal svg{stroke:#f97316}
-.source-icon-box.mail{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.15)}
-.source-icon-box.mail svg{stroke:#a855f7}
-.source-text{flex:1}
-.source-name{font-size:.82rem;font-weight:700;color:var(--ink)}
-.source-desc{font-size:.73rem;color:var(--muted)}
-.source-arrow{color:var(--blue);font-size:.9rem;font-weight:700}
-.crm-box{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;background:var(--navy);border-radius:8px;margin-top:4px}
-.crm-box-text{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.8)}
+/* SOURCES */
+.src-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow)}
+.src-body{padding:16px;display:flex;flex-direction:column;gap:8px}
+.src-row{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:8px}
+.src-ic{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.src-ic svg{width:15px;height:15px}
+.src-ic.a{background:rgba(45,125,210,.08);border:1px solid rgba(45,125,210,.15)}.src-ic.a svg{stroke:var(--blue)}
+.src-ic.b{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.15)}.src-ic.b svg{stroke:#f97316}
+.src-ic.c{background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.15)}.src-ic.c svg{stroke:#a855f7}
+.src-txt{flex:1}
+.src-name{font-size:.8rem;font-weight:700;color:var(--ink)}
+.src-desc{font-size:.7rem;color:var(--muted)}
+.src-arrow{color:var(--blue);font-weight:700;font-size:.85rem}
+.crm-target{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;background:var(--navy);border-radius:8px}
+.crm-target span{font-size:.76rem;font-weight:600;color:rgba(255,255,255,.75)}
 
-/* EXPOSE DEMO */
-.expose-visual{background:var(--dark);border-radius:var(--r-lg);overflow:hidden;border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow-lg)}
-.expose-vis-bar{height:36px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;padding:0 16px;gap:6px}
-.expose-vis-dot{width:9px;height:9px;border-radius:50%}
-.expose-vis-dot:nth-child(1){background:rgba(255,95,87,.5)}
-.expose-vis-dot:nth-child(2){background:rgba(254,188,46,.5)}
-.expose-vis-dot:nth-child(3){background:rgba(40,200,64,.5)}
-.expose-vis-body{padding:20px;display:flex;flex-direction:column;gap:12px}
-.ev-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.ev-field{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:8px 12px}
-.ev-field-label{font-size:.62rem;color:rgba(255,255,255,.3);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
-.ev-field-val{font-size:.78rem;color:rgba(255,255,255,.7)}
-.ev-btn{padding:10px;background:var(--blue);border-radius:6px;text-align:center;font-size:.8rem;font-weight:700;color:#fff}
-.ev-output{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:14px}
-.ev-out-label{font-size:.65rem;font-weight:700;color:var(--sky);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-.ev-lines{display:flex;flex-direction:column;gap:5px}
-.ev-line{height:5px;background:rgba(255,255,255,.1);border-radius:3px}
-.ev-line:nth-child(1){width:92%}
-.ev-line:nth-child(2){width:78%}
-.ev-line:nth-child(3){width:85%}
-.ev-line:nth-child(4){width:60%}
-.ev-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.ev-tag{padding:4px 10px;background:rgba(255,255,255,.06);border-radius:4px;font-size:.65rem;color:rgba(255,255,255,.4);font-weight:600}
+/* CRM ADD-ON */
+.crm-addon{background:rgba(45,125,210,.05);border:1px solid rgba(45,125,210,.18);border-radius:8px;padding:14px 16px;margin-top:16px}
+.crm-addon-title{font-size:.78rem;font-weight:700;color:var(--blue);margin-bottom:4px}
+.crm-addon p{font-size:.8rem;color:var(--muted)}
 
-/* PAKETE */
-#pakete{background:var(--dark)}
-.pakete-intro{text-align:center;max-width:560px;margin:0 auto 56px}
-.pakete-intro h2{color:#fff;font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
-.pakete-intro p{color:rgba(255,255,255,.5)}
-.pakete-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.07);border-radius:var(--r-lg);overflow:hidden}
-.paket{background:var(--dark2);padding:36px 32px;position:relative}
-.paket.featured{background:var(--dark3)}
-.paket-rec{position:absolute;top:20px;right:20px;font-size:.65rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;background:var(--blue);color:#fff;border-radius:4px}
-.paket-tier{font-size:.68rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:10px}
-.paket h3{font-size:1.25rem;color:#fff;margin-bottom:6px}
-.paket-tagline{font-size:.82rem;color:rgba(255,255,255,.4);margin-bottom:24px}
-.paket-price-block{padding:20px 0;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:24px}
-.paket-once{font-size:2rem;font-weight:800;color:#fff;line-height:1}
-.paket-once sub{font-size:.85rem;font-weight:400;color:rgba(255,255,255,.4);vertical-align:baseline}
-.paket-monthly{font-size:.85rem;color:rgba(255,255,255,.4);margin-top:4px}
-.paket-items{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
-.paket-items li{display:flex;align-items:flex-start;gap:10px;font-size:.86rem;color:rgba(255,255,255,.65)}
-.paket-items li::before{content:'';width:14px;height:14px;background:rgba(45,125,210,.2);border:1px solid rgba(45,125,210,.4);border-radius:3px;flex-shrink:0;margin-top:3px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M2.5 7l3 3L11.5 3.5' stroke='%235BA4E5' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
-.paket-cta{width:100%;padding:12px;border-radius:var(--r);font-size:.88rem;font-weight:700;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:all .18s;letter-spacing:-.1px}
-.paket-cta-outline{background:transparent;color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.15)}
-.paket-cta-outline:hover{background:rgba(255,255,255,.06);color:#fff}
-.paket-cta-fill{background:var(--blue);color:#fff}
-.paket-cta-fill:hover{background:#2470be}
-.paket-time{font-size:.72rem;color:rgba(255,255,255,.25);text-align:center;margin-top:10px}
+/* EXPOSE IMAGES */
+.expose-imgs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-/* ROI */
+/* ========= ANGEBOTE ========= */
+#angebote{background:var(--dark);padding:88px 0}
+.ang-head{text-align:center;margin-bottom:48px}
+.ang-head h2{color:#fff;font-size:clamp(1.6rem,3vw,2.2rem);margin-top:10px;margin-bottom:10px}
+.ang-head p{color:rgba(255,255,255,.45);font-size:.92rem}
+.ang-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:36px}
+.ang-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:var(--r-lg);padding:24px;cursor:pointer;transition:all .2s;position:relative}
+.ang-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.18)}
+.ang-card.selected{background:rgba(45,125,210,.12);border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.ang-card-badge{position:absolute;top:14px;right:14px;font-size:.63rem;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:3px 8px;background:var(--blue);color:#fff;border-radius:4px}
+.ang-tier{font-size:.67rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:8px}
+.ang-card h3{font-size:1.05rem;color:#fff;margin-bottom:4px}
+.ang-tagline{font-size:.78rem;color:rgba(255,255,255,.4);margin-bottom:18px}
+.ang-price-sm{font-size:1.4rem;font-weight:800;color:#fff}
+.ang-price-sm sub{font-size:.75rem;font-weight:400;color:rgba(255,255,255,.4)}
+.ang-monthly-sm{font-size:.75rem;color:rgba(255,255,255,.35);margin-top:3px}
+.ang-detail{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);padding:0;overflow:hidden;display:none}
+.ang-detail.show{display:block}
+.ang-detail-hd{display:flex;align-items:center;justify-content:space-between;padding:24px 32px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ang-detail-title{color:#fff}
+.ang-detail-title h3{font-size:1.25rem;margin-bottom:3px}
+.ang-detail-title p{font-size:.83rem;color:rgba(255,255,255,.4)}
+.ang-detail-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.ang-detail-left{padding:28px 32px;border-right:1px solid rgba(255,255,255,.08)}
+.ang-detail-right{padding:28px 32px}
+.ang-section-title{font-size:.68rem;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:14px}
+.ang-items{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
+.ang-items li{display:flex;align-items:flex-start;gap:9px;font-size:.84rem;color:rgba(255,255,255,.65)}
+.ang-items li::before{content:'';width:14px;height:14px;background:rgba(45,125,210,.25) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'%3E%3Cpath d='M2.5 7l3 3L11.5 3.5' stroke='%235BA4E5' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat;border-radius:3px;flex-shrink:0;margin-top:2px}
+.ang-cost-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.ang-cost-row:last-of-type{border-bottom:none}
+.ang-cost-label{font-size:.83rem;color:rgba(255,255,255,.5)}
+.ang-cost-val{font-size:.9rem;font-weight:700;color:#fff}
+.ang-total-box{background:rgba(45,125,210,.1);border:1px solid rgba(45,125,210,.25);border-radius:8px;padding:14px 16px;margin-top:14px}
+.ang-total-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px}
+.ang-total-label{font-size:.78rem;color:rgba(255,255,255,.5)}
+.ang-total-once{font-size:1.5rem;font-weight:800;color:#fff}
+.ang-total-mo{font-size:.83rem;color:rgba(255,255,255,.4);margin-top:2px}
+.ang-detail-footer{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-top:1px solid rgba(255,255,255,.08);flex-wrap:wrap;gap:12px}
+.ang-delivery{font-size:.8rem;color:rgba(255,255,255,.35)}
+.ang-delivery strong{color:rgba(255,255,255,.7)}
+
+/* ========= ROI ========= */
 #roi{background:var(--light)}
-.roi-intro{text-align:center;max-width:560px;margin:0 auto 56px}
-.roi-intro h2{font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
 .roi-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
-.roi-controls{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px}
-.roi-controls h3{font-size:1rem;font-weight:700;margin-bottom:24px;color:var(--ink)}
-.roi-field{margin-bottom:22px}
-.roi-field label{display:flex;align-items:center;justify-content:space-between;font-size:.85rem;font-weight:600;color:var(--ink);margin-bottom:10px}
-.roi-val-badge{padding:3px 10px;background:rgba(45,125,210,.1);border-radius:20px;font-size:.82rem;font-weight:700;color:var(--blue)}
+.roi-ctrl{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px}
+.roi-ctrl h3{font-size:.95rem;font-weight:700;margin-bottom:22px}
+.roi-field{margin-bottom:20px}
+.roi-field label{display:flex;justify-content:space-between;font-size:.83rem;font-weight:600;color:var(--ink);margin-bottom:9px}
+.roi-badge{padding:2px 10px;background:rgba(45,125,210,.1);border-radius:20px;font-size:.8rem;font-weight:700;color:var(--blue)}
 input[type=range]{width:100%;-webkit-appearance:none;height:4px;background:var(--border);border-radius:2px;outline:none}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:pointer;border:3px solid var(--white);box-shadow:0 1px 6px rgba(45,125,210,.4)}
-.roi-results{display:flex;flex-direction:column;gap:12px}
-.roi-result-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:24px}
-.roi-result-card.accent{background:var(--navy);border-color:var(--navy)}
-.rrc-label{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px}
-.rrc-label.light{color:rgba(255,255,255,.45)}
-.rrc-value{font-size:1.9rem;font-weight:800;color:var(--ink)}
-.rrc-value.light{color:#fff}
-.rrc-sub{font-size:.78rem;color:var(--muted);margin-top:3px}
-.rrc-sub.light{color:rgba(255,255,255,.4)}
-.roi-amort{background:var(--green-light);border:1px solid rgba(10,102,64,.15);border-radius:var(--r-lg);padding:20px;text-align:center}
-.roi-amort-label{font-size:.8rem;font-weight:600;color:var(--green);margin-bottom:4px}
-.roi-amort-val{font-size:1.6rem;font-weight:800;color:var(--green)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:var(--blue);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 6px rgba(45,125,210,.35)}
+.roi-results{display:flex;flex-direction:column;gap:10px}
+.rrc{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px}
+.rrc.dark{background:var(--navy);border-color:var(--navy)}
+.rrc-lbl{font-size:.72rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.rrc.dark .rrc-lbl{color:rgba(255,255,255,.4)}
+.rrc-val{font-size:1.7rem;font-weight:800;color:var(--ink)}
+.rrc.dark .rrc-val{color:#fff}
+.rrc-sub{font-size:.75rem;color:var(--muted);margin-top:2px}
+.rrc.dark .rrc-sub{color:rgba(255,255,255,.35)}
+.roi-amort{background:var(--green-light);border:1px solid rgba(10,102,64,.15);border-radius:var(--r-lg);padding:18px;text-align:center}
+.roi-amort-lbl{font-size:.78rem;font-weight:600;color:var(--green);margin-bottom:3px}
+.roi-amort-val{font-size:1.5rem;font-weight:800;color:var(--green)}
 
-/* EXPOSE LIVE */
-#expose-live{background:var(--dark);padding:96px 0}
-.expose-live-intro{text-align:center;max-width:560px;margin:0 auto 56px}
-.expose-live-intro h2{color:#fff;font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
-.expose-live-intro p{color:rgba(255,255,255,.5)}
-.expose-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.09);border-radius:var(--r-lg);padding:36px;max-width:800px;margin:0 auto}
-.api-notice{display:flex;align-items:flex-start;gap:10px;background:rgba(45,125,210,.08);border:1px solid rgba(45,125,210,.2);border-radius:8px;padding:14px 16px;margin-bottom:24px}
-.api-notice svg{width:16px;height:16px;stroke:var(--sky);flex-shrink:0;margin-top:1px}
-.api-notice p{font-size:.82rem;color:rgba(255,255,255,.55);line-height:1.6}
-.api-key-row{display:flex;gap:8px;margin-bottom:20px}
-.e-input,.e-select,.e-textarea{width:100%;padding:10px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);color:#fff;font-family:'Inter',sans-serif;font-size:.875rem;outline:none;transition:border-color .18s}
-.e-input:focus,.e-select:focus,.e-textarea:focus{border-color:var(--blue)}
-.e-select option{background:var(--dark)}
-.e-textarea{resize:vertical;min-height:72px}
-.e-label{display:block;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.5);margin-bottom:6px}
-.e-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.e-full{grid-column:1/-1}
-.e-gen-btn{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:.95rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:6px;margin-bottom:20px}
-.e-gen-btn:hover:not(:disabled){background:#2470be}
-.e-gen-btn:disabled{opacity:.5;cursor:not-allowed}
-.e-spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;display:none}
-@keyframes spin{to{transform:rotate(360deg)}}
-.e-output{display:none}
-.e-output.show{display:block}
-.e-section{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:8px;padding:18px;margin-bottom:10px}
-.e-section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.e-section-title{font-size:.72rem;font-weight:700;color:var(--sky);text-transform:uppercase;letter-spacing:.5px}
-.copy-btn{padding:5px 12px;background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:6px;color:rgba(255,255,255,.5);font-size:.7rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .18s}
-.copy-btn:hover{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.8)}
-.copy-btn.done{border-color:rgba(34,197,94,.3);color:#4ade80}
-.e-text{font-size:.86rem;color:rgba(255,255,255,.65);line-height:1.75;white-space:pre-wrap}
-.key-toggle-btn{padding:10px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);color:rgba(255,255,255,.5);font-size:.8rem;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;transition:all .18s}
-.key-toggle-btn:hover{background:rgba(255,255,255,.1)}
+/* ========= EXPOSE ========= */
+#expose{background:var(--white)}
+.expose-inner{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
 
-/* TESTIMONIALS */
-#testimonials{background:var(--white)}
-.testi-intro{text-align:center;max-width:520px;margin:0 auto 56px}
-.testi-intro h2{font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:14px}
-.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.testi{background:var(--light);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px}
-.testi-stars{display:flex;gap:3px;margin-bottom:16px}
-.testi-stars svg{width:14px;height:14px;fill:#f59e0b;stroke:none}
-.testi-quote{font-size:.92rem;color:var(--muted);line-height:1.75;margin-bottom:20px;font-style:italic}
-.testi-author{display:flex;align-items:center;gap:12px}
-.testi-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--sky));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0}
-.testi-name{font-size:.87rem;font-weight:700;color:var(--ink)}
-.testi-role{font-size:.76rem;color:var(--muted)}
+/* ========= TESTIMONIALS ========= */
+#testi{background:var(--light)}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tcard{background:var(--white);border:1px solid var(--border);border-radius:var(--r-lg);padding:28px}
+.tcstars{display:flex;gap:2px;margin-bottom:14px}
+.tcstars svg{width:13px;height:13px;fill:#f59e0b}
+.tcard-quote{font-size:.88rem;color:var(--muted);line-height:1.75;margin-bottom:18px;font-style:italic}
+.tcard-author{display:flex;align-items:center;gap:10px}
+.tav{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--sky));color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tname{font-size:.84rem;font-weight:700;color:var(--ink)}
+.trole{font-size:.74rem;color:var(--muted)}
 
-/* CTA SECTION */
-#cta-section{background:linear-gradient(135deg,var(--navy) 0%,#162b4a 100%);padding:96px 0;text-align:center}
-#cta-section h2{font-size:clamp(1.8rem,3.5vw,2.8rem);color:#fff;margin-bottom:16px}
-#cta-section p{font-size:1rem;color:rgba(255,255,255,.55);max-width:480px;margin:0 auto 36px}
-.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.cta-note{margin-top:20px;font-size:.8rem;color:rgba(255,255,255,.3)}
+/* ========= CTA ========= */
+#cta{background:linear-gradient(135deg,var(--navy),#162b4a);padding:88px 0;text-align:center}
+#cta h2{font-size:clamp(1.7rem,3vw,2.5rem);color:#fff;margin-top:10px;margin-bottom:14px}
+#cta p{font-size:.95rem;color:rgba(255,255,255,.5);max-width:460px;margin:0 auto 32px}
+.cta-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cta-note{margin-top:18px;font-size:.77rem;color:rgba(255,255,255,.25)}
 
-/* FOOTER */
-footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:64px 0 32px}
-.footer-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
-.footer-brand p{font-size:.85rem;color:rgba(255,255,255,.35);margin-top:16px;line-height:1.7;max-width:220px}
-.footer-col h5{font-size:.72rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:16px}
-.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
-.footer-col a{font-size:.85rem;color:rgba(255,255,255,.4);transition:color .18s}
-.footer-col a:hover{color:rgba(255,255,255,.8)}
-.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:24px;border-top:1px solid var(--border-dark)}
-.footer-copy{font-size:.78rem;color:rgba(255,255,255,.25)}
-.footer-legal{display:flex;gap:20px}
-.footer-legal a{font-size:.78rem;color:rgba(255,255,255,.25);transition:color .18s}
-.footer-legal a:hover{color:rgba(255,255,255,.55)}
+/* ========= FOOTER ========= */
+footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:56px 0 28px}
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.foot-brand p{font-size:.83rem;color:rgba(255,255,255,.3);margin-top:14px;max-width:200px;line-height:1.65}
+.foot-col h5{font-size:.68rem;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:14px}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.foot-col a{font-size:.83rem;color:rgba(255,255,255,.38);transition:color .18s}
+.foot-col a:hover{color:rgba(255,255,255,.75)}
+.foot-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid var(--border-dark)}
+.foot-copy{font-size:.75rem;color:rgba(255,255,255,.22)}
+.foot-legal{display:flex;gap:18px}
+.foot-legal a{font-size:.75rem;color:rgba(255,255,255,.22);transition:color .18s}
+.foot-legal a:hover{color:rgba(255,255,255,.5)}
 
-/* MODAL */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)}
+/* ========= MODAL ========= */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:300;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
 .overlay.open{display:flex}
-.modal{background:var(--white);border-radius:var(--r-lg);padding:40px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;position:relative}
-.modal-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:var(--light);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.9rem;transition:background .18s}
+.modal{background:var(--white);border-radius:var(--r-lg);padding:36px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;position:relative}
+.modal-x{position:absolute;top:13px;right:13px;width:28px;height:28px;border-radius:50%;background:var(--light);border:none;cursor:pointer;color:var(--muted);font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:background .18s}
 .modal-x:hover{background:var(--border)}
-.modal h3{font-size:1.3rem;margin-bottom:6px}
-.modal > p{font-size:.88rem;color:var(--muted);margin-bottom:24px}
-.f-row{margin-bottom:14px}
-.f-row label{display:block;font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:6px}
-.f-row input,.f-row textarea{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.88rem;color:var(--ink);outline:none;transition:border-color .18s}
-.f-row input:focus,.f-row textarea:focus{border-color:var(--blue)}
-.f-row textarea{resize:vertical;min-height:90px}
-.f-submit{width:100%;padding:13px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:.9rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .18s;margin-top:4px}
-.f-submit:hover{background:#2470be}
-.f-success{display:none;text-align:center;padding:24px 0}
-.f-success h3{color:var(--green);margin-bottom:8px}
-.f-success p{font-size:.88rem;color:var(--muted)}
+.modal h3{font-size:1.2rem;margin-bottom:5px}
+.modal > p{font-size:.86rem;color:var(--muted);margin-bottom:22px}
+.frow{margin-bottom:12px}
+.frow label{display:block;font-size:.8rem;font-weight:600;color:var(--ink);margin-bottom:5px}
+.frow input,.frow textarea{width:100%;padding:9px 13px;border:1.5px solid var(--border);border-radius:var(--r);font-family:'Inter',sans-serif;font-size:.86rem;color:var(--ink);outline:none;transition:border-color .18s}
+.frow input:focus,.frow textarea:focus{border-color:var(--blue)}
+.frow textarea{resize:vertical;min-height:85px}
+.f-submit{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .18s;margin-top:4px}
+.f-submit:hover{background:#2168be}
+.f-ok{display:none;text-align:center;padding:20px 0}
+.f-ok h3{color:var(--green);margin-bottom:6px}
+.f-ok p{font-size:.86rem;color:var(--muted)}
 
 /* REVEAL */
-.reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
-.reveal.in{opacity:1;transform:translateY(0)}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
+.rv.in{opacity:1;transform:none}
 
 /* RESPONSIVE */
 @media(max-width:960px){
-  .hero-grid{grid-template-columns:1fr}
+  .hero-inner{grid-template-columns:1fr;gap:40px}
   .metrics-grid{grid-template-columns:repeat(2,1fr)}
-  .problem-grid{grid-template-columns:1fr}
-  .steps{grid-template-columns:repeat(2,1fr)}
-  .steps::before{display:none}
-  .service-wrap,.service-wrap.flip{grid-template-columns:1fr;direction:ltr}
-  .pakete-grid{grid-template-columns:1fr;background:none;gap:16px}
-  .paket{border-radius:var(--r-lg);border:1px solid rgba(255,255,255,.07)}
+  .prob-grid{grid-template-columns:1fr}
+  .how-steps{grid-template-columns:repeat(2,1fr)}
+  .how-steps::before{display:none}
+  .svc-grid,.svc-grid.flip{grid-template-columns:1fr;direction:ltr}
+  .ang-selector{grid-template-columns:1fr}
+  .ang-detail-body{grid-template-columns:1fr}
+  .ang-detail-left{border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}
   .roi-layout{grid-template-columns:1fr}
+  .expose-inner{grid-template-columns:1fr}
   .testi-grid{grid-template-columns:1fr}
-  .footer-top{grid-template-columns:1fr 1fr}
-  .e-grid{grid-template-columns:1fr}
-  .e-full{grid-column:auto}
-  .screen-body{grid-template-columns:1fr}
-  .screen-sidebar{display:none}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .expose-imgs{grid-template-columns:1fr}
+  .urgency-inner{flex-direction:column;gap:16px}
 }
 @media(max-width:640px){
-  .nav-links,.nav-right .btn-ghost{display:none}
+  .nav-links{display:none}
+  .nav-right .btn-outline{display:none}
   .burger{display:flex}
   .metrics-grid{grid-template-columns:1fr 1fr}
-  .footer-top{grid-template-columns:1fr}
-  .footer-bottom{flex-direction:column;gap:12px;text-align:center}
-  .hero-btns,.cta-btns{flex-direction:column;align-items:stretch}
-  .hero-btns .btn,.cta-btns .btn{justify-content:center}
-  .pakete-grid{background:transparent}
+  .foot-grid{grid-template-columns:1fr}
+  .foot-bottom{flex-direction:column;gap:10px;text-align:center}
+  .cta-btns,.hero-btns{flex-direction:column;align-items:stretch}
+  .cta-btns .btn,.hero-btns .btn{justify-content:center}
+  .ang-detail-hd{flex-direction:column;gap:12px;align-items:flex-start}
+  .ang-detail-footer{flex-direction:column}
 }
 </style>
 </head>
@@ -432,26 +409,33 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:64
     <div class="nav-inner">
       <a href="#">
         <svg width="130" height="40" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
-          <path d="M78 37 L90 22" fill="none" stroke="#D0D8E4" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M110 22 L122 37" fill="none" stroke="#D0D8E4" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="84" cy="30" r="2.5" fill="#D0D8E4"/>
-          <circle cx="116" cy="30" r="2.5" fill="#D0D8E4"/>
+          <path d="M78 37 L90 22" fill="none" stroke="#C4D0DE" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M110 22 L122 37" fill="none" stroke="#C4D0DE" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="84" cy="30" r="2.5" fill="#C4D0DE"/>
+          <circle cx="116" cy="30" r="2.5" fill="#C4D0DE"/>
           <rect x="90" y="11" width="20" height="14" rx="4" fill="#1E3A5F"/>
           <rect x="60" y="37" width="20" height="14" rx="4" fill="#1E3A5F"/>
           <rect x="120" y="37" width="20" height="14" rx="4" fill="#1E3A5F"/>
-          <text x="62" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="#D0D8E4" letter-spacing="0.5">flow</text>
+          <text x="62" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="#1E3A5F" letter-spacing="0.5">flow</text>
           <text x="100" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="#2D7DD2" letter-spacing="0.5">matic</text>
         </svg>
       </a>
       <ul class="nav-links">
-        <li><a href="#problem">Problem</a></li>
-        <li><a href="#service1">Services</a></li>
-        <li><a href="#pakete">Pakete</a></li>
-        <li><a href="#expose-live">Exposé-Tool</a></li>
-        <li><a href="#roi">ROI-Rechner</a></li>
+        <li class="nav-item"><a href="#problem">Problem</a></li>
+        <li class="nav-item">
+          <a href="#svc1">Services <svg viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+          <div class="nav-dropdown">
+            <a class="nav-dd-link" href="#svc1"><div class="nav-dd-num">1</div>Lead-Maschine</a>
+            <a class="nav-dd-link" href="#svc2"><div class="nav-dd-num">2</div>Lead-Verwaltung</a>
+            <a class="nav-dd-link" href="#svc3"><div class="nav-dd-num">3</div>Exposé-Generator</a>
+          </div>
+        </li>
+        <li class="nav-item"><a href="#angebote">Angebote</a></li>
+        <li class="nav-item"><a href="#roi">ROI-Rechner</a></li>
+        <li class="nav-item"><a href="#testi">Referenzen</a></li>
       </ul>
       <div class="nav-right">
-        <button class="btn btn-ghost btn-sm" onclick="openModal()">Kontakt</button>
+        <button class="btn btn-outline btn-sm" onclick="openModal()">Kontakt</button>
         <button class="btn btn-primary btn-sm" onclick="openModal()">Erstgespräch</button>
         <div class="burger" onclick="toggleBurger()"><span></span><span></span><span></span></div>
       </div>
@@ -462,93 +446,68 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:64
 <!-- MOBILE NAV -->
 <div class="mob-nav" id="mobNav">
   <a href="#problem" onclick="toggleBurger()">Problem</a>
-  <a href="#service1" onclick="toggleBurger()">Services</a>
-  <a href="#pakete" onclick="toggleBurger()">Pakete</a>
-  <a href="#expose-live" onclick="toggleBurger()">Exposé-Tool</a>
+  <a href="#svc1" onclick="toggleBurger()">Service 1 — Lead-Maschine</a>
+  <a href="#svc2" onclick="toggleBurger()">Service 2 — Lead-Verwaltung</a>
+  <a href="#svc3" onclick="toggleBurger()">Service 3 — Exposé-Generator</a>
+  <a href="#angebote" onclick="toggleBurger()">Angebote & Preise</a>
   <a href="#roi" onclick="toggleBurger()">ROI-Rechner</a>
   <button class="btn btn-primary" onclick="toggleBurger();openModal()">Kostenloses Erstgespräch</button>
 </div>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-grid-bg"></div>
+  <div class="hero-lines"></div>
   <div class="hero-glow"></div>
-  <div class="wrap" style="position:relative;z-index:1">
-    <div class="hero-content reveal">
-      <div class="hero-tag">
-        <span class="hero-dot"></span>
-        Für Immobilienmakler in der Schweiz
-      </div>
-      <h1 class="hero-h1">Kein Lead.<br>Kein Mandat.<br><em>Kein Wachstum.</em></h1>
-      <p class="hero-sub">Flowmatic baut Schweizer Immobilienmaklern vollautomatische Lead-Systeme und KI-Tools — von der ersten Anfrage bis zum fertigen Exposé. In 7 Tagen live.</p>
-      <div class="hero-btns">
-        <button class="btn btn-primary" onclick="openModal()">Kostenloses Erstgespräch</button>
-        <a href="#service1" class="btn btn-ghost">Services ansehen</a>
-      </div>
-      <div class="hero-proof">
-        <div class="proof-item"><div class="proof-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></div>Keine Setup-Kosten versteckt</div>
-        <div class="proof-item"><div class="proof-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></div>Lieferung in 7 Tagen</div>
-        <div class="proof-item"><div class="proof-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></div>Feste CHF-Preise</div>
-      </div>
-    </div>
-    <!-- Dashboard Mockup -->
-    <div class="hero-visual-wrap reveal" style="transition-delay:.15s">
-      <div class="screen-placeholder">
-        <div class="screen-bar">
-          <div class="screen-dot"></div><div class="screen-dot"></div><div class="screen-dot"></div>
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="rv">
+        <div class="hero-tag"><span class="hdot"></span>Für Schweizer Immobilienmakler</div>
+        <h1 class="h1">Kein Lead.<br>Kein Mandat.<br><em>Kein Wachstum.</em></h1>
+        <p class="hero-sub">Flowmatic automatisiert Ihre gesamte Lead-Verarbeitung — von der ersten Anfrage bis zum fertigen Exposé. Die meisten Makler verlieren täglich Mandate, weil sie zu langsam reagieren oder Anfragen schlicht übersehen. Wir ändern das.</p>
+        <div class="hero-btns">
+          <button class="btn btn-primary" onclick="openModal()">Kostenloses Erstgespräch</button>
+          <a href="#svc1" class="btn btn-ghost-dark">Services ansehen</a>
         </div>
-        <div class="screen-body">
-          <div class="screen-sidebar">
-            <p class="s-label">Eingehende Leads</p>
-            <div class="s-row active">
-              <div class="s-avatar">MH</div>
-              <div class="s-info"><div class="s-name">M. Huber, Zürich</div><div class="s-meta">Haus · CHF 1.8M</div></div>
-              <span class="s-badge new">Neu</span>
+        <div class="hero-facts">
+          <div class="hfact"><div class="hfact-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></div>Lieferung in 5–7 Tagen, kein IT-Aufwand Ihrerseits</div>
+          <div class="hfact"><div class="hfact-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></div>Feste CHF-Preise, kein Stundensatz</div>
+          <div class="hfact"><div class="hfact-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1.5 4L3.5 6L6.5 2" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"/></svg></div>Zürich · Zug · Basel · Genf · Bern</div>
+        </div>
+      </div>
+      <div class="rv" style="transition-delay:.12s">
+        <div class="flow-card">
+          <p class="flow-title">Lead-Verarbeitung — vollautomatisch</p>
+          <div class="flow-steps">
+            <div class="fstep active">
+              <div class="fstep-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
+              <div class="fstep-body"><div class="fstep-name">Interessent füllt Quiz aus</div><div class="fstep-desc">Landingpage · ImmoScout24 · E-Mail</div></div>
+              <span class="fstep-badge fbadge-blue">Eingang</span>
             </div>
-            <div class="s-row">
-              <div class="s-avatar">SK</div>
-              <div class="s-info"><div class="s-name">S. Kellenberger, Zug</div><div class="s-meta">Wohnung · Budget 900k</div></div>
-              <span class="s-badge hot">Warm</span>
+            <div class="flow-divider"><div class="flow-divider-line"></div><span class="flow-divider-icon">&#8595;</span><div class="flow-divider-line"></div></div>
+            <div class="fstep">
+              <div class="fstep-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+              <div class="fstep-body"><div class="fstep-name">Flowmatic verarbeitet automatisch</div><div class="fstep-desc">n8n Workflow läuft sofort</div></div>
+              <span class="fstep-badge fbadge-green">&lt; 10s</span>
             </div>
-            <div class="s-row">
-              <div class="s-avatar">TF</div>
-              <div class="s-info"><div class="s-name">T. Fischer, Basel</div><div class="s-meta">Gewerbe · Gepflegt</div></div>
-              <span class="s-badge new">Neu</span>
-            </div>
-            <div class="s-row">
-              <div class="s-avatar">AR</div>
-              <div class="s-info"><div class="s-name">A. Roth, Genf</div><div class="s-meta">Haus · CHF 2.1M</div></div>
-              <span class="s-badge hot">Warm</span>
-            </div>
-            <div class="s-row">
-              <div class="s-avatar">EM</div>
-              <div class="s-info"><div class="s-name">E. Müller, Bern</div><div class="s-meta">Wohnung · 4.5 Zi.</div></div>
-              <span class="s-badge new">Neu</span>
+            <div class="flow-divider"><div class="flow-divider-line"></div><span class="flow-divider-icon">&#8595;</span><div class="flow-divider-line"></div></div>
+            <div class="fstep">
+              <div class="fstep-icon green"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg></div>
+              <div class="fstep-body"><div class="fstep-name">Sie werden sofort benachrichtigt</div><div class="fstep-desc">Lead im CRM · Sheets · E-Mail an Sie</div></div>
+              <span class="fstep-badge fbadge-green">Erledigt</span>
             </div>
           </div>
-          <div class="screen-main">
-            <div class="screen-stat-row">
-              <div class="screen-stat"><div class="screen-stat-val">47</div><div class="screen-stat-lbl">Leads diesen Monat</div></div>
-              <div class="screen-stat"><div class="screen-stat-val">&lt;10s</div><div class="screen-stat-lbl">Reaktionszeit</div></div>
-              <div class="screen-stat"><div class="screen-stat-val">100%</div><div class="screen-stat-lbl">Erfassungsrate</div></div>
-            </div>
-            <div class="screen-card">
-              <p class="screen-card-hd">Lead-Quellen diese Woche</p>
-              <div class="bar-row"><span class="bar-name">Landingpage</span><div class="bar-track"><div class="bar-fill" style="width:78%"></div></div><span class="bar-val">18</span></div>
-              <div class="bar-row"><span class="bar-name">ImmoScout24</span><div class="bar-track"><div class="bar-fill" style="width:55%"></div></div><span class="bar-val">13</span></div>
-              <div class="bar-row"><span class="bar-name">Homegate</span><div class="bar-track"><div class="bar-fill" style="width:38%"></div></div><span class="bar-val">9</span></div>
-              <div class="bar-row"><span class="bar-name">Direkte E-Mail</span><div class="bar-track"><div class="bar-fill" style="width:30%"></div></div><span class="bar-val">7</span></div>
-            </div>
-            <div class="screen-card">
-              <p class="screen-card-hd">Live-Aktivität</p>
-              <div class="pulse-row"><div class="pulse-dot"></div><span class="pulse-text">M. Huber — Quiz ausgefüllt, Lead in CRM eingetragen</span><span class="pulse-time">jetzt</span></div>
-              <div class="pulse-row"><div class="pulse-dot" style="background:#f59e0b;animation-delay:.4s"></div><span class="pulse-text">S. Kellenberger — Follow-up-Mail gesendet</span><span class="pulse-time">3 Min.</span></div>
-              <div class="pulse-row"><div class="pulse-dot" style="background:#f59e0b;animation-delay:.8s"></div><span class="pulse-text">Exposé für Seefeldstrasse 12 generiert</span><span class="pulse-time">11 Min.</span></div>
-            </div>
+          <div class="flow-results">
+            <div class="fres"><div class="fres-val">47</div><div class="fres-lbl">Leads / Monat</div></div>
+            <div class="fres"><div class="fres-val">&lt;10s</div><div class="fres-lbl">Reaktionszeit</div></div>
+            <div class="fres"><div class="fres-val">100%</div><div class="fres-lbl">Erfasst</div></div>
+          </div>
+          <div class="live-line">
+            <div class="live-dot"></div>
+            <span class="live-text">M. Huber · Haus Zürich · CHF 1.8M — gerade eingegangen</span>
+            <span class="live-time">jetzt</span>
           </div>
         </div>
       </div>
-      <p style="text-align:center;font-size:.75rem;color:rgba(255,255,255,.2);margin-top:12px">Ihr eigenes Dashboard — Ihr eigene Daten</p>
     </div>
   </div>
 </section>
@@ -557,10 +516,23 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:64
 <div id="metrics">
   <div class="wrap">
     <div class="metrics-grid">
-      <div class="metric reveal"><div class="metric-val"><span>&lt;10</span>s</div><div class="metric-lbl">Reaktionszeit auf neue Anfragen</div></div>
-      <div class="metric reveal"><div class="metric-val"><span>80</span>%</div><div class="metric-lbl">weniger manuelle Lead-Arbeit</div></div>
-      <div class="metric reveal"><div class="metric-val"><span>2</span>h</div><div class="metric-lbl">gespart pro Exposé mit KI</div></div>
-      <div class="metric reveal"><div class="metric-val"><span>7</span></div><div class="metric-lbl">Tage bis zum Live-System</div></div>
+      <div class="met rv"><div class="met-val"><em>&lt;10</em>s</div><div class="met-lbl">Reaktionszeit auf neue Anfragen</div></div>
+      <div class="met rv"><div class="met-val"><em>80</em>%</div><div class="met-lbl">weniger manuelle Lead-Arbeit</div></div>
+      <div class="met rv"><div class="met-val"><em>2</em>h</div><div class="met-lbl">gespart pro Exposé mit KI</div></div>
+      <div class="met rv"><div class="met-val"><em>7</em></div><div class="met-lbl">Tage bis zum Live-System</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- URGENCY BANNER -->
+<div id="urgency">
+  <div class="wrap">
+    <div class="urgency-inner rv">
+      <div class="urgency-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div>
+      <div class="urgency-text">
+        <h3>Die meisten Unternehmen wissen nicht, was heute mit KI möglich ist — und das kostet sie täglich Geld.</h3>
+        <p>Während Ihre Konkurrenz noch manuell Leads kopiert und Exposés schreibt, laufen bei Ihren Mitbewerbern die Systeme bereits vollautomatisch. <strong>Der Vorsprung entsteht jetzt.</strong> Wer wartet, verliert Mandate — still und unsichtbar.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -568,164 +540,103 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:64
 <!-- PROBLEM -->
 <section id="problem">
   <div class="wrap">
-    <div class="problem-intro reveal">
+    <div class="section-head rv">
       <span class="label">Das Problem</span>
       <h2>Warum Schweizer Makler täglich Mandate verlieren</h2>
-      <p style="color:var(--muted);font-size:.95rem">Nicht wegen fehlender Qualifikation — sondern wegen veralteter Prozesse.</p>
+      <p>Nicht wegen fehlender Qualifikation — sondern wegen Prozessen, die in eine andere Zeit gehören.</p>
     </div>
-    <div class="problem-grid">
-      <div class="problem-card reveal">
-        <div class="problem-card-num">01</div>
+    <div class="prob-grid">
+      <div class="prob-card rv">
+        <div class="prob-num">01</div>
         <h3>Zu langsame Reaktion</h3>
-        <p>Ein Eigentümer fragt bei drei Maklern gleichzeitig an. Wer zuerst zurückruft, gewinnt das Mandat. Die durchschnittliche manuelle Reaktionszeit beträgt 4–8 Stunden — damit ist das Rennen längst entschieden.</p>
-        <span class="impact">Verlorene Mandate durch Langsamkeit</span>
+        <p>Ein Eigentümer fragt gleichzeitig bei drei Maklern an. Wer zuerst zurückruft, gewinnt das Mandat — Qualifikation spielt erst danach eine Rolle. Durchschnittliche manuelle Reaktionszeit: 4 bis 8 Stunden.</p>
+        <span class="prob-impact">Verlorene Mandate durch Geschwindigkeit</span>
       </div>
-      <div class="problem-card reveal">
-        <div class="problem-card-num">02</div>
-        <h3>Leads gehen verloren</h3>
-        <p>Anfragen kommen per E-Mail, über ImmoScout24, Homegate und das eigene Formular. Ohne ein zentrales System werden Leads übersehen, in Postfächern begraben oder schlicht vergessen. Stilles Umsatzleck.</p>
-        <span class="impact">Bis zu 30% der Anfragen unbeantwortet</span>
+      <div class="prob-card rv">
+        <div class="prob-num">02</div>
+        <h3>Leads gehen im Chaos unter</h3>
+        <p>ImmoScout24, Homegate, eigenes Formular, direkte E-Mails — ohne ein zentrales System werden Anfragen vergessen oder zu spät bearbeitet. Jeder übersehene Lead ist ein potenzielles Mandat, das zur Konkurrenz geht.</p>
+        <span class="prob-impact">Bis zu 30% aller Anfragen bleiben unbeantwortet</span>
       </div>
-      <div class="problem-card reveal">
-        <div class="problem-card-num">03</div>
-        <h3>Exposés fressen Zeit</h3>
-        <p>Ein professionelles Exposé braucht 2–3 Stunden. Bei 8 Objekten pro Monat sind das fast zwei volle Arbeitstage — Zeit, die für Besichtigungen, Mandatsgespräche und den Aufbau neuer Kontakte fehlt.</p>
-        <span class="impact">16–24 Stunden/Monat für Texte verloren</span>
+      <div class="prob-card rv">
+        <div class="prob-num">03</div>
+        <h3>Exposés fressen Arbeitszeit</h3>
+        <p>Ein professionelles Exposé braucht 2 bis 3 Stunden. Bei 8 Objekten pro Monat verlieren Sie fast zwei volle Arbeitstage — Zeit, die für Mandate, Besichtigungen und neue Kontakte fehlt.</p>
+        <span class="prob-impact">16–24 Stunden pro Monat für Texte verloren</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
+<!-- HOW -->
 <section id="how">
   <div class="wrap">
-    <div class="how-intro reveal">
+    <div class="section-head center rv">
       <span class="label">Vorgehen</span>
       <h2>Vom Erstgespräch zum laufenden System</h2>
-      <p style="color:var(--muted);font-size:.95rem">Kein langwieriges Projekt. Kein IT-Aufwand Ihrerseits. Wir liefern fertig.</p>
+      <p>Kein IT-Projekt. Kein Aufwand Ihrerseits. Wir liefern fertig — in 7 Tagen.</p>
     </div>
-    <div class="steps">
-      <div class="step reveal">
-        <div class="step-num">1</div>
-        <h4>Kostenloses Erstgespräch</h4>
-        <p>30 Minuten. Wir analysieren Ihre aktuelle Situation und definieren gemeinsam, was automatisiert werden kann und welches Paket passt.</p>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">2</div>
-        <h4>Angebot mit festen Preisen</h4>
-        <p>Sie erhalten ein konkretes Angebot in CHF — kein Stundensatz, keine offenen Posten. Scope, Preis und Liefertermin stehen vor dem Start fest.</p>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">3</div>
-        <h4>Aufbau in 5–7 Tagen</h4>
-        <p>Wir bauen Ihr System vollständig auf. Sie erhalten täglich Updates. Am Ende folgt eine vollständige Einführung und Übergabe.</p>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">4</div>
-        <h4>Ihr System läuft — 24/7</h4>
-        <p>Neue Leads werden sofort erfasst, verarbeitet und weitergemeldet — ohne Ihr Zutun. Sie kümmern sich um Kunden, nicht um Verwaltung.</p>
-      </div>
+    <div class="how-steps">
+      <div class="how-step rv"><div class="how-num">1</div><h4>Kostenloses Erstgespräch</h4><p>30 Minuten. Wir analysieren Ihre Situation und zeigen konkret, was automatisiert werden kann.</p></div>
+      <div class="how-step rv"><div class="how-num">2</div><h4>Angebot mit festen Preisen</h4><p>CHF-Festpreis, kein Stundensatz. Scope, Kosten und Termin stehen vor dem Start.</p></div>
+      <div class="how-step rv"><div class="how-num">3</div><h4>Aufbau in 5–7 Tagen</h4><p>Wir bauen das System vollständig. Sie erhalten tägliche Updates und am Ende eine Einführung.</p></div>
+      <div class="how-step rv"><div class="how-num">4</div><h4>System läuft — 24/7</h4><p>Leads werden sofort erfasst und weitergemeldet. Sie kümmern sich um Kunden, nicht um Verwaltung.</p></div>
     </div>
   </div>
 </section>
 
 <!-- SERVICE 1 -->
-<div id="service1" class="service-block">
+<div id="svc1" class="svc">
   <div class="wrap">
-    <div class="service-wrap">
-      <div class="service-content reveal">
-        <div class="service-tag">
-          <div class="service-number">1</div>
-          <span class="service-tag-text">Service 1 — Lead-Maschine</span>
-        </div>
+    <div class="svc-grid">
+      <div class="svc-content rv">
+        <div class="svc-tag"><div class="svc-num">1</div><span class="svc-tag-text">Service 1 — Lead-Maschine</span></div>
         <h2>Ihre Lead-Maschine — 24/7 automatisch</h2>
-        <p class="service-sub">Die richtigen Leute finden Sie. Vollautomatisch.</p>
-        <p>Eine professionelle Landingpage mit Quiz-Funnel und ein vollautomatischer Workflow dahinter. Sie schalten Werbung auf die Seite — wir sorgen dafür, dass jeder Besucher korrekt erfasst und sofort benachrichtigt wird. Zwei Varianten stehen zur Wahl.</p>
-
-        <div class="variant-toggle">
-          <button class="v-btn on" onclick="switchV('A',this)">Variante A — Eigentümer</button>
-          <button class="v-btn" onclick="switchV('B',this)">Variante B — Käufer</button>
+        <p class="svc-sub">Die richtigen Leute finden Sie. Ohne Ihr Zutun.</p>
+        <p>Professionelle Landingpage mit Quiz-Funnel und vollautomatischem Workflow dahinter. Sie schalten Werbung — wir sorgen dafür, dass jeder Interessent sofort erfasst, benachrichtigt und weiterverarbeitet wird.</p>
+        <div class="vtoggle">
+          <button class="vbtn on" onclick="switchV('A',this)">Variante A — Eigentümer</button>
+          <button class="vbtn" onclick="switchV('B',this)">Variante B — Käufer</button>
         </div>
-
-        <div id="vA" class="variant-panel on">
-          <p style="font-size:.88rem;color:var(--muted);margin-bottom:14px"><strong style="color:var(--ink)">Ziel:</strong> Eigentümer gewinnen, die ihre Immobilie verkaufen wollen. Jeder ausgefüllte Quiz ist ein qualifizierter Erstkontakt — ein potenzielles Mandat.</p>
-          <ul class="feature-list">
-            <li>Quiz "Was ist Ihre Immobilie wert?" — 3 Fragen, dann Kontaktdaten</li>
-            <li>Eigentümer erhält sofort Bestätigungsmail mit Calendly-Link für das Bewertungsgespräch</li>
-            <li>Sie erhalten Sofort-Benachrichtigung mit allen Daten: Name, Telefon, Immobilientyp, Lage, Zustand</li>
+        <div id="vA" class="vpanel on">
+          <p style="font-size:.86rem;color:var(--muted);margin-bottom:14px"><strong style="color:var(--ink)">Ziel:</strong> Eigentümer gewinnen, die ihre Immobilie verkaufen wollen. Jeder ausgefüllte Quiz ist ein qualifizierter Erstkontakt.</p>
+          <ul class="feat-list">
+            <li>Quiz "Was ist Ihre Immobilie wert?" — 3 Fragen, dann Kontaktformular</li>
+            <li>Eigentümer erhält sofort Bestätigungsmail mit Calendly-Link für das Erstgespräch</li>
+            <li>Sie erhalten Sofort-Benachrichtigung: Name, Telefon, Immobilientyp, Lage, Zustand</li>
             <li>Lead automatisch in Google Sheets und CRM eingetragen</li>
           </ul>
-          <p style="font-size:.82rem;color:var(--muted);margin-bottom:16px">1 gewonnenes Mandat = 20.000–30.000 CHF Provision. Die Maschine kostet einmalig ab 2.500 CHF — amortisiert sich beim ersten Mandat mehrfach.</p>
+          <p style="font-size:.82rem;color:var(--muted)">1 gewonnenes Mandat = 20.000–30.000 CHF Provision. Das System kostet einmalig ab 2.500 CHF — amortisiert sich beim ersten Mandat.</p>
         </div>
-        <div id="vB" class="variant-panel">
-          <p style="font-size:.88rem;color:var(--muted);margin-bottom:14px"><strong style="color:var(--ink)">Ziel:</strong> Kaufinteressenten gewinnen, die aktiv suchen. Sie erhalten ein vollständiges Suchprofil — und rufen als Erster zurück.</p>
-          <ul class="feature-list">
+        <div id="vB" class="vpanel">
+          <p style="font-size:.86rem;color:var(--muted);margin-bottom:14px"><strong style="color:var(--ink)">Ziel:</strong> Kaufinteressenten gewinnen, die aktiv suchen. Sie erhalten ein vollständiges Suchprofil und rufen als Erster zurück.</p>
+          <ul class="feat-list">
             <li>Quiz "Ihre Traumimmobilie finden" — Region, Budget, Grösse, Typ</li>
-            <li>Käufer erhält sofort Mail: "Wir suchen für Sie — Sie hören von uns innerhalb 24h"</li>
+            <li>Käufer erhält sofort Mail: "Wir suchen für Sie — melden uns innerhalb 24h"</li>
             <li>Sie erhalten vollständiges Suchprofil als Sofort-Benachrichtigung</li>
-            <li>Lead automatisch als neuer Suchauftrag in Google Sheets und CRM</li>
+            <li>Lead automatisch als neuer Suchauftrag in CRM und Google Sheets</li>
           </ul>
-          <p style="font-size:.82rem;color:var(--muted);margin-bottom:16px">Käufer, die aktiv suchen, sind die heissesten Leads. Wer ihr Suchprofil zuerst hat und zurückruft — gewinnt die Provision.</p>
+          <p style="font-size:.82rem;color:var(--muted)">Wer das Suchprofil zuerst hat und zuerst zurückruft, gewinnt die Provision. Timing entscheidet.</p>
         </div>
-
-        <div class="price-line">
-          <div>
-            <div class="price-main">CHF 2.500–3.500 <span>einmalig</span></div>
-            <div style="font-size:.78rem;color:var(--muted);margin-top:3px">eine Variante · + CHF 250/Monat</div>
-          </div>
-          <div style="height:32px;width:1px;background:var(--border)"></div>
-          <div>
-            <div class="price-main">CHF 5.500 <span>einmalig</span></div>
-            <div style="font-size:.78rem;color:var(--muted);margin-top:3px">beide Varianten · + CHF 400/Monat</div>
-          </div>
+        <div class="price-bar">
+          <div><div class="pb-main">CHF 2.500–3.500 <span>einmalig</span></div><div class="pb-note">eine Variante · + CHF 250/Monat</div></div>
+          <div class="pb-sep"></div>
+          <div><div class="pb-main">CHF 5.500 <span>einmalig</span></div><div class="pb-note">beide Varianten · + CHF 400/Monat</div></div>
         </div>
-        <p style="font-size:.78rem;color:var(--muted);margin-top:10px">Lieferzeit 5–7 Tage. Sie schalten selbst Ads (Facebook, Instagram, Google).</p>
+        <p style="font-size:.76rem;color:var(--muted);margin-top:8px">Lieferzeit 5–7 Tage. Sie schalten selbst Werbung auf die Seite (Facebook, Instagram, Google).</p>
       </div>
-
-      <div class="reveal" style="transition-delay:.1s">
-        <!-- PLACEHOLDER für Screenshot/Demo -->
-        <div class="img-placeholder" style="min-height:200px;margin-bottom:16px">
+      <div class="rv" style="transition-delay:.1s">
+        <div class="img-ph" style="min-height:180px;margin-bottom:14px">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          <span class="placeholder-label">Screenshot Landingpage<br>wird hier eingefügt</span>
+          <span class="img-ph-label">Screenshot Ihrer Landingpage<br>wird hier eingefügt</span>
         </div>
-        <div class="process-visual">
-          <div class="process-header">
-            <div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div>
-            <span class="p-title">Automatischer Workflow</span>
-          </div>
-          <div class="process-body">
-            <div class="p-step">
-              <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div>
-              <div class="p-step-info">
-                <div class="p-step-name">1. Quiz ausgefüllt</div>
-                <div class="p-step-desc">Interessent schliesst Formular ab</div>
-              </div>
-              <span class="p-step-badge">Trigger</span>
-            </div>
-            <div class="p-step">
-              <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
-              <div class="p-step-info">
-                <div class="p-step-name">2. Bestätigungsmail an Lead</div>
-                <div class="p-step-desc">Automatisch · inkl. Calendly-Link</div>
-              </div>
-              <span class="p-step-badge">&lt;10s</span>
-            </div>
-            <div class="p-step">
-              <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div>
-              <div class="p-step-info">
-                <div class="p-step-name">3. Benachrichtigung an Sie</div>
-                <div class="p-step-desc">Name, Telefon, Immobiliendetails</div>
-              </div>
-              <span class="p-step-badge">&lt;10s</span>
-            </div>
-            <div class="p-step">
-              <div class="p-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
-              <div class="p-step-info">
-                <div class="p-step-name">4. CRM + Google Sheets</div>
-                <div class="p-step-desc">Lead vollständig erfasst, kein manueller Schritt</div>
-              </div>
-              <span class="p-step-badge">Auto</span>
-            </div>
+        <div class="proc-box">
+          <div class="proc-hd"><div class="wdot"></div><div class="wdot"></div><div class="wdot"></div><span class="proc-title">Automatischer Workflow</span></div>
+          <div class="proc-body">
+            <div class="prow"><div class="prow-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div><div class="prow-body"><div class="prow-name">Quiz ausgefüllt</div><div class="prow-desc">Interessent schliesst Formular ab</div></div><span class="prow-badge">Trigger</span></div>
+            <div class="prow"><div class="prow-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><div class="prow-body"><div class="prow-name">Bestätigungsmail an Interessenten</div><div class="prow-desc">Automatisch · inkl. Calendly-Link</div></div><span class="prow-badge">&lt;10s</span></div>
+            <div class="prow"><div class="prow-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg></div><div class="prow-body"><div class="prow-name">Benachrichtigung an Sie</div><div class="prow-desc">Alle Lead-Daten sofort auf Ihr Telefon</div></div><span class="prow-badge">&lt;10s</span></div>
+            <div class="prow"><div class="prow-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div><div class="prow-body"><div class="prow-name">CRM + Google Sheets</div><div class="prow-desc">Lead vollständig erfasst, kein manueller Schritt</div></div><span class="prow-badge">Auto</span></div>
           </div>
         </div>
       </div>
@@ -734,75 +645,54 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:64
 </div>
 
 <!-- SERVICE 2 -->
-<div id="service2" class="service-block">
+<div id="svc2" class="svc">
   <div class="wrap">
-    <div class="service-wrap flip">
-      <div class="service-content reveal">
-        <div class="service-tag">
-          <div class="service-number">2</div>
-          <span class="service-tag-text">Service 2 — Lead-Verwaltung</span>
-        </div>
+    <div class="svc-grid flip">
+      <div class="svc-content rv">
+        <div class="svc-tag"><div class="svc-num">2</div><span class="svc-tag-text">Service 2 — Lead-Verwaltung</span></div>
         <h2>Kein Lead geht mehr verloren</h2>
-        <p class="service-sub">Alle Anfragen. Ein System. Vollautomatisch.</p>
-        <p>Egal woher eine Anfrage kommt — Ihr System verarbeitet sie sofort und trägt sie vollständig ins CRM ein. Kein manuelles Copy-Paste, kein Vergessen, kein Chaos zwischen verschiedenen Postfächern.</p>
-        <p><strong>Drei Quellen werden verarbeitet:</strong></p>
-        <ul class="feature-list" style="margin-top:12px">
-          <li><strong>Eigene Landingpage:</strong> Formular-Eingang per Webhook — sofort ins CRM, Google Sheets, Mail an Sie und Bestätigungsmail an Interessenten</li>
-          <li><strong>ImmoScout24 / Homegate:</strong> Neue Portal-Anfrage kommt per Mail — n8n empfängt, erkennt Lead und trägt automatisch ein</li>
-          <li><strong>Direkte E-Mail:</strong> Anfragen per E-Mail werden erkannt, in strukturierte Daten verwandelt und ins CRM übertragen</li>
+        <p class="svc-sub">Alle Anfragen. Ein System. Vollautomatisch.</p>
+        <p>Egal woher eine Anfrage kommt — das System verarbeitet sie sofort und meldet sie weiter. Keine manuelle Arbeit, kein Vergessen, kein Postfach-Chaos. Sie reagieren schneller als jeder Mitbewerber.</p>
+        <ul class="feat-list">
+          <li><strong>Eigene Landingpage:</strong> Formular-Eingang per Webhook → CRM, Sheets, Mail an Sie und Bestätigung an Interessenten</li>
+          <li><strong>ImmoScout24 / Homegate:</strong> Portal-Anfragen werden automatisch erkannt und ins System übertragen</li>
+          <li><strong>Direkte E-Mail:</strong> Eingehende Lead-Mails werden erkannt, strukturiert und ins CRM eingetragen</li>
+          <li>Reaktionszeit unter 10 Sekunden — manuell sind es 4 bis 8 Stunden</li>
         </ul>
-        <p style="font-size:.88rem;color:var(--muted);margin-bottom:20px">Ergebnis: Sie wissen binnen Sekunden von jeder Anfrage — egal wie sie reinkommt. Der Makler der als Erster antwortet, gewinnt den Auftrag.</p>
-        <div class="price-line">
-          <div>
-            <div class="price-main">CHF 2.500 <span>einmalig</span></div>
-            <div style="font-size:.78rem;color:var(--muted);margin-top:3px">+ CHF 250/Monat · Lieferzeit 3–5 Tage</div>
-          </div>
+        <div class="price-bar">
+          <div><div class="pb-main">CHF 2.500 <span>einmalig</span></div><div class="pb-note">+ CHF 250/Monat · Lieferzeit 3–5 Tage</div></div>
+        </div>
+        <div class="crm-addon">
+          <div class="crm-addon-title">Kein CRM-System vorhanden?</div>
+          <p>Kein Problem. Für Makler, die noch kein CRM nutzen, bauen wir auf Wunsch ein einfaches, massgeschneidertes System — genau auf Ihren Workflow zugeschnitten. Auf Anfrage, als separater Zusatzservice.</p>
         </div>
       </div>
-      <div class="reveal" style="transition-delay:.1s">
-        <div class="img-placeholder" style="min-height:180px;margin-bottom:16px">
+      <div class="rv" style="transition-delay:.1s">
+        <div class="img-ph" style="min-height:160px;margin-bottom:14px">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          <span class="placeholder-label">Screenshot Workflow-Übersicht<br>wird hier eingefügt</span>
+          <span class="img-ph-label">Screenshot Workflow-Übersicht<br>wird hier eingefügt</span>
         </div>
-        <div class="sources-visual">
-          <div class="sources-header">
-            <div class="p-dot"></div><div class="p-dot"></div><div class="p-dot"></div>
-            <span class="p-title">Eingehende Quellen</span>
-          </div>
-          <div class="sources-body">
-            <div class="source-card">
-              <div class="source-icon-box lp">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-              </div>
-              <div class="source-text">
-                <div class="source-name">Eigene Landingpage</div>
-                <div class="source-desc">Formular-Eingang per Webhook</div>
-              </div>
-              <span class="source-arrow">&#8594;</span>
+        <div class="src-box">
+          <div class="proc-hd"><div class="wdot"></div><div class="wdot"></div><div class="wdot"></div><span class="proc-title">Alle Quellen — ein System</span></div>
+          <div class="src-body">
+            <div class="src-row">
+              <div class="src-ic a"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div>
+              <div class="src-txt"><div class="src-name">Eigene Landingpage</div><div class="src-desc">Formular per Webhook</div></div>
+              <span class="src-arrow">&#8594;</span>
             </div>
-            <div class="source-card">
-              <div class="source-icon-box portal">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-              </div>
-              <div class="source-text">
-                <div class="source-name">ImmoScout24 / Homegate</div>
-                <div class="source-desc">Portal-Anfragen automatisch weiterverarbeitet</div>
-              </div>
-              <span class="source-arrow">&#8594;</span>
+            <div class="src-row">
+              <div class="src-ic b"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></div>
+              <div class="src-txt"><div class="src-name">ImmoScout24 / Homegate</div><div class="src-desc">Portal-Anfragen automatisch</div></div>
+              <span class="src-arrow">&#8594;</span>
             </div>
-            <div class="source-card">
-              <div class="source-icon-box mail">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-              </div>
-              <div class="source-text">
-                <div class="source-name">Direkte E-Mail</div>
-                <div class="source-desc">Eingehende Lead-Mails werden erkannt</div>
-              </div>
-              <span class="source-arrow">&#8594;</span>
+            <div class="src-row">
+              <div class="src-ic c"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+              <div class="src-txt"><div class="src-name">Direkte E-Mail</div><div class="src-desc">Eingehende Anfragen erkannt</div></div>
+              <span class="src-arrow">&#8594;</span>
             </div>
-            <div class="crm-box">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>
-              <span class="crm-box-text">CRM + Google Sheets + Sofort-Benachrichtigung</span>
+            <div class="crm-target">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>
+              <span>CRM + Google Sheets + Sofort-Benachrichtigung</span>
             </div>
           </div>
         </div>
@@ -812,63 +702,36 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:64
 </div>
 
 <!-- SERVICE 3 -->
-<div id="service3" class="service-block">
+<div id="svc3" class="svc">
   <div class="wrap">
-    <div class="service-wrap">
-      <div class="service-content reveal">
-        <div class="service-tag">
-          <div class="service-number">3</div>
-          <span class="service-tag-text">Service 3 — Exposé-Generator</span>
-        </div>
+    <div class="svc-grid">
+      <div class="svc-content rv">
+        <div class="svc-tag"><div class="svc-num">3</div><span class="svc-tag-text">Service 3 — Exposé-Generator</span></div>
         <h2>Professionelle Exposés in 60 Sekunden</h2>
-        <p class="service-sub">KI schreibt. Sie verkaufen.</p>
-        <p>Sie geben die Eckdaten einer Immobilie ein — Claude AI generiert daraus sofort ein vollständiges, professionelles Exposé auf Schweizer Hochdeutsch. In vier Versionen, direkt kopierbereit für die Portale.</p>
-        <ul class="feature-list">
-          <li>Vollständiges Exposé (400–600 Wörter) — emotionaler Einstieg, Objektbeschreibung, Lage, Ausstattung</li>
-          <li>ImmoScout24-Version — angepasst auf Format und Zeichenlimit des Portals</li>
-          <li>Social Media Post — kurze Version für Instagram, Facebook, LinkedIn</li>
+        <p class="svc-sub">KI schreibt. Sie verkaufen.</p>
+        <p>Immobilien-Daten eingeben — Claude AI generiert sofort ein vollständiges, professionelles Exposé auf Schweizer Hochdeutsch. In vier Versionen, kopierbereit für alle Portale. Besser als handgeschrieben, in einem Bruchteil der Zeit.</p>
+        <ul class="feat-list">
+          <li>Vollständiges Exposé (400–600 Wörter) — emotionaler Einstieg, Beschreibung, Lage, Ausstattung</li>
+          <li>ImmoScout24-Version — angepasst auf Portal-Format und Zeichenlimit</li>
+          <li>Social Media Post — für Instagram, Facebook, LinkedIn</li>
           <li>E-Mail-Betreffzeile — für Käufer-Newsletter</li>
         </ul>
-        <p style="font-size:.88rem;color:var(--muted);margin-bottom:20px">Zeitersparnis pro Objekt: 2–3 Stunden. Bei 8 Objekten/Monat: bis zu 24 Stunden gewonnen — ohne Qualitätsverlust, eher im Gegenteil.</p>
-        <div class="price-line">
-          <div>
-            <div class="price-main">CHF 1.500 <span>einmalig</span></div>
-            <div style="font-size:.78rem;color:var(--muted);margin-top:3px">Standalone · kein Retainer · unbegrenzte Nutzung</div>
-          </div>
-          <div style="height:32px;width:1px;background:var(--border)"></div>
-          <div>
-            <div class="price-main">CHF 800 <span>Add-on</span></div>
-            <div style="font-size:.78rem;color:var(--muted);margin-top:3px">bei Kombination mit Service 1 oder 2</div>
-          </div>
+        <p style="font-size:.86rem;color:var(--muted);margin-bottom:16px">2–3 Stunden gespart pro Objekt. Bei 8 Objekten im Monat: bis zu 24 Stunden gewonnen — die Sie in Mandate investieren.</p>
+        <div class="price-bar">
+          <div><div class="pb-main">CHF 1.500 <span>einmalig</span></div><div class="pb-note">Standalone · kein Retainer · unbegrenzte Nutzung</div></div>
+          <div class="pb-sep"></div>
+          <div><div class="pb-main">CHF 800 <span>Add-on</span></div><div class="pb-note">kombiniert mit Service 1 oder 2</div></div>
         </div>
-        <a href="#expose-live" class="btn btn-outline" style="margin-top:20px">Live-Demo ausprobieren</a>
       </div>
-      <div class="reveal" style="transition-delay:.1s">
-        <div class="img-placeholder" style="min-height:180px;margin-bottom:16px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-          <span class="placeholder-label">Screenshot Exposé-Generator<br>wird hier eingefügt</span>
-        </div>
-        <div class="expose-visual">
-          <div class="expose-vis-bar">
-            <div class="expose-vis-dot"></div><div class="expose-vis-dot"></div><div class="expose-vis-dot"></div>
+      <div class="rv" style="transition-delay:.1s">
+        <div class="expose-imgs">
+          <div class="img-ph" style="min-height:220px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            <span class="img-ph-label">Screenshot Eingabe-Formular<br>wird hier eingefügt</span>
           </div>
-          <div class="expose-vis-body">
-            <div class="ev-field-grid">
-              <div class="ev-field"><div class="ev-field-label">Objekttyp</div><div class="ev-field-val">4.5-Zi.-Wohnung</div></div>
-              <div class="ev-field"><div class="ev-field-label">Lage</div><div class="ev-field-val">Zürichsee, Küsnacht</div></div>
-              <div class="ev-field"><div class="ev-field-label">Fläche</div><div class="ev-field-val">112 m²</div></div>
-              <div class="ev-field"><div class="ev-field-label">Zustand</div><div class="ev-field-val">Neuwertig</div></div>
-            </div>
-            <div class="ev-btn">Exposé generieren</div>
-            <div class="ev-output">
-              <div class="ev-out-label">Vollständiges Exposé</div>
-              <div class="ev-lines"><div class="ev-line"></div><div class="ev-line"></div><div class="ev-line"></div><div class="ev-line"></div></div>
-              <div class="ev-tags">
-                <span class="ev-tag">ImmoScout24-Version</span>
-                <span class="ev-tag">Social Post</span>
-                <span class="ev-tag">Betreffzeile</span>
-              </div>
-            </div>
+          <div class="img-ph" style="min-height:220px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <span class="img-ph-label">Screenshot generiertes Exposé<br>wird hier eingefügt</span>
           </div>
         </div>
       </div>
@@ -876,71 +739,71 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:64
   </div>
 </div>
 
-<!-- PAKETE -->
-<section id="pakete">
+<!-- ANGEBOTE -->
+<section id="angebote">
   <div class="wrap">
-    <div class="pakete-intro reveal">
-      <span class="label label-light">Pakete &amp; Preise</span>
-      <h2>Drei Pakete. Feste CHF-Preise.</h2>
-      <p>Kein Stundensatz, kein Scope-Creep. Was vereinbart ist, wird geliefert.</p>
+    <div class="ang-head rv">
+      <span class="label label-w">Angebote &amp; Preise</span>
+      <h2>Wählen Sie Ihr Angebot</h2>
+      <p>Feste CHF-Preise. Kein Stundensatz. Keine versteckten Kosten. Wählen Sie ein Angebot — und sehen Sie die vollständige Kostenübersicht.</p>
     </div>
-    <div class="pakete-grid">
-      <div class="paket reveal">
-        <div class="paket-tier">Paket 1</div>
+    <div class="ang-selector rv">
+      <div class="ang-card" onclick="selectAng(1,this)">
+        <div class="ang-tier">Angebot 1</div>
         <h3>Starter</h3>
-        <p class="paket-tagline">Einstieg in die Automatisierung</p>
-        <div class="paket-price-block">
-          <div class="paket-once">CHF 2.500<sub> einmalig</sub></div>
-          <div class="paket-monthly">+ CHF 200 / Monat</div>
-        </div>
-        <ul class="paket-items">
-          <li>Service 1: Landingpage (einfach) + Lead-Workflow</li>
-          <li>Automatische Lead-Erfassung in Google Sheets</li>
-          <li>Sofort-Benachrichtigung bei neuer Anfrage</li>
-          <li>Fertig in 5 Tagen</li>
-          <li>1 Monat Support</li>
-        </ul>
-        <button class="paket-cta paket-cta-outline" onclick="openModal()">Jetzt starten</button>
-        <p class="paket-time">Lieferzeit: 5 Tage</p>
+        <p class="ang-tagline">Einstieg in die Automatisierung</p>
+        <div class="ang-price-sm">CHF 2.500<sub> einmalig</sub></div>
+        <div class="ang-monthly-sm">+ CHF 200 / Monat</div>
       </div>
-      <div class="paket featured reveal">
-        <div class="paket-rec">Empfohlen</div>
-        <div class="paket-tier">Paket 2</div>
+      <div class="ang-card" onclick="selectAng(2,this)">
+        <div class="ang-card-badge">Empfohlen</div>
+        <div class="ang-tier">Angebot 2</div>
         <h3>Performance</h3>
-        <p class="paket-tagline">Lead-System von Quelle bis CRM</p>
-        <div class="paket-price-block">
-          <div class="paket-once">CHF 4.500<sub> einmalig</sub></div>
-          <div class="paket-monthly">+ CHF 350 / Monat</div>
-        </div>
-        <ul class="paket-items">
-          <li>Service 1: Landingpage mit Quiz-Funnel und Bewertungskalkulator</li>
-          <li>Service 2: Lead-Verwaltung — ImmoScout24, E-Mail und Landingpage</li>
-          <li>CRM-Integration vollständig eingerichtet</li>
-          <li>Alle Quellen in einem zentralen System</li>
-          <li>Fertig in 7 Tagen</li>
-          <li>1 Monat Support</li>
-        </ul>
-        <button class="paket-cta paket-cta-fill" onclick="openModal()">Jetzt starten</button>
-        <p class="paket-time">Lieferzeit: 7 Tage</p>
+        <p class="ang-tagline">Lead-System von Quelle bis CRM</p>
+        <div class="ang-price-sm">CHF 4.500<sub> einmalig</sub></div>
+        <div class="ang-monthly-sm">+ CHF 350 / Monat</div>
       </div>
-      <div class="paket reveal">
-        <div class="paket-tier">Paket 3</div>
+      <div class="ang-card" onclick="selectAng(3,this)">
+        <div class="ang-tier">Angebot 3</div>
         <h3>Komplett-System</h3>
-        <p class="paket-tagline">Leads + Exposés vollautomatisch</p>
-        <div class="paket-price-block">
-          <div class="paket-once">CHF 6.500<sub> einmalig</sub></div>
-          <div class="paket-monthly">+ CHF 500 / Monat</div>
+        <p class="ang-tagline">Leads + Exposés vollautomatisch</p>
+        <div class="ang-price-sm">CHF 6.500<sub> einmalig</sub></div>
+        <div class="ang-monthly-sm">+ CHF 500 / Monat</div>
+      </div>
+    </div>
+
+    <!-- Detail Panel -->
+    <div class="ang-detail" id="angDetail">
+      <div class="ang-detail-hd">
+        <div class="ang-detail-title">
+          <h3 id="adTitle">Angebot 1 — Starter</h3>
+          <p id="adTagline">Einstieg in die Automatisierung</p>
         </div>
-        <ul class="paket-items">
-          <li>Service 1: Landingpage mit Quiz-Funnel und Bewertungskalkulator</li>
-          <li>Service 2: Lead-Verwaltung — alle drei Quellen</li>
-          <li>Service 3: Exposé-Generator mit Claude AI</li>
-          <li>Alle drei Systeme vollständig integriert</li>
-          <li>Fertig in 7 Tagen</li>
-          <li>3 Monate Support</li>
-        </ul>
-        <button class="paket-cta paket-cta-outline" onclick="openModal()">Jetzt starten</button>
-        <p class="paket-time">Lieferzeit: 7 Tage</p>
+        <button class="btn btn-primary" onclick="openModal()">Jetzt anfragen</button>
+      </div>
+      <div class="ang-detail-body">
+        <div class="ang-detail-left">
+          <div class="ang-section-title">Enthaltene Leistungen</div>
+          <ul class="ang-items" id="adItems"></ul>
+          <div class="ang-section-title" style="margin-top:8px">Lieferzeit</div>
+          <p style="font-size:.84rem;color:rgba(255,255,255,.6)" id="adDelivery"></p>
+          <p style="font-size:.84rem;color:rgba(255,255,255,.6);margin-top:6px" id="adSupport"></p>
+        </div>
+        <div class="ang-detail-right">
+          <div class="ang-section-title">Kostenübersicht</div>
+          <div class="ang-cost-row"><span class="ang-cost-label">Setup / Einmalig</span><span class="ang-cost-val" id="adOnce"></span></div>
+          <div class="ang-cost-row"><span class="ang-cost-label">Monatliche Betreuung</span><span class="ang-cost-val" id="adMo"></span></div>
+          <div class="ang-cost-row"><span class="ang-cost-label">Laufzeit 12 Monate (gesamt)</span><span class="ang-cost-val" id="adYear"></span></div>
+          <div class="ang-total-box">
+            <div class="ang-total-row"><span class="ang-total-label">Einmalig</span><span class="ang-total-once" id="adTotalOnce"></span></div>
+            <div class="ang-total-mo" id="adTotalMo"></div>
+          </div>
+          <p style="font-size:.75rem;color:rgba(255,255,255,.3);margin-top:12px">Alle Preise exkl. MwSt. Fester Projektpreis — keine versteckten Kosten.</p>
+        </div>
+      </div>
+      <div class="ang-detail-footer">
+        <span class="ang-delivery">Lieferzeit: <strong id="adFootDelivery"></strong></span>
+        <button class="btn btn-primary" onclick="openModal()">Kostenloses Erstgespräch anfragen</button>
       </div>
     </div>
   </div>
@@ -949,210 +812,95 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:64
 <!-- ROI -->
 <section id="roi">
   <div class="wrap">
-    <div class="roi-intro reveal">
+    <div class="section-head center rv">
       <span class="label">ROI-Rechner</span>
-      <h2>Wie viel ist Flowmatic für Sie wert?</h2>
-      <p style="color:var(--muted);font-size:.95rem">Passen Sie die Zahlen an Ihre Situation an — sehen Sie, wann sich das System amortisiert hat.</p>
+      <h2>Wann rechnet es sich?</h2>
+      <p>Passen Sie die Zahlen an Ihre Situation an — und sehen Sie, wie schnell Flowmatic bezahlt ist.</p>
     </div>
     <div class="roi-layout">
-      <div class="roi-controls reveal">
+      <div class="roi-ctrl rv">
         <h3>Ihre Ausgangslage</h3>
-        <div class="roi-field">
-          <label>Mandate pro Monat aktuell <span class="roi-val-badge" id="vMand">3</span></label>
-          <input type="range" min="1" max="20" value="3" id="rMand" oninput="calcRoi()">
-        </div>
-        <div class="roi-field">
-          <label>Durchschnittliche Provision <span class="roi-val-badge" id="vProv">CHF 20.000</span></label>
-          <input type="range" min="5000" max="60000" step="1000" value="20000" id="rProv" oninput="calcRoi()">
-        </div>
-        <div class="roi-field">
-          <label>Zusatz-Mandate durch Flowmatic <span class="roi-val-badge" id="vExtra">+2</span></label>
-          <input type="range" min="1" max="8" value="2" id="rExtra" oninput="calcRoi()">
-        </div>
+        <div class="roi-field"><label>Mandate / Monat aktuell <span class="roi-badge" id="vMand">3</span></label><input type="range" min="1" max="20" value="3" id="rMand" oninput="calcRoi()"></div>
+        <div class="roi-field"><label>Ø Provision pro Mandat <span class="roi-badge" id="vProv">CHF 20.000</span></label><input type="range" min="5000" max="60000" step="1000" value="20000" id="rProv" oninput="calcRoi()"></div>
+        <div class="roi-field"><label>Zusatz-Mandate durch Flowmatic <span class="roi-badge" id="vExtra">+2</span></label><input type="range" min="1" max="8" value="2" id="rExtra" oninput="calcRoi()"></div>
       </div>
-      <div class="roi-results reveal" style="transition-delay:.1s">
-        <div class="roi-result-card">
-          <div class="rrc-label">Aktueller Monatsumsatz</div>
-          <div class="rrc-value" id="rCurr">CHF 60.000</div>
-          <div class="rrc-sub" id="rCurrSub">3 Mandate × CHF 20.000</div>
-        </div>
-        <div class="roi-result-card accent">
-          <div class="rrc-label light">Umsatz mit Flowmatic</div>
-          <div class="rrc-value light" id="rNew">CHF 100.000</div>
-          <div class="rrc-sub light" id="rNewSub">5 Mandate × CHF 20.000</div>
-        </div>
-        <div class="roi-result-card">
-          <div class="rrc-label">Mehrertrag pro Jahr</div>
-          <div class="rrc-value" id="rYear">CHF 480.000</div>
-          <div class="rrc-sub">Delta × 12 Monate</div>
-        </div>
-        <div class="roi-amort">
-          <div class="roi-amort-label">Flowmatic amortisiert sich in</div>
-          <div class="roi-amort-val" id="rAmort">1 Monat</div>
-        </div>
+      <div class="roi-results rv" style="transition-delay:.1s">
+        <div class="rrc"><div class="rrc-lbl">Aktueller Monatsumsatz</div><div class="rrc-val" id="rCurr">CHF 60.000</div><div class="rrc-sub" id="rCS">3 × CHF 20.000</div></div>
+        <div class="rrc dark"><div class="rrc-lbl">Umsatz mit Flowmatic</div><div class="rrc-val" id="rNew">CHF 100.000</div><div class="rrc-sub" id="rNS">5 × CHF 20.000</div></div>
+        <div class="rrc"><div class="rrc-lbl">Mehrertrag pro Jahr</div><div class="rrc-val" id="rYear">CHF 480.000</div><div class="rrc-sub">Delta × 12 Monate</div></div>
+        <div class="roi-amort"><div class="roi-amort-lbl">Flowmatic amortisiert sich in</div><div class="roi-amort-val" id="rAmort">1 Monat</div></div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- EXPOSE LIVE DEMO -->
-<section id="expose-live">
-  <div class="wrap">
-    <div class="expose-live-intro reveal">
-      <span class="label label-light">Live-Demo — Service 3</span>
-      <h2>Exposé-Generator ausprobieren</h2>
-      <p>Geben Sie Immobilien-Daten ein und sehen Sie, was Claude AI in wenigen Sekunden daraus macht. Alle vier Versionen — direkt kopierbereit.</p>
-    </div>
-    <div class="expose-box reveal">
-      <div class="api-notice">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <p>Für die Live-Demo benötigen Sie einen Claude API-Key (zu finden auf claude.ai unter Account &rarr; API-Keys). Ihr Key verlässt nie diesen Browser — er wird ausschliesslich für diesen Request verwendet und nicht gespeichert.</p>
-      </div>
-      <div class="api-key-row">
-        <input type="password" class="e-input" id="apiKey" placeholder="sk-ant-api03-...">
-        <button class="key-toggle-btn" onclick="toggleKey()">Anzeigen</button>
-      </div>
-      <div class="e-grid">
-        <div>
-          <label class="e-label">Objekttyp</label>
-          <select class="e-select" id="eTyp"><option value="">Bitte wählen</option><option>Wohnung</option><option>Haus</option><option>Gewerbe</option><option>Grundstück</option></select>
-        </div>
-        <div>
-          <label class="e-label">Lage / Adresse</label>
-          <input type="text" class="e-input" id="eLage" placeholder="z.B. Zürichsee, Küsnacht ZH">
-        </div>
-        <div>
-          <label class="e-label">Fläche</label>
-          <input type="text" class="e-input" id="eFlaeche" placeholder="z.B. 112 m²">
-        </div>
-        <div>
-          <label class="e-label">Zimmer</label>
-          <input type="text" class="e-input" id="eZimmer" placeholder="z.B. 4.5">
-        </div>
-        <div>
-          <label class="e-label">Baujahr</label>
-          <input type="text" class="e-input" id="eBaujahr" placeholder="z.B. 1998">
-        </div>
-        <div>
-          <label class="e-label">Zustand</label>
-          <select class="e-select" id="eZustand"><option value="">Bitte wählen</option><option>Neuwertig</option><option>Gepflegt</option><option>Renovierungsbedarf</option></select>
-        </div>
-        <div class="e-full">
-          <label class="e-label">Besondere Merkmale</label>
-          <input type="text" class="e-input" id="eMerkmale" placeholder="z.B. Seesicht, Garten, Tiefgaragenplatz, komplett renoviert 2022">
-        </div>
-        <div class="e-full">
-          <label class="e-label">Zielpreis</label>
-          <input type="text" class="e-input" id="ePreis" placeholder="z.B. CHF 1.850.000">
-        </div>
-      </div>
-      <button class="e-gen-btn" id="genBtn" onclick="generateExpose()">
-        <span class="e-spinner" id="eSpinner"></span>
-        <span id="eLabel">Exposé generieren</span>
-      </button>
-      <div class="e-output" id="eOutput"></div>
     </div>
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section id="testimonials">
+<section id="testi">
   <div class="wrap">
-    <div class="testi-intro reveal">
-      <span class="label">Kundenstimmen</span>
+    <div class="section-head center rv">
+      <span class="label">Referenzen</span>
       <h2>Was Schweizer Makler sagen</h2>
     </div>
     <div class="testi-grid">
-      <div class="testi reveal">
-        <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-        <p class="testi-quote">"Seit Flowmatic verpassen wir keine Anfrage mehr. Die Reaktionszeit ist von mehreren Stunden auf unter eine Minute gesunken. Im ersten Monat haben wir zwei zusätzliche Mandate gewonnen."</p>
-        <div class="testi-author">
-          <div class="testi-av">BK</div>
-          <div><div class="testi-name">Beat K.</div><div class="testi-role">Inhaber, Immobilien Zürichsee</div></div>
-        </div>
+      <div class="tcard rv">
+        <div class="tcstars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="tcard-quote">"Seit Flowmatic verpassen wir keine Anfrage mehr. Die Reaktionszeit ist von mehreren Stunden auf unter eine Minute gesunken. Im ersten Monat haben wir zwei zusätzliche Mandate gewonnen."</p>
+        <div class="tcard-author"><div class="tav">BK</div><div><div class="tname">Beat K.</div><div class="trole">Inhaber, Immobilien Zürichsee</div></div></div>
       </div>
-      <div class="testi reveal">
-        <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-        <p class="testi-quote">"Der Exposé-Generator spart mir pro Objekt zwei Stunden. Bei zehn Objekten pro Monat ist das ein ganzer Arbeitstag — den ich jetzt für Besichtigungen und Kundenkontakt nutze."</p>
-        <div class="testi-author">
-          <div class="testi-av">SM</div>
-          <div><div class="testi-name">Sandra M.</div><div class="testi-role">Maklerin, Engel &amp; Zürich</div></div>
-        </div>
+      <div class="tcard rv">
+        <div class="tcstars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="tcard-quote">"Der Exposé-Generator spart mir pro Objekt zwei Stunden. Bei zehn Objekten pro Monat ist das ein ganzer Arbeitstag — den ich jetzt für Besichtigungen und Mandatsgespräche nutze."</p>
+        <div class="tcard-author"><div class="tav">SM</div><div><div class="tname">Sandra M.</div><div class="trole">Maklerin, Engel &amp; Zürich</div></div></div>
       </div>
-      <div class="testi reveal">
-        <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-        <p class="testi-quote">"Im ersten Monat drei neue Mandate über die Landingpage. Das System hat sich sofort amortisiert — schon beim ersten Mandat. Ich verstehe nicht, wie ich vorher ohne gearbeitet habe."</p>
-        <div class="testi-author">
-          <div class="testi-av">TW</div>
-          <div><div class="testi-name">Thomas W.</div><div class="testi-role">Geschäftsführer, Immobilien Zentralschweiz</div></div>
-        </div>
+      <div class="tcard rv">
+        <div class="tcstars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <p class="tcard-quote">"Im ersten Monat drei neue Mandate über die Landingpage. Das System hat sich sofort amortisiert — schon beim ersten Mandat. Ich verstehe nicht, wie ich vorher ohne gearbeitet habe."</p>
+        <div class="tcard-author"><div class="tav">TW</div><div><div class="tname">Thomas W.</div><div class="trole">Geschäftsführer, Immobilien Zentralschweiz</div></div></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- CTA -->
-<section id="cta-section">
+<section id="cta">
   <div class="wrap">
-    <div class="reveal">
-      <span class="label label-light">Kostenloses Erstgespräch</span>
+    <div class="rv">
+      <span class="label label-w">Kostenloses Erstgespräch</span>
       <h2>Bereit, keine Leads mehr zu verlieren?</h2>
-      <p>30 Minuten. Keine Kosten. Kein Commitment. Wir analysieren Ihre Situation und zeigen konkret, was automatisiert werden kann.</p>
+      <p>30 Minuten. Keine Kosten. Kein Commitment. Wir zeigen Ihnen konkret, was in Ihrer Situation möglich ist.</p>
       <div class="cta-btns">
-        <button class="btn btn-primary" onclick="openModal()">Erstgespräch anfragen</button>
-        <a href="#pakete" class="btn btn-ghost">Pakete ansehen</a>
+        <button class="btn btn-white" onclick="openModal()">Erstgespräch anfragen</button>
+        <a href="#angebote" class="btn btn-ghost-dark">Angebote ansehen</a>
       </div>
-      <p class="cta-note">Keine versteckten Kosten. Kein Abo-Zwang. Feste CHF-Preise.</p>
+      <p class="cta-note">Feste CHF-Preise. Lieferung in 7 Tagen. Keine versteckten Kosten.</p>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer id="kontakt">
+<footer>
   <div class="wrap">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <svg width="120" height="38" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
-          <path d="M78 37 L90 22" fill="none" stroke="#3a4e65" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M110 22 L122 37" fill="none" stroke="#3a4e65" stroke-width="1.5" stroke-linecap="round"/>
-          <circle cx="84" cy="30" r="2.5" fill="#3a4e65"/>
-          <circle cx="116" cy="30" r="2.5" fill="#3a4e65"/>
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <svg width="115" height="36" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+          <path d="M78 37 L90 22" fill="none" stroke="#2a3d52" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M110 22 L122 37" fill="none" stroke="#2a3d52" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="84" cy="30" r="2.5" fill="#2a3d52"/><circle cx="116" cy="30" r="2.5" fill="#2a3d52"/>
           <rect x="90" y="11" width="20" height="14" rx="4" fill="#2D7DD2"/>
           <rect x="60" y="37" width="20" height="14" rx="4" fill="#2D7DD2"/>
           <rect x="120" y="37" width="20" height="14" rx="4" fill="#2D7DD2"/>
-          <text x="62" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="#3a4e65" letter-spacing="0.5">flow</text>
+          <text x="62" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="#2a3d52" letter-spacing="0.5">flow</text>
           <text x="100" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="#2D7DD2" letter-spacing="0.5">matic</text>
         </svg>
         <p>Vollautomatische Lead-Systeme und KI-Tools für Schweizer Immobilienmakler.<br>Zürich &middot; Zug &middot; Basel &middot; Genf &middot; Bern</p>
       </div>
-      <div class="footer-col">
-        <h5>Services</h5>
-        <ul>
-          <li><a href="#service1">Lead-Maschine</a></li>
-          <li><a href="#service2">Lead-Verwaltung</a></li>
-          <li><a href="#service3">Exposé-Generator</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>Pakete</h5>
-        <ul>
-          <li><a href="#pakete">Starter</a></li>
-          <li><a href="#pakete">Performance</a></li>
-          <li><a href="#pakete">Komplett-System</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5>Kontakt</h5>
-        <ul>
-          <li><a href="#" onclick="openModal();return false">Erstgespräch anfragen</a></li>
-          <li><a href="#expose-live">Live-Demo</a></li>
-          <li><a href="#roi">ROI-Rechner</a></li>
-        </ul>
-      </div>
+      <div class="foot-col"><h5>Services</h5><ul><li><a href="#svc1">Lead-Maschine</a></li><li><a href="#svc2">Lead-Verwaltung</a></li><li><a href="#svc3">Exposé-Generator</a></li></ul></div>
+      <div class="foot-col"><h5>Angebote</h5><ul><li><a href="#angebote">Starter</a></li><li><a href="#angebote">Performance</a></li><li><a href="#angebote">Komplett-System</a></li></ul></div>
+      <div class="foot-col"><h5>Flowmatic</h5><ul><li><a href="#" onclick="openModal();return false">Erstgespräch</a></li><li><a href="#roi">ROI-Rechner</a></li><li><a href="#">Datenschutz</a></li><li><a href="#">Impressum</a></li></ul></div>
     </div>
-    <div class="footer-bottom">
-      <span class="footer-copy">&copy; 2025 Flowmatic. Alle Rechte vorbehalten.</span>
-      <div class="footer-legal"><a href="#">Datenschutz</a><a href="#">Impressum</a></div>
+    <div class="foot-bottom">
+      <span class="foot-copy">&copy; 2025 Flowmatic. Alle Rechte vorbehalten.</span>
+      <div class="foot-legal"><a href="#">Datenschutz</a><a href="#">Impressum</a></div>
     </div>
   </div>
 </footer>
@@ -1162,49 +910,95 @@ footer{background:var(--dark);border-top:1px solid var(--border-dark);padding:64
   <div class="modal">
     <button class="modal-x" onclick="closeModal()">&#10005;</button>
     <h3>Kostenloses Erstgespräch</h3>
-    <p>30 Minuten. Keine Kosten. Kein Commitment. Wir melden uns innerhalb von 24 Stunden.</p>
+    <p>30 Minuten. Keine Kosten. Wir melden uns innerhalb von 24 Stunden.</p>
     <div id="fContent">
-      <div class="f-row"><label>Name *</label><input type="text" id="fName" placeholder="Ihr vollständiger Name"></div>
-      <div class="f-row"><label>E-Mail *</label><input type="email" id="fEmail" placeholder="name@maklerbuero.ch"></div>
-      <div class="f-row"><label>Telefon</label><input type="tel" id="fPhone" placeholder="+41 79 000 00 00"></div>
-      <div class="f-row"><label>Firma / Maklerbüro</label><input type="text" id="fFirma" placeholder="Name Ihres Maklerbüros"></div>
-      <div class="f-row"><label>Nachricht</label><textarea id="fMsg" placeholder="Was ist Ihre grösste Herausforderung bei der Lead-Gewinnung?"></textarea></div>
+      <div class="frow"><label>Name *</label><input type="text" id="fName" placeholder="Ihr vollständiger Name"></div>
+      <div class="frow"><label>E-Mail *</label><input type="email" id="fEmail" placeholder="name@maklerbuero.ch"></div>
+      <div class="frow"><label>Telefon</label><input type="tel" id="fPhone" placeholder="+41 79 000 00 00"></div>
+      <div class="frow"><label>Firma / Maklerbüro</label><input type="text" id="fFirma" placeholder="Name Ihres Maklerbüros"></div>
+      <div class="frow"><label>Nachricht</label><textarea id="fMsg" placeholder="Was ist Ihre grösste Herausforderung bei der Lead-Gewinnung?"></textarea></div>
       <button class="f-submit" onclick="submitForm()">Erstgespräch anfragen</button>
     </div>
-    <div class="f-success" id="fSuccess">
-      <h3 style="color:var(--green)">Anfrage erhalten</h3>
-      <p>Wir melden uns innerhalb von 24 Stunden. Bis bald.</p>
-    </div>
+    <div class="f-ok" id="fOk"><h3>Anfrage erhalten</h3><p>Wir melden uns innerhalb von 24 Stunden. Bis bald.</p></div>
   </div>
 </div>
 
 <script>
 // NAV
 window.addEventListener('scroll',()=>{
-  document.getElementById('nav').classList.toggle('solid',scrollY>30)
+  document.getElementById('nav').classList.toggle('elevated',scrollY>10)
 })
 
 // BURGER
-function toggleBurger(){
-  document.getElementById('mobNav').classList.toggle('open')
-}
+function toggleBurger(){document.getElementById('mobNav').classList.toggle('open')}
 
 // MODAL
 function openModal(){document.getElementById('modal').classList.add('open')}
 function closeModal(){document.getElementById('modal').classList.remove('open')}
 
 // REVEAL
-const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.08})
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el))
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')})},{threshold:.07})
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el))
 
 // VARIANT
 function switchV(v,btn){
-  document.querySelectorAll('.v-btn').forEach(b=>b.classList.remove('on'))
+  document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('on'))
   btn.classList.add('on')
   document.getElementById('vA').classList.toggle('on',v==='A')
   document.getElementById('vB').classList.toggle('on',v==='B')
 }
 document.getElementById('vA').classList.add('on')
+
+// ANGEBOTE DATA
+const angebote={
+  1:{
+    title:'Angebot 1 — Starter',
+    tagline:'Einstieg in die Automatisierung',
+    items:['Service 1: Landingpage (einfacher Funnel) + Lead-Workflow','Automatische Lead-Erfassung in Google Sheets','Sofort-Benachrichtigung bei neuer Anfrage','Bestätigungsmail an Interessenten','1 Monat Support inklusive'],
+    once:'CHF 2.500',mo:'CHF 200 / Monat',
+    year:'CHF 4.900',
+    totalOnce:'CHF 2.500',totalMo:'+ CHF 200 / Monat',
+    delivery:'5 Tage',support:'1 Monat Support inklusive'
+  },
+  2:{
+    title:'Angebot 2 — Performance',
+    tagline:'Lead-System von Quelle bis CRM',
+    items:['Service 1: Landingpage mit Quiz-Funnel und Bewertungskalkulator','Service 2: Lead-Verwaltung — ImmoScout24, Homegate, E-Mail und Landingpage','CRM-Integration vollständig eingerichtet','Alle Quellen in einem zentralen System','1 Monat Support inklusive'],
+    once:'CHF 4.500',mo:'CHF 350 / Monat',
+    year:'CHF 8.700',
+    totalOnce:'CHF 4.500',totalMo:'+ CHF 350 / Monat',
+    delivery:'7 Tage',support:'1 Monat Support inklusive'
+  },
+  3:{
+    title:'Angebot 3 — Komplett-System',
+    tagline:'Leads + Exposés vollautomatisch',
+    items:['Service 1: Landingpage mit Quiz-Funnel und Bewertungskalkulator','Service 2: Lead-Verwaltung — alle drei Quellen vollständig','Service 3: Exposé-Generator mit Claude AI (unbegrenzte Nutzung)','Alle drei Systeme vollständig integriert','3 Monate Support inklusive'],
+    once:'CHF 6.500',mo:'CHF 500 / Monat',
+    year:'CHF 12.500',
+    totalOnce:'CHF 6.500',totalMo:'+ CHF 500 / Monat',
+    delivery:'7 Tage',support:'3 Monate Support inklusive'
+  }
+}
+
+function selectAng(n,el){
+  document.querySelectorAll('.ang-card').forEach(c=>c.classList.remove('selected'))
+  el.classList.add('selected')
+  const d=angebote[n]
+  document.getElementById('adTitle').textContent=d.title
+  document.getElementById('adTagline').textContent=d.tagline
+  document.getElementById('adItems').innerHTML=d.items.map(i=>`<li>${i}</li>`).join('')
+  document.getElementById('adOnce').textContent=d.once
+  document.getElementById('adMo').textContent=d.mo
+  document.getElementById('adYear').textContent=d.year
+  document.getElementById('adTotalOnce').textContent=d.totalOnce
+  document.getElementById('adTotalMo').textContent=d.totalMo
+  document.getElementById('adDelivery').textContent='Fertig in '+d.delivery
+  document.getElementById('adSupport').textContent=d.support
+  document.getElementById('adFootDelivery').textContent=d.delivery
+  const det=document.getElementById('angDetail')
+  det.classList.add('show')
+  setTimeout(()=>det.scrollIntoView({behavior:'smooth',block:'start'}),80)
+}
 
 // ROI
 function fmt(n){return n.toLocaleString('de-CH')}
@@ -1217,91 +1011,23 @@ function calcRoi(){
   document.getElementById('vExtra').textContent='+'+x
   const cur=m*p,nw=(m+x)*p,yr=x*p*12,inv=4500,am=Math.ceil(inv/(x*p))
   document.getElementById('rCurr').textContent='CHF '+fmt(cur)
-  document.getElementById('rCurrSub').textContent=m+' Mandate × CHF '+fmt(p)
+  document.getElementById('rCS').textContent=m+' × CHF '+fmt(p)
   document.getElementById('rNew').textContent='CHF '+fmt(nw)
-  document.getElementById('rNewSub').textContent=(m+x)+' Mandate × CHF '+fmt(p)
+  document.getElementById('rNS').textContent=(m+x)+' × CHF '+fmt(p)
   document.getElementById('rYear').textContent='CHF '+fmt(yr)
   document.getElementById('rAmort').textContent=am<=1?'1 Monat':am+' Monate'
 }
 calcRoi()
 
 // CONTACT
-const WH="https://DEINE-N8N-URL/webhook/flowmatic-leads"
+const WH='https://DEINE-N8N-URL/webhook/flowmatic-leads'
 async function submitForm(){
   const n=document.getElementById('fName').value.trim()
   const e=document.getElementById('fEmail').value.trim()
   if(!n||!e){alert('Bitte Name und E-Mail ausfüllen.');return}
-  try{await fetch(WH,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:e,phone:document.getElementById('fPhone').value,firma:document.getElementById('fFirma').value,msg:document.getElementById('fMsg').value,ts:new Date().toISOString()})})}catch(err){}
+  try{await fetch(WH,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,email:e,phone:document.getElementById('fPhone').value,firma:document.getElementById('fFirma').value,msg:document.getElementById('fMsg').value,ts:new Date().toISOString()})})}catch(_){}
   document.getElementById('fContent').style.display='none'
-  document.getElementById('fSuccess').style.display='block'
-}
-
-// API KEY TOGGLE
-function toggleKey(){
-  const i=document.getElementById('apiKey')
-  i.type=i.type==='password'?'text':'password'
-}
-
-// EXPOSE GENERATOR
-async function generateExpose(){
-  const key=document.getElementById('apiKey').value.trim()
-  const typ=document.getElementById('eTyp').value
-  const lage=document.getElementById('eLage').value.trim()
-  if(!key){alert('Bitte Claude API-Key eingeben.');return}
-  if(!typ||!lage){alert('Bitte mindestens Objekttyp und Lage ausfüllen.');return}
-  const btn=document.getElementById('genBtn')
-  const sp=document.getElementById('eSpinner')
-  const lbl=document.getElementById('eLabel')
-  btn.disabled=true;sp.style.display='block';lbl.textContent='Generiere...'
-  const fl=document.getElementById('eFlaeche').value
-  const zi=document.getElementById('eZimmer').value
-  const bj=document.getElementById('eBaujahr').value
-  const zu=document.getElementById('eZustand').value
-  const me=document.getElementById('eMerkmale').value
-  const pr=document.getElementById('ePreis').value
-  const um=`Erstelle ein professionelles Exposé:\n- Objekttyp: ${typ}\n- Lage: ${lage}${fl?'\n- Fläche: '+fl:''}${zi?'\n- Zimmer: '+zi:''}${bj?'\n- Baujahr: '+bj:''}${zu?'\n- Zustand: '+zu:''}${me?'\n- Merkmale: '+me:''}${pr?'\n- Preis: '+pr:''}\n\nGeneriere alle vier Versionen mit diesen exakten Überschriften: VOLLSTÄNDIGES EXPOSÉ, IMMOSCOUT24 VERSION, SOCIAL MEDIA POST, E-MAIL BETREFFZEILE`
-  const sys=`Du bist ein professioneller Schweizer Immobilien-Texter mit 20 Jahren Erfahrung. Schreibe immer auf Schweizer Hochdeutsch, ohne Anglizismen. Generiere exakt diese vier Versionen:\n1. VOLLSTÄNDIGES EXPOSÉ (400-600 Wörter)\n2. IMMOSCOUT24 VERSION (max. 2000 Zeichen)\n3. SOCIAL MEDIA POST (max. 280 Zeichen)\n4. E-MAIL BETREFFZEILE (max. 60 Zeichen)`
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2048,system:sys,messages:[{role:'user',content:um}]})
-    })
-    if(!r.ok){const er=await r.json().catch(()=>({}));throw new Error(er.error?.message||'Fehler '+r.status)}
-    const d=await r.json()
-    renderOutput(d.content[0].text)
-  }catch(err){
-    alert('Fehler: '+err.message)
-  }finally{
-    btn.disabled=false;sp.style.display='none';lbl.textContent='Exposé erneut generieren'
-  }
-}
-
-function renderOutput(text){
-  const secs=[
-    {k:'VOLLSTÄNDIGES EXPOSÉ',t:'Vollständiges Exposé'},
-    {k:'IMMOSCOUT24 VERSION',t:'ImmoScout24-Version'},
-    {k:'SOCIAL MEDIA POST',t:'Social Media Post'},
-    {k:'E-MAIL BETREFFZEILE',t:'E-Mail Betreffzeile'}
-  ]
-  let html=''
-  secs.forEach((s,i)=>{
-    const nk=secs[i+1]?.k
-    let st=text.indexOf(s.k);if(st===-1)return
-    st+=s.k.length
-    const en=nk?text.indexOf(nk,st):text.length
-    const c=text.slice(st,en).replace(/^[\s:\n]+/,'').trim()
-    html+=`<div class="e-section"><div class="e-section-hd"><span class="e-section-title">${s.t}</span><button class="copy-btn" id="cb${i}" onclick="doCopy('ot${i}','cb${i}')">Kopieren</button></div><div class="e-text" id="ot${i}">${esc(c)}</div></div>`
-  })
-  const out=document.getElementById('eOutput')
-  out.innerHTML=html;out.classList.add('show')
-  out.scrollIntoView({behavior:'smooth',block:'start'})
-}
-function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-async function doCopy(id,btnId){
-  await navigator.clipboard.writeText(document.getElementById(id).textContent)
-  const b=document.getElementById(btnId);b.textContent='Kopiert';b.classList.add('done')
-  setTimeout(()=>{b.textContent='Kopieren';b.classList.remove('done')},2000)
+  document.getElementById('fOk').style.display='block'
 }
 </script>
 </body>
