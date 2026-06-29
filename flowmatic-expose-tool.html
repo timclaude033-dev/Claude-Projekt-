@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<!--
+  FLOWMATIC EXPOSÉ GENERATOR — SETUP ANLEITUNG
+
+  Schritt 1: n8n Workflow importieren
+  → n8n öffnen → Workflows → Import → flowmatic-expose-workflow.json hochladen
+
+  Schritt 2: Claude API Key hinterlegen
+  → In n8n: Settings → Environment Variables
+  → Variable: CLAUDE_API_KEY → Wert: Ihr Claude API Key
+  → API Key holen: console.anthropic.com
+
+  Schritt 3: Webhook URL kopieren
+  → Im importierten Workflow den Webhook Node öffnen
+  → "Webhook URL" kopieren (Test-URL für Tests, Production URL für Echtbetrieb)
+
+  Schritt 4: URL ins Tool eintragen
+  → Diese HTML-Datei im Browser öffnen
+  → Webhook URL oben rechts eintragen
+  → Grüner Punkt erscheint → Fertig!
+
+  Nutzung: Formular ausfüllen, Bilder hochladen, "Exposé generieren" klicken.
+  Das Exposé erscheint direkt im Tool — bereit zum Kopieren oder Drucken.
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowmatic — Exposé Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#1E3A5F; --blue:#2D7DD2; --sky:#5BA4E5;
+  --dark:#0F1826; --mid:#162032; --card:#1a2a42;
+  --light:#E8EDF4; --border-light:#D0D8E4;
+  --white:#FFFFFF; --success:#1D9E75; --danger:#E05555; --warning:#F59E0B;
+  --text:#1E3A5F; --muted:#5a7a9a; --muted2:#7d99b8;
+  --r:8px; --r2:12px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:14px;scroll-behavior:smooth;}
+body{background:var(--light);color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#c5d0de;border-radius:9px;}
+
+/* HEADER */
+header{background:var(--dark);border-bottom:2px solid var(--blue);height:60px;display:flex;align-items:center;padding:0 24px;gap:20px;position:sticky;top:0;z-index:500;}
+.h-logo{display:flex;align-items:center;flex-shrink:0;}
+.h-title{display:flex;flex-direction:column;gap:1px;border-left:1px solid rgba(255,255,255,.12);padding-left:18px;margin-left:4px;}
+.h-title-main{font-size:13px;font-weight:600;color:var(--blue);letter-spacing:.5px;}
+.h-title-sub{font-size:10px;color:var(--muted2);letter-spacing:.3px;}
+.h-webhook{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.h-dot{width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0;transition:background .3s;}
+.h-dot.on{background:var(--success);}
+.webhook-inp{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);color:#c5d5e8;font-size:11px;padding:6px 12px;width:260px;font-family:inherit;outline:none;transition:border-color .15s;}
+.webhook-inp:focus{border-color:var(--blue);}
+.webhook-inp::placeholder{color:#4a5f78;}
+@media(max-width:700px){.webhook-inp{width:160px;}.h-title{display:none;}}
+
+/* LAYOUT */
+.main{display:grid;grid-template-columns:44% 56%;min-height:calc(100vh - 60px);}
+@media(max-width:900px){.main{grid-template-columns:1fr;}}
+
+/* FORM SIDE */
+.form-side{background:var(--white);border-right:1px solid var(--border-light);overflow-y:auto;padding:0 0 100px;}
+
+/* ACCORDION */
+.acc{border-bottom:1px solid var(--border-light);}
+.acc-hdr{padding:16px 20px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none;background:var(--white);transition:background .1s;}
+.acc-hdr:hover{background:#f8fafc;}
+.acc-num{width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.acc-ttl{font-size:13px;font-weight:600;color:var(--navy);flex:1;}
+.acc-chev{color:var(--muted);font-size:11px;transition:transform .2s;}
+.acc-hdr.open .acc-chev{transform:rotate(180deg);}
+.acc-body{padding:0 20px 20px;display:none;}
+.acc-body.open{display:block;}
+
+/* FORM ELEMENTS */
+.field{margin-bottom:12px;}
+.lbl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:4px;display:flex;gap:3px;}
+.req{color:var(--danger);}
+.inp,.sel,.ta{width:100%;background:var(--white);border:1px solid var(--border-light);border-radius:var(--r);color:var(--navy);padding:9px 12px;font-size:13px;font-family:inherit;outline:none;transition:border-color .15s;-webkit-appearance:none;}
+.inp:focus,.sel:focus,.ta:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(45,125,210,.08);}
+.sel{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a7a9a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+.ta{resize:vertical;min-height:72px;line-height:1.6;}
+.inp-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.inp-unit{display:flex;}
+.inp-unit .inp{border-radius:var(--r) 0 0 var(--r);border-right:none;}
+.inp-unit .unit{background:#f4f7fb;border:1px solid var(--border-light);border-radius:0 var(--r) var(--r) 0;padding:0 12px;display:flex;align-items:center;font-size:12px;color:var(--muted);white-space:nowrap;font-weight:500;}
+
+/* CHECKBOXES */
+.chk-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.chk-item{display:flex;align-items:center;gap:8px;cursor:pointer;padding:7px 10px;border-radius:var(--r);border:1px solid var(--border-light);transition:all .15s;user-select:none;}
+.chk-item:hover{border-color:var(--blue);background:rgba(45,125,210,.04);}
+.chk-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+.chk-item span{font-size:12px;color:var(--muted);}
+.chk-item.on{border-color:rgba(45,125,210,.4);background:rgba(45,125,210,.06);}
+.chk-item.on span{color:var(--navy);}
+
+/* UPLOAD */
+.upload-zone{border:2px dashed var(--blue);border-radius:var(--r2);padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s;background:#f8fbff;}
+.upload-zone:hover,.upload-zone.drag{background:rgba(45,125,210,.06);border-style:solid;}
+.upload-icon{font-size:28px;color:var(--blue);margin-bottom:8px;}
+.upload-txt{font-size:13px;color:var(--muted);line-height:1.7;}
+.upload-txt b{color:var(--blue);}
+#fileInput{display:none;}
+.thumb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+.thumb{position:relative;border-radius:var(--r);overflow:visible;border:1px solid var(--border-light);background:#f8fafc;}
+.thumb img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r) var(--r) 0 0;display:block;}
+.thumb-badge{position:absolute;top:6px;left:6px;background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.5px;}
+.thumb-del{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;background:var(--danger);border:2px solid var(--white);color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1;line-height:1;}
+.thumb-lbl{padding:5px 6px;}
+.thumb-lbl input{width:100%;border:none;border-bottom:1px solid var(--border-light);font-size:10px;color:var(--muted);font-family:inherit;outline:none;background:transparent;padding:2px 0;}
+.thumb-lbl input:focus{border-color:var(--blue);color:var(--navy);}
+.img-count{font-size:11px;color:var(--muted);margin-top:8px;}
+
+/* GENERATE */
+.gen-wrap{padding:0 20px 20px;}
+.btn-gen{width:100%;padding:15px;background:var(--blue);border:none;border-radius:var(--r2);color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;letter-spacing:.3px;}
+.btn-gen:hover:not(:disabled){background:#2570be;transform:translateY(-1px);box-shadow:0 6px 20px rgba(45,125,210,.35);}
+.btn-gen:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-gen .spin{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none;flex-shrink:0;}
+.btn-gen.loading .spin{display:block;}
+.gen-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:8px;}
+
+/* OUTPUT SIDE */
+.out-side{background:#f4f7fb;display:flex;flex-direction:column;}
+.out-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--muted);padding:40px;text-align:center;}
+.empty-node{opacity:.15;}
+.empty-ttl{font-size:15px;font-weight:600;color:var(--navy);opacity:.4;}
+.empty-sub{font-size:12px;line-height:1.7;max-width:260px;opacity:.7;}
+
+.load-state{display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.load-state.on{display:flex;}
+.load-ring{width:40px;height:40px;border:2.5px solid rgba(45,125,210,.2);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;}
+.load-txt{font-size:13px;color:var(--muted);font-weight:500;}
+
+.out-result{display:none;flex-direction:column;flex:1;overflow:hidden;}
+.out-result.on{display:flex;}
+
+/* TABS */
+.tabs{display:flex;border-bottom:2px solid var(--border-light);background:var(--white);}
+.tab{padding:14px 20px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap;}
+.tab.on{color:var(--navy);border-bottom-color:var(--blue);font-weight:600;}
+.tab:hover:not(.on){color:var(--navy);}
+
+.tab-panels{flex:1;overflow:hidden;}
+.tab-panel{display:none;height:100%;flex-direction:column;padding:16px 20px;}
+.tab-panel.on{display:flex;}
+.out-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.char-cnt{font-size:11px;color:var(--muted);flex:1;}
+.char-cnt b{color:var(--navy);}
+.char-cnt.over b{color:var(--danger);}
+.out-ta{flex:1;background:var(--white);border:1px solid var(--border-light);border-radius:var(--r2);color:var(--navy);padding:16px;font-size:13px;font-family:inherit;line-height:1.85;resize:none;outline:none;overflow-y:auto;}
+.out-ta:focus{border-color:var(--border-light);}
+.tab-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.btn-act{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r);color:var(--muted);font-size:12px;font-weight:500;padding:8px 14px;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:6px;}
+.btn-act:hover{border-color:var(--blue);color:var(--navy);}
+.btn-act.copied{background:rgba(29,158,117,.06);border-color:var(--success);color:var(--success);}
+.btn-act.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
+.btn-act.primary:hover{background:#2570be;}
+
+.export-bar{padding:12px 20px;border-top:1px solid var(--border-light);background:var(--white);display:flex;gap:8px;}
+
+/* TOAST */
+.toast-wrap{position:fixed;top:72px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r2);padding:12px 16px;font-size:12px;font-weight:500;color:var(--navy);box-shadow:0 4px 20px rgba(0,0,0,.12);min-width:240px;border-left:3px solid var(--blue);animation:slideIn .2s ease;pointer-events:all;}
+.toast.success{border-left-color:var(--success);}
+.toast.error{border-left-color:var(--danger);}
+.toast.warning{border-left-color:var(--warning);}
+@keyframes slideIn{from{transform:translateX(20px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+@keyframes fadeOut{to{opacity:0;transform:translateX(10px);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* PRINT */
+@media print {
+  header,.form-side,.tabs,.out-meta,.tab-actions,.export-bar,.load-state,.out-empty,
+  .toast-wrap,.btn-act{display:none!important;}
+  body{background:#fff;color:#111;}
+  .main{display:block;}
+  .out-side{background:#fff;}
+  .out-result{display:block!important;}
+  .tab-panels{overflow:visible;}
+  .tab-panel{display:block!important;padding:0;}
+  #panel-vollstaendig{display:block!important;}
+  .out-ta{border:none;height:auto;min-height:unset;overflow:visible;font-size:12px;line-height:1.8;}
+  #printHead,#printImgs,#printData{display:block!important;}
+  #printHead{display:flex!important;justify-content:space-between;align-items:flex-start;padding-bottom:16px;border-bottom:2px solid #1E3A5F;margin-bottom:20px;}
+  .print-logo-txt{font-size:18px;font-weight:700;color:#1E3A5F;letter-spacing:2px;}
+  .print-logo-txt span{color:#2D7DD2;}
+  .print-date{font-size:11px;color:#888;}
+  #printImgs img:first-child{width:100%;max-height:400px;object-fit:cover;border-radius:8px;margin-bottom:10px;display:block;}
+  #printImgs{display:grid!important;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0;}
+  #printImgs img:not(:first-child){border-radius:6px;width:100%;aspect-ratio:16/9;object-fit:cover;}
+  #printData{margin-top:20px;border:1px solid #dde5ef;border-radius:8px;overflow:hidden;font-size:12px;}
+  #printData table{width:100%;border-collapse:collapse;}
+  #printData td{padding:8px 14px;border-bottom:1px solid #eee;}
+  #printData td:first-child{font-weight:600;color:#5a7a9a;background:#f4f7fb;width:35%;}
+  @page{margin:15mm;}
+}
+#printHead,#printImgs,#printData{display:none;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="h-logo">
+    <svg width="130" height="40" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+      <path d="M78 37 L90 22" fill="none" stroke="#2D7DD2" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M110 22 L122 37" fill="none" stroke="#2D7DD2" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="84" cy="30" r="2.5" fill="#2D7DD2"/>
+      <circle cx="116" cy="30" r="2.5" fill="#2D7DD2"/>
+      <rect x="90" y="11" width="20" height="14" rx="4" fill="#2D7DD2"/>
+      <rect x="60" y="37" width="20" height="14" rx="4" fill="#2D7DD2" opacity="0.6"/>
+      <rect x="120" y="37" width="20" height="14" rx="4" fill="#2D7DD2" opacity="0.6"/>
+      <text x="62" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="white" letter-spacing="0.5">flow</text>
+      <text x="100" y="68" font-family="system-ui,sans-serif" font-size="18" font-weight="500" fill="#2D7DD2" letter-spacing="0.5">matic</text>
+    </svg>
+  </div>
+  <div class="h-title">
+    <span class="h-title-main">Exposé Generator</span>
+    <span class="h-title-sub">Schweizer Immobilienmakler</span>
+  </div>
+  <div class="h-webhook">
+    <div class="h-dot" id="wDot"></div>
+    <input class="webhook-inp" id="webhookInp" type="text" placeholder="Ihre n8n Webhook URL eintragen..." autocomplete="off">
+  </div>
+</header>
+
+<div class="main">
+  <!-- FORM SIDE -->
+  <div class="form-side">
+
+    <!-- S1: Objekt -->
+    <div class="acc">
+      <div class="acc-hdr open" onclick="toggleAcc(this)">
+        <div class="acc-num">1</div>
+        <div class="acc-ttl">Objekt-Grunddaten</div>
+        <div class="acc-chev">▼</div>
+      </div>
+      <div class="acc-body open">
+        <div class="inp-row">
+          <div class="field">
+            <div class="lbl">Objekttyp <span class="req">*</span></div>
+            <select class="sel" id="fTyp" onchange="validate()">
+              <option value="">Wählen...</option>
+              <option>Wohnung</option><option>Einfamilienhaus</option>
+              <option>Mehrfamilienhaus</option><option>Villa</option>
+              <option>Penthouse</option><option>Gewerbe</option><option>Grundstück</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="lbl">Angebotstyp <span class="req">*</span></div>
+            <select class="sel" id="fAngebot" onchange="validate()">
+              <option value="">Wählen...</option>
+              <option>Verkauf</option><option>Vermietung</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <div class="lbl">Adresse <span class="req">*</span></div>
+          <input class="inp" id="fAdresse" placeholder="Musterstrasse 12, 8001 Zürich" oninput="validate()">
+        </div>
+        <div class="field">
+          <div class="lbl">Kanton</div>
+          <select class="sel" id="fKanton">
+            <option value="">–</option>
+            <option>ZH</option><option>ZG</option><option>BS</option><option>GE</option>
+            <option>BE</option><option>LU</option><option>AG</option><option>SZ</option>
+            <option>NW</option><option>OW</option><option>UR</option><option>GL</option>
+            <option>AR</option><option>AI</option><option>SG</option><option>GR</option>
+            <option>TG</option><option>SH</option><option>TI</option><option>VD</option>
+            <option>VS</option><option>FR</option><option>NE</option><option>JU</option>
+            <option>SO</option><option>BL</option>
+          </select>
+        </div>
+        <div class="inp-row">
+          <div class="field">
+            <div class="lbl">Wohnfläche <span class="req">*</span></div>
+            <div class="inp-unit">
+              <input class="inp" type="number" id="fFlaeche" placeholder="95" min="0" oninput="validate()">
+              <span class="unit">m²</span>
+            </div>
+          </div>
+          <div class="field">
+            <div class="lbl">Zimmer <span class="req">*</span></div>
+            <select class="sel" id="fZimmer" onchange="validate()">
+              <option value="">–</option>
+              <option>1</option><option>1.5</option><option>2</option><option>2.5</option>
+              <option>3</option><option>3.5</option><option>4</option><option>4.5</option>
+              <option>5</option><option>5.5</option><option>6+</option>
+            </select>
+          </div>
+        </div>
+        <div class="inp-row">
+          <div class="field">
+            <div class="lbl">Stockwerk</div>
+            <select class="sel" id="fStockwerk">
+              <option value="">–</option>
+              <option>EG</option><option>1. OG</option><option>2. OG</option>
+              <option>3. OG</option><option>4. OG</option><option>DG</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="lbl">Baujahr</div>
+            <input class="inp" type="number" id="fBaujahr" placeholder="1985" min="1800" max="2030">
+          </div>
+        </div>
+        <div class="inp-row">
+          <div class="field">
+            <div class="lbl">Letzte Renovation</div>
+            <input class="inp" type="number" id="fRenovation" placeholder="2019" min="1800" max="2030">
+          </div>
+          <div class="field">
+            <div class="lbl">Preis <span class="req">*</span></div>
+            <div class="inp-unit">
+              <span class="unit" style="border-radius:var(--r) 0 0 var(--r);border-right:none;border:1px solid var(--border-light);">CHF</span>
+              <input class="inp" type="number" id="fPreis" placeholder="750000" style="border-radius:0 var(--r) var(--r) 0;" oninput="validate()">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2: Zustand -->
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-num">2</div>
+        <div class="acc-ttl">Zustand &amp; Merkmale</div>
+        <div class="acc-chev">▼</div>
+      </div>
+      <div class="acc-body">
+        <div class="inp-row">
+          <div class="field">
+            <div class="lbl">Zustand <span class="req">*</span></div>
+            <select class="sel" id="fZustand" onchange="validate()">
+              <option value="">Wählen...</option>
+              <option>Renovierungsbedarf</option><option>Gepflegt</option>
+              <option>Teilrenoviert</option><option>Neuwertig</option><option>Neubau</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="lbl">Heizung</div>
+            <select class="sel" id="fHeizung">
+              <option value="">–</option>
+              <option>Öl</option><option>Gas</option><option>Wärmepumpe</option>
+              <option>Fernwärme</option><option>Solar</option><option>Elektro</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <div class="lbl">Parkierung</div>
+          <select class="sel" id="fParkierung">
+            <option value="">Keine</option>
+            <option>Aussenplatz</option><option>Carport</option>
+            <option>Garage</option><option>Tiefgarage</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="lbl">Merkmale</div>
+          <div class="chk-grid" id="merkmaleGrid">
+            <label class="chk-item" onclick="chkToggle(this)"><input type="checkbox" value="Seesicht"><span>🌊 Seesicht</span></label>
+            <label class="chk-item" onclick="chkToggle(this)"><input type="checkbox" value="Bergsicht"><span>🏔 Bergsicht</span></label>
+            <label class="chk-item" onclick="chkToggle(this)"><input type="checkbox" value="Garten"><span>🌿 Garten</span></label>
+            <label class="chk-item" onclick="chkToggle(this)"><input type="checkbox" value="Terrasse / Balkon"><span>🏠 Terrasse / Balkon</span></label>
+            <label class="chk-item" onclick="chkToggle(this)"><input type="checkbox" value="Südausrichtung"><span>☀️ Südausrichtung</span></label>
+            <label class="chk-item" onclick="chkToggle(this)"><input type="checkbox" value="Lift"><span>🔼 Lift</span></label>
+            <label class="chk-item" onclick="chkToggle(this)"><input type="checkbox" value="Minergie"><span>🌱 Minergie</span></label>
+            <label class="chk-item" onclick="chkToggle(this)"><input type="checkbox" value="Smart Home"><span>📱 Smart Home</span></label>
+            <label class="chk-item" onclick="chkToggle(this)"><input type="checkbox" value="Cheminée"><span>🔥 Cheminée</span></label>
+            <label class="chk-item" onclick="chkToggle(this)"><input type="checkbox" value="Einbauküche"><span>🍳 Einbauküche</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="lbl">Weitere Infos für Claude</div>
+          <textarea class="ta" id="fWeiteres" placeholder="Was soll Claude noch wissen? Besonderheiten, Renovierungsdetails, Alleinstellungsmerkmale..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- S3: Lage -->
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-num">3</div>
+        <div class="acc-ttl">Lage-Beschreibung</div>
+        <div class="acc-chev">▼</div>
+      </div>
+      <div class="acc-body">
+        <div class="field">
+          <div class="lbl">Umgebung / Quartier</div>
+          <textarea class="ta" id="fUmgebung" placeholder="Ruhige Wohnlage im Sonnenhügel-Quartier, 5 Min. zum See, idyllische Aussicht..."></textarea>
+        </div>
+        <div class="field">
+          <div class="lbl">Öffentlicher Verkehr</div>
+          <input class="inp" id="fOev" placeholder="Bus Linie 31, 3 Min. zu Fuss, Bahnhof Küsnacht 8 Min.">
+        </div>
+        <div class="field">
+          <div class="lbl">Einkauf / Schulen</div>
+          <input class="inp" id="fSchule" placeholder="Migros 5 Min., Primarschule 8 Min., Coop 3 Min.">
+        </div>
+      </div>
+    </div>
+
+    <!-- S4: Bilder -->
+    <div class="acc">
+      <div class="acc-hdr open" onclick="toggleAcc(this)">
+        <div class="acc-num">4</div>
+        <div class="acc-ttl">Bilder hochladen</div>
+        <div class="acc-chev">▼</div>
+      </div>
+      <div class="acc-body open">
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" ondragover="dragOver(event)" ondragleave="dragLeave()" ondrop="dropFiles(event)">
+          <div class="upload-icon">↑</div>
+          <div class="upload-txt"><b>Bilder hier ablegen oder klicken</b><br>JPG, PNG · Max. 10 Bilder · Max. 5 MB pro Bild</div>
+        </div>
+        <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.webp" onchange="handleFiles(this.files)">
+        <div class="thumb-grid" id="thumbGrid"></div>
+        <div class="img-count" id="imgCount"></div>
+      </div>
+    </div>
+
+    <!-- S5: Stil -->
+    <div class="acc">
+      <div class="acc-hdr" onclick="toggleAcc(this)">
+        <div class="acc-num">5</div>
+        <div class="acc-ttl">Stil &amp; Zielgruppe</div>
+        <div class="acc-chev">▼</div>
+      </div>
+      <div class="acc-body">
+        <div class="inp-row">
+          <div class="field">
+            <div class="lbl">Ton / Stil</div>
+            <select class="sel" id="fTon">
+              <option>Professionell</option><option>Emotional</option>
+              <option>Premium</option><option>Familiär</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="lbl">Zielgruppe</div>
+            <select class="sel" id="fZielgruppe">
+              <option>Keine Vorgabe</option><option>Familien</option>
+              <option>Paare / Singles</option><option>Investoren</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GENERATE -->
+    <div class="gen-wrap" style="padding-top:16px;">
+      <button class="btn-gen" id="genBtn" onclick="generate()" disabled>
+        <div class="spin"></div>
+        <span id="genTxt">✦ &nbsp;Exposé generieren</span>
+      </button>
+      <div class="gen-hint" id="genHint">Webhook URL und Pflichtfelder ausfüllen um zu starten</div>
+    </div>
+
+  </div>
+
+  <!-- OUTPUT SIDE -->
+  <div class="out-side">
+    <div class="out-empty" id="outEmpty">
+      <svg class="empty-node" width="64" height="64" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M78 37 L90 22" fill="none" stroke="#2D7DD2" stroke-width="2" stroke-linecap="round"/>
+        <path d="M110 22 L122 37" fill="none" stroke="#2D7DD2" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="84" cy="30" r="3" fill="#2D7DD2"/>
+        <circle cx="116" cy="30" r="3" fill="#2D7DD2"/>
+        <rect x="90" y="11" width="20" height="14" rx="4" fill="#2D7DD2"/>
+        <rect x="60" y="37" width="20" height="14" rx="4" fill="#1E3A5F"/>
+        <rect x="120" y="37" width="20" height="14" rx="4" fill="#1E3A5F"/>
+      </svg>
+      <div class="empty-ttl">Bereit</div>
+      <div class="empty-sub">Füllen Sie die Daten aus und klicken Sie auf <b>«Exposé generieren»</b></div>
+    </div>
+
+    <div class="load-state" id="loadState">
+      <div class="load-ring"></div>
+      <div class="load-txt" id="loadTxt">Bilder werden analysiert...</div>
+    </div>
+
+    <div class="out-result" id="outResult">
+      <div class="tabs">
+        <div class="tab on" onclick="switchTab('vollstaendig',this)">Vollständiges Exposé</div>
+        <div class="tab" onclick="switchTab('portal',this)">Portal-Version</div>
+      </div>
+      <div class="tab-panels">
+        <div class="tab-panel on" id="panel-vollstaendig">
+          <div class="out-meta">
+            <div class="char-cnt" id="cc-v"></div>
+            <button class="btn-act" onclick="copyTab('vollstaendig')">📋 Kopieren</button>
+            <button class="btn-act" onclick="regenTab()">🔄 Neu generieren</button>
+          </div>
+          <textarea class="out-ta" id="ta-v" oninput="countChars('v')"></textarea>
+        </div>
+        <div class="tab-panel" id="panel-portal">
+          <div class="out-meta">
+            <div class="char-cnt" id="cc-p"></div>
+            <button class="btn-act" onclick="copyTab('portal')">📋 Kopieren</button>
+            <button class="btn-act" onclick="regenTab()">🔄 Neu generieren</button>
+          </div>
+          <textarea class="out-ta" id="ta-p" oninput="countChars('p',1800)"></textarea>
+        </div>
+      </div>
+      <div class="export-bar">
+        <button class="btn-act" onclick="window.print()">🖨 Als PDF drucken</button>
+        <button class="btn-act" onclick="saveTxt()">⬇ Als TXT speichern</button>
+      </div>
+    </div>
+
+    <!-- Print-only -->
+    <div id="printHead">
+      <div><div class="print-logo-txt">flow<span>matic</span></div><div id="printSub" style="font-size:11px;color:#888;margin-top:3px;"></div></div>
+      <div class="print-date" id="printDate"></div>
+    </div>
+    <div id="printImgs"></div>
+    <div id="printData"></div>
+  </div>
+</div>
+
+<!-- TOASTS -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ─── STATE ──────────────────────────────────────────────────────────
+let images = []; // {file, label, dataUrl}
+let lastFormData = null;
+
+// ─── INIT ────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('fm_webhook');
+  const inp = document.getElementById('webhookInp');
+  if (saved) { inp.value = saved; setDot(true); }
+
+  inp.addEventListener('input', () => {
+    const v = inp.value.trim();
+    localStorage.setItem('fm_webhook', v);
+    setDot(!!v);
+    validate();
+  });
+
+  const last = localStorage.getItem('fm_last_output');
+  if (last) {
+    try { showOutput(JSON.parse(last)); } catch(e) {}
+  }
+  validate();
+});
+
+function setDot(on) {
+  document.getElementById('wDot').className = 'h-dot' + (on ? ' on' : '');
+}
+
+// ─── ACCORDION ───────────────────────────────────────────────────────
+function toggleAcc(hdr) {
+  hdr.classList.toggle('open');
+  hdr.nextElementSibling.classList.toggle('open');
+}
+
+function chkToggle(label) {
+  setTimeout(() => label.classList.toggle('on', label.querySelector('input').checked), 0);
+}
+
+// ─── VALIDATE ────────────────────────────────────────────────────────
+function validate() {
+  const hasWebhook = !!document.getElementById('webhookInp').value.trim();
+  const req = ['fTyp','fAngebot','fAdresse','fFlaeche','fZimmer','fPreis','fZustand'];
+  const allFilled = req.every(id => document.getElementById(id).value.trim());
+  const btn = document.getElementById('genBtn');
+  btn.disabled = !(hasWebhook && allFilled);
+  const hint = document.getElementById('genHint');
+  if (!hasWebhook) hint.textContent = 'Webhook URL oben rechts eintragen';
+  else if (!allFilled) hint.textContent = 'Pflichtfelder (*) ausfüllen';
+  else hint.textContent = '';
+}
+
+// ─── FILE UPLOAD ─────────────────────────────────────────────────────
+function dragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('drag'); }
+function dragLeave() { document.getElementById('uploadZone').classList.remove('drag'); }
+function dropFiles(e) { e.preventDefault(); dragLeave(); handleFiles(e.dataTransfer.files); }
+
+function handleFiles(files) {
+  for (const f of files) {
+    if (images.length >= 10) { toast('Maximum 10 Bilder erlaubt', 'warning'); break; }
+    if (f.size > 5 * 1024 * 1024) { toast(`${f.name}: Datei zu gross (max. 5 MB)`, 'error'); continue; }
+    if (!f.type.match(/image\/(jpeg|png|webp)/)) continue;
+    const reader = new FileReader();
+    reader.onload = e => {
+      images.push({ file: f, label: guessLabel(f.name, images.length), dataUrl: e.target.result });
+      renderThumbs();
+    };
+    reader.readAsDataURL(f);
+  }
+  document.getElementById('fileInput').value = '';
+}
+
+function guessLabel(name, idx) {
+  const n = name.toLowerCase();
+  if (n.includes('wohn')) return 'Wohnzimmer';
+  if (n.includes('kuch')) return 'Küche';
+  if (n.includes('bad') || n.includes('dusch')) return 'Badezimmer';
+  if (n.includes('schlaf') || n.includes('bett')) return 'Schlafzimmer';
+  if (n.includes('garten')) return 'Garten';
+  if (n.includes('aussen') || n.includes('fassade')) return 'Aussenansicht';
+  if (n.includes('balkon') || n.includes('terrasse')) return 'Balkon / Terrasse';
+  return idx === 0 ? 'Hauptansicht' : `Zimmer ${idx + 1}`;
+}
+
+function renderThumbs() {
+  const g = document.getElementById('thumbGrid');
+  g.innerHTML = images.map((img, i) => `
+    <div class="thumb">
+      <img src="${img.dataUrl}" alt="${img.label}">
+      ${i === 0 ? '<div class="thumb-badge">HAUPTBILD</div>' : ''}
+      <button class="thumb-del" onclick="delImg(${i})">×</button>
+      <div class="thumb-lbl"><input id="img-label-${i}" value="${img.label}" placeholder="Bezeichnung" onchange="images[${i}].label=this.value"></div>
+    </div>`).join('');
+  document.getElementById('imgCount').textContent = images.length ? `${images.length} Bild${images.length > 1 ? 'er' : ''} hochgeladen` : '';
+}
+
+function delImg(i) { images.splice(i, 1); renderThumbs(); }
+
+// ─── COLLECT FORM ────────────────────────────────────────────────────
+function collectForm() {
+  return {
+    typ: v('fTyp'), angebot: v('fAngebot'), adresse: v('fAdresse'),
+    kanton: v('fKanton'), flaeche: v('fFlaeche'), zimmer: v('fZimmer'),
+    stockwerk: v('fStockwerk'), baujahr: v('fBaujahr'), renovation: v('fRenovation'),
+    preis: v('fPreis'), zustand: v('fZustand'), heizung: v('fHeizung'),
+    parkierung: v('fParkierung'),
+    merkmale: [...document.querySelectorAll('#merkmaleGrid input:checked')].map(c => c.value),
+    weiteres: v('fWeiteres'), umgebung: v('fUmgebung'), oev: v('fOev'), schule: v('fSchule'),
+    ton: v('fTon'), zielgruppe: v('fZielgruppe'),
+    bildAnzahl: images.length,
+    bildLabels: images.map(img => img.label)
+  };
+}
+function v(id) { return document.getElementById(id).value.trim(); }
+
+// ─── GENERATE ────────────────────────────────────────────────────────
+async function generate() {
+  const btn = document.getElementById('genBtn');
+  const webhookUrl = document.getElementById('webhookInp').value.trim();
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  document.getElementById('genTxt').textContent = 'Wird generiert...';
+  document.getElementById('outEmpty').style.display = 'none';
+  document.getElementById('loadState').classList.add('on');
+  document.getElementById('outResult').classList.remove('on');
+
+  const msgs = ['Bilder werden analysiert...','Objekt wird erfasst...','Exposé wird verfasst...','Fast fertig...'];
+  let mi = 0;
+  const lt = setInterval(() => {
+    document.getElementById('loadTxt').textContent = msgs[Math.min(mi++, msgs.length - 1)];
+  }, 2500);
+
+  try {
+    const fd = collectForm();
+    lastFormData = fd;
+
+    // Bilder zu Base64
+    const bilder = await Promise.all(images.map(async (img, i) => ({
+      data: img.dataUrl.split(',')[1],
+      type: img.file.type,
+      label: document.getElementById(`img-label-${i}`)?.value || img.label
+    })));
+
+    const payload = { ...fd, bilder };
+
+    const resp = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!resp.ok) throw new Error(`Webhook Fehler ${resp.status}`);
+
+    const result = await resp.json();
+    if (!result.success) throw new Error(result.error || 'Unbekannter Fehler');
+
+    clearInterval(lt);
+    showOutput(result);
+    localStorage.setItem('fm_last_output', JSON.stringify(result));
+    toast('Exposé erfolgreich generiert!', 'success');
+
+  } catch(err) {
+    clearInterval(lt);
+    document.getElementById('loadState').classList.remove('on');
+    document.getElementById('outEmpty').style.display = 'flex';
+    toast('Fehler: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.classList.remove('loading');
+    document.getElementById('genTxt').textContent = '✦  Exposé generieren';
+    validate();
+  }
+}
+
+function showOutput(result) {
+  document.getElementById('loadState').classList.remove('on');
+  document.getElementById('outEmpty').style.display = 'none';
+  document.getElementById('outResult').classList.add('on');
+
+  document.getElementById('ta-v').value = result.vollstaendig || '';
+  document.getElementById('ta-p').value = result.portal || '';
+  countChars('v');
+  countChars('p', 1800);
+
+  // Print setup
+  if (lastFormData) {
+    const fd = lastFormData;
+    document.getElementById('printSub').textContent =
+      `${fd.typ} · ${fd.adresse} · ${fd.angebot} · CHF ${Number(fd.preis).toLocaleString('de-CH')}`;
+    document.getElementById('printDate').textContent = new Date().toLocaleDateString('de-CH');
+    const pi = document.getElementById('printImgs');
+    pi.innerHTML = images.map(img => `<img src="${img.dataUrl}" alt="${img.label}">`).join('');
+    document.getElementById('printData').innerHTML = `<table>
+      <tr><td>Objekttyp</td><td>${fd.typ}</td></tr>
+      <tr><td>Angebot</td><td>${fd.angebot}</td></tr>
+      <tr><td>Adresse</td><td>${fd.adresse}</td></tr>
+      <tr><td>Zimmer</td><td>${fd.zimmer}</td></tr>
+      <tr><td>Wohnfläche</td><td>${fd.flaeche} m²</td></tr>
+      <tr><td>Baujahr</td><td>${fd.baujahr || '–'}</td></tr>
+      <tr><td>Zustand</td><td>${fd.zustand}</td></tr>
+      <tr><td>Heizung</td><td>${fd.heizung || '–'}</td></tr>
+      <tr><td>Parkierung</td><td>${fd.parkierung || 'Keine'}</td></tr>
+      <tr><td>Preis</td><td>CHF ${Number(fd.preis).toLocaleString('de-CH')}</td></tr>
+    </table>`;
+  }
+}
+
+// ─── TABS ────────────────────────────────────────────────────────────
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('panel-' + name).classList.add('on');
+}
+
+// ─── CHAR COUNT ──────────────────────────────────────────────────────
+function countChars(key, max) {
+  const n = document.getElementById('ta-' + key).value.length;
+  const el = document.getElementById('cc-' + key);
+  if (!el) return;
+  el.innerHTML = max
+    ? `<b>${n.toLocaleString('de-CH')}</b> / ${max.toLocaleString('de-CH')} Zeichen`
+    : `<b>${n.toLocaleString('de-CH')}</b> Zeichen`;
+  el.className = 'char-cnt' + (max && n > max ? ' over' : '');
+}
+
+// ─── COPY ────────────────────────────────────────────────────────────
+function copyTab(name) {
+  const key = name === 'vollstaendig' ? 'v' : 'p';
+  navigator.clipboard.writeText(document.getElementById('ta-' + key).value).then(() => {
+    toast('Text kopiert!', 'success');
+  });
+}
+
+// ─── REGEN ───────────────────────────────────────────────────────────
+function regenTab() { generate(); }
+
+// ─── SAVE TXT ────────────────────────────────────────────────────────
+function saveTxt() {
+  const v = document.getElementById('ta-v').value;
+  const p = document.getElementById('ta-p').value;
+  const txt = `=== VOLLSTÄNDIGES EXPOSÉ ===\n\n${v}\n\n=== PORTAL-VERSION ===\n\n${p}`;
+  const a = document.createElement('a');
+  a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(txt);
+  a.download = 'expose-' + new Date().toISOString().slice(0,10) + '.txt';
+  a.click();
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────
+function toast(msg, type = 'info') {
+  const wrap = document.getElementById('toastWrap');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'fadeOut .3s ease forwards';
+    setTimeout(() => el.remove(), 300);
+  }, 4000);
+}
+
+// ─── KEYBOARD ────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+    e.preventDefault();
+    if (!document.getElementById('genBtn').disabled) generate();
+  }
+  if ((e.metaKey || e.ctrlKey) && e.key === '1') {
+    e.preventDefault();
+    document.querySelectorAll('.tab')[0]?.click();
+  }
+  if ((e.metaKey || e.ctrlKey) && e.key === '2') {
+    e.preventDefault();
+    document.querySelectorAll('.tab')[1]?.click();
+  }
+});
+</script>
+</body>
+</html>

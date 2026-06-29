@@ -1,0 +1,218 @@
+{
+  "name": "Flowmatic Exposé Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "flowmatic-expose",
+        "responseMode": "lastNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "node-webhook",
+      "name": "Webhook — Exposé Anfrage",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "flowmatic-expose-01"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ─── NODE 2: DATEN AUFBEREITEN + VALIDIEREN ───────────────────────────\n\nconst body = $input.first().json.body || $input.first().json;\n\n// Pflichtfelder prüfen\nconst required = ['typ','angebot','adresse','flaeche','zimmer','preis','zustand'];\nconst missing = required.filter(f => !body[f] || String(body[f]).trim() === '');\n\nif (missing.length > 0) {\n  return [{\n    json: {\n      success: false,\n      error: `Fehlende Pflichtfelder: ${missing.join(', ')}. Bitte alle Pflichtfelder ausfüllen.`\n    }\n  }];\n}\n\n// Preis formatieren\nconst preisNum = parseInt(String(body.preis).replace(/[^0-9]/g, ''));\nconst preisFormatiert = new Intl.NumberFormat('de-CH').format(preisNum);\n\n// Merkmale\nconst merkmale = Array.isArray(body.merkmale) && body.merkmale.length > 0\n  ? body.merkmale.join(', ')\n  : 'keine besonderen Merkmale';\n\n// Bilder-Info\nconst bilder = Array.isArray(body.bilder) ? body.bilder.slice(0, 10) : [];\nconst bildLabels = bilder.map((b, i) => `Bild ${i+1}: ${b.label || 'Zimmer ' + (i+1)}`).join(', ');\n\n// Prompt zusammenbauen\nconst prompt = `Erstelle ein professionelles Immobilien-Exposé auf Schweizer Hochdeutsch.\n\nOBJEKT-GRUNDDATEN:\n- Typ: ${body.typ}\n- Angebot: ${body.angebot}\n- Adresse: ${body.adresse}${body.kanton ? ', ' + body.kanton : ''}\n- Wohnfläche: ${body.flaeche} m²\n- Zimmer: ${body.zimmer}\n- Stockwerk: ${body.stockwerk || 'nicht angegeben'}\n- Baujahr: ${body.baujahr || 'nicht angegeben'}\n- Letzte Renovation: ${body.renovation || 'nicht angegeben'}\n- ${body.angebot === 'Vermietung' ? 'Miete' : 'Kaufpreis'}: CHF ${preisFormatiert}\n\nZUSTAND & AUSSTATTUNG:\n- Zustand: ${body.zustand}\n- Heizung: ${body.heizung || 'nicht angegeben'}\n- Parkierung: ${body.parkierung || 'keine'}\n- Besondere Merkmale: ${merkmale}\n- Weitere Infos: ${body.weiteres || 'keine'}\n\nLAGE:\n- Umgebung: ${body.umgebung || 'nicht angegeben'}\n- Öffentlicher Verkehr: ${body.oev || 'nicht angegeben'}\n- Einkauf / Schulen: ${body.schule || 'nicht angegeben'}\n\nBILDER: ${bilder.length > 0 ? bildLabels : 'keine Bilder hochgeladen'}\n\nSTIL & ZIELGRUPPE:\n- Ton: ${body.ton || 'Professionell'}\n- Zielgruppe: ${body.zielgruppe || 'Keine Vorgabe'}\n\nVollständiges Exposé: 500–700 Wörter, emotionaler Einstieg, alle Details, Bilder-Beschreibungen natürlich eingeflochten.\nPortal-Version: Exakt max. 1800 Zeichen, kompakt, für ImmoScout24 und Homegate optimiert.`;\n\nreturn [{\n  json: {\n    prompt,\n    bilder,\n    formData: body,\n    preisFormatiert\n  }\n}];"
+      },
+      "id": "node-prepare",
+      "name": "Daten aufbereiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ─── NODE 3: BILDER FÜR CLAUDE API AUFBEREITEN ───────────────────────\n\nconst data = $input.first().json;\n\n// Wenn Fehler aus Node 2 → durchleiten\nif (data.success === false) {\n  return [{ json: data }];\n}\n\nconst bilder = data.bilder || [];\nconst prompt = data.prompt;\n\n// Claude message content aufbauen: erst Bilder, dann Text\nconst content = [];\n\n// Bilder als Base64 image blocks\nfor (const bild of bilder) {\n  if (!bild.data || !bild.type) continue;\n  \n  // Media type validieren\n  const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];\n  const mediaType = validTypes.includes(bild.type) ? bild.type : 'image/jpeg';\n  \n  content.push({\n    type: 'image',\n    source: {\n      type: 'base64',\n      media_type: mediaType,\n      data: bild.data\n    }\n  });\n  \n  // Label als Text nach jedem Bild\n  content.push({\n    type: 'text',\n    text: `(Bild oben: ${bild.label || 'Immobilienbild'})`\n  });\n}\n\n// Haupt-Prompt als letzter Text-Block\ncontent.push({\n  type: 'text',\n  text: prompt\n});\n\nreturn [{\n  json: {\n    messageContent: content,\n    formData: data.formData,\n    preisFormatiert: data.preisFormatiert\n  }\n}];"
+      },
+      "id": "node-images",
+      "name": "Bilder aufbereiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.CLAUDE_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-6\",\n  \"max_tokens\": 3000,\n  \"system\": \"Du bist der beste Immobilien-Texter der Schweiz mit 20 Jahren Erfahrung.\\n\\nDeine Grundsätze:\\n- Schweizer Hochdeutsch (präzise, nicht steif)\\n- Keine Klischees, keine leeren Versprechen\\n- Fakten elegant eingewoben, nicht aufgelistet\\n- Bilder analysieren und Details natürlich integrieren\\n- Emotionale Einstiege die Käufer wirklich abholen\\n\\nGib IMMER exakt diese zwei Versionen aus, mit exakt diesen Trennern:\\n\\n===VOLLSTAENDIG===\\n[500-700 Wörter. Emotionaler Einstieg. Alle Details eingeflochten. Bilder-Beschreibungen natürlich integriert. Für Website, PDF und Direktversand.]\\n\\n===PORTAL===\\n[Maximal 1800 Zeichen. Kompakt und präzise. Alle Pflichtinfos. Optimiert für ImmoScout24 und Homegate. Kein Fülltext.]\",\n  \"messages\": [\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify($json.messageContent) }}\n    }\n  ]\n}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "node-claude",
+      "name": "Claude API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [960, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ─── NODE 5: RESPONSE AUFBEREITEN ────────────────────────────────────\n\nconst input = $input.first().json;\n\n// Fehler aus früheren Nodes durchleiten\nif (input.success === false) {\n  return [{ json: input }];\n}\n\n// Claude API Fehler abfangen\nif (input.error) {\n  const errMsg = input.error?.message || JSON.stringify(input.error);\n  return [{\n    json: {\n      success: false,\n      error: `Claude API Fehler: ${errMsg}`\n    }\n  }];\n}\n\n// Claude Antwort extrahieren\nlet rawText = '';\ntry {\n  rawText = input.content?.[0]?.text || '';\n} catch(e) {\n  return [{\n    json: {\n      success: false,\n      error: 'Antwort von Claude konnte nicht gelesen werden.'\n    }\n  }];\n}\n\nif (!rawText) {\n  return [{\n    json: {\n      success: false,\n      error: 'Claude hat keinen Text zurückgegeben. Bitte erneut versuchen.'\n    }\n  }];\n}\n\n// Versionen extrahieren\nfunction extract(text, marker, nextMarker) {\n  const start = text.indexOf(marker);\n  if (start === -1) return '';\n  const after = text.slice(start + marker.length);\n  if (nextMarker) {\n    const end = after.indexOf(nextMarker);\n    return end === -1 ? after.trim() : after.slice(0, end).trim();\n  }\n  return after.trim();\n}\n\nconst vollstaendig = extract(rawText, '===VOLLSTAENDIG===', '===PORTAL===');\nconst portal = extract(rawText, '===PORTAL===', null);\n\nif (!vollstaendig || !portal) {\n  // Fallback: ganzen Text als vollständiges Exposé\n  return [{\n    json: {\n      success: true,\n      vollstaendig: rawText.trim(),\n      portal: rawText.trim().slice(0, 1800),\n      warning: 'Versionen konnten nicht getrennt werden — vollständiger Text angezeigt.'\n    }\n  }];\n}\n\n// Portal auf 1800 Zeichen begrenzen (Sicherheit)\nconst portalTrimmed = portal.length > 1800 ? portal.slice(0, 1797) + '...' : portal;\n\nreturn [{\n  json: {\n    success: true,\n    vollstaendig: vollstaendig,\n    portal: portalTrimmed,\n    stats: {\n      vollstaendigZeichen: vollstaendig.length,\n      portalZeichen: portalTrimmed.length,\n      model: input.model || 'claude-sonnet-4-6'\n    }\n  }\n}];"
+      },
+      "id": "node-parse",
+      "name": "Response aufbereiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "node-respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1440, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ─── FEHLER-HANDLER ──────────────────────────────────────────────────\n// Dieser Node fängt Fehler aus dem Claude API Call ab\n\nconst error = $input.first();\n\nreturn [{\n  json: {\n    success: false,\n    error: `Verbindungsfehler zur Claude API. Bitte API Key prüfen und erneut versuchen. Details: ${error.json?.message || 'Unbekannter Fehler'}`\n  }\n}];"
+      },
+      "id": "node-error",
+      "name": "Fehler-Handler",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 500]
+    }
+  ],
+  "connections": {
+    "Webhook — Exposé Anfrage": {
+      "main": [
+        [
+          {
+            "node": "Daten aufbereiten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daten aufbereiten": {
+      "main": [
+        [
+          {
+            "node": "Bilder aufbereiten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bilder aufbereiten": {
+      "main": [
+        [
+          {
+            "node": "Claude API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude API": {
+      "main": [
+        [
+          {
+            "node": "Response aufbereiten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "Fehler-Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Response aufbereiten": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fehler-Handler": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z",
+      "id": "flowmatic-tag",
+      "name": "Flowmatic"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-01T00:00:00.000Z",
+  "versionId": "flowmatic-expose-v1"
+}
