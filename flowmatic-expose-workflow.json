@@ -3,77 +3,109 @@
   "nodes": [
     {
       "parameters": {
+        "httpMethod": "GET",
+        "path": "flowmatic-expose",
+        "responseMode": "lastNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "n-get",
+      "name": "GET — HTML ausliefern",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        100,
+        200
+      ],
+      "webhookId": "flowmatic-expose-get"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Flowmatic — Exposé Generator</title>\n<link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n<style>\n:root{--navy:#1E3A5F;--blue:#2D7DD2;--sky:#5BA4E5;--dark:#0F1826;--mid:#162032;--card:#1a2a42;--light:#E8EDF4;--bl:#D0D8E4;--white:#fff;--ok:#1D9E75;--err:#E05555;--warn:#F59E0B;--muted:#5a7a9a;--r:8px;--r2:12px;}\n*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\nhtml{font-size:14px;}\nbody{background:var(--light);color:var(--navy);font-family:Inter,system-ui,sans-serif;min-height:100vh;}\n::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:#c5d0de;border-radius:9px;}\nheader{background:var(--dark);border-bottom:2px solid var(--blue);height:58px;display:flex;align-items:center;padding:0 24px;gap:16px;position:sticky;top:0;z-index:500;}\n.h-logo svg{display:block;}\n.h-meta{border-left:1px solid rgba(255,255,255,.1);padding-left:16px;margin-left:4px;}\n.h-meta-a{font-size:13px;font-weight:600;color:var(--blue);}\n.h-meta-b{font-size:10px;color:#5a7a9a;margin-top:1px;}\n.main{display:grid;grid-template-columns:44% 56%;min-height:calc(100vh - 58px);}\n@media(max-width:860px){.main{grid-template-columns:1fr;}}\n.form-side{background:var(--white);border-right:1px solid var(--bl);overflow-y:auto;padding-bottom:100px;}\n.acc{border-bottom:1px solid var(--bl);}\n.acc-h{padding:14px 20px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none;transition:background .1s;}\n.acc-h:hover{background:#f8fafc;}\n.acc-n{width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}\n.acc-t{font-size:13px;font-weight:600;flex:1;}\n.acc-c{color:var(--muted);font-size:11px;transition:transform .2s;}\n.acc-h.open .acc-c{transform:rotate(180deg);}\n.acc-b{padding:0 20px 18px;display:none;}\n.acc-b.open{display:block;}\n.fld{margin-bottom:11px;}\n.lbl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:4px;display:flex;gap:3px;}\n.req{color:var(--err);}\n.inp,.sel,.ta{width:100%;background:var(--white);border:1px solid var(--bl);border-radius:var(--r);color:var(--navy);padding:8px 12px;font-size:13px;font-family:inherit;outline:none;transition:border-color .15s;-webkit-appearance:none;}\n.inp:focus,.sel:focus,.ta:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(45,125,210,.08);}\n.sel{cursor:pointer;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a7a9a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px;}\n.ta{resize:vertical;min-height:68px;line-height:1.6;}\n.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}\n.inp-u{display:flex;}\n.inp-u .inp{border-radius:var(--r) 0 0 var(--r);border-right:none;}\n.inp-u .unit{background:#f4f7fb;border:1px solid var(--bl);border-radius:0 var(--r) var(--r) 0;padding:0 11px;display:flex;align-items:center;font-size:12px;color:var(--muted);white-space:nowrap;}\n.chk-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}\n.chk{display:flex;align-items:center;gap:7px;cursor:pointer;padding:6px 9px;border-radius:var(--r);border:1px solid var(--bl);user-select:none;transition:all .15s;}\n.chk:hover{border-color:var(--blue);background:rgba(45,125,210,.04);}\n.chk input{accent-color:var(--blue);cursor:pointer;flex-shrink:0;}\n.chk span{font-size:12px;color:var(--muted);}\n.chk.on{border-color:rgba(45,125,210,.4);background:rgba(45,125,210,.06);}\n.chk.on span{color:var(--navy);}\n.drop{border:2px dashed var(--blue);border-radius:var(--r2);padding:26px 18px;text-align:center;cursor:pointer;background:#f8fbff;transition:all .2s;}\n.drop:hover,.drop.drag{background:rgba(45,125,210,.07);border-style:solid;}\n.drop-ico{font-size:26px;color:var(--blue);margin-bottom:6px;}\n.drop-txt{font-size:13px;color:var(--muted);line-height:1.7;}\n.drop-txt b{color:var(--blue);}\n.thumb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}\n.thumb{position:relative;border-radius:var(--r);border:1px solid var(--bl);}\n.thumb img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r) var(--r) 0 0;display:block;}\n.thumb-badge{position:absolute;top:5px;left:5px;background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:20px;}\n.thumb-del{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;background:var(--err);border:2px solid var(--white);color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;}\n.thumb-li{padding:5px 6px;}\n.thumb-li input{width:100%;border:none;border-bottom:1px solid var(--bl);font-size:10px;color:var(--muted);font-family:inherit;outline:none;background:transparent;padding:2px 0;}\n.thumb-li input:focus{border-color:var(--blue);color:var(--navy);}\n.gen-wrap{padding:16px 20px 20px;}\n.btn-gen{width:100%;padding:14px;background:var(--blue);border:none;border-radius:var(--r2);color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;letter-spacing:.3px;}\n.btn-gen:hover:not(:disabled){background:#2570be;transform:translateY(-1px);box-shadow:0 6px 20px rgba(45,125,210,.35);}\n.btn-gen:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}\n.spin{width:17px;height:17px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:none;flex-shrink:0;}\n.btn-gen.ld .spin{display:block;}\n.out-side{background:#f4f7fb;display:flex;flex-direction:column;}\n.out-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted);padding:40px;text-align:center;}\n.oe-ico{opacity:.15;}\n.oe-t{font-size:15px;font-weight:600;color:var(--navy);opacity:.4;}\n.oe-s{font-size:12px;line-height:1.7;max-width:250px;opacity:.7;}\n.load-wrap{display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:14px;}\n.load-wrap.on{display:flex;}\n.load-ring{width:38px;height:38px;border:2.5px solid rgba(45,125,210,.2);border-top-color:var(--blue);border-radius:50%;animation:sp .8s linear infinite;}\n.load-t{font-size:13px;color:var(--muted);font-weight:500;}\n.result{display:none;flex-direction:column;flex:1;overflow:hidden;}\n.result.on{display:flex;}\n.tabs{display:flex;border-bottom:2px solid var(--bl);background:var(--white);}\n.tab{padding:13px 20px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap;}\n.tab.on{color:var(--navy);border-bottom-color:var(--blue);font-weight:600;}\n.tab-panels{flex:1;overflow:hidden;}\n.tp{display:none;height:100%;flex-direction:column;padding:14px 18px;}\n.tp.on{display:flex;}\n.tp-meta{display:flex;align-items:center;gap:8px;margin-bottom:9px;}\n.cc{font-size:11px;color:var(--muted);flex:1;}\n.cc b{color:var(--navy);}\n.cc.over b{color:var(--err);}\n.out-ta{flex:1;background:var(--white);border:1px solid var(--bl);border-radius:var(--r2);color:var(--navy);padding:14px;font-size:13px;font-family:inherit;line-height:1.85;resize:none;outline:none;overflow-y:auto;}\n.act-bar{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap;}\n.btn-s{background:var(--white);border:1px solid var(--bl);border-radius:var(--r);color:var(--muted);font-size:12px;font-weight:500;padding:7px 13px;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:5px;}\n.btn-s:hover{border-color:var(--blue);color:var(--navy);}\n.btn-s.cp{background:rgba(29,158,117,.07);border-color:var(--ok);color:var(--ok);}\n.exp-bar{padding:11px 18px;border-top:1px solid var(--bl);background:var(--white);display:flex;gap:7px;}\n.toast-wrap{position:fixed;top:68px;right:18px;z-index:9999;display:flex;flex-direction:column;gap:7px;pointer-events:none;}\n.toast{background:var(--white);border:1px solid var(--bl);border-radius:var(--r2);padding:11px 15px;font-size:12px;font-weight:500;color:var(--navy);box-shadow:0 4px 18px rgba(0,0,0,.11);min-width:230px;border-left:3px solid var(--blue);animation:si .2s ease;pointer-events:all;}\n.toast.ok{border-left-color:var(--ok);}\n.toast.err{border-left-color:var(--err);}\n.toast.warn{border-left-color:var(--warn);}\n@keyframes sp{to{transform:rotate(360deg);}}\n@keyframes si{from{transform:translateX(16px);opacity:0;}to{transform:translateX(0);opacity:1;}}\n@keyframes fo{to{opacity:0;transform:translateX(8px);}}\n@media print{\n  header,.form-side,.tabs,.tp-meta,.act-bar,.exp-bar,.load-wrap,.out-empty,.toast-wrap{display:none!important;}\n  body{background:#fff;}\n  .main{display:block;}\n  .out-side{background:#fff;}\n  .result{display:block!important;}\n  .tab-panels{overflow:visible;}\n  .tp{display:block!important;padding:0;}\n  #tp-v{display:block!important;}\n  .out-ta{border:none;height:auto;min-height:unset;overflow:visible;font-size:12px;line-height:1.85;}\n  #ph,#pi,#pd{display:block!important;}\n  #ph{display:flex!important;justify-content:space-between;padding-bottom:14px;border-bottom:2px solid #1E3A5F;margin-bottom:18px;}\n  .ph-logo{font-size:17px;font-weight:700;color:#1E3A5F;letter-spacing:2px;}\n  .ph-logo span{color:#2D7DD2;}\n  #pi{display:grid!important;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0;}\n  #pi img:first-child{grid-column:1/-1;max-height:360px;object-fit:cover;border-radius:6px;}\n  #pi img{border-radius:5px;width:100%;aspect-ratio:16/9;object-fit:cover;}\n  #pd{margin-top:18px;border:1px solid #dde5ef;border-radius:8px;overflow:hidden;font-size:12px;}\n  #pd table{width:100%;border-collapse:collapse;}\n  #pd td{padding:7px 13px;border-bottom:1px solid #eee;}\n  #pd td:first-child{font-weight:600;color:#5a7a9a;background:#f4f7fb;width:34%;}\n  @page{margin:14mm;}\n}\n#ph,#pi,#pd{display:none;}\n</style>\n</head>\n<body>\n<header>\n  <div class=\"h-logo\">\n    <svg width=\"126\" height=\"38\" viewBox=\"0 0 200 80\" xmlns=\"http://www.w3.org/2000/svg\">\n      <path d=\"M78 37 L90 22\" fill=\"none\" stroke=\"#2D7DD2\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n      <path d=\"M110 22 L122 37\" fill=\"none\" stroke=\"#2D7DD2\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n      <circle cx=\"84\" cy=\"30\" r=\"2.5\" fill=\"#2D7DD2\"/>\n      <circle cx=\"116\" cy=\"30\" r=\"2.5\" fill=\"#2D7DD2\"/>\n      <rect x=\"90\" y=\"11\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#2D7DD2\"/>\n      <rect x=\"60\" y=\"37\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#2D7DD2\" opacity=\".6\"/>\n      <rect x=\"120\" y=\"37\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#2D7DD2\" opacity=\".6\"/>\n      <text x=\"62\" y=\"68\" font-family=\"system-ui,sans-serif\" font-size=\"18\" font-weight=\"500\" fill=\"white\" letter-spacing=\"0.5\">flow</text>\n      <text x=\"100\" y=\"68\" font-family=\"system-ui,sans-serif\" font-size=\"18\" font-weight=\"500\" fill=\"#2D7DD2\" letter-spacing=\"0.5\">matic</text>\n    </svg>\n  </div>\n  <div class=\"h-meta\">\n    <div class=\"h-meta-a\">Exposé Generator</div>\n    <div class=\"h-meta-b\">Schweizer Immobilienmakler · Powered by Claude AI</div>\n  </div>\n</header>\n\n<div class=\"main\">\n  <div class=\"form-side\">\n    <!-- S1 -->\n    <div class=\"acc\">\n      <div class=\"acc-h open\" onclick=\"ta(this)\"><div class=\"acc-n\">1</div><div class=\"acc-t\">Objekt-Grunddaten</div><div class=\"acc-c\">▼</div></div>\n      <div class=\"acc-b open\">\n        <div class=\"row2\">\n          <div class=\"fld\"><div class=\"lbl\">Objekttyp <span class=\"req\">*</span></div>\n            <select class=\"sel\" id=\"fTyp\" onchange=\"chk()\">\n              <option value=\"\">Wählen...</option>\n              <option>Wohnung</option><option>Einfamilienhaus</option><option>Mehrfamilienhaus</option>\n              <option>Villa</option><option>Penthouse</option><option>Gewerbe</option><option>Grundstück</option>\n            </select>\n          </div>\n          <div class=\"fld\"><div class=\"lbl\">Angebotstyp <span class=\"req\">*</span></div>\n            <select class=\"sel\" id=\"fAng\" onchange=\"chk()\">\n              <option value=\"\">Wählen...</option><option>Verkauf</option><option>Vermietung</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"fld\"><div class=\"lbl\">Adresse <span class=\"req\">*</span></div>\n          <input class=\"inp\" id=\"fAdr\" placeholder=\"Musterstrasse 12, 8001 Zürich\" oninput=\"chk()\">\n        </div>\n        <div class=\"fld\"><div class=\"lbl\">Kanton</div>\n          <select class=\"sel\" id=\"fKt\">\n            <option value=\"\">–</option>\n            <option>ZH</option><option>ZG</option><option>BS</option><option>GE</option><option>BE</option>\n            <option>LU</option><option>AG</option><option>SZ</option><option>NW</option><option>OW</option>\n            <option>UR</option><option>GL</option><option>AR</option><option>AI</option><option>SG</option>\n            <option>GR</option><option>TG</option><option>SH</option><option>TI</option><option>VD</option>\n            <option>VS</option><option>FR</option><option>NE</option><option>JU</option><option>SO</option><option>BL</option>\n          </select>\n        </div>\n        <div class=\"row2\">\n          <div class=\"fld\"><div class=\"lbl\">Wohnfläche <span class=\"req\">*</span></div>\n            <div class=\"inp-u\"><input class=\"inp\" type=\"number\" id=\"fFl\" placeholder=\"95\" min=\"0\" oninput=\"chk()\"><span class=\"unit\">m²</span></div>\n          </div>\n          <div class=\"fld\"><div class=\"lbl\">Zimmer <span class=\"req\">*</span></div>\n            <select class=\"sel\" id=\"fZi\" onchange=\"chk()\">\n              <option value=\"\">–</option>\n              <option>1</option><option>1.5</option><option>2</option><option>2.5</option><option>3</option>\n              <option>3.5</option><option>4</option><option>4.5</option><option>5</option><option>5.5</option><option>6+</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"row2\">\n          <div class=\"fld\"><div class=\"lbl\">Stockwerk</div>\n            <select class=\"sel\" id=\"fSt\">\n              <option value=\"\">–</option><option>EG</option><option>1. OG</option><option>2. OG</option>\n              <option>3. OG</option><option>4. OG</option><option>DG</option>\n            </select>\n          </div>\n          <div class=\"fld\"><div class=\"lbl\">Baujahr</div>\n            <input class=\"inp\" type=\"number\" id=\"fBj\" placeholder=\"1985\" min=\"1800\" max=\"2030\">\n          </div>\n        </div>\n        <div class=\"row2\">\n          <div class=\"fld\"><div class=\"lbl\">Letzte Renovation</div>\n            <input class=\"inp\" type=\"number\" id=\"fRe\" placeholder=\"2019\" min=\"1800\" max=\"2030\">\n          </div>\n          <div class=\"fld\"><div class=\"lbl\">Preis <span class=\"req\">*</span></div>\n            <div class=\"inp-u\">\n              <span class=\"unit\" style=\"border-radius:var(--r) 0 0 var(--r);border-right:none;border:1px solid var(--bl);\">CHF</span>\n              <input class=\"inp\" type=\"number\" id=\"fPr\" placeholder=\"750000\" style=\"border-radius:0 var(--r) var(--r) 0;\" oninput=\"chk()\">\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n    <!-- S2 -->\n    <div class=\"acc\">\n      <div class=\"acc-h\" onclick=\"ta(this)\"><div class=\"acc-n\">2</div><div class=\"acc-t\">Zustand &amp; Merkmale</div><div class=\"acc-c\">▼</div></div>\n      <div class=\"acc-b\">\n        <div class=\"row2\">\n          <div class=\"fld\"><div class=\"lbl\">Zustand <span class=\"req\">*</span></div>\n            <select class=\"sel\" id=\"fZu\" onchange=\"chk()\">\n              <option value=\"\">Wählen...</option>\n              <option>Renovierungsbedarf</option><option>Gepflegt</option>\n              <option>Teilrenoviert</option><option>Neuwertig</option><option>Neubau</option>\n            </select>\n          </div>\n          <div class=\"fld\"><div class=\"lbl\">Heizung</div>\n            <select class=\"sel\" id=\"fHz\">\n              <option value=\"\">–</option><option>Öl</option><option>Gas</option><option>Wärmepumpe</option>\n              <option>Fernwärme</option><option>Solar</option><option>Elektro</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"fld\"><div class=\"lbl\">Parkierung</div>\n          <select class=\"sel\" id=\"fPk\">\n            <option value=\"\">Keine</option><option>Aussenplatz</option><option>Carport</option>\n            <option>Garage</option><option>Tiefgarage</option>\n          </select>\n        </div>\n        <div class=\"fld\"><div class=\"lbl\">Merkmale</div>\n          <div class=\"chk-grid\" id=\"mGrid\">\n            <label class=\"chk\" onclick=\"ct(this)\"><input type=\"checkbox\" value=\"Seesicht\"><span>🌊 Seesicht</span></label>\n            <label class=\"chk\" onclick=\"ct(this)\"><input type=\"checkbox\" value=\"Bergsicht\"><span>🏔 Bergsicht</span></label>\n            <label class=\"chk\" onclick=\"ct(this)\"><input type=\"checkbox\" value=\"Garten\"><span>🌿 Garten</span></label>\n            <label class=\"chk\" onclick=\"ct(this)\"><input type=\"checkbox\" value=\"Terrasse / Balkon\"><span>🏠 Terrasse / Balkon</span></label>\n            <label class=\"chk\" onclick=\"ct(this)\"><input type=\"checkbox\" value=\"Südausrichtung\"><span>☀️ Südausrichtung</span></label>\n            <label class=\"chk\" onclick=\"ct(this)\"><input type=\"checkbox\" value=\"Lift\"><span>🔼 Lift</span></label>\n            <label class=\"chk\" onclick=\"ct(this)\"><input type=\"checkbox\" value=\"Minergie\"><span>🌱 Minergie</span></label>\n            <label class=\"chk\" onclick=\"ct(this)\"><input type=\"checkbox\" value=\"Smart Home\"><span>📱 Smart Home</span></label>\n            <label class=\"chk\" onclick=\"ct(this)\"><input type=\"checkbox\" value=\"Cheminée\"><span>🔥 Cheminée</span></label>\n            <label class=\"chk\" onclick=\"ct(this)\"><input type=\"checkbox\" value=\"Einbauküche\"><span>🍳 Einbauküche</span></label>\n          </div>\n        </div>\n        <div class=\"fld\"><div class=\"lbl\">Weitere Details</div>\n          <textarea class=\"ta\" id=\"fWe\" placeholder=\"Was soll Claude noch wissen? Besonderheiten, Details...\"></textarea>\n        </div>\n      </div>\n    </div>\n    <!-- S3 -->\n    <div class=\"acc\">\n      <div class=\"acc-h\" onclick=\"ta(this)\"><div class=\"acc-n\">3</div><div class=\"acc-t\">Lage &amp; Infrastruktur</div><div class=\"acc-c\">▼</div></div>\n      <div class=\"acc-b\">\n        <div class=\"fld\"><div class=\"lbl\">Umgebung / Quartier</div>\n          <textarea class=\"ta\" id=\"fUm\" placeholder=\"Ruhige Wohnlage, 5 Min. zum See, Sonnenhügel-Quartier...\"></textarea>\n        </div>\n        <div class=\"fld\"><div class=\"lbl\">Öffentlicher Verkehr</div>\n          <input class=\"inp\" id=\"fOv\" placeholder=\"Bus Linie 31, 3 Min. zu Fuss, Bahnhof 10 Min.\">\n        </div>\n        <div class=\"fld\"><div class=\"lbl\">Einkauf / Schulen</div>\n          <input class=\"inp\" id=\"fSc\" placeholder=\"Migros 5 Min., Primarschule 8 Min.\">\n        </div>\n      </div>\n    </div>\n    <!-- S4 -->\n    <div class=\"acc\">\n      <div class=\"acc-h open\" onclick=\"ta(this)\"><div class=\"acc-n\">4</div><div class=\"acc-t\">Bilder hochladen</div><div class=\"acc-c\">▼</div></div>\n      <div class=\"acc-b open\">\n        <div class=\"drop\" id=\"dropZ\" onclick=\"document.getElementById('fi').click()\" ondragover=\"dov(event)\" ondragleave=\"dlv()\" ondrop=\"df(event)\">\n          <div class=\"drop-ico\">↑</div>\n          <div class=\"drop-txt\"><b>Bilder hier ablegen oder klicken</b><br>JPG, PNG · Max. 10 Bilder · Max. 5 MB pro Bild</div>\n        </div>\n        <input type=\"file\" id=\"fi\" multiple accept=\".jpg,.jpeg,.png,.webp\" onchange=\"hf(this.files)\" style=\"display:none\">\n        <div class=\"thumb-grid\" id=\"tg\"></div>\n        <div id=\"ic\" style=\"font-size:11px;color:var(--muted);margin-top:7px;\"></div>\n      </div>\n    </div>\n    <!-- S5 -->\n    <div class=\"acc\">\n      <div class=\"acc-h\" onclick=\"ta(this)\"><div class=\"acc-n\">5</div><div class=\"acc-t\">Stil &amp; Zielgruppe</div><div class=\"acc-c\">▼</div></div>\n      <div class=\"acc-b\">\n        <div class=\"row2\">\n          <div class=\"fld\"><div class=\"lbl\">Ton</div>\n            <select class=\"sel\" id=\"fTo\"><option>Professionell</option><option>Emotional</option><option>Premium</option><option>Familiär</option></select>\n          </div>\n          <div class=\"fld\"><div class=\"lbl\">Zielgruppe</div>\n            <select class=\"sel\" id=\"fZg\"><option>Keine Vorgabe</option><option>Familien</option><option>Paare / Singles</option><option>Investoren</option></select>\n          </div>\n        </div>\n      </div>\n    </div>\n    <div class=\"gen-wrap\">\n      <button class=\"btn-gen\" id=\"gb\" onclick=\"gen()\" disabled>\n        <div class=\"spin\"></div>\n        <span id=\"gt\">✦  Exposé generieren</span>\n      </button>\n      <div id=\"gh\" style=\"font-size:11px;color:var(--muted);text-align:center;margin-top:7px;\">Pflichtfelder ausfüllen um zu starten</div>\n    </div>\n  </div>\n\n  <!-- OUTPUT -->\n  <div class=\"out-side\">\n    <div class=\"out-empty\" id=\"oe\">\n      <svg class=\"oe-ico\" width=\"60\" height=\"60\" viewBox=\"0 0 200 80\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M78 37 L90 22\" fill=\"none\" stroke=\"#2D7DD2\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <path d=\"M110 22 L122 37\" fill=\"none\" stroke=\"#2D7DD2\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <circle cx=\"84\" cy=\"30\" r=\"3\" fill=\"#2D7DD2\"/>\n        <circle cx=\"116\" cy=\"30\" r=\"3\" fill=\"#2D7DD2\"/>\n        <rect x=\"90\" y=\"11\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#2D7DD2\"/>\n        <rect x=\"60\" y=\"37\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#1E3A5F\"/>\n        <rect x=\"120\" y=\"37\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#1E3A5F\"/>\n      </svg>\n      <div class=\"oe-t\">Bereit</div>\n      <div class=\"oe-s\">Formular ausfüllen und auf <b>«Exposé generieren»</b> klicken</div>\n    </div>\n    <div class=\"load-wrap\" id=\"lw\">\n      <div class=\"load-ring\"></div>\n      <div class=\"load-t\" id=\"lt\">Wird verarbeitet...</div>\n    </div>\n    <div class=\"result\" id=\"res\">\n      <div class=\"tabs\">\n        <div class=\"tab on\" onclick=\"st('v',this)\">Vollständiges Exposé</div>\n        <div class=\"tab\" onclick=\"st('p',this)\">Portal-Version</div>\n      </div>\n      <div class=\"tab-panels\">\n        <div class=\"tp on\" id=\"tp-v\">\n          <div class=\"tp-meta\"><div class=\"cc\" id=\"cc-v\"></div><button class=\"btn-s\" onclick=\"cp('v')\">📋 Kopieren</button></div>\n          <textarea class=\"out-ta\" id=\"ta-v\" oninput=\"cc_('v')\"></textarea>\n        </div>\n        <div class=\"tp\" id=\"tp-p\">\n          <div class=\"tp-meta\"><div class=\"cc\" id=\"cc-p\"></div><button class=\"btn-s\" onclick=\"cp('p')\">📋 Kopieren</button></div>\n          <textarea class=\"out-ta\" id=\"ta-p\" oninput=\"cc_('p',1800)\"></textarea>\n        </div>\n      </div>\n      <div class=\"exp-bar\">\n        <button class=\"btn-s\" onclick=\"window.print()\">🖨 PDF drucken</button>\n        <button class=\"btn-s\" onclick=\"saveTxt()\">⬇ TXT speichern</button>\n        <button class=\"btn-s\" onclick=\"gen()\">🔄 Neu generieren</button>\n      </div>\n    </div>\n    <div id=\"ph\"><div><div class=\"ph-logo\">flow<span>matic</span></div><div id=\"ph-s\" style=\"font-size:11px;color:#888;margin-top:2px;\"></div></div><div id=\"ph-d\" style=\"font-size:11px;color:#888;\"></div></div>\n    <div id=\"pi\"></div>\n    <div id=\"pd\"></div>\n  </div>\n</div>\n<div class=\"toast-wrap\" id=\"tw\"></div>\n\n<script>\nlet imgs=[];\nconst WEBHOOK=window.location.href.split('?')[0];\n\nfunction ta(h){h.classList.toggle('open');h.nextElementSibling.classList.toggle('open');}\nfunction ct(l){setTimeout(()=>l.classList.toggle('on',l.querySelector('input').checked),0);}\nfunction g(id){return document.getElementById(id);}\nfunction v(id){return g(id).value.trim();}\n\nfunction chk(){\n  const req=['fTyp','fAng','fAdr','fFl','fZi','fPr','fZu'];\n  const ok=req.every(id=>v(id));\n  g('gb').disabled=!ok;\n  g('gh').textContent=ok?'':' Pflichtfelder (*) ausfüllen';\n}\n\nfunction dov(e){e.preventDefault();g('dropZ').classList.add('drag');}\nfunction dlv(){g('dropZ').classList.remove('drag');}\nfunction df(e){e.preventDefault();dlv();hf(e.dataTransfer.files);}\n\nfunction hf(files){\n  for(const f of files){\n    if(imgs.length>=10){toast('Max. 10 Bilder','warn');break;}\n    if(f.size>5*1024*1024){toast(f.name+' zu gross (max. 5 MB)','err');continue;}\n    if(!f.type.match(/image\\/(jpeg|png|webp)/))continue;\n    const r=new FileReader();\n    r.onload=e=>{imgs.push({file:f,label:gl(f.name,imgs.length),url:e.target.result});rt();};\n    r.readAsDataURL(f);\n  }\n  g('fi').value='';\n}\n\nfunction gl(n,i){\n  n=n.toLowerCase();\n  if(n.includes('wohn'))return'Wohnzimmer';\n  if(n.includes('kuch'))return'Küche';\n  if(n.includes('bad')||n.includes('dusch'))return'Badezimmer';\n  if(n.includes('schlaf')||n.includes('bett'))return'Schlafzimmer';\n  if(n.includes('garten'))return'Garten';\n  if(n.includes('aussen')||n.includes('fassade'))return'Aussenansicht';\n  if(n.includes('balkon')||n.includes('terrasse'))return'Balkon / Terrasse';\n  return i===0?'Hauptansicht':'Bild '+(i+1);\n}\n\nfunction rt(){\n  g('tg').innerHTML=imgs.map((im,i)=>`<div class=\"thumb\"><img src=\"${im.url}\" alt=\"${im.label}\">${i===0?'<div class=\"thumb-badge\">HAUPTBILD</div>':''}<button class=\"thumb-del\" onclick=\"di(${i})\">×</button><div class=\"thumb-li\"><input id=\"il${i}\" value=\"${im.label}\" onchange=\"imgs[${i}].label=this.value\"></div></div>`).join('');\n  g('ic').textContent=imgs.length?imgs.length+' Bild'+(imgs.length>1?'er':'')+' hochgeladen':'';\n}\nfunction di(i){imgs.splice(i,1);rt();}\n\nasync function gen(){\n  const btn=g('gb');\n  btn.disabled=true;btn.classList.add('ld');\n  g('gt').textContent='Wird generiert...';\n  g('oe').style.display='none';\n  g('lw').classList.add('on');\n  g('res').classList.remove('on');\n\n  const ms=['Bilder werden analysiert...','Objekt wird erfasst...','Exposé wird verfasst...','Fast fertig...'];\n  let mi=0;\n  const lt2=setInterval(()=>{g('lt').textContent=ms[Math.min(mi++,ms.length-1)];},2500);\n\n  try{\n    const merkmale=[...document.querySelectorAll('#mGrid input:checked')].map(c=>c.value);\n    const bilder=await Promise.all(imgs.map(async(im,i)=>({\n      data:im.url.split(',')[1],\n      type:im.file.type,\n      label:g('il'+i)?.value||im.label\n    })));\n\n    const payload={\n      typ:v('fTyp'),ang:v('fAng'),adr:v('fAdr'),kt:v('fKt'),\n      fl:v('fFl'),zi:v('fZi'),st_:v('fSt'),bj:v('fBj'),re:v('fRe'),pr:v('fPr'),\n      zu:v('fZu'),hz:v('fHz'),pk:v('fPk'),merkmale,we:v('fWe'),\n      um:v('fUm'),ov:v('fOv'),sc:v('fSc'),\n      ton:v('fTo'),zg:v('fZg'),bilder\n    };\n\n    const resp=await fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});\n    if(!resp.ok)throw new Error('Fehler '+resp.status);\n    const data=await resp.json();\n    if(!data.success)throw new Error(data.error||'Unbekannter Fehler');\n\n    clearInterval(lt2);\n    g('ta-v').value=data.vollstaendig||'';;\n    g('ta-p').value=data.portal||'';\n    cc_('v');cc_('p',1800);\n    g('lw').classList.remove('on');\n    g('res').classList.add('on');\n\n    // Print setup\n    g('ph-s').textContent=payload.typ+' · '+payload.adr+' · CHF '+Number(payload.pr).toLocaleString('de-CH');\n    g('ph-d').textContent=new Date().toLocaleDateString('de-CH');\n    g('pi').innerHTML=imgs.map(im=>'<img src=\"'+im.url+'\" alt=\"'+im.label+'\">').join('');\n    g('pd').innerHTML='<table>'+\n      ['<tr><td>Objekttyp</td><td>'+payload.typ+'</td></tr>',\n       '<tr><td>Angebot</td><td>'+payload.ang+'</td></tr>',\n       '<tr><td>Adresse</td><td>'+payload.adr+'</td></tr>',\n       '<tr><td>Zimmer</td><td>'+payload.zi+'</td></tr>',\n       '<tr><td>Wohnfläche</td><td>'+payload.fl+' m²</td></tr>',\n       '<tr><td>Baujahr</td><td>'+(payload.bj||'–')+'</td></tr>',\n       '<tr><td>Zustand</td><td>'+payload.zu+'</td></tr>',\n       '<tr><td>Preis</td><td>CHF '+Number(payload.pr).toLocaleString('de-CH')+'</td></tr>'\n      ].join('')+'</table>';\n\n    toast('Exposé erfolgreich generiert!','ok');\n  }catch(e){\n    clearInterval(lt2);\n    g('lw').classList.remove('on');\n    g('oe').style.display='flex';\n    toast('Fehler: '+e.message,'err');\n  }finally{\n    btn.disabled=false;btn.classList.remove('ld');\n    g('gt').textContent='✦  Exposé generieren';\n    chk();\n  }\n}\n\nfunction st(n,el){\n  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));\n  document.querySelectorAll('.tp').forEach(p=>p.classList.remove('on'));\n  el.classList.add('on');g('tp-'+n).classList.add('on');\n}\n\nfunction cc_(k,max){\n  const n=g('ta-'+k).value.length;\n  const el=g('cc-'+k);\n  el.innerHTML=max?`<b>${n.toLocaleString('de-CH')}</b> / ${max.toLocaleString('de-CH')} Zeichen`:`<b>${n.toLocaleString('de-CH')}</b> Zeichen`;\n  el.className='cc'+(max&&n>max?' over':'');\n}\n\nfunction cp(k){\n  navigator.clipboard.writeText(g('ta-'+k).value).then(()=>toast('Kopiert!','ok'));\n}\n\nfunction saveTxt(){\n  const txt='=== VOLLSTÄNDIGES EXPOSÉ ===\\n\\n'+g('ta-v').value+'\\n\\n=== PORTAL-VERSION ===\\n\\n'+g('ta-p').value;\n  const a=document.createElement('a');\n  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(txt);\n  a.download='expose-'+new Date().toISOString().slice(0,10)+'.txt';a.click();\n}\n\nfunction toast(msg,type='info'){\n  const el=document.createElement('div');\n  el.className='toast '+type;el.textContent=msg;\n  g('tw').appendChild(el);\n  setTimeout(()=>{el.style.animation='fo .3s ease forwards';setTimeout(()=>el.remove(),300);},4000);\n}\n\ndocument.addEventListener('keydown',e=>{\n  if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();if(!g('gb').disabled)gen();}\n});\n</script>\n</body>\n</html>",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              },
+              {
+                "name": "Cache-Control",
+                "value": "no-cache"
+              }
+            ]
+          }
+        }
+      },
+      "id": "n-html",
+      "name": "HTML Seite senden",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        200
+      ]
+    },
+    {
+      "parameters": {
         "httpMethod": "POST",
         "path": "flowmatic-expose",
         "responseMode": "lastNode",
-        "options": { "allowedOrigins": "*" }
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
-      "id": "n1",
-      "name": "01 · Webhook Eingang",
+      "id": "n-post",
+      "name": "POST — Exposé generieren",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [100, 400],
-      "webhookId": "flowmatic-expose-pro-01"
+      "position": [
+        100,
+        500
+      ],
+      "webhookId": "flowmatic-expose-post"
     },
     {
       "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 02 · PFLICHTFELDER VALIDIEREN\n// Prüft ob alle Pflichtfelder vorhanden und plausibel sind\n// ══════════════════════════════════════════════════════\n\nconst body = $input.first().json.body || $input.first().json;\nconst errors = [];\nconst warnings = [];\n\n// Pflichtfelder\nconst required = {\n  typ: 'Objekttyp',\n  angebot: 'Angebotstyp',\n  adresse: 'Adresse',\n  flaeche: 'Wohnfläche',\n  zimmer: 'Zimmer',\n  preis: 'Preis',\n  zustand: 'Zustand'\n};\n\nfor (const [key, label] of Object.entries(required)) {\n  if (!body[key] || String(body[key]).trim() === '') {\n    errors.push(`Pflichtfeld fehlt: ${label}`);\n  }\n}\n\n// Fläche plausibel?\nif (body.flaeche) {\n  const fl = parseFloat(body.flaeche);\n  if (fl < 10) errors.push('Wohnfläche zu klein (min. 10 m²)');\n  if (fl > 5000) warnings.push('Wohnfläche sehr gross — bitte prüfen');\n}\n\n// Preis plausibel?\nif (body.preis) {\n  const p = parseInt(String(body.preis).replace(/[^0-9]/g,''));\n  if (p < 100) errors.push('Preis zu niedrig — CHF-Betrag eingeben');\n  if (body.angebot === 'Verkauf' && p < 50000) warnings.push('Kaufpreis unter CHF 50.000 — bitte prüfen');\n  if (body.angebot === 'Vermietung' && p > 50000) warnings.push('Mietpreis über CHF 50.000 — bitte prüfen');\n}\n\n// Zimmeranzahl\nif (body.zimmer) {\n  const zm = parseFloat(body.zimmer);\n  if (zm > 20) warnings.push('Zimmeranzahl über 20 — bitte prüfen');\n}\n\n// Baujahr\nif (body.baujahr) {\n  const bj = parseInt(body.baujahr);\n  if (bj < 1800 || bj > 2030) errors.push('Baujahr ungültig (1800–2030)');\n}\n\nif (errors.length > 0) {\n  return [{ json: {\n    _error: true,\n    step: 'Eingabe-Validierung',\n    error: errors.join(' | '),\n    warnings\n  }}];\n}\n\nreturn [{ json: {\n  _error: false,\n  body,\n  warnings,\n  validatedAt: new Date().toISOString()\n}}];"
+        "jsCode": "// ══ NODE 02 · VALIDIERUNG ══════════════════════════════════════════════\nconst body = $input.first().json.body || $input.first().json;\nconst e = [];\n\nconst req = {typ:'Objekttyp',ang:'Angebotstyp',adr:'Adresse',fl:'Wohnfläche',zi:'Zimmer',pr:'Preis',zu:'Zustand'};\nfor(const [k,l] of Object.entries(req)){\n  if(!body[k]||String(body[k]).trim()==='') e.push('Pflichtfeld fehlt: '+l);\n}\n\nif(body.fl && parseFloat(body.fl)<5) e.push('Wohnfläche zu klein');\nif(body.bj && (parseInt(body.bj)<1800||parseInt(body.bj)>2030)) e.push('Baujahr ungültig');\n\nif(e.length>0) return [{ json:{_err:true,step:'Validierung',error:e.join(' | ')} }];\n\nconst bilder=(Array.isArray(body.bilder)?body.bilder:[]).slice(0,10).filter(b=>b&&b.data&&b.data.length>100);\n\nreturn [{ json:{ body, bilder, ok:true } }];"
       },
       "id": "n2",
-      "name": "02 · Pflichtfelder validieren",
+      "name": "02 · Eingabe validieren",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [320, 400]
+      "position": [
+        320,
+        500
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 03 · BILDER VALIDIEREN\n// Prüft Anzahl, Typ, Grösse und Base64-Integrität\n// ══════════════════════════════════════════════════════\n\nconst input = $input.first().json;\nif (input._error) return [{ json: input }];\n\nconst body = input.body;\nconst bilder = Array.isArray(body.bilder) ? body.bilder : [];\nconst errors = [];\nconst warnings = [];\nconst validBilder = [];\n\nconst MAX_BILDER = 10;\nconst VALID_TYPES = ['image/jpeg', 'image/png', 'image/webp'];\n\n// Anzahl\nif (bilder.length === 0) {\n  warnings.push('Keine Bilder hochgeladen — Exposé ohne Bildbeschreibungen');\n}\nif (bilder.length > MAX_BILDER) {\n  warnings.push(`Nur die ersten ${MAX_BILDER} Bilder werden verarbeitet`);\n}\n\n// Jedes Bild prüfen\nfor (let i = 0; i < Math.min(bilder.length, MAX_BILDER); i++) {\n  const b = bilder[i];\n  const bErrors = [];\n\n  // Typ prüfen\n  if (!b.type || !VALID_TYPES.includes(b.type)) {\n    bErrors.push(`Ungültiger Bildtyp: ${b.type || 'unbekannt'}`);\n  }\n\n  // Base64 vorhanden?\n  if (!b.data || b.data.length < 100) {\n    bErrors.push('Bilddaten fehlen oder zu klein');\n  }\n\n  // Base64 Syntax prüfen\n  if (b.data) {\n    const validB64 = /^[A-Za-z0-9+/]+=*$/.test(b.data.replace(/\\s/g,''));\n    if (!validB64) bErrors.push('Base64-Daten beschädigt');\n  }\n\n  // Geschätzte Grösse (Base64 → Bytes)\n  if (b.data) {\n    const estBytes = Math.round(b.data.length * 0.75);\n    const estMB = (estBytes / 1024 / 1024).toFixed(1);\n    if (estBytes > 5 * 1024 * 1024) {\n      bErrors.push(`Bild ${i+1} zu gross (ca. ${estMB} MB)`);\n    }\n  }\n\n  if (bErrors.length > 0) {\n    errors.push(...bErrors);\n  } else {\n    validBilder.push({\n      ...b,\n      index: i,\n      label: b.label || (i === 0 ? 'Hauptbild' : `Bild ${i+1}`),\n      mediaType: b.type\n    });\n  }\n}\n\nif (errors.length > 0) {\n  return [{ json: {\n    _error: true,\n    step: 'Bild-Validierung',\n    error: errors.join(' | '),\n    warnings\n  }}];\n}\n\nreturn [{ json: {\n  ...input,\n  validBilder,\n  bildAnzahl: validBilder.length,\n  bildWarnings: warnings,\n  bilderValidatedAt: new Date().toISOString()\n}}];"
+        "jsCode": "// ══ NODE 03 · DATEN + PROMPTS AUFBAUEN ════════════════════════════════\nconst input = $input.first().json;\nif(input._err) return [{ json:input }];\n\nconst b = input.body;\nconst bilder = input.bilder || [];\n\nconst preisN = parseInt(String(b.pr).replace(/[^0-9]/g,''));\nconst preisFmt = new Intl.NumberFormat('de-CH').format(preisN);\nconst preisLbl = b.ang==='Vermietung' ? 'Mietzins' : 'Kaufpreis';\n\nconst kantone={ZH:'Zürich',ZG:'Zug',BS:'Basel-Stadt',GE:'Genf',BE:'Bern',LU:'Luzern',AG:'Aargau',SZ:'Schwyz',SG:'St. Gallen',GR:'Graubünden',TG:'Thurgau',TI:'Tessin',VD:'Waadt',VS:'Wallis',FR:'Freiburg'};\nconst ktName = kantone[b.kt] || b.kt || '';\nconst adresse = b.adr + (ktName ? ', '+ktName : '');\n\nconst alter = b.bj ? (2025-parseInt(b.bj)) : null;\nconst alterTxt = alter===null?'':alter<=0?'Neubau':alter<=5?'nahezu neu':alter+' Jahre alt';\nconst renoTxt = b.re ? (2025-parseInt(b.re)<=3?'kürzlich renoviert':'Renovation '+b.re) : '';\n\nconst merkmale = Array.isArray(b.merkmale)&&b.merkmale.length>0 ? b.merkmale.join(', ') : 'keine';\n\nconst bildInfo = bilder.length>0\n  ? bilder.length+' Bild'+(bilder.length>1?'er':'')+': '+bilder.map((bi,i)=>bi.label||'Bild '+(i+1)).join(', ')\n  : 'keine Bilder';\n\nconst stilMap = {\n  'Professionell':'Sachlich, präzise, seriös. Fakten im Vordergrund.',\n  'Emotional':'Wärmend, einladend. Lässt den Leser sich vorstellen, dort zu leben.',\n  'Premium':'Exklusiv, distinguiert. Für anspruchsvolle Käufer.',\n  'Familiär':'Herzlich, praktisch. Alltag und Familie betonen.'\n};\nconst zgMap = {\n  'Familien':'Betone Schulen, Garten, Platz, Gemeinschaft.',\n  'Paare / Singles':'Betone Lage, Lifestyle, moderne Küche.',\n  'Investoren':'Betone Rendite, Substanz, Lage-Entwicklung.',\n  'Keine Vorgabe':'Breite Ansprache, kein Fokus.'\n};\n\nconst systemPrompt = `Du bist der beste Immobilien-Texter der Schweiz.\nSchweizer Hochdeutsch. Keine Klischees. Keine leeren Versprechen. Jeder Satz trägt.\nStil: ${stilMap[b.ton]||stilMap['Professionell']}\nZielgruppe: ${zgMap[b.zg]||zgMap['Keine Vorgabe']}\n\nGib exakt diese zwei Blöcke aus:\n===VOLLSTAENDIG===\n[500–700 Wörter: emotionaler Einstieg, alle Details eingeflochten, Bilder präzise beschrieben]\n===PORTAL===\n[Max. 1800 Zeichen: kompakt, alle Pflichtinfos, für ImmoScout24 und Homegate optimiert]`;\n\nconst userPrompt = `OBJEKT: ${b.typ} | ${b.ang} | ${adresse}\nFLÄCHE: ${b.fl} m² | ZIMMER: ${b.zi}${b.st_?' | '+b.st_:''}\nBAUJAHR: ${b.bj||'–'}${alterTxt?' ('+alterTxt+')':''}${renoTxt?' | '+renoTxt:''}\n${preisLbl}: CHF ${preisFmt}\nZUSTAND: ${b.zu} | HEIZUNG: ${b.hz||'–'} | PARKIERUNG: ${b.pk||'keine'}\nMERKMALE: ${merkmale}\nWEITERE DETAILS: ${b.we||'keine'}\nLAGE: ${b.um||'–'}\nÖV: ${b.ov||'–'} | EINKAUF/SCHULEN: ${b.sc||'–'}\nBILDER: ${bildInfo}\n\nAnalysiere zuerst die Bilder und integriere visuelle Details natürlich in beide Texte.`;\n\nreturn [{ json:{ ...input, systemPrompt, userPrompt, preisFmt, adresse } }];"
       },
       "id": "n3",
-      "name": "03 · Bilder validieren",
+      "name": "03 · Prompts aufbauen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [540, 400]
+      "position": [
+        540,
+        500
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 04 · DATEN ANREICHERN\n// Normalisiert, formatiert und ergänzt alle Felder\n// ══════════════════════════════════════════════════════\n\nconst input = $input.first().json;\nif (input._error) return [{ json: input }];\n\nconst body = input.body;\n\n// Preis formatieren\nconst preisRaw = parseInt(String(body.preis).replace(/[^0-9]/g,''));\nconst preisFormatiert = new Intl.NumberFormat('de-CH').format(preisRaw);\nconst preisLabel = body.angebot === 'Vermietung' ? 'Mietzins' : 'Kaufpreis';\n\n// Zimmer-Label\nconst zimmerLabel = body.zimmer === '6+' ? '6 und mehr Zimmer' : `${body.zimmer}-Zimmer`;\n\n// Adresse aufbereiten\nconst adresseParts = String(body.adresse).split(',').map(s => s.trim());\nconst strasseNr = adresseParts[0] || body.adresse;\nconst ortPLZ = adresseParts.slice(1).join(', ');\n\n// Kanton-Vollname\nconst kantone = {\n  ZH:'Zürich',ZG:'Zug',BS:'Basel-Stadt',GE:'Genf',BE:'Bern',\n  LU:'Luzern',AG:'Aargau',SZ:'Schwyz',NW:'Nidwalden',OW:'Obwalden',\n  UR:'Uri',GL:'Glarus',AR:'Appenzell Ausserrhoden',AI:'Appenzell Innerrhoden',\n  SG:'St. Gallen',GR:'Graubünden',TG:'Thurgau',SH:'Schaffhausen',\n  TI:'Tessin',VD:'Waadt',VS:'Wallis',FR:'Freiburg',NE:'Neuenburg',\n  JU:'Jura',SO:'Solothurn',BL:'Basel-Landschaft'\n};\nconst kantonName = kantone[body.kanton] || body.kanton || '';\n\n// Merkmale aufbereiten\nconst merkmale = Array.isArray(body.merkmale) ? body.merkmale : [];\nconst merkmaleTxt = merkmale.length > 0 ? merkmale.join(', ') : 'keine besonderen Merkmale angegeben';\n\n// Alter berechnen\nlet objektAlter = '';\nif (body.baujahr) {\n  const alter = 2025 - parseInt(body.baujahr);\n  objektAlter = alter <= 0 ? 'Neubau' : alter <= 5 ? 'nahezu neu' : `${alter} Jahre alt`;\n}\n\n// Renovations-Info\nlet renovationsInfo = '';\nif (body.renovation && body.baujahr) {\n  const jahreSeitReno = 2025 - parseInt(body.renovation);\n  renovationsInfo = jahreSeitReno === 0 ? 'frisch renoviert' :\n    jahreSeitReno <= 3 ? 'kürzlich renoviert' :\n    jahreSeitReno <= 10 ? `vor ${jahreSeitReno} Jahren renoviert` :\n    `Renovation ${body.renovation}`;\n}\n\nreturn [{ json: {\n  ...input,\n  enriched: {\n    preisRaw, preisFormatiert, preisLabel,\n    zimmerLabel, strasseNr, ortPLZ, kantonName,\n    merkmaleTxt, objektAlter, renovationsInfo,\n    adresseVoll: `${body.adresse}${kantonName ? ', ' + kantonName : ''}`\n  },\n  enrichedAt: new Date().toISOString()\n}}];"
+        "jsCode": "// ══ NODE 04 · CLAUDE MESSAGE BAUEN ════════════════════════════════════\nconst input = $input.first().json;\nif(input._err) return [{ json:input }];\n\nconst bilder = input.bilder || [];\nconst content = [];\n\nfor(const bild of bilder){\n  content.push({ type:'image', source:{ type:'base64', media_type:bild.type||'image/jpeg', data:bild.data } });\n  content.push({ type:'text', text:'↑ '+( bild.label||'Immobilienbild') });\n}\ncontent.push({ type:'text', text:input.userPrompt });\n\nreturn [{ json:{ ...input, apiBody:{\n  model:'claude-sonnet-4-6',\n  max_tokens:3000,\n  system:input.systemPrompt,\n  messages:[{ role:'user', content }]\n} } }];"
       },
       "id": "n4",
-      "name": "04 · Daten anreichern",
+      "name": "04 · Claude Message bauen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [760, 400]
-    },
-    {
-      "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 05 · SYSTEM PROMPT AUFBAUEN\n// Personalisiert den System Prompt für dieses Objekt\n// ══════════════════════════════════════════════════════\n\nconst input = $input.first().json;\nif (input._error) return [{ json: input }];\n\nconst body = input.body;\nconst e = input.enriched;\n\n// Stil-Anweisungen je nach Ton\nconst stilAnweisung = {\n  'Professionell': 'Sachlich, präzise, seriös. Fakten stehen im Vordergrund. Keine Superlative.',\n  'Emotional': 'Wärmend, einladend, Gefühle ansprechen. Lässt den Leser sich vorstellen, dort zu wohnen.',\n  'Premium': 'Exklusiv, distinguiert, zurückhaltend luxuriös. Für anspruchsvolle Käufer.',\n  'Familiär': 'Herzlich, einladend, praktisch orientiert. Alltag und Zusammenleben betonen.'\n};\nconst stil = stilAnweisung[body.ton] || stilAnweisung['Professionell'];\n\n// Zielgruppen-Fokus\nconst zielgruppenFokus = {\n  'Familien': 'Betone Schulen, Garten, Kinderzimmer, Sicherheit, Gemeinschaft.',\n  'Paare / Singles': 'Betone Lage, Lifestyle, moderne Küche, Erreichbarkeit, Ausgehen.',\n  'Investoren': 'Betone Rendite-Potenzial, Lage-Entwicklung, Mietpreise, Substanz.',\n  'Keine Vorgabe': 'Keine spezifische Zielgruppe — breite Ansprache.'\n};\nconst zielFokus = zielgruppenFokus[body.zielgruppe] || zielgruppenFokus['Keine Vorgabe'];\n\nconst systemPrompt = `Du bist der beste Immobilien-Texter der Schweiz.\nDu hast 20 Jahre Erfahrung und hast schon tausende Exposés für Liegenschaften im Wert von über 2 Milliarden CHF geschrieben.\n\nDEINE GRUNDSÄTZE:\n- Nur Schweizer Hochdeutsch\n- Keine Klischees («einzigartiges Schmuckstück», «traumhafte Lage»)\n- Keine leeren Versprechen\n- Keine Adjektiv-Stapelungen\n- Bilder präzise analysieren, Details natürlich einweben\n- Jeder Satz muss einen Mehrwert liefern\n\nSTIL FÜR DIESES EXPOSÉ: ${stil}\nZIELGRUPPE: ${zielFokus}\n\nOBJEKT-KONTEXT:\n- ${e.zimmerLabel}-${body.typ} in ${e.adresseVoll}\n- ${body.angebot} für CHF ${e.preisFormatiert}\n- ${body.flaeche} m² | ${body.zustand}\n${e.objektAlter ? `- Alter: ${e.objektAlter}` : ''}\n${e.renovationsInfo ? `- Renovation: ${e.renovationsInfo}` : ''}\n\nAUFBAU VOLLSTÄNDIGES EXPOSÉ (500–700 Wörter):\n1. Emotionaler Einstieg (2–3 Sätze) — Stimmung, nicht Fakten\n2. Objekt-Beschreibung — Räume, Flächen, Qualität\n3. Ausstattung & Merkmale — präzise, keine Listen\n4. Lage & Umgebung — konkret, mit Distanzen\n5. Abschluss — subtiler Call-to-Action\n\nAUFBAU PORTAL-VERSION (max. 1800 Zeichen):\n- Erste Zeile: Kerninfo (Typ, Zimmer, Fläche, Ort)\n- Dann: 3–4 kurze Absätze\n- Alle Pflichtinfos: Fläche, Zimmer, Preis, Lage\n- Kein Fülltext, jedes Wort zählt\n\nGib exakt diese zwei Blöcke aus:\n===VOLLSTAENDIG===\n[500-700 Wörter]\n===PORTAL===\n[max. 1800 Zeichen]`;\n\nreturn [{ json: {\n  ...input,\n  systemPrompt,\n  systemPromptBuiltAt: new Date().toISOString()\n}}];"
-      },
-      "id": "n5",
-      "name": "05 · System Prompt aufbauen",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [980, 400]
-    },
-    {
-      "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 06 · USER PROMPT AUFBAUEN\n// Baut den detaillierten Objekt-Prompt für Claude\n// ══════════════════════════════════════════════════════\n\nconst input = $input.first().json;\nif (input._error) return [{ json: input }];\n\nconst body = input.body;\nconst e = input.enriched;\nconst bilder = input.validBilder || [];\n\n// Bild-Labels für Prompt\nconst bildInfo = bilder.length > 0\n  ? `${bilder.length} Bild${bilder.length > 1 ? 'er' : ''} beigefügt:\\n` +\n    bilder.map((b,i) => `  · Bild ${i+1}: ${b.label}`).join('\\n')\n  : 'Keine Bilder vorhanden — Exposé ohne Bildreferenzen erstellen';\n\n// Preis-Info\nconst nkInfo = body.nk\n  ? `CHF ${Number(String(body.nk).replace(/[^0-9]/g,'')).toLocaleString('de-CH')} / Monat Nebenkosten`\n  : 'nicht angegeben';\n\nconst userPrompt = `AUFGABE: Professionelles Immobilien-Exposé erstellen\n\n═══ OBJEKT-GRUNDDATEN ═══\nTyp:              ${body.typ}\nAngebotsart:      ${body.angebot}\nAdresse:          ${e.adresseVoll}\nWohnfläche:       ${body.flaeche} m²\nAnzahl Zimmer:    ${body.zimmer}\nStockwerk:        ${body.stockwerk || 'nicht angegeben'}\nBaujahr:          ${body.baujahr || 'nicht angegeben'}${e.objektAlter ? ' (' + e.objektAlter + ')' : ''}\nLetzte Renovation:${body.renovation || 'nicht angegeben'}${e.renovationsInfo ? ' (' + e.renovationsInfo + ')' : ''}\n${e.preisLabel}: CHF ${e.preisFormatiert}\nNebenkosten:      ${nkInfo}\n\n═══ AUSSTATTUNG & ZUSTAND ═══\nZustand:          ${body.zustand}\nHeizungsart:      ${body.heizung || 'nicht angegeben'}\nParkierung:       ${body.parkierung || 'keine'}\nMerkmale:         ${e.merkmaleTxt}\nWeitere Details:  ${body.weiteres || 'keine zusätzlichen Angaben'}\n\n═══ LAGE & INFRASTRUKTUR ═══\nUmgebung/Quartier:${body.umgebung || 'nicht angegeben'}\nÖffentlicher Verkehr: ${body.oev || 'nicht angegeben'}\nEinkauf & Schulen:${body.schule || 'nicht angegeben'}\n\n═══ BILDER ═══\n${bildInfo}\n\n═══ AUSGABE-VORGABEN ═══\nTon:              ${body.ton || 'Professionell'}\nZielgruppe:       ${body.zielgruppe || 'Keine Vorgabe'}\n\nBitte analysiere zuerst die beigefügten Bilder und integriere konkrete visuelle Details natürlich in beide Texte.\nDann erstelle die zwei Versionen exakt wie im System Prompt vorgegeben.`;\n\nreturn [{ json: {\n  ...input,\n  userPrompt,\n  userPromptBuiltAt: new Date().toISOString()\n}}];"
-      },
-      "id": "n6",
-      "name": "06 · User Prompt aufbauen",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [1200, 400]
-    },
-    {
-      "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 07 · CLAUDE MESSAGE BAUEN\n// Kombiniert Bilder + Text zu Claude API Format\n// ══════════════════════════════════════════════════════\n\nconst input = $input.first().json;\nif (input._error) return [{ json: input }];\n\nconst bilder = input.validBilder || [];\nconst userPrompt = input.userPrompt;\n\n// Content-Array: Bilder zuerst, dann Text\nconst content = [];\n\n// Bilder als Vision-Blocks\nfor (const bild of bilder) {\n  // Bild-Block\n  content.push({\n    type: 'image',\n    source: {\n      type: 'base64',\n      media_type: bild.mediaType || 'image/jpeg',\n      data: bild.data\n    }\n  });\n  // Label direkt nach Bild\n  content.push({\n    type: 'text',\n    text: `↑ ${bild.label} (Bild ${bild.index + 1} von ${bilder.length})`\n  });\n}\n\n// Haupt-Prompt\ncontent.push({ type: 'text', text: userPrompt });\n\n// API Body\nconst apiBody = {\n  model: 'claude-sonnet-4-6',\n  max_tokens: 3000,\n  system: input.systemPrompt,\n  messages: [{ role: 'user', content }]\n};\n\nreturn [{ json: {\n  ...input,\n  apiBody,\n  messageBuiltAt: new Date().toISOString()\n}}];"
-      },
-      "id": "n7",
-      "name": "07 · Claude Message bauen",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [1420, 400]
+      "position": [
+        760,
+        500
+      ]
     },
     {
       "parameters": {
@@ -82,91 +114,61 @@
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "x-api-key", "value": "={{ $env.CLAUDE_API_KEY }}" },
-            { "name": "anthropic-version", "value": "2023-06-01" },
-            { "name": "content-type", "value": "application/json" }
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.CLAUDE_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json.apiBody) }}",
-        "options": { "timeout": 90000 }
+        "options": {
+          "timeout": 90000
+        }
       },
-      "id": "n8",
-      "name": "08 · Claude API Call",
+      "id": "n5",
+      "name": "05 · Claude API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1640, 400]
+      "position": [
+        980,
+        500
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 09 · API ANTWORT PRÜFEN\n// Prüft ob Claude geantwortet hat und extrahiert Text\n// ══════════════════════════════════════════════════════\n\nconst claudeResp = $input.first().json;\n\n// HTTP-Fehler\nif (claudeResp.error) {\n  const code = claudeResp.error.type || 'unknown';\n  const msg = claudeResp.error.message || 'Unbekannter API-Fehler';\n  const deutlich = {\n    'authentication_error': 'Ungültiger API Key. Bitte CLAUDE_API_KEY in n8n prüfen.',\n    'permission_error': 'Keine Berechtigung. API Key hat keine Zugriffsberechtigung.',\n    'rate_limit_error': 'API Rate Limit erreicht. Bitte 1 Minute warten und erneut versuchen.',\n    'overloaded_error': 'Claude ist überlastet. Bitte in 30 Sekunden erneut versuchen.'\n  };\n  return [{ json: {\n    _error: true,\n    step: 'Claude API',\n    error: deutlich[code] || `API Fehler: ${msg}`\n  }}];\n}\n\n// Antwort-Text\nlet rawText = '';\ntry {\n  rawText = claudeResp.content?.[0]?.text || '';\n} catch(e) {\n  return [{ json: { _error: true, step: 'API Antwort', error: 'Antwort-Format unbekannt' }}];\n}\n\nif (!rawText || rawText.length < 100) {\n  return [{ json: { _error: true, step: 'API Antwort', error: 'Claude hat keinen verwertbaren Text zurückgegeben' }}];\n}\n\nreturn [{ json: {\n  rawText,\n  usage: claudeResp.usage || {},\n  model: claudeResp.model || 'claude-sonnet-4-6',\n  apiCheckedAt: new Date().toISOString()\n}}];"
+        "jsCode": "// ══ NODE 06 · ANTWORT VERARBEITEN ═════════════════════════════════════\nconst r = $input.first().json;\n\nif(r.error){\n  const codes = {\n    'authentication_error':'Ungültiger API Key — bitte CLAUDE_API_KEY in n8n prüfen.',\n    'rate_limit_error':'Rate Limit — bitte 60 Sek. warten.',\n    'overloaded_error':'Claude überlastet — bitte erneut versuchen.'\n  };\n  return [{ json:{ success:false, error:codes[r.error.type]||'API Fehler: '+r.error.message } }];\n}\n\nconst raw = r.content?.[0]?.text||'';\nif(!raw) return [{ json:{ success:false, error:'Keine Antwort von Claude — bitte erneut versuchen.' } }];\n\nfunction extr(text, start, end){\n  const si=text.indexOf(start);\n  if(si===-1) return null;\n  const after=text.slice(si+start.length);\n  if(!end) return after.trim();\n  const ei=after.indexOf(end);\n  return ei===-1?after.trim():after.slice(0,ei).trim();\n}\n\nlet vollst = extr(raw,'===VOLLSTAENDIG===','===PORTAL===') || raw.trim();\nlet portal = extr(raw,'===PORTAL===',null) || vollst.slice(0,1800);\n\n// Portal auf 1800 Zeichen kürzen (sauber auf Satz)\nif(portal.length>1800){\n  let cut=portal.slice(0,1780);\n  const last=Math.max(cut.lastIndexOf('.'),cut.lastIndexOf('!'),cut.lastIndexOf('?'));\n  portal=last>1600?cut.slice(0,last+1):cut.trim()+'...';\n}\n\nreturn [{ json:{ success:true, vollstaendig:vollst, portal, stats:{\n  worte:vollst.split(/\\s+/).filter(w=>w).length,\n  zeichenPortal:portal.length\n} } }];"
       },
-      "id": "n9",
-      "name": "09 · API Antwort prüfen",
+      "id": "n6",
+      "name": "06 · Antwort verarbeiten",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1860, 400]
+      "position": [
+        1200,
+        500
+      ]
     },
     {
       "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 10 · VERSIONEN EXTRAHIEREN\n// Parst ===VOLLSTAENDIG=== und ===PORTAL=== aus dem Text\n// ══════════════════════════════════════════════════════\n\nconst input = $input.first().json;\nif (input._error) return [{ json: input }];\n\nconst raw = input.rawText;\n\nfunction extract(text, startMarker, endMarker) {\n  const si = text.indexOf(startMarker);\n  if (si === -1) return null;\n  const after = text.slice(si + startMarker.length);\n  if (!endMarker) return after.trim();\n  const ei = after.indexOf(endMarker);\n  return ei === -1 ? after.trim() : after.slice(0, ei).trim();\n}\n\nlet vollstaendig = extract(raw, '===VOLLSTAENDIG===', '===PORTAL===');\nlet portal = extract(raw, '===PORTAL===', null);\n\n// Fallback: Varianten des Markers\nif (!vollstaendig) {\n  vollstaendig = extract(raw, '=== VOLLSTÄNDIGES EXPOSÉ ===', '=== PORTAL') ||\n                 extract(raw, 'VOLLSTÄNDIGES EXPOSÉ', 'PORTAL');\n}\nif (!portal) {\n  portal = extract(raw, 'PORTAL-VERSION', null) ||\n            extract(raw, 'PORTAL VERSION', null);\n}\n\n// Letzter Fallback: ganzer Text\nif (!vollstaendig && !portal) {\n  vollstaendig = raw.trim();\n  portal = raw.trim();\n}\n\nif (!vollstaendig) vollstaendig = raw.trim();\nif (!portal) portal = vollstaendig.slice(0, 1800);\n\nreturn [{ json: {\n  ...input,\n  vollstaendig,\n  portal,\n  extractedAt: new Date().toISOString()\n}}];"
+        "jsCode": "// ══ NODE 07 · FEHLER-HANDLER (API) ════════════════════════════════════\nconst e = $input.first().json;\nconst msg = e?.message || e?.error?.message || 'Verbindungsfehler zur Claude API';\nconst code = String(e?.statusCode||'');\nconst map={'401':'Ungültiger API Key.','403':'Zugriff verweigert.','429':'Rate Limit — bitte 60 Sek. warten.','529':'Claude überlastet.'};\nreturn [{ json:{ success:false, error:map[code]||'API Fehler: '+msg } }];"
       },
-      "id": "n10",
-      "name": "10 · Versionen extrahieren",
+      "id": "n7",
+      "name": "07 · Fehler-Handler",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2080, 400]
-    },
-    {
-      "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 11 · VOLLSTÄNDIGES EXPOSÉ PRÜFEN\n// Wortanzahl, Struktur, Qualitäts-Check\n// ══════════════════════════════════════════════════════\n\nconst input = $input.first().json;\nif (input._error) return [{ json: input }];\n\nconst text = input.vollstaendig;\nconst warnings = [];\n\n// Wortanzahl\nconst worte = text.trim().split(/\\s+/).filter(w => w.length > 0).length;\nconst zeichen = text.length;\n\n// Zu kurz?\nif (worte < 200) warnings.push(`Vollständiges Exposé sehr kurz (${worte} Wörter, Ziel: 500–700)`);\nif (worte > 900) warnings.push(`Vollständiges Exposé sehr lang (${worte} Wörter, Ziel: 500–700)`);\n\n// Verbotene Klischees prüfen\nconst klischees = [\n  'einzigartiges Schmuckstück', 'Traumlage', 'traumhaft', 'einzigartig',\n  'unverbaubar', 'absolut ruhig', 'perfekt gelegen', 'ideale Lage'\n];\nconst gefundeneKlischees = klischees.filter(k => text.toLowerCase().includes(k.toLowerCase()));\nif (gefundeneKlischees.length > 0) {\n  warnings.push(`Klischee-Begriffe gefunden: ${gefundeneKlischees.join(', ')}`);\n}\n\n// Pflicht-Infos vorhanden?\nconst checkPflicht = (field, label) => {\n  if (!text.toLowerCase().includes(field.toLowerCase())) {\n    warnings.push(`«${label}» nicht im Exposé erwähnt`);\n  }\n};\n\n// Prüfe ob Ort erwähnt\n// (nur warnen, nicht abbrechen)\n\nreturn [{ json: {\n  ...input,\n  qcVollstaendig: {\n    worte,\n    zeichen,\n    warnings,\n    ok: warnings.length === 0\n  },\n  qcVollstaendigAt: new Date().toISOString()\n}}];"
-      },
-      "id": "n11",
-      "name": "11 · Vollständiges Exposé prüfen",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [2300, 300]
-    },
-    {
-      "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 12 · PORTAL-VERSION PRÜFEN\n// Zeichenlimit, Pflichtfelder, Struktur\n// ══════════════════════════════════════════════════════\n\nconst input = $input.first().json;\nif (input._error) return [{ json: input }];\n\nlet portal = input.portal;\nconst warnings = [];\nlet trimmed = false;\n\n// Zeichenlimit 1800 hart durchsetzen\nif (portal.length > 1800) {\n  // Sauber auf Satzende schneiden\n  let cut = portal.slice(0, 1780);\n  const lastDot = Math.max(\n    cut.lastIndexOf('.'),\n    cut.lastIndexOf('!'),\n    cut.lastIndexOf('?')\n  );\n  portal = lastDot > 1600 ? cut.slice(0, lastDot + 1) : cut.trim() + '...';\n  trimmed = true;\n  warnings.push(`Portal-Version wurde auf ${portal.length} Zeichen gekürzt`);\n}\n\n// Zu kurz?\nif (portal.length < 300) {\n  warnings.push(`Portal-Version sehr kurz (${portal.length} Zeichen)`);\n}\n\n// Prüfe Pflicht-Angaben für Portale\nconst pflicht = [\n  ['m²', 'Fläche in m²'],\n  ['CHF', 'Preis in CHF'],\n];\nfor (const [term, label] of pflicht) {\n  if (!portal.includes(term)) {\n    warnings.push(`${label} fehlt in Portal-Version`);\n  }\n}\n\nreturn [{ json: {\n  ...input,\n  portal,\n  qcPortal: {\n    zeichen: portal.length,\n    limit: 1800,\n    trimmed,\n    warnings,\n    ok: !trimmed && warnings.length === 0\n  },\n  qcPortalAt: new Date().toISOString()\n}}];"
-      },
-      "id": "n12",
-      "name": "12 · Portal-Version prüfen",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [2300, 500]
-    },
-    {
-      "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 13 · ERGEBNISSE ZUSAMMENFÜHREN\n// Wartet auf beide QC-Nodes und fügt zusammen\n// ══════════════════════════════════════════════════════\n\n// Wir nehmen hier einfach den letzten Input (sequentiell)\nconst input = $input.first().json;\nif (input._error) return [{ json: input }];\n\n// Alle Warnings sammeln\nconst allWarnings = [\n  ...(input.warnings || []),\n  ...(input.bildWarnings || []),\n  ...(input.qcVollstaendig?.warnings || []),\n  ...(input.qcPortal?.warnings || [])\n].filter(Boolean);\n\nreturn [{ json: {\n  ...input,\n  allWarnings,\n  mergedAt: new Date().toISOString()\n}}];"
-      },
-      "id": "n13",
-      "name": "13 · Ergebnisse zusammenführen",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [2520, 400]
-    },
-    {
-      "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 14 · FINAL QC — GESAMTPRÜFUNG\n// Letzter Check bevor die Antwort gesendet wird\n// ══════════════════════════════════════════════════════\n\nconst input = $input.first().json;\nif (input._error) return [{ json: input }];\n\nconst v = input.vollstaendig || '';\nconst p = input.portal || '';\nconst body = input.body || {};\nconst e = input.enriched || {};\nconst criticalErrors = [];\n\n// Vollständiges Exposé nicht leer\nif (v.length < 50) criticalErrors.push('Vollständiges Exposé fehlt oder zu kurz');\n\n// Portal nicht leer\nif (p.length < 50) criticalErrors.push('Portal-Version fehlt oder zu kurz');\n\n// Portal-Limit\nif (p.length > 1800) criticalErrors.push(`Portal überschreitet Zeichenlimit (${p.length}/1800)`);\n\n// Adresse im Vollexposé vorhanden?\nconst ortParts = (body.adresse || '').split(',').map(s => s.trim());\nconst ortGefunden = ortParts.some(part => part.length > 2 && v.includes(part));\nif (!ortGefunden && body.adresse) {\n  // Kein kritischer Fehler, nur Hinweis\n}\n\nif (criticalErrors.length > 0) {\n  return [{ json: {\n    _error: true,\n    step: 'Final QC',\n    error: criticalErrors.join(' | ')\n  }}];\n}\n\nreturn [{ json: {\n  ...input,\n  finalQcPassed: true,\n  finalQcAt: new Date().toISOString()\n}}];"
-      },
-      "id": "n14",
-      "name": "14 · Final QC",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [2740, 400]
-    },
-    {
-      "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 15 · RESPONSE FORMATIEREN\n// Baut die finale JSON-Antwort für das HTML-Tool\n// ══════════════════════════════════════════════════════\n\nconst input = $input.first().json;\nif (input._error) return [{ json: input }];\n\nconst e = input.enriched || {};\nconst body = input.body || {};\n\n// Objekt-Zusammenfassung\nconst zusammenfassung = [\n  body.zimmer ? `${body.zimmer}-Zimmer-${body.typ}` : body.typ,\n  body.flaeche ? `${body.flaeche} m²` : null,\n  e.adresseVoll || body.adresse,\n  e.preisFormatiert ? `CHF ${e.preisFormatiert}` : null\n].filter(Boolean).join(' · ');\n\nreturn [{ json: {\n  success: true,\n  vollstaendig: input.vollstaendig,\n  portal: input.portal,\n  meta: {\n    zusammenfassung,\n    bildAnzahl: input.bildAnzahl || 0,\n    worteVollstaendig: input.qcVollstaendig?.worte || 0,\n    zeichenVollstaendig: input.qcVollstaendig?.zeichen || 0,\n    zeichenPortal: input.qcPortal?.zeichen || 0,\n    model: input.model || 'claude-sonnet-4-6',\n    tokensUsed: input.usage?.output_tokens || 0,\n    generatedAt: new Date().toISOString()\n  },\n  warnings: input.allWarnings || []\n}}];"
-      },
-      "id": "n15",
-      "name": "15 · Response formatieren",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [2960, 400]
+      "position": [
+        1200,
+        700
+      ]
     },
     {
       "parameters": {
@@ -175,130 +177,135 @@
         "options": {
           "responseHeaders": {
             "entries": [
-              { "name": "Access-Control-Allow-Origin", "value": "*" },
-              { "name": "Content-Type", "value": "application/json" }
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
             ]
           }
         }
       },
-      "id": "n16",
-      "name": "16 · Respond to Webhook",
+      "id": "n8",
+      "name": "08 · Antwort senden",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [3180, 400]
-    },
-    {
-      "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 17 · FEHLER-HANDLER (Claude API)\n// Fängt HTTP-Fehler vom API-Call ab\n// ══════════════════════════════════════════════════════\n\nconst err = $input.first().json;\nconst errMsg = err?.message || err?.error?.message || JSON.stringify(err).slice(0,200);\n\nconst userMessages = {\n  '401': 'Ungültiger API Key. Bitte CLAUDE_API_KEY in n8n > Settings > Environment Variables prüfen.',\n  '403': 'Zugriff verweigert. API Key hat keine Berechtigungen.',\n  '429': 'Zu viele Anfragen. Bitte 60 Sekunden warten und erneut versuchen.',\n  '529': 'Claude API überlastet. Bitte 30 Sekunden warten.',\n  '500': 'Claude API interner Fehler. Bitte erneut versuchen.',\n  '503': 'Claude API vorübergehend nicht erreichbar.'\n};\n\nconst code = String(err?.statusCode || '');\nconst message = userMessages[code] || `Verbindungsfehler zur Claude API: ${errMsg}`;\n\nreturn [{ json: {\n  success: false,\n  error: message,\n  errorCode: code,\n  errorAt: new Date().toISOString()\n}}];"
-      },
-      "id": "n17",
-      "name": "17 · Fehler-Handler API",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [1860, 620]
-    },
-    {
-      "parameters": {
-        "jsCode": "// ══════════════════════════════════════════════════════\n// NODE 18 · FEHLER-RESPONSE\n// Sendet Fehlermeldung auf Deutsch zurück ans Tool\n// ══════════════════════════════════════════════════════\n\nconst input = $input.first().json;\n\n// Fehler-Objekte normalisieren\nconst errorMsg = input.error || input._error && 'Unbekannter Fehler' || 'Fehler';\nconst step = input.step || 'Verarbeitung';\n\nreturn [{ json: {\n  success: false,\n  error: typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg),\n  step,\n  errorAt: new Date().toISOString()\n}}];"
-      },
-      "id": "n18",
-      "name": "18 · Fehler-Response",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [2960, 620]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": { "caseSensitive": false },
-          "conditions": [
-            {
-              "id": "check-error",
-              "leftValue": "={{ $json._error }}",
-              "rightValue": true,
-              "operator": { "type": "boolean", "operation": "equals" }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "id": "n19",
-      "name": "19 · Fehler-Weiche",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2.1,
-      "position": [2740, 600]
+      "position": [
+        1420,
+        500
+      ]
     }
   ],
   "connections": {
-    "01 · Webhook Eingang": {
-      "main": [[{ "node": "02 · Pflichtfelder validieren", "type": "main", "index": 0 }]]
-    },
-    "02 · Pflichtfelder validieren": {
-      "main": [[{ "node": "03 · Bilder validieren", "type": "main", "index": 0 }]]
-    },
-    "03 · Bilder validieren": {
-      "main": [[{ "node": "04 · Daten anreichern", "type": "main", "index": 0 }]]
-    },
-    "04 · Daten anreichern": {
-      "main": [[{ "node": "05 · System Prompt aufbauen", "type": "main", "index": 0 }]]
-    },
-    "05 · System Prompt aufbauen": {
-      "main": [[{ "node": "06 · User Prompt aufbauen", "type": "main", "index": 0 }]]
-    },
-    "06 · User Prompt aufbauen": {
-      "main": [[{ "node": "07 · Claude Message bauen", "type": "main", "index": 0 }]]
-    },
-    "07 · Claude Message bauen": {
-      "main": [[{ "node": "08 · Claude API Call", "type": "main", "index": 0 }]]
-    },
-    "08 · Claude API Call": {
-      "main": [[{ "node": "09 · API Antwort prüfen", "type": "main", "index": 0 }]],
-      "error": [[{ "node": "17 · Fehler-Handler API", "type": "main", "index": 0 }]]
-    },
-    "09 · API Antwort prüfen": {
-      "main": [[{ "node": "10 · Versionen extrahieren", "type": "main", "index": 0 }]]
-    },
-    "10 · Versionen extrahieren": {
+    "GET — HTML ausliefern": {
       "main": [
-        [{ "node": "11 · Vollständiges Exposé prüfen", "type": "main", "index": 0 }],
-        [{ "node": "12 · Portal-Version prüfen", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "HTML Seite senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
-    "11 · Vollständiges Exposé prüfen": {
-      "main": [[{ "node": "13 · Ergebnisse zusammenführen", "type": "main", "index": 0 }]]
-    },
-    "12 · Portal-Version prüfen": {
-      "main": [[{ "node": "13 · Ergebnisse zusammenführen", "type": "main", "index": 0 }]]
-    },
-    "13 · Ergebnisse zusammenführen": {
-      "main": [[{ "node": "14 · Final QC", "type": "main", "index": 0 }]]
-    },
-    "14 · Final QC": {
-      "main": [[{ "node": "19 · Fehler-Weiche", "type": "main", "index": 0 }]]
-    },
-    "19 · Fehler-Weiche": {
+    "POST — Exposé generieren": {
       "main": [
-        [{ "node": "18 · Fehler-Response", "type": "main", "index": 0 }],
-        [{ "node": "15 · Response formatieren", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "02 · Eingabe validieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
-    "15 · Response formatieren": {
-      "main": [[{ "node": "16 · Respond to Webhook", "type": "main", "index": 0 }]]
+    "02 · Eingabe validieren": {
+      "main": [
+        [
+          {
+            "node": "03 · Prompts aufbauen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "17 · Fehler-Handler API": {
-      "main": [[{ "node": "18 · Fehler-Response", "type": "main", "index": 0 }]]
+    "03 · Prompts aufbauen": {
+      "main": [
+        [
+          {
+            "node": "04 · Claude Message bauen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "18 · Fehler-Response": {
-      "main": [[{ "node": "16 · Respond to Webhook", "type": "main", "index": 0 }]]
+    "04 · Claude Message bauen": {
+      "main": [
+        [
+          {
+            "node": "05 · Claude API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "05 · Claude API": {
+      "main": [
+        [
+          {
+            "node": "06 · Antwort verarbeiten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "07 · Fehler-Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06 · Antwort verarbeiten": {
+      "main": [
+        [
+          {
+            "node": "08 · Antwort senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "07 · Fehler-Handler": {
+      "main": [
+        [
+          {
+            "node": "08 · Antwort senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "pinData": {},
   "settings": {
-    "executionOrder": "v1",
-    "saveManualExecutions": true,
-    "errorWorkflow": ""
+    "executionOrder": "v1"
   },
-  "tags": [{ "name": "Flowmatic" }],
-  "versionId": "flowmatic-expose-pro-v2"
+  "tags": [
+    {
+      "name": "Flowmatic"
+    }
+  ],
+  "versionId": "flowmatic-expose-v3-selfserve"
 }
