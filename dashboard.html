@@ -3,1589 +3,542 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flowmatic — Business Dashboard</title>
+<title>Flowmatic — Command Center</title>
 <style>
-  :root {
-    --navy: #0a1628;
-    --navy2: #112240;
-    --navy3: #1a3258;
-    --gold: #c9a84c;
-    --gold2: #e8c97a;
-    --gold3: #f5e4b0;
-    --white: #f0f4ff;
-    --gray: #8892a4;
-    --green: #2ecc71;
-    --red: #e74c3c;
-    --orange: #f39c12;
-    --radius: 12px;
-    --shadow: 0 4px 24px rgba(0,0,0,0.35);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--navy);
-    color: var(--white);
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    min-height: 100vh;
-  }
-
-  /* ─── HEADER ─── */
-  header {
-    background: linear-gradient(135deg, var(--navy2), var(--navy3));
-    border-bottom: 2px solid var(--gold);
-    padding: 20px 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: var(--shadow);
-  }
-
-  .logo {
-    font-size: 1.6rem;
-    font-weight: 800;
-    background: linear-gradient(90deg, var(--gold), var(--gold2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 2px;
-  }
-
-  .header-meta {
-    font-size: 0.8rem;
-    color: var(--gray);
-    text-align: right;
-  }
-
-  .header-meta span {
-    color: var(--gold2);
-    font-weight: 600;
-  }
-
-  /* ─── LAYOUT ─── */
-  .container {
-    max-width: 1300px;
-    margin: 0 auto;
-    padding: 32px 20px;
-  }
-
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
-  .span-2 { grid-column: span 2; }
-
-  @media (max-width: 900px) {
-    .grid-2, .grid-3 { grid-template-columns: 1fr; }
-    .span-2 { grid-column: span 1; }
-  }
-
-  /* ─── CARDS ─── */
-  .card {
-    background: var(--navy2);
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: var(--radius);
-    padding: 24px;
-    box-shadow: var(--shadow);
-    transition: border-color 0.3s;
-  }
-
-  .card:hover { border-color: rgba(201,168,76,0.5); }
-
-  .card-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--gold2);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .card-title .icon { font-size: 1.2rem; }
-
-  /* ─── PROGRESS BAR ─── */
-  .progress-wrap { margin-bottom: 8px; }
-  .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: var(--gray);
-    margin-bottom: 6px;
-  }
-  .progress-bar {
-    height: 8px;
-    background: var(--navy3);
-    border-radius: 99px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--gold), var(--gold2));
-    border-radius: 99px;
-    transition: width 0.8s ease;
-  }
-
-  /* ─── KPI CHIPS ─── */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-
-  @media (max-width: 700px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
-
-  .kpi {
-    background: var(--navy2);
-    border: 1px solid rgba(201,168,76,0.25);
-    border-radius: var(--radius);
-    padding: 20px 16px;
-    text-align: center;
-    transition: transform 0.2s, border-color 0.3s;
-  }
-
-  .kpi:hover { transform: translateY(-3px); border-color: var(--gold); }
-
-  .kpi-value {
-    font-size: 1.8rem;
-    font-weight: 800;
-    background: linear-gradient(90deg, var(--gold), var(--gold2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .kpi-label {
-    font-size: 0.75rem;
-    color: var(--gray);
-    margin-top: 4px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  /* ─── TABS ─── */
-  .tab-bar {
-    display: flex;
-    gap: 4px;
-    background: var(--navy3);
-    padding: 4px;
-    border-radius: 10px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-  }
-
-  .tab-btn {
-    flex: 1;
-    min-width: 100px;
-    padding: 10px 16px;
-    border: none;
-    border-radius: 8px;
-    background: transparent;
-    color: var(--gray);
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .tab-btn.active {
-    background: linear-gradient(135deg, var(--gold), var(--gold2));
-    color: var(--navy);
-  }
-
-  .tab-btn:hover:not(.active) { background: rgba(201,168,76,0.1); color: var(--gold2); }
-
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
-
-  /* ─── CHECKLIST ─── */
-  .phase-title {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--gold);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin: 20px 0 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid rgba(201,168,76,0.2);
-  }
-
-  .phase-title:first-child { margin-top: 0; }
-
-  .task-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    margin-bottom: 4px;
-    transition: background 0.2s;
-    cursor: pointer;
-  }
-
-  .task-item:hover { background: rgba(255,255,255,0.04); }
-
-  .task-item input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    min-width: 18px;
-    accent-color: var(--gold);
-    cursor: pointer;
-    margin-top: 2px;
-  }
-
-  .task-text {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    transition: color 0.2s, text-decoration 0.2s;
-  }
-
-  .task-item.done .task-text {
-    color: var(--gray);
-    text-decoration: line-through;
-  }
-
-  .task-badge {
-    margin-left: auto;
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    border-radius: 99px;
-    white-space: nowrap;
-    font-weight: 600;
-  }
-
-  .badge-prio { background: rgba(231,76,60,0.2); color: #e74c3c; }
-  .badge-mid { background: rgba(243,156,18,0.2); color: #f39c12; }
-  .badge-low { background: rgba(46,204,113,0.2); color: #2ecc71; }
-  .badge-info { background: rgba(201,168,76,0.15); color: var(--gold2); }
-
-  /* ─── ROADMAP ─── */
-  .roadmap-step {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 24px;
-    position: relative;
-  }
-
-  .roadmap-step::before {
-    content: '';
-    position: absolute;
-    left: 19px;
-    top: 40px;
-    width: 2px;
-    height: calc(100% + 8px);
-    background: linear-gradient(to bottom, var(--gold), transparent);
-  }
-
-  .roadmap-step:last-child::before { display: none; }
-
-  .step-num {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--gold), var(--gold2));
-    color: var(--navy);
-    font-weight: 800;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 0 16px rgba(201,168,76,0.4);
-  }
-
-  .step-content { flex: 1; padding-top: 6px; }
-
-  .step-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--gold2);
-    margin-bottom: 4px;
-  }
-
-  .step-desc {
-    font-size: 0.85rem;
-    color: var(--gray);
-    line-height: 1.6;
-  }
-
-  .step-meta {
-    margin-top: 8px;
-    font-size: 0.75rem;
-    color: var(--gold);
-    font-weight: 600;
-  }
-
-  /* ─── REVENUE CALCULATOR ─── */
-  .calc-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 20px;
-  }
-
-  @media (max-width: 600px) { .calc-grid { grid-template-columns: 1fr; } }
-
-  .calc-field label {
-    display: block;
-    font-size: 0.78rem;
-    color: var(--gray);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .calc-field input, .calc-field select {
-    width: 100%;
-    background: var(--navy3);
-    border: 1px solid rgba(201,168,76,0.25);
-    border-radius: 8px;
-    color: var(--white);
-    padding: 10px 14px;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .calc-field input:focus, .calc-field select:focus {
-    border-color: var(--gold);
-  }
-
-  .calc-result {
-    background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.05));
-    border: 1px solid rgba(201,168,76,0.3);
-    border-radius: var(--radius);
-    padding: 20px;
-    text-align: center;
-    margin-top: 16px;
-  }
-
-  .calc-result-value {
-    font-size: 2.5rem;
-    font-weight: 900;
-    background: linear-gradient(90deg, var(--gold), var(--gold2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .calc-result-label { font-size: 0.85rem; color: var(--gray); margin-top: 4px; }
-
-  .calc-breakdown {
-    margin-top: 16px;
-    font-size: 0.82rem;
-    color: var(--gray);
-    line-height: 2;
-  }
-
-  .calc-breakdown span { color: var(--gold2); font-weight: 600; }
-
-  /* ─── PITCH TIMER ─── */
-  .timer-display {
-    font-size: 4rem;
-    font-weight: 900;
-    text-align: center;
-    background: linear-gradient(90deg, var(--gold), var(--gold2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin: 20px 0;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .timer-btns {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 16px;
-  }
-
-  .btn {
-    padding: 10px 24px;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-  .btn-gold {
-    background: linear-gradient(135deg, var(--gold), var(--gold2));
-    color: var(--navy);
-  }
-
-  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(201,168,76,0.4); }
-
-  .btn-outline {
-    background: transparent;
-    border: 1px solid rgba(201,168,76,0.4);
-    color: var(--gold2);
-  }
-
-  .btn-outline:hover { background: rgba(201,168,76,0.1); }
-
-  .pitch-script {
-    background: var(--navy3);
-    border-radius: 8px;
-    padding: 16px;
-    font-size: 0.9rem;
-    line-height: 1.8;
-    color: var(--white);
-    border-left: 3px solid var(--gold);
-  }
-
-  .pitch-script strong { color: var(--gold2); }
-
-  /* ─── PRICE BUILDER ─── */
-  .price-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-  }
-
-  .price-row:last-child { border-bottom: none; }
-
-  .price-name { font-size: 0.9rem; }
-  .price-amount { font-size: 0.9rem; color: var(--gold2); font-weight: 600; }
-
-  .price-toggle {
-    width: 42px;
-    height: 22px;
-    background: var(--navy3);
-    border-radius: 99px;
-    border: 1px solid rgba(201,168,76,0.3);
-    cursor: pointer;
-    position: relative;
-    transition: background 0.2s;
-    margin-left: 12px;
-  }
-
-  .price-toggle.on { background: var(--gold); }
-
-  .price-toggle::after {
-    content: '';
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    background: white;
-    border-radius: 50%;
-    top: 2px;
-    left: 2px;
-    transition: left 0.2s;
-  }
-
-  .price-toggle.on::after { left: 22px; }
-
-  .price-total-box {
-    margin-top: 16px;
-    background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
-    border: 1px solid var(--gold);
-    border-radius: 10px;
-    padding: 16px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .price-total-label { font-size: 0.85rem; color: var(--gray); }
-
-  .price-total-value {
-    font-size: 1.8rem;
-    font-weight: 900;
-    background: linear-gradient(90deg, var(--gold), var(--gold2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  /* ─── CLIENT TRACKER ─── */
-  .client-row {
-    display: grid;
-    grid-template-columns: 1fr auto auto auto;
-    gap: 12px;
-    align-items: center;
-    padding: 10px 12px;
-    border-radius: 8px;
-    background: var(--navy3);
-    margin-bottom: 8px;
-    font-size: 0.85rem;
-    transition: transform 0.2s;
-  }
-
-  .client-row:hover { transform: translateX(4px); }
-
-  .client-name { font-weight: 600; }
-  .client-value { color: var(--gold2); font-weight: 700; }
-
-  .status-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    margin-left: auto;
-  }
-
-  .status-lead { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
-  .status-active { background: var(--green); box-shadow: 0 0 8px var(--green); }
-  .status-done { background: var(--gray); }
-
-  .add-client-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 8px;
-    margin-top: 12px;
-  }
-
-  .add-client-form input, .add-client-form select {
-    background: var(--navy3);
-    border: 1px solid rgba(201,168,76,0.25);
-    border-radius: 8px;
-    color: var(--white);
-    padding: 9px 12px;
-    font-size: 0.85rem;
-    outline: none;
-  }
-
-  .add-client-form input::placeholder { color: var(--gray); }
-
-  /* ─── NOTES ─── */
-  .notes-area {
-    width: 100%;
-    background: var(--navy3);
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 10px;
-    color: var(--white);
-    padding: 14px;
-    font-size: 0.9rem;
-    line-height: 1.7;
-    min-height: 160px;
-    resize: vertical;
-    outline: none;
-    font-family: inherit;
-    transition: border-color 0.2s;
-  }
-
-  .notes-area:focus { border-color: var(--gold); }
-
-  .notes-saved {
-    font-size: 0.75rem;
-    color: var(--green);
-    margin-top: 6px;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .notes-saved.show { opacity: 1; }
-
-  /* ─── SECTIONS ─── */
-  section { margin-bottom: 32px; }
-  section > h2 {
-    font-size: 1.2rem;
-    color: var(--gold2);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  section > h2::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, rgba(201,168,76,0.3), transparent);
-  }
-
-  /* ─── PORSCHE COUNTER ─── */
-  .porsche-bar {
-    background: var(--navy2);
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: var(--radius);
-    padding: 20px 24px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-
-  .porsche-icon { font-size: 2.5rem; }
-
-  .porsche-text { flex: 1; min-width: 200px; }
-
-  .porsche-title {
-    font-size: 0.75rem;
-    color: var(--gray);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-  }
-
-  .porsche-prog {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .porsche-prog-bar {
-    flex: 1;
-    height: 10px;
-    background: var(--navy3);
-    border-radius: 99px;
-    overflow: hidden;
-  }
-
-  .porsche-prog-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--gold), var(--gold2));
-    border-radius: 99px;
-    transition: width 1s ease;
-  }
-
-  .porsche-pct { font-weight: 700; color: var(--gold2); font-size: 0.9rem; }
-
-  .porsche-amount { font-size: 1.8rem; font-weight: 900; color: var(--gold2); white-space: nowrap; }
-
-  .porsche-sub { font-size: 0.75rem; color: var(--gray); }
-
-  /* ─── TOOLTIP ─── */
-  [data-tip] { position: relative; cursor: help; }
-  [data-tip]:hover::after {
-    content: attr(data-tip);
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--navy3);
-    border: 1px solid var(--gold);
-    color: var(--white);
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    white-space: nowrap;
-    z-index: 200;
-    pointer-events: none;
-  }
-
-  /* ─── SCROLLBAR ─── */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--navy); }
-  ::-webkit-scrollbar-thumb { background: var(--navy3); border-radius: 99px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+:root {
+  --bg:       #080d16;
+  --s1:       #0d1520;
+  --s2:       #111d2b;
+  --s3:       #172438;
+  --s4:       #1e2f47;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(255,255,255,0.12);
+  --accent:   #2D7DD2;
+  --accent2:  #5BA4E5;
+  --gold:     #c9a84c;
+  --gold2:    #e2c46a;
+  --text:     #dce6f5;
+  --muted:    #5a6a82;
+  --muted2:   #7d8fa8;
+  --green:    #3bbf72;
+  --orange:   #e09b3a;
+  --red:      #e05555;
+  --r:        8px;
+  --r2:       12px;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 14px; }
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; overflow-x: hidden; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--s4); border-radius: 9px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+#goalBar { position: sticky; top: 0; z-index: 300; background: var(--s1); border-bottom: 1px solid var(--border2); height: 52px; display: flex; align-items: center; padding: 0 28px; gap: 28px; }
+.logo-mark { font-size: 13px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--text); white-space: nowrap; padding-right: 28px; border-right: 1px solid var(--border2); }
+.logo-mark span { color: var(--accent); }
+.goal-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.goal-track { flex: 1; height: 6px; background: var(--s4); border-radius: 9px; overflow: hidden; min-width: 80px; }
+.goal-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold2)); border-radius: 9px; transition: width 1s cubic-bezier(.4,0,.2,1); }
+.goal-pct { font-size: 12px; font-weight: 700; color: var(--gold2); white-space: nowrap; }
+.goal-nums { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.goal-nums b { color: var(--text); }
+.goal-edit { margin-left: auto; background: var(--s3); border: 1px solid var(--border2); border-radius: var(--r); color: var(--muted2); font-size: 11px; padding: 5px 12px; cursor: pointer; transition: all .15s; font-family: inherit; white-space: nowrap; }
+.goal-edit:hover { color: var(--text); border-color: var(--accent); }
+.app { display: flex; height: calc(100vh - 52px); }
+.sidebar { width: 200px; min-width: 200px; background: var(--s1); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; padding: 16px 10px 24px; gap: 2px; }
+.nav-group { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); padding: 14px 6px 5px; }
+.nav-group:first-child { padding-top: 2px; }
+.nav-btn { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: var(--r); cursor: pointer; color: var(--muted2); font-size: 13px; transition: all .15s; border: 1px solid transparent; user-select: none; background: none; width: 100%; text-align: left; font-family: inherit; }
+.nav-btn:hover { background: var(--s2); color: var(--text); }
+.nav-btn.active { background: var(--s3); border-color: var(--border2); color: var(--text); }
+.nav-btn.active .nav-dot { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--s4); flex-shrink: 0; transition: all .2s; }
+.main { flex: 1; overflow-y: auto; }
+.panel { display: none; }
+.panel.active { display: flex; flex-direction: column; min-height: 100%; }
+.ph { padding: 24px 28px 0; flex-shrink: 0; }
+.ph-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.ph-sub { font-size: 12px; color: var(--muted); }
+.card { background: var(--s1); border: 1px solid var(--border); border-radius: var(--r2); padding: 20px; }
+.card-title { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted2); margin-bottom: 16px; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+.kpi { background: var(--s1); border: 1px solid var(--border); border-radius: var(--r2); padding: 18px 20px; position: relative; overflow: hidden; transition: border-color .2s, transform .2s; }
+.kpi::after { content:''; position:absolute; top:0;left:0;right:0; height:2px; background: linear-gradient(90deg, var(--accent), transparent); }
+.kpi:hover { border-color: var(--border2); transform: translateY(-2px); }
+.kpi-val { font-size: 24px; font-weight: 800; color: var(--text); line-height: 1.1; margin-bottom: 4px; }
+.kpi-lbl { font-size: 11px; color: var(--muted); }
+.inp { background: var(--s2); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text); padding: 9px 12px; font-size: 13px; outline: none; width: 100%; font-family: inherit; transition: border-color .2s; }
+.inp:focus { border-color: var(--accent); }
+.inp::placeholder { color: var(--muted); }
+select.inp option { background: var(--s2); }
+.lbl { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border: none; border-radius: var(--r); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; font-family: inherit; white-space: nowrap; letter-spacing: .3px; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+.btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--muted2); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--text); }
+.btn-sm { padding: 6px 12px; font-size: 11px; }
+.result-box { background: linear-gradient(135deg, rgba(45,125,210,.1), rgba(45,125,210,.04)); border: 1px solid rgba(45,125,210,.25); border-radius: var(--r); padding: 20px; text-align: center; margin-top: 14px; }
+.result-val { font-size: 2.4rem; font-weight: 900; color: var(--gold2); line-height: 1; }
+.result-lbl { font-size: 11px; color: var(--muted); margin-top: 5px; }
+.div { height: 1px; background: var(--border); margin: 16px 0; }
+.prog-row { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:5px; }
+.prog-bar { height:6px; background:var(--s4); border-radius:9px; overflow:hidden; }
+.prog-fill { height:100%; background: linear-gradient(90deg, var(--accent), var(--gold2)); border-radius:9px; transition:width .8s ease; }
+.kanban-wrap { flex: 1; overflow-x: auto; overflow-y: hidden; padding: 20px 28px 28px; display: flex; gap: 14px; align-items: flex-start; }
+.kb-col { min-width: 260px; width: 260px; display: flex; flex-direction: column; gap: 0; flex-shrink: 0; }
+.kb-col-header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--r2) var(--r2) 0 0; background: var(--s2); border: 1px solid var(--border2); border-bottom: none; }
+.kb-col-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.kb-col-name { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.kb-col-count { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--muted); background: var(--s4); padding: 1px 7px; border-radius: 99px; }
+.kb-list { background: var(--s2); border: 1px solid var(--border2); border-radius: 0 0 var(--r2) var(--r2); border-top: 2px solid var(--border2); padding: 8px; min-height: 200px; flex: 1; display: flex; flex-direction: column; gap: 6px; transition: background .15s; }
+.kb-list.drag-over { background: rgba(45,125,210,.07); border-color: rgba(45,125,210,.4); }
+.kb-card { background: var(--s1); border: 1px solid var(--border); border-radius: var(--r); padding: 11px 13px; cursor: grab; user-select: none; transition: border-color .15s, box-shadow .15s, transform .15s; }
+.kb-card:hover { border-color: var(--border2); box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+.kb-card.dragging { opacity: .5; cursor: grabbing; transform: rotate(1.5deg); }
+.kb-card-text { font-size: 12px; line-height: 1.5; color: var(--text); margin-bottom: 8px; }
+.kb-card-footer { display: flex; align-items: center; gap: 6px; }
+.kb-tag { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 99px; }
+.tag-gratis { background: rgba(59,191,114,.13); color: #4ade80; font-weight: 700; }
+.tag-paid   { background: rgba(224,85,85,.13); color: #f87171; font-weight: 700; }
+.tag-ms     { background: rgba(201,168,76,.15); color: var(--gold2); }
+.kb-card-grip { width: 16px; height: 16px; flex-shrink: 0; margin-left: auto; color: var(--muted); display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.kb-card-grip span { display:block; width:100%; height:1.5px; background:currentColor; border-radius:9px; }
+.col-offen  .kb-col-dot { background: var(--muted2); }
+.col-inprog .kb-col-dot { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+.col-done   .kb-col-dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.col-online .kb-col-dot { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+.col-offen  .kb-col-header { border-top: 2px solid var(--muted); }
+.col-inprog .kb-col-header { border-top: 2px solid var(--accent); }
+.col-done   .kb-col-header { border-top: 2px solid var(--green); }
+.col-online .kb-col-header { border-top: 2px solid var(--gold); }
+.svc-select-item { background: var(--s1); border: 1px solid var(--border); border-radius: var(--r2); padding: 16px 18px; margin-bottom: 8px; cursor: pointer; transition: all .15s; }
+.svc-select-item:hover { border-color: var(--border2); background: var(--s2); }
+.svc-select-item.on { border-color: var(--accent); background: rgba(45,125,210,.07); }
+.svc-check { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--muted); flex-shrink: 0; transition: all .15s; display: flex; align-items: center; justify-content: center; }
+.svc-select-item.on .svc-check { background: var(--accent); border-color: var(--accent); }
+.svc-check-mark { width: 10px; height: 6px; border-left: 2px solid white; border-bottom: 2px solid white; transform: rotate(-45deg) translateY(-1px); display: none; }
+.svc-select-item.on .svc-check-mark { display: block; }
+.offer-total { background: linear-gradient(135deg, rgba(45,125,210,.1), rgba(45,125,210,.04)); border: 1px solid rgba(45,125,210,.25); border-radius: var(--r2); padding: 18px; margin-top: 14px; }
+.offer-line { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; color: var(--muted2); }
+.offer-line b { color: var(--text); }
+.offer-line.total-line { border-top: 1px solid var(--border2); margin-top: 8px; padding-top: 12px; }
+.offer-line.total-line b { font-size: 1.3rem; font-weight: 900; color: var(--gold2); }
+.rm-phase-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted2); background: var(--s2); border: 1px solid var(--border); border-radius: var(--r); padding: 7px 14px; display: inline-block; margin-bottom: 14px; }
+.rm-card { background: var(--s1); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; transition: all .2s; position: relative; overflow: hidden; }
+.rm-card::before { content:''; position:absolute; left:0;top:0;bottom:0; width:2px; background:var(--accent); }
+.rm-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.rm-card-num { font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.rm-card-title { font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+.rm-card-desc { font-size: 12px; color: var(--muted2); line-height: 1.6; }
+.rm-card-meta { font-size: 11px; color: var(--muted); margin-top: 8px; }
+.tl-card { background: var(--s2); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; text-align: center; }
+.tl-card.hl { border-color: rgba(201,168,76,.35); background: linear-gradient(135deg, rgba(201,168,76,.08), rgba(201,168,76,.02)); }
+.tl-period { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+.tl-rev { font-size: 1.2rem; font-weight: 900; color: var(--text); }
+.tl-lbl { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.tl-bar { height: 3px; background: var(--s4); border-radius: 9px; margin-top: 10px; overflow: hidden; }
+.tl-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold2)); border-radius: 9px; }
+.timer-d { font-size: 5.5rem; font-weight: 900; text-align: center; color: var(--text); letter-spacing: -3px; line-height: 1; margin: 16px 0; font-variant-numeric: tabular-nums; transition: color .3s; }
+.client-row { display: grid; grid-template-columns: 1fr auto auto auto; gap: 12px; align-items: center; padding: 10px 14px; background: var(--s2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 6px; transition: border-color .15s; }
+.client-row:hover { border-color: var(--border2); }
+.client-name { font-weight: 600; font-size: 13px; }
+.client-val { color: var(--gold2); font-weight: 700; font-size: 13px; }
+.sdot { width: 8px; height: 8px; border-radius: 50%; }
+.sdot-lead   { background: var(--orange); box-shadow: 0 0 5px var(--orange); }
+.sdot-active { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.sdot-done   { background: var(--muted); }
+.ta { width: 100%; background: var(--s2); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text); padding: 13px; font-size: 13px; line-height: 1.7; min-height: 140px; resize: vertical; outline: none; font-family: inherit; transition: border-color .2s; }
+.ta:focus { border-color: var(--accent); }
+.ta::placeholder { color: var(--muted); }
+.saved-ok { font-size: 11px; color: var(--green); margin-top: 5px; opacity: 0; transition: opacity .3s; }
+.saved-ok.show { opacity: 1; }
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(5px); z-index: 500; display: none; align-items: center; justify-content: center; }
+.modal-bg.open { display: flex; }
+.modal { background: var(--s2); border: 1px solid var(--border2); border-radius: var(--r2); padding: 28px; width: 420px; max-width: 90vw; box-shadow: 0 24px 60px rgba(0,0,0,.6); }
+.modal-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 18px; }
+.oc { background: var(--s2); border: 1px solid var(--border); border-radius: var(--r); padding: 14px; transition: border-color .15s, background .15s; cursor: pointer; }
+.oc:hover { border-color: var(--accent); background: var(--s3); }
+.prob-card { background: var(--s2); border: 1px solid var(--border); border-radius: var(--r2); padding: 20px; border-left: 3px solid var(--red); }
+.prob-num { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+.prob-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.prob-desc { font-size: 12px; color: var(--muted2); line-height: 1.8; }
+.prob-impact { display: inline-block; background: rgba(224,85,85,.12); color: var(--red); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px; margin-top: 10px; }
+.oc-num { font-size: 2rem; font-weight: 900; }
+@media (max-width:900px) { .sidebar { display: none; } .g2, .g3, .g4 { grid-template-columns: 1fr; } }
+.p { padding: 20px 28px; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; gap: 12px; align-items: center; }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-  <div class="logo">⚡ FLOWMATIC</div>
-  <div class="header-meta">
-    Business Dashboard v1.0<br>
-    Ziel: <span>190.000 € in 18 Monaten</span>
-  </div>
-</header>
+<div id="goalBar">
+  <div class="logo-mark">flow<span>matic</span></div>
+  <div class="goal-label">Ziel 190.000 CHF</div>
+  <div class="goal-track"><div class="goal-fill" id="gFill" style="width:0%"></div></div>
+  <div class="goal-pct" id="gPct">0 %</div>
+  <div class="goal-nums" id="gNums"><b>0 CHF</b> verdient &middot; 190.000 CHF verbleibend</div>
+  <button class="goal-edit" onclick="openGoal()">Umsatz eingeben</button>
+</div>
 
-<div class="container">
-
-  <!-- PORSCHE PROGRESS BAR -->
-  <div class="porsche-bar">
-    <div class="porsche-icon">🏎️</div>
-    <div class="porsche-text">
-      <div class="porsche-title">Porsche-Fortschritt — 190.000 € Gesamtziel</div>
-      <div class="porsche-prog">
-        <div class="porsche-prog-bar">
-          <div class="porsche-prog-fill" id="porscheFill" style="width: 0%"></div>
-        </div>
-        <div class="porsche-pct" id="porschePct">0%</div>
-      </div>
-      <div style="font-size:0.75rem;color:var(--gray);margin-top:6px;">
-        Verdient: <span id="porscheEarned" style="color:var(--gold2);font-weight:700;">0 €</span>
-        &nbsp;·&nbsp; Verbleibend: <span id="porscheLeft" style="color:var(--gray);">190.000 €</span>
-      </div>
+<div class="modal-bg" id="gModal" onclick="if(event.target===this)closeGoal()">
+  <div class="modal">
+    <div class="modal-title">Gesamtverdienst aktualisieren</div>
+    <div class="lbl" style="margin-bottom:6px;">Verdient bisher (in CHF)</div>
+    <input type="number" class="inp" id="gInput" placeholder="z.B. 4500" oninput="previewGoal()">
+    <div style="margin:16px 0 20px;">
+      <div class="prog-row"><span>Fortschritt</span><span id="gPreviewPct">0 %</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="gPreviewFill" style="width:0%"></div></div>
     </div>
-    <div style="text-align:right;">
-      <div class="porsche-amount" id="porscheAmt">0 €</div>
-      <div class="porsche-sub">aktueller Monatsumsatz</div>
-      <input type="number" id="monthlyRevInput" placeholder="Umsatz eingeben..."
-        style="margin-top:8px;background:var(--navy3);border:1px solid rgba(201,168,76,0.3);
-               border-radius:6px;color:var(--white);padding:6px 10px;font-size:0.82rem;
-               width:160px;outline:none;" oninput="updatePorsche()">
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-ghost" onclick="closeGoal()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveGoal()">Speichern</button>
     </div>
   </div>
+</div>
 
-  <!-- KPI CHIPS -->
-  <div class="kpi-grid">
-    <div class="kpi" data-tip="Bundle: 4.500 € einmalig">
-      <div class="kpi-value">4.500 €</div>
-      <div class="kpi-label">Bundle-Preis</div>
-    </div>
-    <div class="kpi" data-tip="2 Bundle/Monat + 5 Retainer">
-      <div class="kpi-value">11.500 €</div>
-      <div class="kpi-label">Porsche-Niveau/Mo</div>
-    </div>
-    <div class="kpi" data-tip="Ab Monat 2 pro Kunde">
-      <div class="kpi-value">500 €</div>
-      <div class="kpi-label">Retainer/Monat</div>
-    </div>
-    <div class="kpi" data-tip="Starter bis Performance-Paket">
-      <div class="kpi-value">7 Tage</div>
-      <div class="kpi-label">Max. Lieferzeit</div>
-    </div>
-  </div>
+<div class="app">
+  <nav class="sidebar">
+    <div class="nav-group">Planung</div>
+    <button class="nav-btn active" onclick="show('roadmap',this)"><div class="nav-dot"></div>Roadmap</button>
+    <button class="nav-btn" onclick="show('kanban',this)"><div class="nav-dot"></div>Aufgaben</button>
+    <div class="nav-group">Werkzeuge</div>
+    <button class="nav-btn" onclick="show('problems',this)"><div class="nav-dot"></div>Kundenprobleme</button>
+    <button class="nav-btn" onclick="show('calc',this)"><div class="nav-dot"></div>Kalkulator</button>
+    <button class="nav-btn" onclick="show('offer',this)"><div class="nav-dot"></div>Angebots-Builder</button>
+    <button class="nav-btn" onclick="show('pitch',this)"><div class="nav-dot"></div>Pitch-Timer</button>
+    <button class="nav-btn" onclick="show('outreach',this)"><div class="nav-dot"></div>Outreach-Tracker</button>
+    <div class="nav-group">Verwaltung</div>
+    <button class="nav-btn" onclick="show('clients',this)"><div class="nav-dot"></div>Kunden-Pipeline</button>
+    <button class="nav-btn" onclick="show('notes',this)"><div class="nav-dot"></div>Notizen</button>
+  </nav>
 
-  <!-- MAIN TABS -->
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('roadmap')">🗺️ Roadmap</button>
-    <button class="tab-btn" onclick="switchTab('tasks')">✅ Aufgaben</button>
-    <button class="tab-btn" onclick="switchTab('tools')">🛠️ Tools</button>
-    <button class="tab-btn" onclick="switchTab('clients')">👥 Kunden</button>
-    <button class="tab-btn" onclick="switchTab('notes')">📝 Notizen</button>
-  </div>
+  <main class="main">
 
-  <!-- ══════════════════════════════════════════ -->
-  <!-- TAB: ROADMAP -->
-  <!-- ══════════════════════════════════════════ -->
-  <div class="tab-panel active" id="tab-roadmap">
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title"><span class="icon">🚀</span> Phase 1 — Aufbau (Monat 1–3)</div>
-
-        <div class="roadmap-step">
-          <div class="step-num">1</div>
-          <div class="step-content">
-            <div class="step-title">Business-Setup abschließen</div>
-            <div class="step-desc">Domain sichern (flowmatic.de / .io), GitHub Pages konfigurieren, n8n-Instanz aufsetzen, Gmail SMTP einrichten.</div>
-            <div class="step-meta">⏱ Woche 1 · Prio: JETZT</div>
+    <!-- ROADMAP -->
+    <div class="panel active" id="panel-roadmap">
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Roadmap</div><div class="ph-sub">18-Monats-Plan — Setup bis Skalierung</div></div>
+      <div class="p stack" style="padding-top:0;">
+        <div class="g4">
+          <div class="kpi"><div class="kpi-val">CHF 9.000</div><div class="kpi-lbl">Max. Setup (alle Services)</div></div>
+          <div class="kpi"><div class="kpi-val">CHF 650/Mo</div><div class="kpi-lbl">Max. Retainer pro Kunde</div></div>
+          <div class="kpi"><div class="kpi-val">3 Services</div><div class="kpi-lbl">Lead-Maschine / Verwaltung / Expose</div></div>
+          <div class="kpi"><div class="kpi-val">7 Tage</div><div class="kpi-lbl">Max. Lieferzeit</div></div>
+        </div>
+        <div>
+          <div class="rm-phase-label">Phase 1 &mdash; Aufbau &nbsp; Monat 1&ndash;3 &nbsp; Ziel 1&ndash;3K CHF/Mo</div>
+          <div class="g3">
+            <div class="rm-card"><div class="rm-card-num">Schritt 01</div><div class="rm-card-title">Infrastruktur aufsetzen</div><div class="rm-card-desc">Domain sichern, GitHub Pages, n8n Cloud, Gmail SMTP, Google Sheets Vorlage.</div><div class="rm-card-meta">Woche 1 &mdash; sofort</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 02</div><div class="rm-card-title">Brand &amp; Landingpage live</div><div class="rm-card-desc">Flowmatic Logo, CI-Farben Navy/Blue, eigene Landingpage fuer Schweizer Immobilienmakler deployen.</div><div class="rm-card-meta">Woche 1</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 03</div><div class="rm-card-title">Lead-Maschine Demo aufsetzen</div><div class="rm-card-desc">Demo fuer Schweizer Makler bauen und deployen. Eigentuemer-Funnel + Kaeufer-Funnel zeigbar machen.</div><div class="rm-card-meta">Woche 1&ndash;2</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 04</div><div class="rm-card-title">n8n Workflows aufsetzen</div><div class="rm-card-desc">Lead-Maschine (Formular &rarr; Bestaetigung &rarr; CRM &rarr; Follow-up), Lead-Verwaltung, Expose-Generator.</div><div class="rm-card-meta">Woche 2&ndash;3</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 05</div><div class="rm-card-title">Akquise starten</div><div class="rm-card-desc">50 Immobilienmakler in Zuerich, Zug, Basel, Genf identifizieren. 10 pro Woche kontaktieren.</div><div class="rm-card-meta">Woche 2&ndash;4</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 06</div><div class="rm-card-title">Ersten Kunden abschliessen</div><div class="rm-card-desc">Gespraech, Demo zeigen, Angebot, Vertrag, Lieferung in 7 Tagen, Rechnung, Testimonial.</div><div class="rm-card-meta">Monat 1&ndash;2</div></div>
           </div>
         </div>
-
-        <div class="roadmap-step">
-          <div class="step-num">2</div>
-          <div class="step-content">
-            <div class="step-title">Demo-Seiten fertigstellen</div>
-            <div class="step-desc">Wasserfilter-Demo (existiert) + Immobilien-Demo bauen. Diese zwei Seiten sind dein wichtigstes Verkaufswerkzeug.</div>
-            <div class="step-meta">⏱ Woche 1–2 · Prio: HOCH</div>
+        <div>
+          <div class="rm-phase-label">Phase 2 &mdash; Wachstum &nbsp; Monat 4&ndash;8 &nbsp; Ziel 4&ndash;7K CHF/Mo</div>
+          <div class="g3">
+            <div class="rm-card"><div class="rm-card-num">Schritt 07</div><div class="rm-card-title">Retainer-Basis aufbauen</div><div class="rm-card-desc">5 aktive Retainer = ca. 3.000 CHF passiv/Monat. Monatliche Performance-Reports liefern.</div><div class="rm-card-meta">Monat 3&ndash;6</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 08</div><div class="rm-card-title">Expose-Generator skalieren</div><div class="rm-card-desc">Expose-Service aktiv pitchen. Einmalzahlung ohne Retainer &mdash; einfach zu verkaufen, hohe Marge.</div><div class="rm-card-meta">Monat 4&ndash;5</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 09</div><div class="rm-card-title">Eigene Akquise automatisieren</div><div class="rm-card-desc">Flowmatic-Funnel fuer sich selbst aufsetzen. LinkedIn-Content. Erste Ads testen.</div><div class="rm-card-meta">Monat 6&ndash;8</div></div>
           </div>
         </div>
-
-        <div class="roadmap-step">
-          <div class="step-num">3</div>
-          <div class="step-content">
-            <div class="step-title">Ersten Kunden gewinnen</div>
-            <div class="step-desc">Direkt-Outreach an 30 Immobilienmakler (XING, LinkedIn, E-Mail). Demo-Link schicken, Gespräch vereinbaren, Angebot machen.</div>
-            <div class="step-meta">⏱ Woche 2–4 · Ziel: 1–2 Kunden</div>
+        <div>
+          <div class="rm-phase-label">Phase 3 &mdash; Skalierung &nbsp; Monat 9&ndash;18 &nbsp; Ziel 12&ndash;15K CHF/Mo</div>
+          <div class="g3">
+            <div class="rm-card"><div class="rm-card-num">Schritt 10</div><div class="rm-card-title">Delegieren beginnen</div><div class="rm-card-desc">VA oder Freelancer fuer Setup-Ausfuehrung. Fokus auf Akquise und Strategie.</div><div class="rm-card-meta">Monat 9&ndash;12</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 11</div><div class="rm-card-title">Premium-Preise durchsetzen</div><div class="rm-card-desc">Mit Case Studies und ROI-Belegen Preise erhoehen. Warteliste aufbauen.</div><div class="rm-card-meta">Monat 10&ndash;14</div></div>
+            <div class="rm-card" style="border-color:rgba(201,168,76,.3)"><div class="rm-card-num" style="color:var(--gold)">Endziel</div><div class="rm-card-title" style="color:var(--gold2)">190.000 CHF &mdash; Ziel erreicht</div><div class="rm-card-desc">10+ aktive Kunden mit Retainer + laufende Setup-Auftraege = 12.000+ CHF/Monat.</div><div class="rm-card-meta">Monat 15&ndash;18</div></div>
           </div>
         </div>
-
-        <div class="roadmap-step">
-          <div class="step-num">4</div>
-          <div class="step-content">
-            <div class="step-title">n8n Workflows live schalten</div>
-            <div class="step-desc">Automation 1 (Lead-Eingang) und Automation 2 (Follow-up Sequenz) für ersten Kunden aufsetzen und testen.</div>
-            <div class="step-meta">⏱ Monat 1 · Prio: HOCH</div>
-          </div>
-        </div>
-
-        <div class="roadmap-step">
-          <div class="step-num">5</div>
-          <div class="step-content">
-            <div class="step-title">Referenz & Testimonial sichern</div>
-            <div class="step-desc">Nach erstem Auftrag: Screenshot der Ergebnisse, Kundenstimme einholen, Case Study schreiben → für nächste Akquise nutzen.</div>
-            <div class="step-meta">⏱ Monat 2–3</div>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div class="card" style="margin-bottom:20px;">
-          <div class="card-title"><span class="icon">📈</span> Phase 2 — Wachstum (Monat 4–8)</div>
-
-          <div class="roadmap-step">
-            <div class="step-num">6</div>
-            <div class="step-content">
-              <div class="step-title">Zweite Zielgruppe erschließen</div>
-              <div class="step-desc">Coaches & Berater oder Handwerker. Neue Branchen-Demo bauen. Outreach verdoppeln.</div>
-              <div class="step-meta">⏱ Monat 4–5</div>
-            </div>
-          </div>
-
-          <div class="roadmap-step">
-            <div class="step-num">7</div>
-            <div class="step-content">
-              <div class="step-title">Retainer-Basis aufbauen</div>
-              <div class="step-desc">Ziel: 5 aktive Retainer à 500 € = 2.500 € passives Einkommen/Monat. A/B-Tests, Updates, Optimierungen liefern.</div>
-              <div class="step-meta">⏱ Monat 5–7</div>
-            </div>
-          </div>
-
-          <div class="roadmap-step">
-            <div class="step-num">8</div>
-            <div class="step-content">
-              <div class="step-title">Automatisierung der Akquise</div>
-              <div class="step-desc">Eigene Flowmatic-Landingpage mit Anfrage-Funnel, LinkedIn-Content, vielleicht Google Ads testen.</div>
-              <div class="step-meta">⏱ Monat 6–8</div>
-            </div>
-          </div>
-        </div>
-
         <div class="card">
-          <div class="card-title"><span class="icon">🏆</span> Phase 3 — Skalierung (Monat 9–18)</div>
-
-          <div class="roadmap-step">
-            <div class="step-num">9</div>
-            <div class="step-content">
-              <div class="step-title">Sub-Unternehmer / VA einbinden</div>
-              <div class="step-desc">Erste Aufgaben delegieren (Design-Elemente, Texte). Fokus auf Akquise & Strategie statt Ausführung.</div>
-              <div class="step-meta">⏱ Monat 9–12</div>
-            </div>
-          </div>
-
-          <div class="roadmap-step">
-            <div class="step-num">10</div>
-            <div class="step-content">
-              <div class="step-title">Porsche-Niveau erreichen</div>
-              <div class="step-desc">2 Bundle-Kunden + 5+ Retainer = 11.500+ €/Monat. 190.000 € Gesamtziel erreicht.</div>
-              <div class="step-meta">⏱ Monat 15–18 · 🏎️</div>
-            </div>
+          <div class="card-title">Umsatz-Zeitplan</div>
+          <div class="g4">
+            <div class="tl-card"><div class="tl-period">Monat 1&ndash;3</div><div class="tl-rev">1&ndash;3K CHF</div><div class="tl-lbl">Aufbau</div><div class="tl-bar"><div class="tl-fill" style="width:20%"></div></div></div>
+            <div class="tl-card"><div class="tl-period">Monat 4&ndash;8</div><div class="tl-rev">4&ndash;7K CHF</div><div class="tl-lbl">Wachstum</div><div class="tl-bar"><div class="tl-fill" style="width:50%"></div></div></div>
+            <div class="tl-card"><div class="tl-period">Monat 9&ndash;14</div><div class="tl-rev">8&ndash;12K CHF</div><div class="tl-lbl">Skalierung</div><div class="tl-bar"><div class="tl-fill" style="width:80%"></div></div></div>
+            <div class="tl-card hl"><div class="tl-period">Monat 15&ndash;18</div><div class="tl-rev" style="color:var(--gold2)">12&ndash;15K CHF</div><div class="tl-lbl" style="color:var(--gold)">Ziel erreicht</div><div class="tl-bar"><div class="tl-fill" style="width:100%"></div></div></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- UMSATZ TIMELINE -->
-    <div class="card" style="margin-top:24px;">
-      <div class="card-title"><span class="icon">💰</span> Umsatz-Zeitplan</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
-        <div style="text-align:center;padding:16px;background:var(--navy3);border-radius:10px;">
-          <div style="font-size:0.75rem;color:var(--gray);margin-bottom:8px;">MONAT 1–3</div>
-          <div style="font-size:1.3rem;font-weight:800;color:var(--gold2);">1–3K €</div>
-          <div style="font-size:0.75rem;color:var(--gray);margin-top:4px;">Aufbau</div>
-          <div style="margin-top:8px;height:4px;background:var(--navy);border-radius:99px;">
-            <div style="width:20%;height:100%;background:var(--gold);border-radius:99px;"></div>
-          </div>
-        </div>
-        <div style="text-align:center;padding:16px;background:var(--navy3);border-radius:10px;">
-          <div style="font-size:0.75rem;color:var(--gray);margin-bottom:8px;">MONAT 4–8</div>
-          <div style="font-size:1.3rem;font-weight:800;color:var(--gold2);">4–7K €</div>
-          <div style="font-size:0.75rem;color:var(--gray);margin-top:4px;">Wachstum</div>
-          <div style="margin-top:8px;height:4px;background:var(--navy);border-radius:99px;">
-            <div style="width:50%;height:100%;background:var(--gold);border-radius:99px;"></div>
-          </div>
-        </div>
-        <div style="text-align:center;padding:16px;background:var(--navy3);border-radius:10px;">
-          <div style="font-size:0.75rem;color:var(--gray);margin-bottom:8px;">MONAT 9–14</div>
-          <div style="font-size:1.3rem;font-weight:800;color:var(--gold2);">8–12K €</div>
-          <div style="font-size:0.75rem;color:var(--gray);margin-top:4px;">Skalierung</div>
-          <div style="margin-top:8px;height:4px;background:var(--navy);border-radius:99px;">
-            <div style="width:75%;height:100%;background:var(--gold);border-radius:99px;"></div>
-          </div>
-        </div>
-        <div style="text-align:center;padding:16px;background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.05));border:1px solid var(--gold);border-radius:10px;">
-          <div style="font-size:0.75rem;color:var(--gray);margin-bottom:8px;">MONAT 15–18</div>
-          <div style="font-size:1.3rem;font-weight:800;color:var(--gold2);">12–15K €</div>
-          <div style="font-size:0.75rem;color:var(--gold);margin-top:4px;">🏎️ Porsche</div>
-          <div style="margin-top:8px;height:4px;background:var(--navy);border-radius:99px;">
-            <div style="width:100%;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:99px;"></div>
-          </div>
-        </div>
+    <!-- KANBAN -->
+    <div class="panel" id="panel-kanban">
+      <div class="ph"><div class="ph-title">Aufgaben</div><div class="ph-sub">Karten per Drag &amp; Drop verschieben</div></div>
+      <div class="kanban-wrap">
+        <div class="kb-col col-offen"><div class="kb-col-header"><div class="kb-col-dot"></div><div class="kb-col-name">Offen</div><div class="kb-col-count" id="cnt-offen">0</div></div><div class="kb-list" id="col-offen" data-col="offen" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'offen')"></div></div>
+        <div class="kb-col col-inprog"><div class="kb-col-header"><div class="kb-col-dot"></div><div class="kb-col-name">In Bearbeitung</div><div class="kb-col-count" id="cnt-inprog">0</div></div><div class="kb-list" id="col-inprog" data-col="inprog" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'inprog')"></div></div>
+        <div class="kb-col col-done"><div class="kb-col-header"><div class="kb-col-dot"></div><div class="kb-col-name">Erledigt</div><div class="kb-col-count" id="cnt-done">0</div></div><div class="kb-list" id="col-done" data-col="done" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'done')"></div></div>
+        <div class="kb-col col-online"><div class="kb-col-header"><div class="kb-col-dot"></div><div class="kb-col-name">Online</div><div class="kb-col-count" id="cnt-online">0</div></div><div class="kb-list" id="col-online" data-col="online" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'online')"></div></div>
       </div>
     </div>
-  </div>
 
-  <!-- ══════════════════════════════════════════ -->
-  <!-- TAB: AUFGABEN -->
-  <!-- ══════════════════════════════════════════ -->
-  <div class="tab-panel" id="tab-tasks">
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title"><span class="icon">🔥</span> Diese Woche erledigen</div>
-
-        <div class="progress-wrap">
-          <div class="progress-label">
-            <span>Fortschritt</span>
-            <span id="weekProgress">0 / 0</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" id="weekFill" style="width:0%"></div>
-          </div>
+    <!-- KUNDENPROBLEME -->
+    <div class="panel" id="panel-problems">
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Kundenprobleme</div><div class="ph-sub">Die 3 groessten Schmerzen der Schweizer Immobilienmakler</div></div>
+      <div class="p" style="padding-top:0;">
+        <div class="g3" style="margin-bottom:20px;">
+          <div class="prob-card"><div class="prob-num">Problem 01</div><div class="prob-title">Zu langsame Reaktionszeit</div><div class="prob-desc">Qualifizierte Eigentuemer-Leads fragen gleichzeitig bei 3&ndash;5 Maklern an. Wer zuerst zurueckruft, bekommt das Mandat.<br><br><span style="color:var(--text);font-weight:600;">Loesung: Lead-Maschine.</span> Sofort-Bestaetigung + Benachrichtigung bei jeder Anfrage.</div><div class="prob-impact">Mandat verloren wegen zu langsamer Reaktion</div></div>
+          <div class="prob-card"><div class="prob-num">Problem 02</div><div class="prob-title">Leads gehen verloren</div><div class="prob-desc">Interessenten werden manuell aufgeschrieben oder gar nicht erfasst. Follow-ups vergessen. Kein CRM.<br><br><span style="color:var(--text);font-weight:600;">Loesung: Lead-Verwaltung.</span> Alle Quellen automatisch ins CRM, Follow-up laeuft automatisch.</div><div class="prob-impact">20&ndash;40 % der Leads werden nie nachgefasst</div></div>
+          <div class="prob-card"><div class="prob-num">Problem 03</div><div class="prob-title">Expose kostet zu viel Zeit</div><div class="prob-desc">Ein professionelles Expose dauert 2&ndash;4 Stunden pro Objekt. Bilder sortieren, Text schreiben, Fakten einpflegen.<br><br><span style="color:var(--text);font-weight:600;">Loesung: Expose-Generator.</span> Objektdaten eingeben, KI generiert in unter 2 Minuten.</div><div class="prob-impact">2&ndash;4 Stunden pro Expose verschwendet</div></div>
         </div>
-
-        <div style="margin-top:16px;" id="weekTasks">
-          <div class="phase-title">Setup & Infrastruktur</div>
-
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">Domain flowmatic.de oder flowmatic.io kaufen</span>
-            <span class="task-badge badge-prio">Prio 1</span>
-          </div>
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">GitHub Pages für Flowmatic-Website aktivieren</span>
-            <span class="task-badge badge-prio">Prio 1</span>
-          </div>
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">n8n Cloud-Account erstellen (oder selbst hosten)</span>
-            <span class="task-badge badge-prio">Prio 1</span>
-          </div>
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">Gmail SMTP-Zugang für n8n konfigurieren</span>
-            <span class="task-badge badge-mid">Prio 2</span>
-          </div>
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">Google Sheets Vorlage für Leads anlegen</span>
-            <span class="task-badge badge-mid">Prio 2</span>
-          </div>
-
-          <div class="phase-title">Demos & Produkt</div>
-
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">Immobilien-Demo Landingpage fertigstellen (Claude Code)</span>
-            <span class="task-badge badge-prio">Prio 1</span>
-          </div>
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">n8n Workflow Automation 1 (Lead-Eingang) aufbauen</span>
-            <span class="task-badge badge-prio">Prio 1</span>
-          </div>
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">Immobilien-Demo live auf GitHub Pages deployen</span>
-            <span class="task-badge badge-prio">Prio 1</span>
-          </div>
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">Testformular ausfüllen → n8n Webhook prüfen</span>
-            <span class="task-badge badge-mid">Prio 2</span>
-          </div>
-
-          <div class="phase-title">Akquise</div>
-
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">Liste mit 30 Immobilienmaklern (XING/LinkedIn) erstellen</span>
-            <span class="task-badge badge-prio">Prio 1</span>
-          </div>
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">Outreach-Template schreiben (E-Mail + LinkedIn-DM)</span>
-            <span class="task-badge badge-mid">Prio 2</span>
-          </div>
-          <div class="task-item" onclick="toggleTask(this)">
-            <input type="checkbox">
-            <span class="task-text">10 erste Immobilienmakler kontaktieren</span>
-            <span class="task-badge badge-mid">Prio 2</span>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <div class="card" style="margin-bottom:20px;">
-          <div class="card-title"><span class="icon">📅</span> Monat 1–3 Aufgaben</div>
-          <div id="monthTasks">
-            <div class="phase-title">Marketing & Sichtbarkeit</div>
-
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">LinkedIn-Profil auf Flowmatic-Brand optimieren</span>
-              <span class="task-badge badge-mid">Monat 1</span>
-            </div>
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">Eigene Flowmatic-Landingpage mit Angeboten live stellen</span>
-              <span class="task-badge badge-mid">Monat 1</span>
-            </div>
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">30 weitere Makler kontaktieren (wöchentlich)</span>
-              <span class="task-badge badge-low">Laufend</span>
-            </div>
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">Ersten LinkedIn-Post veröffentlichen (Demo zeigen)</span>
-              <span class="task-badge badge-mid">Monat 1</span>
-            </div>
-
-            <div class="phase-title">Produkt-Erweiterungen</div>
-
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">n8n Automation 2 (Follow-up Sequenz) aufbauen</span>
-              <span class="task-badge badge-mid">Monat 1–2</span>
-            </div>
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">n8n Automation 3 (Performance-Report) aufbauen</span>
-              <span class="task-badge badge-low">Monat 2</span>
-            </div>
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">Zweite Demo-Branche wählen und bauen (Coaches?)</span>
-              <span class="task-badge badge-low">Monat 2–3</span>
-            </div>
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">Angebots-Template als PDF erstellen (Preise, Leistungen)</span>
-              <span class="task-badge badge-low">Monat 1</span>
-            </div>
-
-            <div class="phase-title">Geschäftliches</div>
-
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">Gewerbe anmelden (falls noch nicht geschehen)</span>
-              <span class="task-badge badge-prio">Rechtlich</span>
-            </div>
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">Geschäftskonto eröffnen</span>
-              <span class="task-badge badge-prio">Rechtlich</span>
-            </div>
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">Rechnungsvorlage erstellen (mit USt-ID)</span>
-              <span class="task-badge badge-mid">Monat 1</span>
-            </div>
-            <div class="task-item" onclick="toggleTask(this)">
-              <input type="checkbox">
-              <span class="task-text">Erstens Kundenprojekt erfolgreich abliefern 🎉</span>
-              <span class="task-badge badge-info">Meilenstein</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!-- TAB: TOOLS -->
-  <!-- ══════════════════════════════════════════ -->
-  <div class="tab-panel" id="tab-tools">
-    <div class="grid-2">
-
-      <!-- REVENUE CALCULATOR -->
-      <div class="card">
-        <div class="card-title"><span class="icon">🧮</span> Umsatz-Kalkulator</div>
-        <div class="calc-grid">
-          <div class="calc-field">
-            <label>Starter-Pakete / Monat</label>
-            <input type="number" id="cStarter" value="0" min="0" oninput="calcRevenue()">
-          </div>
-          <div class="calc-field">
-            <label>Performance-Pakete / Monat</label>
-            <input type="number" id="cPerf" value="0" min="0" oninput="calcRevenue()">
-          </div>
-          <div class="calc-field">
-            <label>Bundle-Pakete / Monat</label>
-            <input type="number" id="cBundle" value="2" min="0" oninput="calcRevenue()">
-          </div>
-          <div class="calc-field">
-            <label>Aktive Retainer</label>
-            <input type="number" id="cRetainer" value="5" min="0" oninput="calcRevenue()">
-          </div>
-          <div class="calc-field">
-            <label>Automation 1-Aufträge / Mo</label>
-            <input type="number" id="cAuto1" value="0" min="0" oninput="calcRevenue()">
-          </div>
-          <div class="calc-field">
-            <label>Automation 2-Aufträge / Mo</label>
-            <input type="number" id="cAuto2" value="0" min="0" oninput="calcRevenue()">
-          </div>
-        </div>
-        <div class="calc-result">
-          <div class="calc-result-value" id="calcTotal">11.500 €</div>
-          <div class="calc-result-label">Monatlicher Umsatz (geschätzt)</div>
-        </div>
-        <div class="calc-breakdown" id="calcBreakdown"></div>
-      </div>
-
-      <!-- PRICE BUILDER -->
-      <div class="card">
-        <div class="card-title"><span class="icon">💼</span> Angebots-Builder</div>
-        <p style="font-size:0.82rem;color:var(--gray);margin-bottom:14px;">Pakete ein-/ausschalten → Gesamtpreis für Kunden-Angebot berechnen</p>
-
-        <div class="price-row">
-          <div>
-            <div class="price-name">Starter Landingpage</div>
-            <div style="font-size:0.75rem;color:var(--gray);">1 Seite, Formular, 5 Tage</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div class="price-amount">1.500 €</div>
-            <div class="price-toggle" data-val="1500" onclick="togglePrice(this)"></div>
-          </div>
-        </div>
-
-        <div class="price-row">
-          <div>
-            <div class="price-name">Performance Landingpage</div>
-            <div style="font-size:0.75rem;color:var(--gray);">Quiz + Kalkulator, 7 Tage</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div class="price-amount">3.500 €</div>
-            <div class="price-toggle on" data-val="3500" onclick="togglePrice(this)"></div>
-          </div>
-        </div>
-
-        <div class="price-row">
-          <div>
-            <div class="price-name">Automation 1 — Lead-Eingang</div>
-            <div style="font-size:0.75rem;color:var(--gray);">Webhook, Mail, Google Sheets</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div class="price-amount">800 €</div>
-            <div class="price-toggle on" data-val="800" onclick="togglePrice(this)"></div>
-          </div>
-        </div>
-
-        <div class="price-row">
-          <div>
-            <div class="price-name">Automation 2 — Follow-up Sequenz</div>
-            <div style="font-size:0.75rem;color:var(--gray);">4-Mail-Serie, 7 Tage</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div class="price-amount">1.000 €</div>
-            <div class="price-toggle on" data-val="1000" onclick="togglePrice(this)"></div>
-          </div>
-        </div>
-
-        <div class="price-row">
-          <div>
-            <div class="price-name">Automation 3 — Performance-Report</div>
-            <div style="font-size:0.75rem;color:var(--gray);">Wöchentlicher KPI-Report</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div class="price-amount">800 €</div>
-            <div class="price-toggle" data-val="800" onclick="togglePrice(this)"></div>
-          </div>
-        </div>
-
-        <div class="price-row">
-          <div>
-            <div class="price-name">Monatlicher Retainer</div>
-            <div style="font-size:0.75rem;color:var(--gray);">Updates, A/B-Tests, Support</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div class="price-amount">500 €/Mo</div>
-            <div class="price-toggle on" data-val="500" data-monthly="1" onclick="togglePrice(this)"></div>
-          </div>
-        </div>
-
-        <div class="price-total-box">
-          <div>
-            <div class="price-total-label">Setup-Gesamtpreis</div>
-            <div style="font-size:0.75rem;color:var(--gray);margin-top:2px;" id="monthlyNote">+ 500 €/Monat ab Monat 2</div>
-          </div>
-          <div class="price-total-value" id="priceTotal">5.300 €</div>
-        </div>
-      </div>
-
-      <!-- PITCH TIMER -->
-      <div class="card">
-        <div class="card-title"><span class="icon">🎤</span> 30-Sekunden Pitch Timer</div>
-        <div class="timer-display" id="timerDisplay">0:30</div>
-        <div class="timer-btns">
-          <button class="btn btn-gold" onclick="startTimer()">▶ Start</button>
-          <button class="btn btn-outline" onclick="resetTimer()">↺ Reset</button>
-        </div>
-        <div class="pitch-script">
-          <strong>"Ich baue Landingpages, die Anfragen automatisch weiterleiten</strong> — kein IT-Aufwand für Sie, fertig in einer Woche.<br><br>
-          <strong>Das System funktioniert so:</strong> Ihr Interessent füllt ein kurzes Quiz aus, bekommt sofort eine Bestätigungsmail, und Sie bekommen gleichzeitig eine Benachrichtigung mit allen Kontaktdaten — automatisch.<br><br>
-          <strong>Darf ich Ihnen kurz ein Beispiel zeigen?"</strong>
-          <br><br>
-          <span style="color:var(--gold);font-size:0.8rem;">→ Demo-Link: timclaude033-dev.github.io/Claude-Projekt-/</span>
-        </div>
-      </div>
-
-      <!-- OUTREACH TRACKER -->
-      <div class="card">
-        <div class="card-title"><span class="icon">📊</span> Outreach-Zähler</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;">
-          <div style="text-align:center;background:var(--navy3);padding:14px;border-radius:10px;">
-            <div style="font-size:1.8rem;font-weight:900;color:var(--gold2);" id="outContactCount">0</div>
-            <div style="font-size:0.75rem;color:var(--gray);margin-top:4px;">Kontaktiert</div>
-            <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;">
-              <button class="btn btn-outline" style="padding:4px 10px;font-size:0.8rem;" onclick="adjustOut('outContactCount',-1)">−</button>
-              <button class="btn btn-gold" style="padding:4px 10px;font-size:0.8rem;" onclick="adjustOut('outContactCount',1)">+</button>
-            </div>
-          </div>
-          <div style="text-align:center;background:var(--navy3);padding:14px;border-radius:10px;">
-            <div style="font-size:1.8rem;font-weight:900;color:var(--orange);" id="outReplyCount">0</div>
-            <div style="font-size:0.75rem;color:var(--gray);margin-top:4px;">Antworten</div>
-            <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;">
-              <button class="btn btn-outline" style="padding:4px 10px;font-size:0.8rem;" onclick="adjustOut('outReplyCount',-1)">−</button>
-              <button class="btn btn-gold" style="padding:4px 10px;font-size:0.8rem;" onclick="adjustOut('outReplyCount',1)">+</button>
-            </div>
-          </div>
-          <div style="text-align:center;background:var(--navy3);padding:14px;border-radius:10px;">
-            <div style="font-size:1.8rem;font-weight:900;color:var(--green);" id="outDealCount">0</div>
-            <div style="font-size:0.75rem;color:var(--gray);margin-top:4px;">Deals</div>
-            <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;">
-              <button class="btn btn-outline" style="padding:4px 10px;font-size:0.8rem;" onclick="adjustOut('outDealCount',-1)">−</button>
-              <button class="btn btn-gold" style="padding:4px 10px;font-size:0.8rem;" onclick="adjustOut('outDealCount',1)">+</button>
-            </div>
-          </div>
-        </div>
-        <div style="background:var(--navy3);padding:14px;border-radius:10px;font-size:0.85rem;">
-          <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <span style="color:var(--gray);">Antwortrate:</span>
-            <span style="color:var(--gold2);font-weight:700;" id="replyRate">—</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;">
-            <span style="color:var(--gray);">Conversion Rate:</span>
-            <span style="color:var(--green);font-weight:700;" id="convRate">—</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!-- TAB: KUNDEN -->
-  <!-- ══════════════════════════════════════════ -->
-  <div class="tab-panel" id="tab-clients">
-    <div class="card">
-      <div class="card-title"><span class="icon">👥</span> Kunden & Leads Pipeline</div>
-
-      <div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:6px;font-size:0.82rem;">
-          <div class="status-dot status-lead"></div><span style="color:var(--gray);">Lead / In Gespräch</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:0.82rem;">
-          <div class="status-dot status-active"></div><span style="color:var(--gray);">Aktiver Kunde / Retainer</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;font-size:0.82rem;">
-          <div class="status-dot status-done"></div><span style="color:var(--gray);">Abgeschlossen</span>
-        </div>
-      </div>
-
-      <div id="clientList">
-        <!-- Beispiel-Einträge -->
-        <div class="client-row" style="opacity:0.5;">
-          <div class="client-name" style="color:var(--gray);font-style:italic;">Noch keine Kunden eingetragen...</div>
-          <div></div><div></div>
-          <div class="status-dot status-done"></div>
-        </div>
-      </div>
-
-      <div class="add-client-form" style="margin-top:16px;">
-        <input type="text" id="newClientName" placeholder="Name / Firma">
-        <input type="number" id="newClientVal" placeholder="Wert in €">
-        <select id="newClientStatus">
-          <option value="lead">Lead</option>
-          <option value="active">Aktiv</option>
-          <option value="done">Fertig</option>
-        </select>
-      </div>
-      <button class="btn btn-gold" style="margin-top:10px;width:100%;" onclick="addClient()">+ Kunden / Lead hinzufügen</button>
-
-      <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06);">
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-          <div style="text-align:center;">
-            <div style="font-size:1.4rem;font-weight:800;color:var(--orange);" id="totalLeads">0</div>
-            <div style="font-size:0.75rem;color:var(--gray);">Aktive Leads</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-size:1.4rem;font-weight:800;color:var(--green);" id="totalActive">0</div>
-            <div style="font-size:0.75rem;color:var(--gray);">Aktive Kunden</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-size:1.4rem;font-weight:800;color:var(--gold2);" id="totalRevenue">0 €</div>
-            <div style="font-size:0.75rem;color:var(--gray);">Pipeline-Wert</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════ -->
-  <!-- TAB: NOTIZEN -->
-  <!-- ══════════════════════════════════════════ -->
-  <div class="tab-panel" id="tab-notes">
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title"><span class="icon">📝</span> Schnellnotizen</div>
-        <textarea class="notes-area" id="notesMain" placeholder="Ideen, Gesprächsnotizen, To-dos...&#10;&#10;Alles wird automatisch gespeichert." oninput="saveNotes('notesMain')"></textarea>
-        <div class="notes-saved" id="savedMain">✓ Gespeichert</div>
-      </div>
-
-      <div>
-        <div class="card" style="margin-bottom:20px;">
-          <div class="card-title"><span class="icon">🎯</span> Heute fokussieren auf</div>
-          <textarea class="notes-area" id="notesFocus" placeholder="Was ist das Wichtigste heute?&#10;&#10;1.&#10;2.&#10;3." style="min-height:100px;" oninput="saveNotes('notesFocus')"></textarea>
-          <div class="notes-saved" id="savedFocus">✓ Gespeichert</div>
-        </div>
-
         <div class="card">
-          <div class="card-title"><span class="icon">💡</span> Ideen & Erkenntnisse</div>
-          <textarea class="notes-area" id="notesIdeas" placeholder="Ideen für neue Services, Branchen, Angebote...&#10;&#10;Was hat gut funktioniert?&#10;Was hat nicht funktioniert?" style="min-height:100px;" oninput="saveNotes('notesIdeas')"></textarea>
-          <div class="notes-saved" id="savedIdeas">✓ Gespeichert</div>
+          <div class="card-title">Gespraeches-Leitfaden</div>
+          <div class="g3">
+            <div style="background:var(--s2);border-radius:var(--r);padding:16px;"><div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Zum Problem 01</div><div style="font-size:12px;color:var(--muted2);line-height:2;">"Wie schnell melden Sie sich bei neuen Anfragen?"<br>"Haben Sie schon mal ein Mandat verloren, weil ein anderer Makler schneller war?"<br>"Was passiert nachts mit neuen Anfragen?"</div></div>
+            <div style="background:var(--s2);border-radius:var(--r);padding:16px;"><div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Zum Problem 02</div><div style="font-size:12px;color:var(--muted2);line-height:2;">"Wo landen Ihre Leads gerade &mdash; Excel, Notizbuch, nirgends?"<br>"Wie viele potenzielle Kaeufer haben Sie gerade in der Pipeline?"<br>"Wann haben Sie zuletzt einen Lead nachgefasst?"</div></div>
+            <div style="background:var(--s2);border-radius:var(--r);padding:16px;"><div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Zum Problem 03</div><div style="font-size:12px;color:var(--muted2);line-height:2;">"Wie lange brauchen Sie fuer ein Expose?"<br>"Wie viele Objekte verwalten Sie gleichzeitig?"<br>"Was wuerden Sie mit 3 Stunden mehr Zeit pro Woche machen?"</div></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-</div><!-- /container -->
+    <!-- KALKULATOR -->
+    <div class="panel" id="panel-calc">
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Umsatz-Kalkulator</div><div class="ph-sub">Monatliches Umsatzpotenzial mit den 3 Services berechnen</div></div>
+      <div class="p" style="padding-top:0;">
+        <div class="g2">
+          <div class="card">
+            <div class="card-title">Eingabe &mdash; Auftraege pro Monat</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px;">
+              <div><div class="lbl">Lead-Maschine Eigentuemer (2.500 CHF)</div><input type="number" class="inp" id="cLME" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Lead-Maschine Kaeufer (2.500 CHF)</div><input type="number" class="inp" id="cLMK" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Lead-Verwaltung (2.500 CHF)</div><input type="number" class="inp" id="cLV" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Expose-Generator (1.500 CHF)</div><input type="number" class="inp" id="cEG" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Retainer LM-E (200 CHF/Mo)</div><input type="number" class="inp" id="rLME" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Retainer LM-K (200 CHF/Mo)</div><input type="number" class="inp" id="rLMK" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Retainer Lead-Verwaltung (250 CHF/Mo)</div><input type="number" class="inp" id="rLV" value="0" min="0" oninput="calc()"></div>
+            </div>
+            <div class="result-box"><div class="result-val" id="calcOut">0 CHF</div><div class="result-lbl">Monatlicher Umsatz</div></div>
+            <div style="font-size:12px;color:var(--muted);line-height:2;margin-top:14px;" id="calcBreak"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Szenarien</div>
+            <div class="stack">
+              <div class="oc" onclick="setS(0,0,0,0,0,0,0)"><div style="font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:3px;">Monat 1 &mdash; Kein Umsatz</div><div style="font-size:11px;color:var(--muted);">Noch kein Kunde. Aufbauphase.</div><div style="font-size:1.1rem;font-weight:800;color:var(--text);margin-top:6px;">0 CHF</div></div>
+              <div class="oc" onclick="setS(1,0,0,0,0,0,0)"><div style="font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:3px;">Monat 2 &mdash; Erster Auftrag</div><div style="font-size:11px;color:var(--muted);">1 Lead-Maschine Eigentuemer-Funnel</div><div style="font-size:1.1rem;font-weight:800;color:var(--text);margin-top:6px;">2.500 CHF</div></div>
+              <div class="oc" onclick="setS(1,1,1,1,1,1,1)"><div style="font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:3px;">Monat 5 &mdash; Alle Services aktiv</div><div style="font-size:11px;color:var(--muted);">Alle 4 Angebote + Retainer</div><div style="font-size:1.1rem;font-weight:800;color:var(--text);margin-top:6px;">9.150 CHF</div></div>
+              <div class="oc" style="border-color:rgba(201,168,76,.3);" onclick="setS(0,0,0,0,5,5,3)"><div style="font-size:12px;font-weight:700;color:var(--gold2);margin-bottom:3px;">Retainer-Ziel</div><div style="font-size:11px;color:var(--muted);">5x LM-E + 5x LM-K + 3x LV Retainer</div><div style="font-size:1.1rem;font-weight:800;color:var(--gold2);margin-top:6px;">3.750 CHF/Mo passiv</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANGEBOT -->
+    <div class="panel" id="panel-offer">
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Angebots-Builder</div><div class="ph-sub">Services auswaehlen, Preis berechnen, Angebotstext kopieren</div></div>
+      <div class="p" style="padding-top:0;">
+        <div class="g3" style="margin-bottom:20px;">
+          <div class="card" style="border-top:2px solid var(--accent);"><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Service 1</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Lead-Maschine</div><div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:14px;">Automatisierter Funnel generiert qualifizierte Leads von Eigentuemern oder Kaeufern. Sofort-Benachrichtigung, CRM-Eintrag, Follow-up.</div><div style="font-size:12px;color:var(--muted2);line-height:2;"><span style="color:var(--accent);">&rarr;</span> Eigentuemer-Funnel: <b style="color:var(--gold2);">CHF 2.500</b> + 200/Mo<br><span style="color:var(--accent);">&rarr;</span> Kaeufer-Funnel: <b style="color:var(--gold2);">CHF 2.500</b> + 200/Mo</div></div>
+          <div class="card" style="border-top:2px solid var(--green);"><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px;">Service 2</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Lead-Verwaltung</div><div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:14px;">Alle Leads aus allen Quellen laufen automatisch in einem zentralen CRM zusammen. Inkl. Follow-up-Sequenz und woechentlichem Report.</div><div style="font-size:12px;color:var(--muted2);line-height:2;"><span style="color:var(--green);">&rarr;</span> Setup: <b style="color:var(--gold2);">CHF 2.500</b> + 250/Mo<br><span style="color:var(--green);">&rarr;</span> Optional: CRM-System inklusive</div></div>
+          <div class="card" style="border-top:2px solid var(--gold);"><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Service 3</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Expose-Generator</div><div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:14px;">KI-Tool, das aus Objektdaten in unter 2 Minuten ein vollstaendiges Expose erstellt. Einmalig, unbegrenzte Nutzung.</div><div style="font-size:12px;color:var(--muted2);line-height:2;"><span style="color:var(--gold);">&rarr;</span> Einmalig: <b style="color:var(--gold2);">CHF 1.500</b><br><span style="color:var(--gold);">&rarr;</span> Kein Retainer &mdash; kein Abo</div></div>
+        </div>
+        <div class="g2">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted2);margin-bottom:12px;">Angebote auswaehlen (Mehrfachauswahl moeglich)</div>
+            <div id="si0" class="svc-select-item" onclick="toggleSvc(0)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div class="svc-check"><div class="svc-check-mark"></div></div><div style="font-size:13px;font-weight:800;color:var(--text);">Lead-Maschine &mdash; Eigentuemer-Funnel</div><div style="margin-left:auto;font-size:14px;font-weight:900;color:var(--gold2);">CHF 2.500</div></div><div style="font-size:11px;color:var(--muted2);padding-left:28px;line-height:2;">Funnel mit Immobilienbewertung &rarr; Sofort-Benachrichtigung &rarr; CRM-Eintrag<br>+ <span style="color:var(--accent2);">200 CHF/Mo Retainer</span></div></div>
+            <div id="si1" class="svc-select-item" onclick="toggleSvc(1)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div class="svc-check"><div class="svc-check-mark"></div></div><div style="font-size:13px;font-weight:800;color:var(--text);">Lead-Maschine &mdash; Kaeufer-Funnel</div><div style="margin-left:auto;font-size:14px;font-weight:900;color:var(--gold2);">CHF 2.500</div></div><div style="font-size:11px;color:var(--muted2);padding-left:28px;line-height:2;">Suchprofil-Funnel fuer Kaufinteressenten &rarr; Matching &rarr; automatische Benachrichtigung<br>+ <span style="color:var(--accent2);">200 CHF/Mo Retainer</span></div></div>
+            <div id="si2" class="svc-select-item" onclick="toggleSvc(2)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div class="svc-check"><div class="svc-check-mark"></div></div><div style="font-size:13px;font-weight:800;color:var(--text);">Lead-Verwaltung</div><div style="margin-left:auto;font-size:14px;font-weight:900;color:var(--gold2);">CHF 2.500</div></div><div style="font-size:11px;color:var(--muted2);padding-left:28px;line-height:2;">Alle Quellen &rarr; zentrales CRM &rarr; Follow-up-Sequenz &rarr; woechentlicher Report<br>+ <span style="color:var(--accent2);">250 CHF/Mo Retainer</span> &middot; optional: CRM inklusive</div></div>
+            <div id="si3" class="svc-select-item" onclick="toggleSvc(3)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div class="svc-check"><div class="svc-check-mark"></div></div><div style="font-size:13px;font-weight:800;color:var(--text);">Expose-Generator</div><div style="margin-left:auto;font-size:14px;font-weight:900;color:var(--gold2);">CHF 1.500</div></div><div style="font-size:11px;color:var(--muted2);padding-left:28px;line-height:2;">KI-Expose in unter 2 Minuten &mdash; einmalig, kein Abo<br><span style="color:var(--green);">Kein Retainer</span></div></div>
+            <div class="offer-total" id="offerTotal" style="display:none;"><div id="offerBreakdown"></div><div class="offer-line total-line"><span style="color:var(--muted);font-size:11px;">Setup gesamt (netto)</span><b id="offerSetup">-</b></div><div class="offer-line"><span style="color:var(--muted);font-size:11px;">Retainer / Monat</span><span id="offerRetainer" style="color:var(--accent2);font-weight:700;">-</span></div><div class="offer-line"><span style="color:var(--muted);font-size:11px;">MwSt. 8,1 % auf Setup</span><span id="offerVat" style="color:var(--muted2);">-</span></div></div>
+          </div>
+          <div class="card">
+            <div class="card-title">Angebots-Vorschau</div>
+            <div style="background:var(--s2);border-radius:var(--r);padding:18px;font-size:12px;line-height:1.9;margin-bottom:12px;min-height:280px;">
+              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);">Angebot &mdash; Flowmatic</div>
+              <div id="offerPreview" style="color:var(--muted2);">Bitte mindestens einen Service auswaehlen...</div>
+              <div style="height:1px;background:var(--border);margin:12px 0;"></div>
+              <div style="font-size:10px;color:var(--muted);">zzgl. 8,1 % MwSt. &middot; 50 % Anzahlung bei Auftragserteilung &middot; Zahlungsziel 14 Tage</div>
+            </div>
+            <button class="btn btn-primary" style="width:100%;" onclick="copyOffer()">Angebotstext kopieren</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PITCH -->
+    <div class="panel" id="panel-pitch">
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Pitch-Timer</div><div class="ph-sub">30-Sekunden-Pitch trainieren</div></div>
+      <div class="p" style="padding-top:0;">
+        <div class="g2">
+          <div class="card"><div class="card-title">Timer</div><div class="timer-d" id="timerD">0:30</div><div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;"><button class="btn btn-primary" onclick="tStart()">Start / Pause</button><button class="btn btn-ghost" onclick="tReset()">Reset</button></div><div class="div"></div><div class="lbl" style="margin-bottom:8px;">Pitch-Version</div><div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="setPitch('std')">Standard</button><button class="btn btn-ghost btn-sm" onclick="setPitch('immo')">Lead-Maschine</button><button class="btn btn-ghost btn-sm" onclick="setPitch('expose')">Expose-Generator</button></div></div>
+          <div class="card"><div class="card-title">Script</div><div id="pitchText" style="background:var(--s2);border-left:2px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:16px;font-size:13px;line-height:1.8;color:var(--text);"><b style="color:var(--gold2)">"Ich baue fuer Schweizer Immobilienmakler automatisierte Lead-Systeme</b> &mdash; qualifizierte Anfragen automatisch erfassen, sofort reagieren, Follow-up ohne manuellen Aufwand.<br><br>Fertig in 7 Tagen, CHF 2.500 einmalig.<br><br><b style="color:var(--gold2)">Darf ich Ihnen kurz die Demo zeigen?"</b></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTREACH -->
+    <div class="panel" id="panel-outreach">
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Outreach-Tracker</div><div class="ph-sub">Kontakte, Antworten und Abschluesse verfolgen</div></div>
+      <div class="p" style="padding-top:0;">
+        <div class="g3" style="margin-bottom:16px;">
+          <div class="card" style="text-align:center;"><div class="card-title" style="justify-content:center;">Kontaktiert</div><div class="oc-num" style="color:var(--text);" id="oC">0</div><div style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Makler angeschrieben</div><div style="display:flex;gap:6px;justify-content:center;"><button class="btn btn-ghost btn-sm" onclick="adj('oC',-1)">-</button><button class="btn btn-primary btn-sm" onclick="adj('oC',1)">+</button></div></div>
+          <div class="card" style="text-align:center;"><div class="card-title" style="justify-content:center;">Antworten</div><div class="oc-num" style="color:var(--orange);" id="oR">0</div><div style="font-size:11px;color:var(--muted);margin:4px 0 10px;">haben geantwortet</div><div style="display:flex;gap:6px;justify-content:center;"><button class="btn btn-ghost btn-sm" onclick="adj('oR',-1)">-</button><button class="btn btn-primary btn-sm" onclick="adj('oR',1)">+</button></div></div>
+          <div class="card" style="text-align:center;"><div class="card-title" style="justify-content:center;">Abschluesse</div><div class="oc-num" style="color:var(--green);" id="oD">0</div><div style="font-size:11px;color:var(--muted);margin:4px 0 10px;">zahlende Kunden</div><div style="display:flex;gap:6px;justify-content:center;"><button class="btn btn-ghost btn-sm" onclick="adj('oD',-1)">-</button><button class="btn btn-primary btn-sm" onclick="adj('oD',1)">+</button></div></div>
+        </div>
+        <div class="card"><div class="card-title">Conversion-Raten</div><div class="g3"><div style="background:var(--s2);border-radius:var(--r);padding:16px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:var(--text);" id="rR">-</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Antwortrate</div></div><div style="background:var(--s2);border-radius:var(--r);padding:16px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:var(--orange);" id="rC">-</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Abschlussrate</div></div><div style="background:var(--s2);border-radius:var(--r);padding:16px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:var(--green);" id="rT">-</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Gesamt-Conversion</div></div></div></div>
+      </div>
+    </div>
+
+    <!-- KUNDEN -->
+    <div class="panel" id="panel-clients">
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Kunden-Pipeline</div></div>
+      <div class="p" style="padding-top:0;">
+        <div class="card"><div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;margin-bottom:12px;align-items:end;"><div><div class="lbl">Name / Firma</div><input class="inp" id="nN" placeholder="z.B. Maklerbuero Meier AG"></div><div><div class="lbl">Wert (CHF)</div><input type="number" class="inp" id="nV" placeholder="2500" style="width:120px;"></div><div><div class="lbl">Status</div><select class="inp" id="nS" style="width:110px;"><option value="lead">Lead</option><option value="active">Aktiv</option><option value="done">Fertig</option></select></div><button class="btn btn-primary" onclick="addC()" style="align-self:end;">Hinzufuegen</button></div><div class="div"></div><div id="clientList"></div><div class="div"></div><div class="g3"><div style="background:var(--s2);border-radius:var(--r);padding:12px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:var(--orange);" id="cL">0</div><div style="font-size:10px;color:var(--muted);">Leads</div></div><div style="background:var(--s2);border-radius:var(--r);padding:12px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:var(--green);" id="cA">0</div><div style="font-size:10px;color:var(--muted);">Aktive Kunden</div></div><div style="background:var(--s2);border-radius:var(--r);padding:12px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:var(--gold2);" id="cRev">0 CHF</div><div style="font-size:10px;color:var(--muted);">Pipeline-Wert</div></div></div></div>
+      </div>
+    </div>
+
+    <!-- NOTIZEN -->
+    <div class="panel" id="panel-notes">
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Notizen</div><div class="ph-sub">Automatisch gespeichert</div></div>
+      <div class="p" style="padding-top:0;">
+        <div class="g2"><div class="card"><div class="card-title">Allgemeine Notizen</div><textarea class="ta" id="n1" placeholder="Ideen, Gespraechsnotizen, Gedanken..." oninput="sn('n1')"></textarea><div class="saved-ok" id="sv1">Gespeichert</div></div><div class="stack"><div class="card"><div class="card-title">Heute - Top 3</div><textarea class="ta" id="n2" placeholder="1.&#10;2.&#10;3." style="min-height:100px;" oninput="sn('n2')"></textarea><div class="saved-ok" id="sv2">Gespeichert</div></div><div class="card"><div class="card-title">Ideen &amp; Erkenntnisse</div><textarea class="ta" id="n3" placeholder="Was hat funktioniert?&#10;Neue Ideen..." style="min-height:100px;" oninput="sn('n3')"></textarea><div class="saved-ok" id="sv3">Gespeichert</div></div></div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
 
 <script>
-// ── TABS ──────────────────────────────────────
-function switchTab(name) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  event.target.classList.add('active');
-  if (name === 'tasks') updateWeekProgress();
+function show(name,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('panel-'+name).classList.add('active');el.classList.add('active');}
+function openGoal(){const v=parseFloat(localStorage.getItem('fm_earned')||0);document.getElementById('gInput').value=v||'';previewGoal();document.getElementById('gModal').classList.add('open');}
+function closeGoal(){document.getElementById('gModal').classList.remove('open');}
+function previewGoal(){const v=parseFloat(document.getElementById('gInput').value)||0,pct=Math.min(100,Math.round(v/190000*100));document.getElementById('gPreviewFill').style.width=pct+'%';document.getElementById('gPreviewPct').textContent=pct+' %';}
+function saveGoal(){const v=parseFloat(document.getElementById('gInput').value)||0;localStorage.setItem('fm_earned',v);renderGoalBar(v);closeGoal();}
+function renderGoalBar(v){const total=190000,pct=Math.min(100,Math.round(v/total*100));document.getElementById('gFill').style.width=pct+'%';document.getElementById('gPct').textContent=pct+' %';document.getElementById('gNums').innerHTML='<b>'+v.toLocaleString('de-CH')+' CHF</b> verdient &middot; '+Math.max(0,total-v).toLocaleString('de-CH')+' CHF verbleibend';}
+
+const TASKS=[
+  {id:'t2',text:'GitHub Pages aktivieren und testen',col:'offen',tag:'gratis'},
+  {id:'t3',text:'n8n Cloud-Account erstellen (Free-Plan)',col:'offen',tag:'gratis'},
+  {id:'t4',text:'Gmail SMTP in n8n konfigurieren',col:'offen',tag:'gratis'},
+  {id:'t5',text:'Google Sheets Vorlage fuer Lead-Speicherung anlegen',col:'offen',tag:'gratis'},
+  {id:'t8',text:'Flowmatic-Logo erstellen (Canva Free)',col:'offen',tag:'gratis'},
+  {id:'t9',text:'Brand-Farben: Navy #1E3A5F, Blue #2D7DD2, Sky #5BA4E5',col:'offen',tag:'gratis'},
+  {id:'t11',text:'LinkedIn-Profil auf Flowmatic-Brand umstellen',col:'offen',tag:'gratis'},
+  {id:'t10',text:'Flowmatic-Landingpage fuer Schweizer Immobilienmakler live stellen',col:'offen',tag:'gratis'},
+  {id:'t13',text:'Lead-Maschine Demo Eigentuemer-Funnel bauen und deployen',col:'offen',tag:'gratis'},
+  {id:'t13b',text:'Lead-Maschine Demo Kaeufer-Funnel bauen und deployen',col:'offen',tag:'gratis'},
+  {id:'t15',text:'Testformular ausfullen - n8n Webhook, Mail, Sheets pruefen',col:'offen',tag:'gratis'},
+  {id:'t16',text:'n8n: Lead-Maschine Workflow (Formular > CRM > Follow-up)',col:'offen',tag:'gratis'},
+  {id:'t17',text:'n8n: Lead-Verwaltung - alle Quellen in zentrales CRM',col:'offen',tag:'gratis'},
+  {id:'t18',text:'n8n: Expose-Generator mit Claude API verbinden',col:'offen',tag:'gratis'},
+  {id:'t19',text:'n8n: Woechentlicher Performance-Report automatisieren',col:'offen',tag:'gratis'},
+  {id:'t20',text:'Angebots-PDF erstellen (3 Services, CHF-Preise, MwSt 8.1%)',col:'offen',tag:'gratis'},
+  {id:'t21',text:'Rechnungsvorlage erstellen (CHF, MwSt 8.1%)',col:'offen',tag:'gratis'},
+  {id:'t22',text:'Dienstleistungsvertrag/AGB Vorlage',col:'offen',tag:'gratis'},
+  {id:'t25',text:'50 Immobilienmakler in Zuerich, Zug, Basel, Genf zusammenstellen',col:'offen',tag:'gratis'},
+  {id:'t26',text:'Outreach-Template schreiben (Problem ansprechen + Demo-Link)',col:'offen',tag:'gratis'},
+  {id:'t27',text:'10 erste Immobilienmakler kontaktieren',col:'offen',tag:'gratis'},
+  {id:'t28',text:'Ersten LinkedIn-Post: Lead-Maschine Demo zeigen',col:'offen',tag:'gratis'},
+  {id:'t29',text:'Follow-up nach 3 Tagen an alle kontaktierten Makler',col:'offen',tag:'gratis'},
+  {id:'t32',text:'Erstgespraech: 30 Min, Demo zeigen, Kundenproblem herausarbeiten',col:'offen',tag:'gratis'},
+  {id:'t33',text:'Individuelles Angebot erstellen und versenden (CHF, Services)',col:'offen',tag:'gratis'},
+  {id:'t34',text:'Ersten Auftrag annehmen und 50% Anzahlung einholen',col:'offen',tag:'gratis'},
+  {id:'t35',text:'Kunden-Setup in 7 Tagen liefern',col:'offen',tag:'gratis'},
+  {id:'t36',text:'Rechnung stellen und Restzahlung einziehen',col:'offen',tag:'gratis'},
+  {id:'t37',text:'Testimonial nach Projektabschluss einholen',col:'offen',tag:'gratis'},
+  {id:'t38',text:'Retainer-Gespraech fuehren',col:'offen',tag:'gratis'},
+  {id:'t40',text:'Erste Case Study mit echten Lead-Zahlen schreiben',col:'offen',tag:'gratis'},
+  {id:'t41',text:'Woechentlich 15 neue Makler kontaktieren (Routine)',col:'offen',tag:'gratis'},
+  {id:'t42',text:'2x pro Woche LinkedIn-Content veroeffentlichen',col:'offen',tag:'gratis'},
+  {id:'t44',text:'5 aktive Retainer-Kunden - ca. 3.000 CHF passiv/Monat',col:'offen',tag:'ms'},
+  {id:'t45',text:'190.000 CHF Gesamtziel erreicht',col:'offen',tag:'ms'},
+  {id:'t1',text:'Domain flowmatic.ch registrieren - ca. 10-20 CHF/Jahr',col:'offen',tag:'paid'},
+  {id:'t6',text:'Gewerbe anmelden in der Schweiz',col:'offen',tag:'paid'},
+  {id:'t7',text:'Geschaeftskonto eroeffnen (Neon Business oder Kantonalbank)',col:'offen',tag:'paid'},
+  {id:'t46',text:'Google Ads Testkampagne fuer Makler-Zielgruppe - 100-200 CHF',col:'offen',tag:'paid'},
+  {id:'t49',text:'n8n Cloud auf bezahlten Plan upgraden - ab 20 EUR/Monat',col:'offen',tag:'paid'},
+];
+const TAG_LABELS={gratis:'Kostenlos',paid:'Kostenpflichtig',ms:'Meilenstein'};
+let taskState={};
+function loadKanban(){const s=localStorage.getItem('fm_kb5');if(s)taskState=JSON.parse(s);else TASKS.forEach(t=>taskState[t.id]=t.col);renderKanban();}
+function renderKanban(){['offen','inprog','done','online'].forEach(col=>{const el=document.getElementById('col-'+col);el.innerHTML='';const tasks=TASKS.filter(t=>taskState[t.id]===col);tasks.forEach(t=>el.appendChild(makeCard(t)));document.getElementById('cnt-'+col).textContent=tasks.length;});}
+function makeCard(t){const d=document.createElement('div');d.className='kb-card';d.draggable=true;d.dataset.id=t.id;d.innerHTML='<div class="kb-card-text">'+t.text+'</div><div class="kb-card-footer"><span class="kb-tag tag-'+t.tag+'">'+TAG_LABELS[t.tag]+'</span><div class="kb-card-grip"><span></span><span></span><span></span></div></div>';d.addEventListener('dragstart',onDragStart);d.addEventListener('dragend',onDragEnd);return d;}
+let dragged=null;
+function onDragStart(e){dragged=this;this.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',this.dataset.id);}
+function onDragEnd(){this.classList.remove('dragging');document.querySelectorAll('.kb-list').forEach(l=>l.classList.remove('drag-over'));}
+function onDragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';e.currentTarget.classList.add('drag-over');}
+function onDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function onDrop(e,col){e.preventDefault();e.currentTarget.classList.remove('drag-over');const id=e.dataTransfer.getData('text/plain');if(id){taskState[id]=col;localStorage.setItem('fm_kb5',JSON.stringify(taskState));renderKanban();}}
+
+function calc(){
+  const lme=+document.getElementById('cLME').value||0,lmk=+document.getElementById('cLMK').value||0,lv=+document.getElementById('cLV').value||0,eg=+document.getElementById('cEG').value||0;
+  const rlme=+document.getElementById('rLME').value||0,rlmk=+document.getElementById('rLMK').value||0,rlv=+document.getElementById('rLV').value||0;
+  const setup=lme*2500+lmk*2500+lv*2500+eg*1500,ret=rlme*200+rlmk*200+rlv*250;
+  document.getElementById('calcOut').textContent=(setup+ret).toLocaleString('de-CH')+' CHF';
+  const lines=[];
+  if(lme)lines.push(lme+'x LM Eigentuemer: <span style="color:var(--gold2)">'+(lme*2500).toLocaleString('de-CH')+' CHF</span>');
+  if(lmk)lines.push(lmk+'x LM Kaeufer: <span style="color:var(--gold2)">'+(lmk*2500).toLocaleString('de-CH')+' CHF</span>');
+  if(lv)lines.push(lv+'x Lead-Verwaltung: <span style="color:var(--gold2)">'+(lv*2500).toLocaleString('de-CH')+' CHF</span>');
+  if(eg)lines.push(eg+'x Expose: <span style="color:var(--gold2)">'+(eg*1500).toLocaleString('de-CH')+' CHF</span>');
+  if(rlme)lines.push(rlme+'x LM-E Retainer: <span style="color:var(--accent2)">'+(rlme*200).toLocaleString('de-CH')+' CHF/Mo</span>');
+  if(rlmk)lines.push(rlmk+'x LM-K Retainer: <span style="color:var(--accent2)">'+(rlmk*200).toLocaleString('de-CH')+' CHF/Mo</span>');
+  if(rlv)lines.push(rlv+'x LV Retainer: <span style="color:var(--accent2)">'+(rlv*250).toLocaleString('de-CH')+' CHF/Mo</span>');
+  document.getElementById('calcBreak').innerHTML=lines.join('<br>')||'<span style="color:var(--muted)">Werte eingeben...</span>';
+}
+function setS(lme,lmk,lv,eg,rlme,rlmk,rlv){['cLME','cLMK','cLV','cEG','rLME','rLMK','rLV'].forEach((id,i)=>document.getElementById(id).value=[lme,lmk,lv,eg,rlme,rlmk,rlv][i]);calc();}
+
+const SVC_DEF=[
+  {name:'Lead-Maschine - Eigentuemer-Funnel',once:2500,mo:200,desc:'Eigentuemer-Funnel > Sofort-Benachrichtigung > CRM-Eintrag > Follow-up-Sequenz'},
+  {name:'Lead-Maschine - Kaeufer-Funnel',once:2500,mo:200,desc:'Kaeufer-Funnel > Suchprofil-Matching > automatische Benachrichtigung'},
+  {name:'Lead-Verwaltung',once:2500,mo:250,desc:'Alle Quellen > zentrales CRM > Follow-up-Sequenz > woechentlicher Performance-Report'},
+  {name:'Expose-Generator',once:1500,mo:0,desc:'KI-Expose aus Objektdaten in unter 2 Minuten - kein Retainer'},
+];
+const svcSelected=new Set();
+function toggleSvc(idx){if(svcSelected.has(idx))svcSelected.delete(idx);else svcSelected.add(idx);document.getElementById('si'+idx).classList.toggle('on',svcSelected.has(idx));updateOfferTotal();}
+function updateOfferTotal(){
+  let once=0,mo=0;const brkLines=[];
+  svcSelected.forEach(i=>{const s=SVC_DEF[i];once+=s.once;mo+=s.mo;brkLines.push('<div class="offer-line"><span>'+s.name+'</span><b>CHF '+s.once.toLocaleString('de-CH')+'</b></div>');});
+  const el=document.getElementById('offerTotal');
+  if(svcSelected.size===0){el.style.display='none';document.getElementById('offerPreview').innerHTML='Bitte mindestens einen Service auswaehlen...';return;}
+  el.style.display='block';
+  document.getElementById('offerBreakdown').innerHTML=brkLines.join('');
+  document.getElementById('offerSetup').textContent='CHF '+once.toLocaleString('de-CH');
+  document.getElementById('offerRetainer').textContent=mo>0?'CHF '+mo.toLocaleString('de-CH')+'/Mo':'Kein Retainer';
+  const vat=Math.round(once*0.081);
+  document.getElementById('offerVat').textContent='CHF '+vat.toLocaleString('de-CH');
+  const prev=[...svcSelected].map(i=>{const s=SVC_DEF[i];const ret=s.mo>0?' + CHF '+s.mo+'/Mo Retainer':' - kein Retainer';return '<div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--accent);flex-shrink:0;">+</span><span style="color:var(--muted2)">'+s.name+'<br><span style="font-size:11px;color:var(--muted);">'+s.desc+'</span><br><span style="color:var(--gold2);font-weight:700;">CHF '+s.once.toLocaleString('de-CH')+' Setup'+ret+'</span></span></div>';}).join('');
+  document.getElementById('offerPreview').innerHTML=prev+'<div style="color:var(--muted);font-size:11px;margin-top:10px;">+ MwSt. 8,1% auf Setup (CHF '+vat.toLocaleString('de-CH')+')</div>';
+}
+function copyOffer(){
+  if(svcSelected.size===0){alert('Bitte mindestens einen Service auswaehlen.');return;}
+  let once=0,mo=0;
+  const items=[...svcSelected].map(i=>{const s=SVC_DEF[i];once+=s.once;mo+=s.mo;return'- '+s.name+': CHF '+s.once.toLocaleString('de-CH')+' Setup'+(s.mo?' + CHF '+s.mo+'/Mo Retainer':' (einmalig, kein Retainer)');}).join('\n');
+  const vat=Math.round(once*0.081);
+  const txt='ANGEBOT - FLOWMATIC\n\nLeistungsumfang:\n'+items+'\n\nSetup-Preis (netto): CHF '+once.toLocaleString('de-CH')+'\n'+(mo>0?'Monatlicher Retainer: CHF '+mo.toLocaleString('de-CH')+'/Mo\n':'')+'MwSt. 8,1%: CHF '+vat.toLocaleString('de-CH')+'\nSetup gesamt inkl. MwSt.: CHF '+(once+vat).toLocaleString('de-CH')+'\n\n50% Anzahlung bei Auftragserteilung\nZahlungsziel: 14 Tage\nLieferzeit: 7 Werktage';
+  navigator.clipboard.writeText(txt).then(()=>{const b=event.target;b.textContent='Kopiert';setTimeout(()=>b.textContent='Angebotstext kopieren',2000);});
 }
 
-// ── TASKS ─────────────────────────────────────
-function toggleTask(item) {
-  const cb = item.querySelector('input[type="checkbox"]');
-  cb.checked = !cb.checked;
-  item.classList.toggle('done', cb.checked);
-  saveTaskState();
-  updateWeekProgress();
-}
+let tInt=null,tLeft=30,tRun=false;
+function tStart(){if(tRun){clearInterval(tInt);tRun=false;return;}if(tLeft<=0){tLeft=30;updT();}tRun=true;tInt=setInterval(()=>{tLeft--;updT();if(tLeft<=0){clearInterval(tInt);tRun=false;}},1000);}
+function tReset(){clearInterval(tInt);tRun=false;tLeft=30;updT();}
+function updT(){const el=document.getElementById('timerD');el.textContent='0:'+String(tLeft).padStart(2,'0');el.style.color=tLeft<=0?'var(--green)':tLeft<=10?'var(--red)':'var(--text)';if(tLeft<=0)el.textContent='Fertig';}
+const pitches={
+  std:'<b style="color:var(--gold2)">"Ich baue fuer Schweizer Immobilienmakler automatisierte Lead-Systeme</b> - qualifizierte Anfragen automatisch erfassen, sofort reagieren, Follow-up ohne Aufwand.<br><br>Fertig in 7 Tagen, CHF 2.500 einmalig.<br><br><b style="color:var(--gold2)">Darf ich Ihnen kurz die Demo zeigen?"</b>',
+  immo:'<b style="color:var(--gold2)">"Ich baue fuer Immobilienmakler automatisierte Bewertungs-Funnels</b> - Eigentuemer fragen online die Immobilienbewertung an, Sie bekommen sofort alle Kontaktdaten, Follow-up laeuft von alleine.<br><br>Fertig in 7 Tagen, CHF 2.500 einmalig.<br><br><b style="color:var(--gold2)">Darf ich Ihnen kurz die Demo zeigen?"</b>',
+  expose:'<b style="color:var(--gold2)">"Ein professionelles Expose kostet Sie heute 2-4 Stunden pro Objekt.</b> Ich baue Ihnen ein KI-Tool, das das in unter 2 Minuten erledigt.<br><br>Einmalig CHF 1.500, kein Abo, keine laufenden Kosten.<br><br><b style="color:var(--gold2)">Darf ich Ihnen das kurz zeigen?"</b>'
+};
+function setPitch(k){document.getElementById('pitchText').innerHTML=pitches[k];}
 
-function updateWeekProgress() {
-  const tasks = document.querySelectorAll('#weekTasks .task-item');
-  const done = document.querySelectorAll('#weekTasks .task-item.done').length;
-  const pct = tasks.length ? Math.round(done / tasks.length * 100) : 0;
-  document.getElementById('weekProgress').textContent = done + ' / ' + tasks.length;
-  document.getElementById('weekFill').style.width = pct + '%';
-}
+function adj(id,d){const el=document.getElementById(id);el.textContent=Math.max(0,parseInt(el.textContent)+d);const c=parseInt(document.getElementById('oC').textContent),r=parseInt(document.getElementById('oR').textContent),d2=parseInt(document.getElementById('oD').textContent);document.getElementById('rR').textContent=c?Math.round(r/c*100)+'%':'-';document.getElementById('rC').textContent=r?Math.round(d2/r*100)+'%':'-';document.getElementById('rT').textContent=c?Math.round(d2/c*100)+'%':'-';localStorage.setItem('fm_out5',JSON.stringify({c,r,d:d2}));}
+function loadOut(){const s=localStorage.getItem('fm_out5');if(!s)return;const d=JSON.parse(s);document.getElementById('oC').textContent=d.c||0;document.getElementById('oR').textContent=d.r||0;document.getElementById('oD').textContent=d.d||0;adj('oC',0);}
 
-function saveTaskState() {
-  const states = {};
-  document.querySelectorAll('.task-item').forEach((item, i) => {
-    states[i] = item.classList.contains('done');
-  });
-  localStorage.setItem('fm_tasks', JSON.stringify(states));
-}
+let clients=JSON.parse(localStorage.getItem('fm_cl5')||'[]');
+function renderClients(){const list=document.getElementById('clientList');list.innerHTML=clients.length?clients.map((c,i)=>'<div class="client-row"><div class="client-name">'+c.n+'</div><div class="client-val">'+parseInt(c.v).toLocaleString('de-CH')+' CHF</div><div style="font-size:11px;color:var(--muted);">'+( c.s==='lead'?'Lead':c.s==='active'?'Aktiv':'Fertig')+'</div><div style="display:flex;align-items:center;gap:8px;"><div class="sdot sdot-'+c.s+'"></div><button onclick="rmC('+i+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;">x</button></div></div>').join(''):'<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">Noch keine Eintraege</div>';document.getElementById('cL').textContent=clients.filter(c=>c.s==='lead').length;document.getElementById('cA').textContent=clients.filter(c=>c.s==='active').length;document.getElementById('cRev').textContent=clients.reduce((s,c)=>s+parseInt(c.v),0).toLocaleString('de-CH')+' CHF';}
+function addC(){const n=document.getElementById('nN').value.trim(),v=document.getElementById('nV').value||0,s=document.getElementById('nS').value;if(!n)return;clients.push({n,v,s});localStorage.setItem('fm_cl5',JSON.stringify(clients));document.getElementById('nN').value='';document.getElementById('nV').value='';renderClients();}
+function rmC(i){clients.splice(i,1);localStorage.setItem('fm_cl5',JSON.stringify(clients));renderClients();}
 
-function loadTaskState() {
-  const saved = localStorage.getItem('fm_tasks');
-  if (!saved) return;
-  const states = JSON.parse(saved);
-  document.querySelectorAll('.task-item').forEach((item, i) => {
-    if (states[i]) {
-      item.classList.add('done');
-      item.querySelector('input[type="checkbox"]').checked = true;
-    }
-  });
-  updateWeekProgress();
-}
+const nT={};
+function sn(id){clearTimeout(nT[id]);nT[id]=setTimeout(()=>{localStorage.setItem('fm_n_'+id,document.getElementById(id).value);const sv=document.getElementById('sv'+id.slice(1));if(sv){sv.classList.add('show');setTimeout(()=>sv.classList.remove('show'),1800);}},500);}
+function loadNotes(){['n1','n2','n3'].forEach(id=>{const v=localStorage.getItem('fm_n_'+id);if(v)document.getElementById(id).value=v;});}
 
-// ── REVENUE CALC ──────────────────────────────
-function calcRevenue() {
-  const starter = parseInt(document.getElementById('cStarter').value) || 0;
-  const perf = parseInt(document.getElementById('cPerf').value) || 0;
-  const bundle = parseInt(document.getElementById('cBundle').value) || 0;
-  const retainer = parseInt(document.getElementById('cRetainer').value) || 0;
-  const auto1 = parseInt(document.getElementById('cAuto1').value) || 0;
-  const auto2 = parseInt(document.getElementById('cAuto2').value) || 0;
-
-  const starterRev = starter * 1500;
-  const perfRev = perf * 3500;
-  const bundleRev = bundle * 4500;
-  const retainerRev = retainer * 500;
-  const auto1Rev = auto1 * 1000;
-  const auto2Rev = auto2 * 1400;
-
-  const total = starterRev + perfRev + bundleRev + retainerRev + auto1Rev + auto2Rev;
-
-  document.getElementById('calcTotal').textContent = total.toLocaleString('de-DE') + ' €';
-
-  const lines = [];
-  if (starterRev) lines.push(`${starter}× Starter: <span>${starterRev.toLocaleString('de-DE')} €</span>`);
-  if (perfRev) lines.push(`${perf}× Performance: <span>${perfRev.toLocaleString('de-DE')} €</span>`);
-  if (bundleRev) lines.push(`${bundle}× Bundle: <span>${bundleRev.toLocaleString('de-DE')} €</span>`);
-  if (retainerRev) lines.push(`${retainer}× Retainer: <span>${retainerRev.toLocaleString('de-DE')} €</span>`);
-  if (auto1Rev) lines.push(`${auto1}× Automation 1: <span>${auto1Rev.toLocaleString('de-DE')} €</span>`);
-  if (auto2Rev) lines.push(`${auto2}× Automation 2: <span>${auto2Rev.toLocaleString('de-DE')} €</span>`);
-
-  document.getElementById('calcBreakdown').innerHTML = lines.join('<br>') || '<span style="color:var(--gray)">Eingaben oben anpassen...</span>';
-}
-
-// ── PRICE BUILDER ─────────────────────────────
-function togglePrice(el) {
-  el.classList.toggle('on');
-  updatePriceTotal();
-}
-
-function updatePriceTotal() {
-  let total = 0;
-  let monthlyTotal = 0;
-  document.querySelectorAll('.price-toggle').forEach(t => {
-    if (t.classList.contains('on')) {
-      const val = parseInt(t.dataset.val) || 0;
-      if (t.dataset.monthly) monthlyTotal += val;
-      else total += val;
-    }
-  });
-  document.getElementById('priceTotal').textContent = total.toLocaleString('de-DE') + ' €';
-  document.getElementById('monthlyNote').textContent = monthlyTotal
-    ? '+ ' + monthlyTotal.toLocaleString('de-DE') + ' €/Monat ab Monat 2'
-    : '';
-}
-
-// ── PITCH TIMER ───────────────────────────────
-let timerInterval = null;
-let timerLeft = 30;
-
-function updateTimerDisplay() {
-  const s = timerLeft % 60;
-  document.getElementById('timerDisplay').textContent = '0:' + String(s).padStart(2, '0');
-  document.getElementById('timerDisplay').style.color = timerLeft <= 10 ? '#e74c3c' : '';
-  if (timerLeft <= 10) {
-    document.getElementById('timerDisplay').style.webkitTextFillColor = timerLeft <= 10 ? '#e74c3c' : '';
-  }
-}
-
-function startTimer() {
-  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; return; }
-  timerInterval = setInterval(() => {
-    timerLeft--;
-    updateTimerDisplay();
-    if (timerLeft <= 0) {
-      clearInterval(timerInterval);
-      timerInterval = null;
-      document.getElementById('timerDisplay').textContent = '✓ DONE';
-    }
-  }, 1000);
-}
-
-function resetTimer() {
-  clearInterval(timerInterval);
-  timerInterval = null;
-  timerLeft = 30;
-  document.getElementById('timerDisplay').style.webkitTextFillColor = '';
-  updateTimerDisplay();
-}
-
-// ── OUTREACH COUNTER ──────────────────────────
-function adjustOut(id, delta) {
-  const el = document.getElementById(id);
-  const val = Math.max(0, parseInt(el.textContent) + delta);
-  el.textContent = val;
-  const contacted = parseInt(document.getElementById('outContactCount').textContent);
-  const replies = parseInt(document.getElementById('outReplyCount').textContent);
-  const deals = parseInt(document.getElementById('outDealCount').textContent);
-  document.getElementById('replyRate').textContent = contacted ? Math.round(replies / contacted * 100) + '%' : '—';
-  document.getElementById('convRate').textContent = replies ? Math.round(deals / replies * 100) + '%' : '—';
-  saveOutreach();
-}
-
-function saveOutreach() {
-  localStorage.setItem('fm_out', JSON.stringify({
-    c: document.getElementById('outContactCount').textContent,
-    r: document.getElementById('outReplyCount').textContent,
-    d: document.getElementById('outDealCount').textContent
-  }));
-}
-
-function loadOutreach() {
-  const s = localStorage.getItem('fm_out');
-  if (!s) return;
-  const d = JSON.parse(s);
-  document.getElementById('outContactCount').textContent = d.c || 0;
-  document.getElementById('outReplyCount').textContent = d.r || 0;
-  document.getElementById('outDealCount').textContent = d.d || 0;
-  adjustOut('outContactCount', 0);
-}
-
-// ── CLIENT TRACKER ────────────────────────────
-let clients = JSON.parse(localStorage.getItem('fm_clients') || '[]');
-
-function renderClients() {
-  const list = document.getElementById('clientList');
-  if (clients.length === 0) {
-    list.innerHTML = '<div class="client-row" style="opacity:0.5;"><div class="client-name" style="color:var(--gray);font-style:italic;">Noch keine Kunden eingetragen...</div><div></div><div></div><div class="status-dot status-done"></div></div>';
-  } else {
-    list.innerHTML = clients.map((c, i) => `
-      <div class="client-row">
-        <div class="client-name">${c.name}</div>
-        <div class="client-value">${parseInt(c.val).toLocaleString('de-DE')} €</div>
-        <div style="font-size:0.78rem;color:var(--gray);">${c.status === 'lead' ? 'Lead' : c.status === 'active' ? 'Aktiv' : 'Fertig'}</div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div class="status-dot status-${c.status}"></div>
-          <button onclick="removeClient(${i})" style="background:none;border:none;color:var(--gray);cursor:pointer;font-size:0.8rem;">✕</button>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  const leads = clients.filter(c => c.status === 'lead').length;
-  const active = clients.filter(c => c.status === 'active').length;
-  const revenue = clients.reduce((s, c) => s + parseInt(c.val), 0);
-  document.getElementById('totalLeads').textContent = leads;
-  document.getElementById('totalActive').textContent = active;
-  document.getElementById('totalRevenue').textContent = revenue.toLocaleString('de-DE') + ' €';
-}
-
-function addClient() {
-  const name = document.getElementById('newClientName').value.trim();
-  const val = document.getElementById('newClientVal').value || 0;
-  const status = document.getElementById('newClientStatus').value;
-  if (!name) return;
-  clients.push({ name, val, status });
-  localStorage.setItem('fm_clients', JSON.stringify(clients));
-  document.getElementById('newClientName').value = '';
-  document.getElementById('newClientVal').value = '';
-  renderClients();
-}
-
-function removeClient(i) {
-  clients.splice(i, 1);
-  localStorage.setItem('fm_clients', JSON.stringify(clients));
-  renderClients();
-}
-
-// ── NOTES ─────────────────────────────────────
-let notesTimers = {};
-function saveNotes(id) {
-  clearTimeout(notesTimers[id]);
-  notesTimers[id] = setTimeout(() => {
-    localStorage.setItem('fm_notes_' + id, document.getElementById(id).value);
-    const saved = document.getElementById('saved' + id.charAt(0).toUpperCase() + id.slice(1).replace('notes',''));
-    if (saved) { saved.classList.add('show'); setTimeout(() => saved.classList.remove('show'), 2000); }
-  }, 600);
-}
-
-function loadNotes() {
-  ['notesMain', 'notesFocus', 'notesIdeas'].forEach(id => {
-    const val = localStorage.getItem('fm_notes_' + id);
-    if (val) document.getElementById(id).value = val;
-  });
-}
-
-// ── PORSCHE COUNTER ───────────────────────────
-function updatePorsche() {
-  const monthly = parseFloat(document.getElementById('monthlyRevInput').value) || 0;
-  document.getElementById('porscheAmt').textContent = monthly.toLocaleString('de-DE') + ' €';
-
-  const total = 190000;
-  const earned = parseFloat(localStorage.getItem('fm_total_earned') || 0) + monthly;
-  const pct = Math.min(100, Math.round(earned / total * 100));
-  document.getElementById('porscheFill').style.width = pct + '%';
-  document.getElementById('porschePct').textContent = pct + '%';
-  document.getElementById('porscheEarned').textContent = earned.toLocaleString('de-DE') + ' €';
-  document.getElementById('porscheLeft').textContent = Math.max(0, total - earned).toLocaleString('de-DE') + ' €';
-}
-
-// ── INIT ──────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  loadTaskState();
-  loadNotes();
-  loadOutreach();
-  renderClients();
-  calcRevenue();
-  updatePriceTotal();
-  updateTimerDisplay();
-  updateWeekProgress();
-});
+document.addEventListener('DOMContentLoaded',()=>{renderGoalBar(parseFloat(localStorage.getItem('fm_earned')||0));loadKanban();calc();updT();loadOut();loadNotes();renderClients();});
 </script>
 </body>
 </html>
