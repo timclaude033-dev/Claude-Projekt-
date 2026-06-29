@@ -13,8 +13,8 @@
   --s4:       #1e2f47;
   --border:   rgba(255,255,255,0.07);
   --border2:  rgba(255,255,255,0.12);
-  --accent:   #3b7dd8;
-  --accent2:  #5b9af0;
+  --accent:   #2D7DD2;
+  --accent2:  #5BA4E5;
   --gold:     #c9a84c;
   --gold2:    #e2c46a;
   --text:     #dce6f5;
@@ -23,516 +23,173 @@
   --green:    #3bbf72;
   --orange:   #e09b3a;
   --red:      #e05555;
-  --purple:   #8b6cf7;
   --r:        8px;
   --r2:       12px;
 }
-
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { font-size: 14px; }
 body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; overflow-x: hidden; }
-
-/* SCROLLBAR */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--s4); border-radius: 9px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-
-/* ── GOAL BAR ── */
-#goalBar {
-  position: sticky;
-  top: 0;
-  z-index: 300;
-  background: var(--s1);
-  border-bottom: 1px solid var(--border2);
-  height: 52px;
-  display: flex;
-  align-items: center;
-  padding: 0 28px;
-  gap: 28px;
-}
-
-.logo-mark {
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--text);
-  white-space: nowrap;
-  padding-right: 28px;
-  border-right: 1px solid var(--border2);
-}
-
+#goalBar { position: sticky; top: 0; z-index: 300; background: var(--s1); border-bottom: 1px solid var(--border2); height: 52px; display: flex; align-items: center; padding: 0 28px; gap: 28px; }
+.logo-mark { font-size: 13px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--text); white-space: nowrap; padding-right: 28px; border-right: 1px solid var(--border2); }
+.logo-mark span { color: var(--accent); }
 .goal-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
-
-.goal-track {
-  flex: 1;
-  height: 6px;
-  background: var(--s4);
-  border-radius: 9px;
-  overflow: hidden;
-  min-width: 80px;
-}
-
-.goal-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--gold2));
-  border-radius: 9px;
-  transition: width 1s cubic-bezier(.4,0,.2,1);
-}
-
+.goal-track { flex: 1; height: 6px; background: var(--s4); border-radius: 9px; overflow: hidden; min-width: 80px; }
+.goal-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold2)); border-radius: 9px; transition: width 1s cubic-bezier(.4,0,.2,1); }
 .goal-pct { font-size: 12px; font-weight: 700; color: var(--gold2); white-space: nowrap; }
 .goal-nums { font-size: 11px; color: var(--muted); white-space: nowrap; }
 .goal-nums b { color: var(--text); }
-
-.goal-edit {
-  margin-left: auto;
-  background: var(--s3);
-  border: 1px solid var(--border2);
-  border-radius: var(--r);
-  color: var(--muted2);
-  font-size: 11px;
-  padding: 5px 12px;
-  cursor: pointer;
-  transition: all .15s;
-  font-family: inherit;
-  white-space: nowrap;
-}
+.goal-edit { margin-left: auto; background: var(--s3); border: 1px solid var(--border2); border-radius: var(--r); color: var(--muted2); font-size: 11px; padding: 5px 12px; cursor: pointer; transition: all .15s; font-family: inherit; white-space: nowrap; }
 .goal-edit:hover { color: var(--text); border-color: var(--accent); }
-
-/* ── APP ── */
 .app { display: flex; height: calc(100vh - 52px); }
-
-/* ── SIDEBAR ── */
-.sidebar {
-  width: 200px;
-  min-width: 200px;
-  background: var(--s1);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding: 16px 10px 24px;
-  gap: 2px;
-}
-
-.nav-group {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  padding: 14px 6px 5px;
-}
-
+.sidebar { width: 200px; min-width: 200px; background: var(--s1); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; padding: 16px 10px 24px; gap: 2px; }
+.nav-group { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); padding: 14px 6px 5px; }
 .nav-group:first-child { padding-top: 2px; }
-
-.nav-btn {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 8px 10px;
-  border-radius: var(--r);
-  cursor: pointer;
-  color: var(--muted2);
-  font-size: 13px;
-  transition: all .15s;
-  border: 1px solid transparent;
-  user-select: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-  font-family: inherit;
-}
-
+.nav-btn { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: var(--r); cursor: pointer; color: var(--muted2); font-size: 13px; transition: all .15s; border: 1px solid transparent; user-select: none; background: none; width: 100%; text-align: left; font-family: inherit; }
 .nav-btn:hover { background: var(--s2); color: var(--text); }
 .nav-btn.active { background: var(--s3); border-color: var(--border2); color: var(--text); }
 .nav-btn.active .nav-dot { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
-
 .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--s4); flex-shrink: 0; transition: all .2s; }
-
-/* ── MAIN ── */
 .main { flex: 1; overflow-y: auto; }
-
-/* ── PANELS ── */
 .panel { display: none; }
 .panel.active { display: flex; flex-direction: column; min-height: 100%; }
-
-/* ── PANEL HEADER ── */
-.ph {
-  padding: 24px 28px 0;
-  flex-shrink: 0;
-}
-
+.ph { padding: 24px 28px 0; flex-shrink: 0; }
 .ph-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
 .ph-sub { font-size: 12px; color: var(--muted); }
-
-/* ── CARD ── */
-.card {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 20px;
-}
-
-.card-title {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--muted2);
-  margin-bottom: 16px;
-}
-
-/* ── GRIDS ── */
+.card { background: var(--s1); border: 1px solid var(--border); border-radius: var(--r2); padding: 20px; }
+.card-title { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted2); margin-bottom: 16px; }
 .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 .g4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
-
-/* ── KPI ── */
-.kpi {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
-  padding: 18px 20px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color .2s, transform .2s;
-}
+.kpi { background: var(--s1); border: 1px solid var(--border); border-radius: var(--r2); padding: 18px 20px; position: relative; overflow: hidden; transition: border-color .2s, transform .2s; }
 .kpi::after { content:''; position:absolute; top:0;left:0;right:0; height:2px; background: linear-gradient(90deg, var(--accent), transparent); }
 .kpi:hover { border-color: var(--border2); transform: translateY(-2px); }
 .kpi-val { font-size: 24px; font-weight: 800; color: var(--text); line-height: 1.1; margin-bottom: 4px; }
 .kpi-lbl { font-size: 11px; color: var(--muted); }
-
-/* ── INPUT / SELECT ── */
-.inp {
-  background: var(--s2);
-  border: 1px solid var(--border2);
-  border-radius: var(--r);
-  color: var(--text);
-  padding: 9px 12px;
-  font-size: 13px;
-  outline: none;
-  width: 100%;
-  font-family: inherit;
-  transition: border-color .2s;
-}
+.inp { background: var(--s2); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text); padding: 9px 12px; font-size: 13px; outline: none; width: 100%; font-family: inherit; transition: border-color .2s; }
 .inp:focus { border-color: var(--accent); }
 .inp::placeholder { color: var(--muted); }
 select.inp option { background: var(--s2); }
-
 .lbl { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
-
-/* ── BTN ── */
-.btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 9px 18px; border: none; border-radius: var(--r);
-  font-size: 12px; font-weight: 600; cursor: pointer;
-  transition: all .15s; font-family: inherit; white-space: nowrap; letter-spacing: .3px;
-}
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border: none; border-radius: var(--r); font-size: 12px; font-weight: 600; cursor: pointer; transition: all .15s; font-family: inherit; white-space: nowrap; letter-spacing: .3px; }
 .btn-primary { background: var(--accent); color: #fff; }
 .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
 .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--muted2); }
 .btn-ghost:hover { border-color: var(--accent); color: var(--text); }
 .btn-sm { padding: 6px 12px; font-size: 11px; }
-
-/* ── RESULT BOX ── */
-.result-box {
-  background: linear-gradient(135deg, rgba(59,125,216,.1), rgba(59,125,216,.04));
-  border: 1px solid rgba(59,125,216,.25);
-  border-radius: var(--r);
-  padding: 20px;
-  text-align: center;
-  margin-top: 14px;
-}
+.result-box { background: linear-gradient(135deg, rgba(45,125,210,.1), rgba(45,125,210,.04)); border: 1px solid rgba(45,125,210,.25); border-radius: var(--r); padding: 20px; text-align: center; margin-top: 14px; }
 .result-val { font-size: 2.4rem; font-weight: 900; color: var(--gold2); line-height: 1; }
 .result-lbl { font-size: 11px; color: var(--muted); margin-top: 5px; }
-
-/* ── DIVIDER ── */
 .div { height: 1px; background: var(--border); margin: 16px 0; }
-
-/* ── PROGRESS MINI ── */
-.prog-wrap { }
 .prog-row { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:5px; }
 .prog-bar { height:6px; background:var(--s4); border-radius:9px; overflow:hidden; }
 .prog-fill { height:100%; background: linear-gradient(90deg, var(--accent), var(--gold2)); border-radius:9px; transition:width .8s ease; }
-
-/* ══════════════════════════════════════════════
-   KANBAN
-══════════════════════════════════════════════ */
-.kanban-wrap {
-  flex: 1;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 20px 28px 28px;
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-
-.kb-col {
-  min-width: 260px;
-  width: 260px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  flex-shrink: 0;
-}
-
-.kb-col-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border-radius: var(--r2) var(--r2) 0 0;
-  background: var(--s2);
-  border: 1px solid var(--border2);
-  border-bottom: none;
-}
-
+.kanban-wrap { flex: 1; overflow-x: auto; overflow-y: hidden; padding: 20px 28px 28px; display: flex; gap: 14px; align-items: flex-start; }
+.kb-col { min-width: 260px; width: 260px; display: flex; flex-direction: column; gap: 0; flex-shrink: 0; }
+.kb-col-header { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: var(--r2) var(--r2) 0 0; background: var(--s2); border: 1px solid var(--border2); border-bottom: none; }
 .kb-col-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 .kb-col-name { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
 .kb-col-count { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--muted); background: var(--s4); padding: 1px 7px; border-radius: 99px; }
-
-.kb-list {
-  background: var(--s2);
-  border: 1px solid var(--border2);
-  border-radius: 0 0 var(--r2) var(--r2);
-  border-top: 2px solid var(--border2);
-  padding: 8px;
-  min-height: 200px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  transition: background .15s;
-}
-
-.kb-list.drag-over {
-  background: rgba(59,125,216,.07);
-  border-color: rgba(59,125,216,.4);
-}
-
-.kb-card {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 11px 13px;
-  cursor: grab;
-  user-select: none;
-  transition: border-color .15s, box-shadow .15s, transform .15s;
-  position: relative;
-}
-
-.kb-card:hover {
-  border-color: var(--border2);
-  box-shadow: 0 4px 16px rgba(0,0,0,.3);
-}
-
-.kb-card.dragging {
-  opacity: .5;
-  cursor: grabbing;
-  transform: rotate(1.5deg);
-}
-
-.kb-card-text {
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--text);
-  margin-bottom: 8px;
-}
-
-.kb-card-footer {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.kb-tag {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 99px;
-}
-
+.kb-list { background: var(--s2); border: 1px solid var(--border2); border-radius: 0 0 var(--r2) var(--r2); border-top: 2px solid var(--border2); padding: 8px; min-height: 200px; flex: 1; display: flex; flex-direction: column; gap: 6px; transition: background .15s; }
+.kb-list.drag-over { background: rgba(45,125,210,.07); border-color: rgba(45,125,210,.4); }
+.kb-card { background: var(--s1); border: 1px solid var(--border); border-radius: var(--r); padding: 11px 13px; cursor: grab; user-select: none; transition: border-color .15s, box-shadow .15s, transform .15s; }
+.kb-card:hover { border-color: var(--border2); box-shadow: 0 4px 16px rgba(0,0,0,.3); }
+.kb-card.dragging { opacity: .5; cursor: grabbing; transform: rotate(1.5deg); }
+.kb-card-text { font-size: 12px; line-height: 1.5; color: var(--text); margin-bottom: 8px; }
+.kb-card-footer { display: flex; align-items: center; gap: 6px; }
+.kb-tag { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 99px; }
 .tag-gratis { background: rgba(59,191,114,.13); color: #4ade80; font-weight: 700; }
 .tag-paid   { background: rgba(224,85,85,.13); color: #f87171; font-weight: 700; }
 .tag-ms     { background: rgba(201,168,76,.15); color: var(--gold2); }
-.tag-now    { background: rgba(224,85,85,.15); color: #f87171; }
-.tag-week   { background: rgba(224,155,58,.15); color: #f9a825; }
-.tag-month  { background: rgba(59,191,114,.12); color: #5dd68e; }
-.tag-later  { background: rgba(90,106,130,.15); color: var(--muted2); }
-.tag-legal  { background: rgba(139,108,247,.15); color: #a78bfa; }
-
-.kb-card-grip {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
-  margin-left: auto;
-  color: var(--muted);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2px;
-}
-
+.kb-card-grip { width: 16px; height: 16px; flex-shrink: 0; margin-left: auto; color: var(--muted); display: flex; flex-direction: column; justify-content: center; gap: 2px; }
 .kb-card-grip span { display:block; width:100%; height:1.5px; background:currentColor; border-radius:9px; }
-
-/* STATUS COLORS */
-.col-offen     .kb-col-dot { background: var(--muted2); }
-.col-inprog    .kb-col-dot { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
-.col-done      .kb-col-dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
-.col-online    .kb-col-dot { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
-
+.col-offen  .kb-col-dot { background: var(--muted2); }
+.col-inprog .kb-col-dot { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+.col-done   .kb-col-dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.col-online .kb-col-dot { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
 .col-offen  .kb-col-header { border-top: 2px solid var(--muted); }
 .col-inprog .kb-col-header { border-top: 2px solid var(--accent); }
 .col-done   .kb-col-header { border-top: 2px solid var(--green); }
 .col-online .kb-col-header { border-top: 2px solid var(--gold); }
-
-/* ── OFFER / PRICE ── */
-.price-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.04); }
-.price-row:last-child { border-bottom:none; }
-.price-name { flex:1; font-size:13px; }
-.price-name small { display:block; font-size:11px; color:var(--muted); }
-.price-amt { font-size:13px; font-weight:700; color: var(--gold2); white-space:nowrap; }
-
-.toggle {
-  width: 34px; height: 18px; background: var(--s4);
-  border-radius: 99px; border: 1px solid var(--border2);
-  cursor: pointer; position: relative; transition: background .2s; flex-shrink:0;
-}
-.toggle.on { background: var(--accent); border-color: var(--accent); }
-.toggle::after { content:''; position:absolute; width:12px; height:12px; background:white; border-radius:50%; top:2px; left:2px; transition:left .18s; }
-.toggle.on::after { left:18px; }
-
-.total-row {
-  margin-top:14px; background:linear-gradient(135deg,rgba(59,125,216,.08),rgba(59,125,216,.03));
-  border:1px solid rgba(59,125,216,.25); border-radius:var(--r); padding:14px 16px;
-  display:flex; justify-content:space-between; align-items:center;
-}
-.total-lbl { font-size:11px; color:var(--muted); }
-.total-val { font-size:1.7rem; font-weight:900; color:var(--gold2); }
-
-/* ── TIMER ── */
-.timer-d {
-  font-size: 5.5rem; font-weight: 900; text-align:center;
-  color: var(--text); letter-spacing:-3px; line-height:1;
-  margin:16px 0; font-variant-numeric:tabular-nums;
-  transition: color .3s;
-}
-
-/* ── CLIENTS ── */
-.client-row {
-  display:grid; grid-template-columns:1fr auto auto auto;
-  gap:12px; align-items:center;
-  padding:10px 14px; background:var(--s2); border:1px solid var(--border);
-  border-radius:var(--r); margin-bottom:6px; transition:border-color .15s;
-}
-.client-row:hover { border-color:var(--border2); }
-.client-name { font-weight:600; font-size:13px; }
-.client-val { color:var(--gold2); font-weight:700; font-size:13px; }
-.sdot { width:8px; height:8px; border-radius:50%; }
-.sdot-lead   { background:var(--orange); box-shadow:0 0 5px var(--orange); }
-.sdot-active { background:var(--green);  box-shadow:0 0 5px var(--green); }
-.sdot-done   { background:var(--muted); }
-
-/* ── NOTES ── */
-.ta {
-  width:100%; background:var(--s2); border:1px solid var(--border2);
-  border-radius:var(--r); color:var(--text); padding:13px;
-  font-size:13px; line-height:1.7; min-height:140px; resize:vertical;
-  outline:none; font-family:inherit; transition:border-color .2s;
-}
-.ta:focus { border-color:var(--accent); }
-.ta::placeholder { color:var(--muted); }
-.saved-ok { font-size:11px; color:var(--green); margin-top:5px; opacity:0; transition:opacity .3s; }
-.saved-ok.show { opacity:1; }
-
-/* ── MODAL ── */
-.modal-bg {
-  position:fixed; inset:0; background:rgba(0,0,0,.7); backdrop-filter:blur(5px);
-  z-index:500; display:none; align-items:center; justify-content:center;
-}
-.modal-bg.open { display:flex; }
-.modal {
-  background:var(--s2); border:1px solid var(--border2); border-radius:var(--r2);
-  padding:28px; width:420px; max-width:90vw; box-shadow:0 24px 60px rgba(0,0,0,.6);
-}
-.modal-title { font-size:16px; font-weight:700; color:var(--text); margin-bottom:18px; }
-
-/* ── OUTLINE CARD ── */
-.oc {
-  background:var(--s2); border:1px solid var(--border); border-radius:var(--r);
-  padding:14px; transition:border-color .15s, background .15s;
-  cursor:pointer;
-}
-.oc:hover { border-color:var(--accent); background:var(--s3); }
-
-/* ── ROADMAP ── */
-.rm-phase-label {
-  font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase;
-  color:var(--muted2); background:var(--s2); border:1px solid var(--border);
-  border-radius:var(--r); padding:7px 14px; display:inline-block; margin-bottom:14px;
-}
-
-.rm-card {
-  background:var(--s1); border:1px solid var(--border); border-radius:var(--r);
-  padding:16px; transition:all .2s; position:relative; overflow:hidden;
-}
+.svc-select-item { background: var(--s1); border: 1px solid var(--border); border-radius: var(--r2); padding: 16px 18px; margin-bottom: 8px; cursor: pointer; transition: all .15s; }
+.svc-select-item:hover { border-color: var(--border2); background: var(--s2); }
+.svc-select-item.on { border-color: var(--accent); background: rgba(45,125,210,.07); }
+.svc-check { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--muted); flex-shrink: 0; transition: all .15s; display: flex; align-items: center; justify-content: center; }
+.svc-select-item.on .svc-check { background: var(--accent); border-color: var(--accent); }
+.svc-check-mark { width: 10px; height: 6px; border-left: 2px solid white; border-bottom: 2px solid white; transform: rotate(-45deg) translateY(-1px); display: none; }
+.svc-select-item.on .svc-check-mark { display: block; }
+.offer-total { background: linear-gradient(135deg, rgba(45,125,210,.1), rgba(45,125,210,.04)); border: 1px solid rgba(45,125,210,.25); border-radius: var(--r2); padding: 18px; margin-top: 14px; }
+.offer-line { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; color: var(--muted2); }
+.offer-line b { color: var(--text); }
+.offer-line.total-line { border-top: 1px solid var(--border2); margin-top: 8px; padding-top: 12px; }
+.offer-line.total-line b { font-size: 1.3rem; font-weight: 900; color: var(--gold2); }
+.rm-phase-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted2); background: var(--s2); border: 1px solid var(--border); border-radius: var(--r); padding: 7px 14px; display: inline-block; margin-bottom: 14px; }
+.rm-card { background: var(--s1); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; transition: all .2s; position: relative; overflow: hidden; }
 .rm-card::before { content:''; position:absolute; left:0;top:0;bottom:0; width:2px; background:var(--accent); }
-.rm-card:hover { border-color:var(--border2); transform:translateY(-2px); }
-.rm-card-num { font-size:10px; font-weight:700; color:var(--accent); letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
-.rm-card-title { font-size:13px; font-weight:700; margin-bottom:5px; }
-.rm-card-desc { font-size:12px; color:var(--muted2); line-height:1.6; }
-.rm-card-meta { font-size:11px; color:var(--muted); margin-top:8px; }
-
-/* TIMELINE */
-.tl-card {
-  background:var(--s2); border:1px solid var(--border); border-radius:var(--r);
-  padding:16px; text-align:center;
-}
-.tl-card.hl { border-color:rgba(201,168,76,.35); background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02)); }
-.tl-period { font-size:10px; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:8px; }
-.tl-rev { font-size:1.2rem; font-weight:900; color:var(--text); }
-.tl-lbl { font-size:11px; color:var(--muted); margin-top:4px; }
-.tl-bar { height:3px; background:var(--s4); border-radius:9px; margin-top:10px; overflow:hidden; }
-.tl-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--gold2)); border-radius:9px; }
-
-/* ── OUTREACH ── */
-.oc-num { font-size:2rem; font-weight:900; }
-
-/* ── RESPONSIVE ── */
-@media (max-width:900px) {
-  .sidebar { display:none; }
-  .g2, .g3, .g4 { grid-template-columns:1fr; }
-}
-
-/* ── SECTION SPACING ── */
+.rm-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.rm-card-num { font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.rm-card-title { font-size: 13px; font-weight: 700; margin-bottom: 5px; }
+.rm-card-desc { font-size: 12px; color: var(--muted2); line-height: 1.6; }
+.rm-card-meta { font-size: 11px; color: var(--muted); margin-top: 8px; }
+.tl-card { background: var(--s2); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; text-align: center; }
+.tl-card.hl { border-color: rgba(201,168,76,.35); background: linear-gradient(135deg, rgba(201,168,76,.08), rgba(201,168,76,.02)); }
+.tl-period { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
+.tl-rev { font-size: 1.2rem; font-weight: 900; color: var(--text); }
+.tl-lbl { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.tl-bar { height: 3px; background: var(--s4); border-radius: 9px; margin-top: 10px; overflow: hidden; }
+.tl-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold2)); border-radius: 9px; }
+.timer-d { font-size: 5.5rem; font-weight: 900; text-align: center; color: var(--text); letter-spacing: -3px; line-height: 1; margin: 16px 0; font-variant-numeric: tabular-nums; transition: color .3s; }
+.client-row { display: grid; grid-template-columns: 1fr auto auto auto; gap: 12px; align-items: center; padding: 10px 14px; background: var(--s2); border: 1px solid var(--border); border-radius: var(--r); margin-bottom: 6px; transition: border-color .15s; }
+.client-row:hover { border-color: var(--border2); }
+.client-name { font-weight: 600; font-size: 13px; }
+.client-val { color: var(--gold2); font-weight: 700; font-size: 13px; }
+.sdot { width: 8px; height: 8px; border-radius: 50%; }
+.sdot-lead   { background: var(--orange); box-shadow: 0 0 5px var(--orange); }
+.sdot-active { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.sdot-done   { background: var(--muted); }
+.ta { width: 100%; background: var(--s2); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text); padding: 13px; font-size: 13px; line-height: 1.7; min-height: 140px; resize: vertical; outline: none; font-family: inherit; transition: border-color .2s; }
+.ta:focus { border-color: var(--accent); }
+.ta::placeholder { color: var(--muted); }
+.saved-ok { font-size: 11px; color: var(--green); margin-top: 5px; opacity: 0; transition: opacity .3s; }
+.saved-ok.show { opacity: 1; }
+.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(5px); z-index: 500; display: none; align-items: center; justify-content: center; }
+.modal-bg.open { display: flex; }
+.modal { background: var(--s2); border: 1px solid var(--border2); border-radius: var(--r2); padding: 28px; width: 420px; max-width: 90vw; box-shadow: 0 24px 60px rgba(0,0,0,.6); }
+.modal-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 18px; }
+.oc { background: var(--s2); border: 1px solid var(--border); border-radius: var(--r); padding: 14px; transition: border-color .15s, background .15s; cursor: pointer; }
+.oc:hover { border-color: var(--accent); background: var(--s3); }
+.prob-card { background: var(--s2); border: 1px solid var(--border); border-radius: var(--r2); padding: 20px; border-left: 3px solid var(--red); }
+.prob-num { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+.prob-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.prob-desc { font-size: 12px; color: var(--muted2); line-height: 1.8; }
+.prob-impact { display: inline-block; background: rgba(224,85,85,.12); color: var(--red); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px; margin-top: 10px; }
+.oc-num { font-size: 2rem; font-weight: 900; }
+@media (max-width:900px) { .sidebar { display: none; } .g2, .g3, .g4 { grid-template-columns: 1fr; } }
 .p { padding: 20px 28px; }
-.pb { padding-bottom: 28px; }
-.stack { display:flex; flex-direction:column; gap:16px; }
-.row { display:flex; gap:12px; align-items:center; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; gap: 12px; align-items: center; }
 </style>
 </head>
 <body>
 
-<!-- ── GOAL BAR ── -->
 <div id="goalBar">
-  <div class="logo-mark">Flowmatic</div>
-  <div class="goal-label">Ziel 190.000 €</div>
+  <div class="logo-mark">flow<span>matic</span></div>
+  <div class="goal-label">Ziel 190.000 CHF</div>
   <div class="goal-track"><div class="goal-fill" id="gFill" style="width:0%"></div></div>
   <div class="goal-pct" id="gPct">0 %</div>
-  <div class="goal-nums" id="gNums"><b>0 €</b> verdient &middot; 190.000 € verbleibend</div>
+  <div class="goal-nums" id="gNums"><b>0 CHF</b> verdient &middot; 190.000 CHF verbleibend</div>
   <button class="goal-edit" onclick="openGoal()">Umsatz eingeben</button>
 </div>
 
-<!-- ── GOAL MODAL ── -->
 <div class="modal-bg" id="gModal" onclick="if(event.target===this)closeGoal()">
   <div class="modal">
     <div class="modal-title">Gesamtverdienst aktualisieren</div>
-    <div class="lbl" style="margin-bottom:6px;">Verdient bisher (in Euro)</div>
+    <div class="lbl" style="margin-bottom:6px;">Verdient bisher (in CHF)</div>
     <input type="number" class="inp" id="gInput" placeholder="z.B. 4500" oninput="previewGoal()">
-    <div class="prog-wrap" style="margin:16px 0 20px;">
+    <div style="margin:16px 0 20px;">
       <div class="prog-row"><span>Fortschritt</span><span id="gPreviewPct">0 %</span></div>
       <div class="prog-bar"><div class="prog-fill" id="gPreviewFill" style="width:0%"></div></div>
     </div>
@@ -543,507 +200,205 @@ select.inp option { background: var(--s2); }
   </div>
 </div>
 
-<!-- ── APP ── -->
 <div class="app">
-
-  <!-- SIDEBAR -->
   <nav class="sidebar">
     <div class="nav-group">Planung</div>
     <button class="nav-btn active" onclick="show('roadmap',this)"><div class="nav-dot"></div>Roadmap</button>
     <button class="nav-btn" onclick="show('kanban',this)"><div class="nav-dot"></div>Aufgaben</button>
-
     <div class="nav-group">Werkzeuge</div>
+    <button class="nav-btn" onclick="show('problems',this)"><div class="nav-dot"></div>Kundenprobleme</button>
     <button class="nav-btn" onclick="show('calc',this)"><div class="nav-dot"></div>Kalkulator</button>
     <button class="nav-btn" onclick="show('offer',this)"><div class="nav-dot"></div>Angebots-Builder</button>
     <button class="nav-btn" onclick="show('pitch',this)"><div class="nav-dot"></div>Pitch-Timer</button>
     <button class="nav-btn" onclick="show('outreach',this)"><div class="nav-dot"></div>Outreach-Tracker</button>
-
     <div class="nav-group">Verwaltung</div>
     <button class="nav-btn" onclick="show('clients',this)"><div class="nav-dot"></div>Kunden-Pipeline</button>
     <button class="nav-btn" onclick="show('notes',this)"><div class="nav-dot"></div>Notizen</button>
   </nav>
 
-  <!-- MAIN -->
   <main class="main">
 
-    <!-- ══ ROADMAP ══ -->
+    <!-- ROADMAP -->
     <div class="panel active" id="panel-roadmap">
-      <div class="ph" style="padding-bottom:20px;">
-        <div class="ph-title">Roadmap</div>
-        <div class="ph-sub">18-Monats-Plan — Setup bis Skalierung</div>
-      </div>
-      <div class="p pt-0 stack" style="padding-top:0;">
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Roadmap</div><div class="ph-sub">18-Monats-Plan — Setup bis Skalierung</div></div>
+      <div class="p stack" style="padding-top:0;">
         <div class="g4">
-          <div class="kpi"><div class="kpi-val">4.500 €</div><div class="kpi-lbl">Bundle-Preis</div></div>
-          <div class="kpi"><div class="kpi-val">11.500 €</div><div class="kpi-lbl">Porsche-Niveau / Monat</div></div>
-          <div class="kpi"><div class="kpi-val">500 €</div><div class="kpi-lbl">Retainer pro Kunde</div></div>
+          <div class="kpi"><div class="kpi-val">CHF 9.000</div><div class="kpi-lbl">Max. Setup (alle Services)</div></div>
+          <div class="kpi"><div class="kpi-val">CHF 650/Mo</div><div class="kpi-lbl">Max. Retainer pro Kunde</div></div>
+          <div class="kpi"><div class="kpi-val">3 Services</div><div class="kpi-lbl">Lead-Maschine / Verwaltung / Expose</div></div>
           <div class="kpi"><div class="kpi-val">7 Tage</div><div class="kpi-lbl">Max. Lieferzeit</div></div>
         </div>
-
         <div>
-          <div class="rm-phase-label">Phase 1 — Aufbau &nbsp; Monat 1–3 &nbsp; Ziel 1–3K €/Mo</div>
+          <div class="rm-phase-label">Phase 1 &mdash; Aufbau &nbsp; Monat 1&ndash;3 &nbsp; Ziel 1&ndash;3K CHF/Mo</div>
           <div class="g3">
-            <div class="rm-card"><div class="rm-card-num">Schritt 01</div><div class="rm-card-title">Infrastruktur aufsetzen</div><div class="rm-card-desc">Domain sichern, GitHub Pages, n8n Cloud, Gmail SMTP, Google Sheets Vorlage.</div><div class="rm-card-meta">Woche 1 — sofort</div></div>
-            <div class="rm-card"><div class="rm-card-num">Schritt 02</div><div class="rm-card-title">Logo & Brand</div><div class="rm-card-desc">Logo erstellen, Farbpalette festlegen, eigene Flowmatic-Landingpage live stellen.</div><div class="rm-card-meta">Woche 1</div></div>
-            <div class="rm-card"><div class="rm-card-num">Schritt 03</div><div class="rm-card-title">Demos fertigstellen</div><div class="rm-card-desc">Immobilien-Demo bauen und deployen. Wichtigstes Verkaufswerkzeug.</div><div class="rm-card-meta">Woche 1–2</div></div>
-            <div class="rm-card"><div class="rm-card-num">Schritt 04</div><div class="rm-card-title">n8n Automations live</div><div class="rm-card-desc">Automation 1 (Lead-Eingang) und 2 (Follow-up) aufsetzen und testen.</div><div class="rm-card-meta">Woche 2–3</div></div>
-            <div class="rm-card"><div class="rm-card-num">Schritt 05</div><div class="rm-card-title">Akquise starten</div><div class="rm-card-desc">50 Immobilienmakler identifizieren. Outreach-Template schreiben. 10 pro Woche kontaktieren.</div><div class="rm-card-meta">Woche 2–4</div></div>
-            <div class="rm-card"><div class="rm-card-num">Schritt 06</div><div class="rm-card-title">Ersten Kunden abschliessen</div><div class="rm-card-desc">Gespräch, Angebot, Vertrag, Lieferung in 7 Tagen, Rechnung, Testimonial.</div><div class="rm-card-meta">Monat 1–2</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 01</div><div class="rm-card-title">Infrastruktur aufsetzen</div><div class="rm-card-desc">Domain sichern, GitHub Pages, n8n Cloud, Gmail SMTP, Google Sheets Vorlage.</div><div class="rm-card-meta">Woche 1 &mdash; sofort</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 02</div><div class="rm-card-title">Brand &amp; Landingpage live</div><div class="rm-card-desc">Flowmatic Logo, CI-Farben Navy/Blue, eigene Landingpage fuer Schweizer Immobilienmakler deployen.</div><div class="rm-card-meta">Woche 1</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 03</div><div class="rm-card-title">Lead-Maschine Demo aufsetzen</div><div class="rm-card-desc">Demo fuer Schweizer Makler bauen und deployen. Eigentuemer-Funnel + Kaeufer-Funnel zeigbar machen.</div><div class="rm-card-meta">Woche 1&ndash;2</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 04</div><div class="rm-card-title">n8n Workflows aufsetzen</div><div class="rm-card-desc">Lead-Maschine (Formular &rarr; Bestaetigung &rarr; CRM &rarr; Follow-up), Lead-Verwaltung, Expose-Generator.</div><div class="rm-card-meta">Woche 2&ndash;3</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 05</div><div class="rm-card-title">Akquise starten</div><div class="rm-card-desc">50 Immobilienmakler in Zuerich, Zug, Basel, Genf identifizieren. 10 pro Woche kontaktieren.</div><div class="rm-card-meta">Woche 2&ndash;4</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 06</div><div class="rm-card-title">Ersten Kunden abschliessen</div><div class="rm-card-desc">Gespraech, Demo zeigen, Angebot, Vertrag, Lieferung in 7 Tagen, Rechnung, Testimonial.</div><div class="rm-card-meta">Monat 1&ndash;2</div></div>
           </div>
         </div>
-
         <div>
-          <div class="rm-phase-label">Phase 2 — Wachstum &nbsp; Monat 4–8 &nbsp; Ziel 4–7K €/Mo</div>
+          <div class="rm-phase-label">Phase 2 &mdash; Wachstum &nbsp; Monat 4&ndash;8 &nbsp; Ziel 4&ndash;7K CHF/Mo</div>
           <div class="g3">
-            <div class="rm-card"><div class="rm-card-num">Schritt 07</div><div class="rm-card-title">Retainer-Basis aufbauen</div><div class="rm-card-desc">5 aktive Retainer = 2.500 € passiv/Monat. A/B-Tests und Performance-Reports liefern.</div><div class="rm-card-meta">Monat 3–6</div></div>
-            <div class="rm-card"><div class="rm-card-num">Schritt 08</div><div class="rm-card-title">Zweite Zielgruppe</div><div class="rm-card-desc">Coaches, Handwerker oder Kliniken. Neue Demo bauen, Outreach ausweiten.</div><div class="rm-card-meta">Monat 4–5</div></div>
-            <div class="rm-card"><div class="rm-card-num">Schritt 09</div><div class="rm-card-title">Eigene Akquise automatisieren</div><div class="rm-card-desc">Flowmatic-Funnel mit Anfrage-Automation, LinkedIn-Content, erste Ads testen.</div><div class="rm-card-meta">Monat 6–8</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 07</div><div class="rm-card-title">Retainer-Basis aufbauen</div><div class="rm-card-desc">5 aktive Retainer = ca. 3.000 CHF passiv/Monat. Monatliche Performance-Reports liefern.</div><div class="rm-card-meta">Monat 3&ndash;6</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 08</div><div class="rm-card-title">Expose-Generator skalieren</div><div class="rm-card-desc">Expose-Service aktiv pitchen. Einmalzahlung ohne Retainer &mdash; einfach zu verkaufen, hohe Marge.</div><div class="rm-card-meta">Monat 4&ndash;5</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 09</div><div class="rm-card-title">Eigene Akquise automatisieren</div><div class="rm-card-desc">Flowmatic-Funnel fuer sich selbst aufsetzen. LinkedIn-Content. Erste Ads testen.</div><div class="rm-card-meta">Monat 6&ndash;8</div></div>
           </div>
         </div>
-
         <div>
-          <div class="rm-phase-label">Phase 3 — Skalierung &nbsp; Monat 9–18 &nbsp; Ziel 12–15K €/Mo</div>
+          <div class="rm-phase-label">Phase 3 &mdash; Skalierung &nbsp; Monat 9&ndash;18 &nbsp; Ziel 12&ndash;15K CHF/Mo</div>
           <div class="g3">
-            <div class="rm-card"><div class="rm-card-num">Schritt 10</div><div class="rm-card-title">Delegieren beginnen</div><div class="rm-card-desc">VA oder Freelancer für Ausführung. Fokus auf Akquise und Strategie.</div><div class="rm-card-meta">Monat 9–12</div></div>
-            <div class="rm-card"><div class="rm-card-num">Schritt 11</div><div class="rm-card-title">Premium-Preise durchsetzen</div><div class="rm-card-desc">Mit Track Record und Case Studies Preise erhöhen. Warteliste aufbauen.</div><div class="rm-card-meta">Monat 10–14</div></div>
-            <div class="rm-card" style="border-color:rgba(201,168,76,.3)"><div class="rm-card-num" style="color:var(--gold)">Endziel</div><div class="rm-card-title" style="color:var(--gold2)">190.000 € — Ziel erreicht</div><div class="rm-card-desc">2+ Bundle + 5+ Retainer = 11.500+ €/Monat. Porsche kaufen.</div><div class="rm-card-meta">Monat 15–18</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 10</div><div class="rm-card-title">Delegieren beginnen</div><div class="rm-card-desc">VA oder Freelancer fuer Setup-Ausfuehrung. Fokus auf Akquise und Strategie.</div><div class="rm-card-meta">Monat 9&ndash;12</div></div>
+            <div class="rm-card"><div class="rm-card-num">Schritt 11</div><div class="rm-card-title">Premium-Preise durchsetzen</div><div class="rm-card-desc">Mit Case Studies und ROI-Belegen Preise erhoehen. Warteliste aufbauen.</div><div class="rm-card-meta">Monat 10&ndash;14</div></div>
+            <div class="rm-card" style="border-color:rgba(201,168,76,.3)"><div class="rm-card-num" style="color:var(--gold)">Endziel</div><div class="rm-card-title" style="color:var(--gold2)">190.000 CHF &mdash; Ziel erreicht</div><div class="rm-card-desc">10+ aktive Kunden mit Retainer + laufende Setup-Auftraege = 12.000+ CHF/Monat.</div><div class="rm-card-meta">Monat 15&ndash;18</div></div>
           </div>
         </div>
-
         <div class="card">
           <div class="card-title">Umsatz-Zeitplan</div>
           <div class="g4">
-            <div class="tl-card"><div class="tl-period">Monat 1–3</div><div class="tl-rev">1–3K €</div><div class="tl-lbl">Aufbau</div><div class="tl-bar"><div class="tl-fill" style="width:20%"></div></div></div>
-            <div class="tl-card"><div class="tl-period">Monat 4–8</div><div class="tl-rev">4–7K €</div><div class="tl-lbl">Wachstum</div><div class="tl-bar"><div class="tl-fill" style="width:50%"></div></div></div>
-            <div class="tl-card"><div class="tl-period">Monat 9–14</div><div class="tl-rev">8–12K €</div><div class="tl-lbl">Skalierung</div><div class="tl-bar"><div class="tl-fill" style="width:80%"></div></div></div>
-            <div class="tl-card hl"><div class="tl-period">Monat 15–18</div><div class="tl-rev" style="color:var(--gold2)">12–15K €</div><div class="tl-lbl" style="color:var(--gold)">Porsche-Niveau</div><div class="tl-bar"><div class="tl-fill" style="width:100%"></div></div></div>
+            <div class="tl-card"><div class="tl-period">Monat 1&ndash;3</div><div class="tl-rev">1&ndash;3K CHF</div><div class="tl-lbl">Aufbau</div><div class="tl-bar"><div class="tl-fill" style="width:20%"></div></div></div>
+            <div class="tl-card"><div class="tl-period">Monat 4&ndash;8</div><div class="tl-rev">4&ndash;7K CHF</div><div class="tl-lbl">Wachstum</div><div class="tl-bar"><div class="tl-fill" style="width:50%"></div></div></div>
+            <div class="tl-card"><div class="tl-period">Monat 9&ndash;14</div><div class="tl-rev">8&ndash;12K CHF</div><div class="tl-lbl">Skalierung</div><div class="tl-bar"><div class="tl-fill" style="width:80%"></div></div></div>
+            <div class="tl-card hl"><div class="tl-period">Monat 15&ndash;18</div><div class="tl-rev" style="color:var(--gold2)">12&ndash;15K CHF</div><div class="tl-lbl" style="color:var(--gold)">Ziel erreicht</div><div class="tl-bar"><div class="tl-fill" style="width:100%"></div></div></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ══ KANBAN ══ -->
+    <!-- KANBAN -->
     <div class="panel" id="panel-kanban">
-      <div class="ph">
-        <div class="ph-title">Aufgaben</div>
-        <div class="ph-sub">Karten per Drag & Drop zwischen den Spalten verschieben</div>
-      </div>
-      <div class="kanban-wrap" id="kanbanWrap">
-
-        <div class="kb-col col-offen">
-          <div class="kb-col-header">
-            <div class="kb-col-dot"></div>
-            <div class="kb-col-name">Offen</div>
-            <div class="kb-col-count" id="cnt-offen">0</div>
-          </div>
-          <div class="kb-list" id="col-offen" data-col="offen"
-               ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'offen')">
-          </div>
-        </div>
-
-        <div class="kb-col col-inprog">
-          <div class="kb-col-header">
-            <div class="kb-col-dot"></div>
-            <div class="kb-col-name">In Bearbeitung</div>
-            <div class="kb-col-count" id="cnt-inprog">0</div>
-          </div>
-          <div class="kb-list" id="col-inprog" data-col="inprog"
-               ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'inprog')">
-          </div>
-        </div>
-
-        <div class="kb-col col-done">
-          <div class="kb-col-header">
-            <div class="kb-col-dot"></div>
-            <div class="kb-col-name">Erledigt</div>
-            <div class="kb-col-count" id="cnt-done">0</div>
-          </div>
-          <div class="kb-list" id="col-done" data-col="done"
-               ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'done')">
-          </div>
-        </div>
-
-        <div class="kb-col col-online">
-          <div class="kb-col-header">
-            <div class="kb-col-dot"></div>
-            <div class="kb-col-name">Online</div>
-            <div class="kb-col-count" id="cnt-online">0</div>
-          </div>
-          <div class="kb-list" id="col-online" data-col="online"
-               ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'online')">
-          </div>
-        </div>
-
+      <div class="ph"><div class="ph-title">Aufgaben</div><div class="ph-sub">Karten per Drag &amp; Drop verschieben</div></div>
+      <div class="kanban-wrap">
+        <div class="kb-col col-offen"><div class="kb-col-header"><div class="kb-col-dot"></div><div class="kb-col-name">Offen</div><div class="kb-col-count" id="cnt-offen">0</div></div><div class="kb-list" id="col-offen" data-col="offen" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'offen')"></div></div>
+        <div class="kb-col col-inprog"><div class="kb-col-header"><div class="kb-col-dot"></div><div class="kb-col-name">In Bearbeitung</div><div class="kb-col-count" id="cnt-inprog">0</div></div><div class="kb-list" id="col-inprog" data-col="inprog" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'inprog')"></div></div>
+        <div class="kb-col col-done"><div class="kb-col-header"><div class="kb-col-dot"></div><div class="kb-col-name">Erledigt</div><div class="kb-col-count" id="cnt-done">0</div></div><div class="kb-list" id="col-done" data-col="done" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'done')"></div></div>
+        <div class="kb-col col-online"><div class="kb-col-header"><div class="kb-col-dot"></div><div class="kb-col-name">Online</div><div class="kb-col-count" id="cnt-online">0</div></div><div class="kb-list" id="col-online" data-col="online" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'online')"></div></div>
       </div>
     </div>
 
-    <!-- ══ KALKULATOR ══ -->
+    <!-- KUNDENPROBLEME -->
+    <div class="panel" id="panel-problems">
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Kundenprobleme</div><div class="ph-sub">Die 3 groessten Schmerzen der Schweizer Immobilienmakler</div></div>
+      <div class="p" style="padding-top:0;">
+        <div class="g3" style="margin-bottom:20px;">
+          <div class="prob-card"><div class="prob-num">Problem 01</div><div class="prob-title">Zu langsame Reaktionszeit</div><div class="prob-desc">Qualifizierte Eigentuemer-Leads fragen gleichzeitig bei 3&ndash;5 Maklern an. Wer zuerst zurueckruft, bekommt das Mandat.<br><br><span style="color:var(--text);font-weight:600;">Loesung: Lead-Maschine.</span> Sofort-Bestaetigung + Benachrichtigung bei jeder Anfrage.</div><div class="prob-impact">Mandat verloren wegen zu langsamer Reaktion</div></div>
+          <div class="prob-card"><div class="prob-num">Problem 02</div><div class="prob-title">Leads gehen verloren</div><div class="prob-desc">Interessenten werden manuell aufgeschrieben oder gar nicht erfasst. Follow-ups vergessen. Kein CRM.<br><br><span style="color:var(--text);font-weight:600;">Loesung: Lead-Verwaltung.</span> Alle Quellen automatisch ins CRM, Follow-up laeuft automatisch.</div><div class="prob-impact">20&ndash;40 % der Leads werden nie nachgefasst</div></div>
+          <div class="prob-card"><div class="prob-num">Problem 03</div><div class="prob-title">Expose kostet zu viel Zeit</div><div class="prob-desc">Ein professionelles Expose dauert 2&ndash;4 Stunden pro Objekt. Bilder sortieren, Text schreiben, Fakten einpflegen.<br><br><span style="color:var(--text);font-weight:600;">Loesung: Expose-Generator.</span> Objektdaten eingeben, KI generiert in unter 2 Minuten.</div><div class="prob-impact">2&ndash;4 Stunden pro Expose verschwendet</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Gespraeches-Leitfaden</div>
+          <div class="g3">
+            <div style="background:var(--s2);border-radius:var(--r);padding:16px;"><div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Zum Problem 01</div><div style="font-size:12px;color:var(--muted2);line-height:2;">"Wie schnell melden Sie sich bei neuen Anfragen?"<br>"Haben Sie schon mal ein Mandat verloren, weil ein anderer Makler schneller war?"<br>"Was passiert nachts mit neuen Anfragen?"</div></div>
+            <div style="background:var(--s2);border-radius:var(--r);padding:16px;"><div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Zum Problem 02</div><div style="font-size:12px;color:var(--muted2);line-height:2;">"Wo landen Ihre Leads gerade &mdash; Excel, Notizbuch, nirgends?"<br>"Wie viele potenzielle Kaeufer haben Sie gerade in der Pipeline?"<br>"Wann haben Sie zuletzt einen Lead nachgefasst?"</div></div>
+            <div style="background:var(--s2);border-radius:var(--r);padding:16px;"><div style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Zum Problem 03</div><div style="font-size:12px;color:var(--muted2);line-height:2;">"Wie lange brauchen Sie fuer ein Expose?"<br>"Wie viele Objekte verwalten Sie gleichzeitig?"<br>"Was wuerden Sie mit 3 Stunden mehr Zeit pro Woche machen?"</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KALKULATOR -->
     <div class="panel" id="panel-calc">
-      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Umsatz-Kalkulator</div><div class="ph-sub">Monatliches Umsatzpotenzial berechnen</div></div>
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Umsatz-Kalkulator</div><div class="ph-sub">Monatliches Umsatzpotenzial mit den 3 Services berechnen</div></div>
       <div class="p" style="padding-top:0;">
         <div class="g2">
           <div class="card">
-            <div class="card-title">Eingabe</div>
+            <div class="card-title">Eingabe &mdash; Auftraege pro Monat</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px;">
-              <div><div class="lbl">Starter-Pakete (1.500 €)</div><input type="number" class="inp" id="cS" value="0" min="0" oninput="calc()"></div>
-              <div><div class="lbl">Performance-Pakete (3.500 €)</div><input type="number" class="inp" id="cP" value="0" min="0" oninput="calc()"></div>
-              <div><div class="lbl">Bundle-Pakete (4.500 €)</div><input type="number" class="inp" id="cB" value="2" min="0" oninput="calc()"></div>
-              <div><div class="lbl">Aktive Retainer (500 €/Mo)</div><input type="number" class="inp" id="cR" value="5" min="0" oninput="calc()"></div>
-              <div><div class="lbl">Automation 1 (1.000 €)</div><input type="number" class="inp" id="cA1" value="0" min="0" oninput="calc()"></div>
-              <div><div class="lbl">Automation 2 (1.400 €)</div><input type="number" class="inp" id="cA2" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Lead-Maschine Eigentuemer (2.500 CHF)</div><input type="number" class="inp" id="cLME" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Lead-Maschine Kaeufer (2.500 CHF)</div><input type="number" class="inp" id="cLMK" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Lead-Verwaltung (2.500 CHF)</div><input type="number" class="inp" id="cLV" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Expose-Generator (1.500 CHF)</div><input type="number" class="inp" id="cEG" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Retainer LM-E (200 CHF/Mo)</div><input type="number" class="inp" id="rLME" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Retainer LM-K (200 CHF/Mo)</div><input type="number" class="inp" id="rLMK" value="0" min="0" oninput="calc()"></div>
+              <div><div class="lbl">Retainer Lead-Verwaltung (250 CHF/Mo)</div><input type="number" class="inp" id="rLV" value="0" min="0" oninput="calc()"></div>
             </div>
-            <div class="result-box">
-              <div class="result-val" id="calcOut">11.500 €</div>
-              <div class="result-lbl">Monatlicher Umsatz</div>
-            </div>
+            <div class="result-box"><div class="result-val" id="calcOut">0 CHF</div><div class="result-lbl">Monatlicher Umsatz</div></div>
             <div style="font-size:12px;color:var(--muted);line-height:2;margin-top:14px;" id="calcBreak"></div>
           </div>
           <div class="card">
             <div class="card-title">Szenarien</div>
             <div class="stack">
-              <div class="oc" onclick="setS(0,0,0,0,0,0)">
-                <div style="font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:3px;">Monat 1 — Kein Umsatz</div>
-                <div style="font-size:11px;color:var(--muted);">Noch kein Kunde. Aufbauphase.</div>
-                <div style="font-size:1.1rem;font-weight:800;color:var(--text);margin-top:6px;">0 €</div>
-              </div>
-              <div class="oc" onclick="setS(1,0,0,0,1,0)">
-                <div style="font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:3px;">Monat 2 — Erster Auftrag</div>
-                <div style="font-size:11px;color:var(--muted);">1 Starter + Automation 1</div>
-                <div style="font-size:1.1rem;font-weight:800;color:var(--text);margin-top:6px;">2.500 €</div>
-              </div>
-              <div class="oc" onclick="setS(0,0,1,2,1,1)">
-                <div style="font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:3px;">Monat 5 — Wachstum</div>
-                <div style="font-size:11px;color:var(--muted);">1 Bundle + 2 Retainer + Automations</div>
-                <div style="font-size:1.1rem;font-weight:800;color:var(--text);margin-top:6px;">7.400 €</div>
-              </div>
-              <div class="oc" style="border-color:rgba(201,168,76,.3);" onclick="setS(0,0,2,5,0,0)">
-                <div style="font-size:12px;font-weight:700;color:var(--gold2);margin-bottom:3px;">Porsche-Niveau</div>
-                <div style="font-size:11px;color:var(--muted);">2 Bundle + 5 Retainer</div>
-                <div style="font-size:1.1rem;font-weight:800;color:var(--gold2);margin-top:6px;">11.500 €</div>
-              </div>
+              <div class="oc" onclick="setS(0,0,0,0,0,0,0)"><div style="font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:3px;">Monat 1 &mdash; Kein Umsatz</div><div style="font-size:11px;color:var(--muted);">Noch kein Kunde. Aufbauphase.</div><div style="font-size:1.1rem;font-weight:800;color:var(--text);margin-top:6px;">0 CHF</div></div>
+              <div class="oc" onclick="setS(1,0,0,0,0,0,0)"><div style="font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:3px;">Monat 2 &mdash; Erster Auftrag</div><div style="font-size:11px;color:var(--muted);">1 Lead-Maschine Eigentuemer-Funnel</div><div style="font-size:1.1rem;font-weight:800;color:var(--text);margin-top:6px;">2.500 CHF</div></div>
+              <div class="oc" onclick="setS(1,1,1,1,1,1,1)"><div style="font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:3px;">Monat 5 &mdash; Alle Services aktiv</div><div style="font-size:11px;color:var(--muted);">Alle 4 Angebote + Retainer</div><div style="font-size:1.1rem;font-weight:800;color:var(--text);margin-top:6px;">9.150 CHF</div></div>
+              <div class="oc" style="border-color:rgba(201,168,76,.3);" onclick="setS(0,0,0,0,5,5,3)"><div style="font-size:12px;font-weight:700;color:var(--gold2);margin-bottom:3px;">Retainer-Ziel</div><div style="font-size:11px;color:var(--muted);">5x LM-E + 5x LM-K + 3x LV Retainer</div><div style="font-size:1.1rem;font-weight:800;color:var(--gold2);margin-top:6px;">3.750 CHF/Mo passiv</div></div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ══ ANGEBOT ══ -->
+    <!-- ANGEBOT -->
     <div class="panel" id="panel-offer">
-      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Services & Angebots-Builder</div><div class="ph-sub">Services auswählen, Preis berechnen, Angebotstext kopieren</div></div>
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Angebots-Builder</div><div class="ph-sub">Services auswaehlen, Preis berechnen, Angebotstext kopieren</div></div>
       <div class="p" style="padding-top:0;">
-
-        <!-- SERVICE KARTEN -->
         <div class="g3" style="margin-bottom:20px;">
-
-          <!-- Service 1 -->
-          <div class="card" style="border-top:2px solid var(--accent);position:relative;">
-            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Service 1</div>
-            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Lead-Eingang Automation</div>
-            <div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:16px;">
-              Formular auf der Landingpage wird ausgefüllt &rarr; Kunde bekommt sofort eine Bestätigungsmail &rarr; du bekommst intern eine Benachrichtigung mit allen Daten &rarr; Lead landet automatisch in Google Sheets oder CRM.<br><br>
-              <span style="color:var(--text);font-weight:600;">Das braucht jeder Betrieb, der online Anfragen bekommt.</span>
-            </div>
-            <div style="background:var(--s2);border-radius:var(--r);padding:12px;margin-bottom:12px;">
-              <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;">Was du lieferst</div>
-              <div style="font-size:12px;color:var(--muted2);line-height:2;">
-                &rarr; n8n Webhook der die Formulardaten empfängt<br>
-                &rarr; Automatische Bestätigungsmail an den Kunden<br>
-                &rarr; Sofort-Benachrichtigung an den Inhaber<br>
-                &rarr; Eintrag in Google Sheets (Name, Mail, Tel, Datum, Quelle)
-              </div>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div>
-                <div style="font-size:18px;font-weight:900;color:var(--gold2);">800 – 1.200 €</div>
-                <div style="font-size:11px;color:var(--muted);">einmalig + optional 200 €/Mo Retainer</div>
-              </div>
-              <div style="font-size:11px;color:var(--muted);text-align:right;">Lieferzeit<br><span style="color:var(--text);font-weight:700;">2–3 Tage</span></div>
-            </div>
-          </div>
-
-          <!-- Service 2 -->
-          <div class="card" style="border-top:2px solid var(--green);position:relative;">
-            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px;">Service 2</div>
-            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Follow-up Sequenz</div>
-            <div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:16px;">
-              Lead kommt rein &rarr; Tag 0 Bestätigung &rarr; Tag 1 erste Follow-up-Mail &rarr; Tag 3 Social Proof &rarr; Tag 7 letzter Reminder. Kein manuelles Nachfassen mehr.<br><br>
-              <span style="color:var(--text);font-weight:600;">Hat der Lead geantwortet oder gebucht, stoppt die Sequenz automatisch.</span>
-            </div>
-            <div style="background:var(--s2);border-radius:var(--r);padding:12px;margin-bottom:12px;">
-              <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;">Die 4 Mails</div>
-              <div style="font-size:12px;color:var(--muted2);line-height:2;">
-                <span style="color:var(--accent);font-weight:600;">Tag 0</span> &rarr; Sofortige Bestätigung nach Eintrag<br>
-                <span style="color:var(--accent);font-weight:600;">Tag 1</span> &rarr; "Haben Sie noch Fragen?" + Mehrwert<br>
-                <span style="color:var(--accent);font-weight:600;">Tag 3</span> &rarr; Kundenstimme + konkretes Angebot<br>
-                <span style="color:var(--accent);font-weight:600;">Tag 7</span> &rarr; Letzter Reminder — Termin oder Angebot
-              </div>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div>
-                <div style="font-size:18px;font-weight:900;color:var(--gold2);">1.000 – 1.800 €</div>
-                <div style="font-size:11px;color:var(--muted);">einmalig + optional 300 €/Mo Retainer</div>
-              </div>
-              <div style="font-size:11px;color:var(--muted);text-align:right;">Lieferzeit<br><span style="color:var(--text);font-weight:700;">3–5 Tage</span></div>
-            </div>
-          </div>
-
-          <!-- Service 3 -->
-          <div class="card" style="border-top:2px solid var(--gold);position:relative;">
-            <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Service 3</div>
-            <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Wöchentlicher Performance-Report</div>
-            <div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:16px;">
-              Dein Kunde bekommt jeden Montag automatisch eine Übersicht: wie viele Leads diese Woche, woher, wer hat auf Follow-up reagiert, wer ist noch offen.<br><br>
-              <span style="color:var(--text);font-weight:600;">Der Kunde sieht schwarz auf weiß, was sein System leistet — das rechtfertigt den Retainer monatlich neu.</span>
-            </div>
-            <div style="background:var(--s2);border-radius:var(--r);padding:12px;margin-bottom:12px;">
-              <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px;">Inhalt des Reports</div>
-              <div style="font-size:12px;color:var(--muted2);line-height:2;">
-                &rarr; Leads diese Woche: Anzahl, Namen, Quelle<br>
-                &rarr; Conversion: Wer hat auf Follow-up reagiert?<br>
-                &rarr; Offene Leads: Wer hat noch nicht geantwortet?<br>
-                &rarr; KPI-Übersicht aus Google Sheets<br>
-                &rarr; Versand: HTML-Mail, automatisch, jeden Montag 8 Uhr
-              </div>
-            </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <div>
-                <div style="font-size:18px;font-weight:900;color:var(--gold2);">800 – 1.500 €</div>
-                <div style="font-size:11px;color:var(--muted);">einmalig + optional 250 €/Mo Retainer</div>
-              </div>
-              <div style="font-size:11px;color:var(--muted);text-align:right;">Lieferzeit<br><span style="color:var(--text);font-weight:700;">2–3 Tage</span></div>
-            </div>
-          </div>
+          <div class="card" style="border-top:2px solid var(--accent);"><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Service 1</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Lead-Maschine</div><div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:14px;">Automatisierter Funnel generiert qualifizierte Leads von Eigentuemern oder Kaeufern. Sofort-Benachrichtigung, CRM-Eintrag, Follow-up.</div><div style="font-size:12px;color:var(--muted2);line-height:2;"><span style="color:var(--accent);">&rarr;</span> Eigentuemer-Funnel: <b style="color:var(--gold2);">CHF 2.500</b> + 200/Mo<br><span style="color:var(--accent);">&rarr;</span> Kaeufer-Funnel: <b style="color:var(--gold2);">CHF 2.500</b> + 200/Mo</div></div>
+          <div class="card" style="border-top:2px solid var(--green);"><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:10px;">Service 2</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Lead-Verwaltung</div><div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:14px;">Alle Leads aus allen Quellen laufen automatisch in einem zentralen CRM zusammen. Inkl. Follow-up-Sequenz und woechentlichem Report.</div><div style="font-size:12px;color:var(--muted2);line-height:2;"><span style="color:var(--green);">&rarr;</span> Setup: <b style="color:var(--gold2);">CHF 2.500</b> + 250/Mo<br><span style="color:var(--green);">&rarr;</span> Optional: CRM-System inklusive</div></div>
+          <div class="card" style="border-top:2px solid var(--gold);"><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Service 3</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:8px;">Expose-Generator</div><div style="font-size:12px;color:var(--muted2);line-height:1.8;margin-bottom:14px;">KI-Tool, das aus Objektdaten in unter 2 Minuten ein vollstaendiges Expose erstellt. Einmalig, unbegrenzte Nutzung.</div><div style="font-size:12px;color:var(--muted2);line-height:2;"><span style="color:var(--gold);">&rarr;</span> Einmalig: <b style="color:var(--gold2);">CHF 1.500</b><br><span style="color:var(--gold);">&rarr;</span> Kein Retainer &mdash; kein Abo</div></div>
         </div>
-
-        <!-- RETAINER ERKLÄRUNG -->
-        <div class="card" style="margin-bottom:20px;border:1px solid rgba(201,168,76,.25);background:linear-gradient(135deg,rgba(201,168,76,.06),rgba(201,168,76,.02));">
-          <div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;">
-            <div style="background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);border-radius:var(--r);padding:14px 18px;white-space:nowrap;text-align:center;">
-              <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--gold);margin-bottom:4px;">Retainer</div>
-              <div style="font-size:22px;font-weight:900;color:var(--gold2);">300–500 €</div>
-              <div style="font-size:11px;color:var(--muted);">pro Monat</div>
-            </div>
-            <div>
-              <div style="font-size:13px;font-weight:700;color:var(--gold2);margin-bottom:8px;">Was ist ein Retainer — und warum zahlt der Kunde das?</div>
-              <div style="font-size:12px;color:var(--muted2);line-height:1.9;">
-                Ein Retainer ist eine monatliche Pauschalgebühr, die der Kunde ab Monat 2 zahlt — dafür, dass du das System weiter betreust, optimierst und am Laufen hältst.<br><br>
-                <span style="color:var(--text);font-weight:600;">Was du dafür lieferst:</span> A/B-Tests auf der Landingpage, Anpassung der Follow-up-Texte, neue Leads-Quellen einbinden, Report auswerten, technische Pflege. Im Schnitt 2–4 Stunden Arbeit pro Monat pro Kunde.<br><br>
-                <span style="color:var(--text);font-weight:600;">Warum zahlt der Kunde?</span> Weil das System läuft und Leads bringt — er zahlt nicht für deine Zeit, sondern für das Ergebnis. Der wöchentliche Report (Service 3) macht das jeden Montag sichtbar. Kein Report = kein Beweis = kein Retainer. Mit Report = klarer ROI = Retainer selbstverständlich.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ANGEBOTS-BUILDER -->
         <div class="g2">
           <div>
-            <div class="card-title" style="margin-bottom:12px;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted2);">Paket auswählen</div>
-
-            <!-- Paket 1 -->
-            <div id="pkg1" onclick="selectPkg(1)" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:8px;cursor:pointer;transition:all .15s;position:relative;">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                <div id="pkgr1" style="width:15px;height:15px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
-                <div style="font-size:13px;font-weight:800;color:var(--text);">Paket 1 — Lead-Eingang</div>
-                <div style="margin-left:auto;font-size:15px;font-weight:900;color:var(--gold2);">2.500 €</div>
-              </div>
-              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:25px;">
-                <span style="color:var(--accent);">+</span> Starter Landingpage (1 Seite, Kontaktformular)<br>
-                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Bestätigungsmail &rarr; Benachrichtigung &rarr; Google Sheets<br>
-                <span style="color:var(--muted);">+</span> Retainer 200 €/Mo ab Monat 2 (optional)
-              </div>
-            </div>
-
-            <!-- Paket 2 -->
-            <div id="pkg2" onclick="selectPkg(2)" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:8px;cursor:pointer;transition:all .15s;position:relative;">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                <div id="pkgr2" style="width:15px;height:15px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
-                <div style="font-size:13px;font-weight:800;color:var(--text);">Paket 2 — Lead-Eingang + Follow-up</div>
-                <div style="margin-left:auto;font-size:15px;font-weight:900;color:var(--gold2);">4.500 €</div>
-              </div>
-              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:25px;">
-                <span style="color:var(--accent);">+</span> Performance Landingpage (Quiz-Funnel + Kalkulator)<br>
-                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Bestätigungsmail &rarr; Benachrichtigung &rarr; Google Sheets<br>
-                <span style="color:var(--accent);">+</span> Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7 &rarr; stoppt bei Antwort<br>
-                <span style="color:var(--muted);">+</span> Retainer 350 €/Mo ab Monat 2 (optional)
-              </div>
-            </div>
-
-            <!-- Paket 3 -->
-            <div id="pkg3" onclick="selectPkg(3)" style="background:var(--s1);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:8px;cursor:pointer;transition:all .15s;position:relative;">
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                <div id="pkgr3" style="width:15px;height:15px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
-                <div style="font-size:13px;font-weight:800;color:var(--text);">Paket 3 — Komplett mit Report</div>
-                <div style="margin-left:auto;font-size:15px;font-weight:900;color:var(--gold2);">6.200 €</div>
-              </div>
-              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:25px;">
-                <span style="color:var(--accent);">+</span> Performance Landingpage (Quiz-Funnel + Kalkulator)<br>
-                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Bestätigungsmail &rarr; Benachrichtigung &rarr; Google Sheets<br>
-                <span style="color:var(--accent);">+</span> Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7<br>
-                <span style="color:var(--accent);">+</span> Service 3: Wöchentlicher Performance-Report (jeden Montag per Mail)<br>
-                <span style="color:var(--muted);">+</span> Retainer 500 €/Mo ab Monat 2 (optional)
-              </div>
-            </div>
-
-            <!-- Paket 4 -->
-            <div id="pkg4" onclick="selectPkg(4)" style="background:var(--s1);border:2px solid var(--gold);border-radius:var(--r2);padding:16px 18px;margin-bottom:8px;cursor:pointer;transition:all .15s;position:relative;">
-              <div style="position:absolute;top:-1px;right:16px;background:var(--gold);color:var(--bg);font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:0 0 6px 6px;">Gesamtsystem</div>
-              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-                <div id="pkgr4" style="width:15px;height:15px;border-radius:50%;border:2px solid var(--muted);flex-shrink:0;transition:all .15s;"></div>
-                <div style="font-size:13px;font-weight:800;color:var(--gold2);">Paket 4 — Gesamtsystem + Performance Pricing</div>
-                <div style="margin-left:auto;font-size:15px;font-weight:900;color:var(--gold2);">6.200 €</div>
-              </div>
-              <div style="font-size:11px;color:var(--muted2);line-height:2;padding-left:25px;">
-                <span style="color:var(--accent);">+</span> Performance Landingpage (Quiz-Funnel + Kalkulator)<br>
-                <span style="color:var(--accent);">+</span> Service 1: Formular &rarr; Bestätigungsmail &rarr; Benachrichtigung &rarr; Google Sheets<br>
-                <span style="color:var(--accent);">+</span> Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7<br>
-                <span style="color:var(--accent);">+</span> Service 3: Wöchentlicher Performance-Report (jeden Montag per Mail)<br>
-                <span style="color:var(--green);">+</span> Performance Pricing: <span style="color:var(--text);font-weight:700;">15 € pro qualifiziertem Lead</span> statt Retainer<br>
-                <span style="color:var(--muted);font-style:italic;">&nbsp;&nbsp; Kein Lead = keine Zusatzkosten. Mehr Leads = mehr Einnahmen für dich.</span>
-              </div>
-              <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:16px;padding-left:25px;">
-                <div style="font-size:11px;color:var(--muted);">Leads/Mo anpassen:</div>
-                <input type="number" id="ppLeads" value="20" min="1" max="500"
-                  onclick="event.stopPropagation()"
-                  oninput="event.stopPropagation();updatePP()"
-                  style="width:70px;background:var(--s3);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:5px 8px;font-size:12px;outline:none;">
-                <div style="font-size:12px;color:var(--muted);">× 15 € = <span id="ppMonthly" style="color:var(--green);font-weight:700;">300 €/Mo</span></div>
-              </div>
-            </div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted2);margin-bottom:12px;">Angebote auswaehlen (Mehrfachauswahl moeglich)</div>
+            <div id="si0" class="svc-select-item" onclick="toggleSvc(0)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div class="svc-check"><div class="svc-check-mark"></div></div><div style="font-size:13px;font-weight:800;color:var(--text);">Lead-Maschine &mdash; Eigentuemer-Funnel</div><div style="margin-left:auto;font-size:14px;font-weight:900;color:var(--gold2);">CHF 2.500</div></div><div style="font-size:11px;color:var(--muted2);padding-left:28px;line-height:2;">Funnel mit Immobilienbewertung &rarr; Sofort-Benachrichtigung &rarr; CRM-Eintrag<br>+ <span style="color:var(--accent2);">200 CHF/Mo Retainer</span></div></div>
+            <div id="si1" class="svc-select-item" onclick="toggleSvc(1)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div class="svc-check"><div class="svc-check-mark"></div></div><div style="font-size:13px;font-weight:800;color:var(--text);">Lead-Maschine &mdash; Kaeufer-Funnel</div><div style="margin-left:auto;font-size:14px;font-weight:900;color:var(--gold2);">CHF 2.500</div></div><div style="font-size:11px;color:var(--muted2);padding-left:28px;line-height:2;">Suchprofil-Funnel fuer Kaufinteressenten &rarr; Matching &rarr; automatische Benachrichtigung<br>+ <span style="color:var(--accent2);">200 CHF/Mo Retainer</span></div></div>
+            <div id="si2" class="svc-select-item" onclick="toggleSvc(2)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div class="svc-check"><div class="svc-check-mark"></div></div><div style="font-size:13px;font-weight:800;color:var(--text);">Lead-Verwaltung</div><div style="margin-left:auto;font-size:14px;font-weight:900;color:var(--gold2);">CHF 2.500</div></div><div style="font-size:11px;color:var(--muted2);padding-left:28px;line-height:2;">Alle Quellen &rarr; zentrales CRM &rarr; Follow-up-Sequenz &rarr; woechentlicher Report<br>+ <span style="color:var(--accent2);">250 CHF/Mo Retainer</span> &middot; optional: CRM inklusive</div></div>
+            <div id="si3" class="svc-select-item" onclick="toggleSvc(3)"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;"><div class="svc-check"><div class="svc-check-mark"></div></div><div style="font-size:13px;font-weight:800;color:var(--text);">Expose-Generator</div><div style="margin-left:auto;font-size:14px;font-weight:900;color:var(--gold2);">CHF 1.500</div></div><div style="font-size:11px;color:var(--muted2);padding-left:28px;line-height:2;">KI-Expose in unter 2 Minuten &mdash; einmalig, kein Abo<br><span style="color:var(--green);">Kein Retainer</span></div></div>
+            <div class="offer-total" id="offerTotal" style="display:none;"><div id="offerBreakdown"></div><div class="offer-line total-line"><span style="color:var(--muted);font-size:11px;">Setup gesamt (netto)</span><b id="offerSetup">-</b></div><div class="offer-line"><span style="color:var(--muted);font-size:11px;">Retainer / Monat</span><span id="offerRetainer" style="color:var(--accent2);font-weight:700;">-</span></div><div class="offer-line"><span style="color:var(--muted);font-size:11px;">MwSt. 8,1 % auf Setup</span><span id="offerVat" style="color:var(--muted2);">-</span></div></div>
           </div>
-
           <div class="card">
             <div class="card-title">Angebots-Vorschau</div>
-            <div style="background:var(--s2);border-radius:var(--r);padding:18px;font-size:12px;line-height:1.9;margin-bottom:12px;min-height:240px;">
-              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);">Angebot — Flowmatic</div>
-              <div id="offerLines" style="color:var(--muted2);">Bitte Paket auswählen...</div>
-              <div id="offerRetainer" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;">
-                <span id="retainerAmt" style="color:var(--gold2);font-weight:700;"></span>
-              </div>
-              <div class="div"></div>
-              <div style="display:flex;justify-content:space-between;align-items:center;">
-                <span style="color:var(--muted);">Setup-Preis (netto, einmalig)</span>
-                <span style="color:var(--gold2);font-weight:800;font-size:15px;" id="offerTotalB">—</span>
-              </div>
-              <div style="font-size:10px;color:var(--muted);margin-top:8px;">zzgl. 19 % MwSt. &middot; 50 % Anzahlung bei Auftragserteilung &middot; Zahlungsziel 14 Tage</div>
+            <div style="background:var(--s2);border-radius:var(--r);padding:18px;font-size:12px;line-height:1.9;margin-bottom:12px;min-height:280px;">
+              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);">Angebot &mdash; Flowmatic</div>
+              <div id="offerPreview" style="color:var(--muted2);">Bitte mindestens einen Service auswaehlen...</div>
+              <div style="height:1px;background:var(--border);margin:12px 0;"></div>
+              <div style="font-size:10px;color:var(--muted);">zzgl. 8,1 % MwSt. &middot; 50 % Anzahlung bei Auftragserteilung &middot; Zahlungsziel 14 Tage</div>
             </div>
             <button class="btn btn-primary" style="width:100%;" onclick="copyOffer()">Angebotstext kopieren</button>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- ══ PITCH ══ -->
+    <!-- PITCH -->
     <div class="panel" id="panel-pitch">
       <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Pitch-Timer</div><div class="ph-sub">30-Sekunden-Pitch trainieren</div></div>
       <div class="p" style="padding-top:0;">
         <div class="g2">
-          <div class="card">
-            <div class="card-title">Timer</div>
-            <div class="timer-d" id="timerD">0:30</div>
-            <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;">
-              <button class="btn btn-primary" onclick="tStart()">Start / Pause</button>
-              <button class="btn btn-ghost" onclick="tReset()">Reset</button>
-            </div>
-            <div class="div"></div>
-            <div class="lbl" style="margin-bottom:8px;">Pitch-Version</div>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;">
-              <button class="btn btn-ghost btn-sm" onclick="setPitch('std')">Standard</button>
-              <button class="btn btn-ghost btn-sm" onclick="setPitch('immo')">Immobilien</button>
-              <button class="btn btn-ghost btn-sm" onclick="setPitch('kalt')">Kaltakquise</button>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-title">Script</div>
-            <div id="pitchText" style="background:var(--s2);border-left:2px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:16px;font-size:13px;line-height:1.8;color:var(--text);">
-              <b style="color:var(--gold2)">"Ich baue Landingpages, die Anfragen automatisch weiterleiten</b> — kein IT-Aufwand, fertig in einer Woche.<br><br>
-              Ihr Interessent füllt ein Quiz aus, Sie bekommen sofort alle Kontaktdaten, automatisch in Ihrer Datenbank gespeichert.<br><br>
-              <b style="color:var(--gold2)">Darf ich Ihnen kurz eine Demo zeigen?"</b><br><br>
-              <span style="font-size:11px;color:var(--muted);">Demo zeigen — Seite verkauft sich selbst.</span>
-            </div>
-          </div>
+          <div class="card"><div class="card-title">Timer</div><div class="timer-d" id="timerD">0:30</div><div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;"><button class="btn btn-primary" onclick="tStart()">Start / Pause</button><button class="btn btn-ghost" onclick="tReset()">Reset</button></div><div class="div"></div><div class="lbl" style="margin-bottom:8px;">Pitch-Version</div><div style="display:flex;gap:6px;flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" onclick="setPitch('std')">Standard</button><button class="btn btn-ghost btn-sm" onclick="setPitch('immo')">Lead-Maschine</button><button class="btn btn-ghost btn-sm" onclick="setPitch('expose')">Expose-Generator</button></div></div>
+          <div class="card"><div class="card-title">Script</div><div id="pitchText" style="background:var(--s2);border-left:2px solid var(--accent);border-radius:0 var(--r) var(--r) 0;padding:16px;font-size:13px;line-height:1.8;color:var(--text);"><b style="color:var(--gold2)">"Ich baue fuer Schweizer Immobilienmakler automatisierte Lead-Systeme</b> &mdash; qualifizierte Anfragen automatisch erfassen, sofort reagieren, Follow-up ohne manuellen Aufwand.<br><br>Fertig in 7 Tagen, CHF 2.500 einmalig.<br><br><b style="color:var(--gold2)">Darf ich Ihnen kurz die Demo zeigen?"</b></div></div>
         </div>
       </div>
     </div>
 
-    <!-- ══ OUTREACH ══ -->
+    <!-- OUTREACH -->
     <div class="panel" id="panel-outreach">
-      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Outreach-Tracker</div><div class="ph-sub">Kontakte, Antworten und Abschlüsse verfolgen</div></div>
+      <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Outreach-Tracker</div><div class="ph-sub">Kontakte, Antworten und Abschluesse verfolgen</div></div>
       <div class="p" style="padding-top:0;">
         <div class="g3" style="margin-bottom:16px;">
-          <div class="card" style="text-align:center;">
-            <div class="card-title" style="justify-content:center;">Kontaktiert</div>
-            <div class="oc-num" style="color:var(--text);" id="oC">0</div>
-            <div style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Makler angeschrieben</div>
-            <div style="display:flex;gap:6px;justify-content:center;">
-              <button class="btn btn-ghost btn-sm" onclick="adj('oC',-1)">−</button>
-              <button class="btn btn-primary btn-sm" onclick="adj('oC',1)">+</button>
-            </div>
-          </div>
-          <div class="card" style="text-align:center;">
-            <div class="card-title" style="justify-content:center;">Antworten</div>
-            <div class="oc-num" style="color:var(--orange);" id="oR">0</div>
-            <div style="font-size:11px;color:var(--muted);margin:4px 0 10px;">haben geantwortet</div>
-            <div style="display:flex;gap:6px;justify-content:center;">
-              <button class="btn btn-ghost btn-sm" onclick="adj('oR',-1)">−</button>
-              <button class="btn btn-primary btn-sm" onclick="adj('oR',1)">+</button>
-            </div>
-          </div>
-          <div class="card" style="text-align:center;">
-            <div class="card-title" style="justify-content:center;">Abschlüsse</div>
-            <div class="oc-num" style="color:var(--green);" id="oD">0</div>
-            <div style="font-size:11px;color:var(--muted);margin:4px 0 10px;">zahlende Kunden</div>
-            <div style="display:flex;gap:6px;justify-content:center;">
-              <button class="btn btn-ghost btn-sm" onclick="adj('oD',-1)">−</button>
-              <button class="btn btn-primary btn-sm" onclick="adj('oD',1)">+</button>
-            </div>
-          </div>
+          <div class="card" style="text-align:center;"><div class="card-title" style="justify-content:center;">Kontaktiert</div><div class="oc-num" style="color:var(--text);" id="oC">0</div><div style="font-size:11px;color:var(--muted);margin:4px 0 10px;">Makler angeschrieben</div><div style="display:flex;gap:6px;justify-content:center;"><button class="btn btn-ghost btn-sm" onclick="adj('oC',-1)">-</button><button class="btn btn-primary btn-sm" onclick="adj('oC',1)">+</button></div></div>
+          <div class="card" style="text-align:center;"><div class="card-title" style="justify-content:center;">Antworten</div><div class="oc-num" style="color:var(--orange);" id="oR">0</div><div style="font-size:11px;color:var(--muted);margin:4px 0 10px;">haben geantwortet</div><div style="display:flex;gap:6px;justify-content:center;"><button class="btn btn-ghost btn-sm" onclick="adj('oR',-1)">-</button><button class="btn btn-primary btn-sm" onclick="adj('oR',1)">+</button></div></div>
+          <div class="card" style="text-align:center;"><div class="card-title" style="justify-content:center;">Abschluesse</div><div class="oc-num" style="color:var(--green);" id="oD">0</div><div style="font-size:11px;color:var(--muted);margin:4px 0 10px;">zahlende Kunden</div><div style="display:flex;gap:6px;justify-content:center;"><button class="btn btn-ghost btn-sm" onclick="adj('oD',-1)">-</button><button class="btn btn-primary btn-sm" onclick="adj('oD',1)">+</button></div></div>
         </div>
-        <div class="card">
-          <div class="card-title">Conversion-Raten</div>
-          <div class="g3">
-            <div style="background:var(--s2);border-radius:var(--r);padding:16px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:var(--text);" id="rR">—</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Antwortrate</div></div>
-            <div style="background:var(--s2);border-radius:var(--r);padding:16px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:var(--orange);" id="rC">—</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Abschlussrate</div></div>
-            <div style="background:var(--s2);border-radius:var(--r);padding:16px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:var(--green);" id="rT">—</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Gesamt-Conversion</div></div>
-          </div>
-        </div>
+        <div class="card"><div class="card-title">Conversion-Raten</div><div class="g3"><div style="background:var(--s2);border-radius:var(--r);padding:16px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:var(--text);" id="rR">-</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Antwortrate</div></div><div style="background:var(--s2);border-radius:var(--r);padding:16px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:var(--orange);" id="rC">-</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Abschlussrate</div></div><div style="background:var(--s2);border-radius:var(--r);padding:16px;text-align:center;"><div style="font-size:1.6rem;font-weight:800;color:var(--green);" id="rT">-</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Gesamt-Conversion</div></div></div></div>
       </div>
     </div>
 
-    <!-- ══ KUNDEN ══ -->
+    <!-- KUNDEN -->
     <div class="panel" id="panel-clients">
       <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Kunden-Pipeline</div></div>
       <div class="p" style="padding-top:0;">
-        <div class="card">
-          <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;margin-bottom:12px;align-items:end;">
-            <div><div class="lbl">Name / Firma</div><input class="inp" id="nN" placeholder="z.B. Makler Weber GmbH"></div>
-            <div><div class="lbl">Wert (€)</div><input type="number" class="inp" id="nV" placeholder="4500" style="width:120px;"></div>
-            <div><div class="lbl">Status</div><select class="inp" id="nS" style="width:110px;"><option value="lead">Lead</option><option value="active">Aktiv</option><option value="done">Fertig</option></select></div>
-            <button class="btn btn-primary" onclick="addC()" style="align-self:end;">Hinzufügen</button>
-          </div>
-          <div class="div"></div>
-          <div id="clientList"></div>
-          <div class="div"></div>
-          <div class="g3">
-            <div style="background:var(--s2);border-radius:var(--r);padding:12px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:var(--orange);" id="cL">0</div><div style="font-size:10px;color:var(--muted);">Leads</div></div>
-            <div style="background:var(--s2);border-radius:var(--r);padding:12px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:var(--green);" id="cA">0</div><div style="font-size:10px;color:var(--muted);">Aktive Kunden</div></div>
-            <div style="background:var(--s2);border-radius:var(--r);padding:12px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:var(--gold2);" id="cRev">0 €</div><div style="font-size:10px;color:var(--muted);">Pipeline-Wert</div></div>
-          </div>
-        </div>
+        <div class="card"><div style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;margin-bottom:12px;align-items:end;"><div><div class="lbl">Name / Firma</div><input class="inp" id="nN" placeholder="z.B. Maklerbuero Meier AG"></div><div><div class="lbl">Wert (CHF)</div><input type="number" class="inp" id="nV" placeholder="2500" style="width:120px;"></div><div><div class="lbl">Status</div><select class="inp" id="nS" style="width:110px;"><option value="lead">Lead</option><option value="active">Aktiv</option><option value="done">Fertig</option></select></div><button class="btn btn-primary" onclick="addC()" style="align-self:end;">Hinzufuegen</button></div><div class="div"></div><div id="clientList"></div><div class="div"></div><div class="g3"><div style="background:var(--s2);border-radius:var(--r);padding:12px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:var(--orange);" id="cL">0</div><div style="font-size:10px;color:var(--muted);">Leads</div></div><div style="background:var(--s2);border-radius:var(--r);padding:12px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:var(--green);" id="cA">0</div><div style="font-size:10px;color:var(--muted);">Aktive Kunden</div></div><div style="background:var(--s2);border-radius:var(--r);padding:12px;text-align:center;"><div style="font-size:1.2rem;font-weight:800;color:var(--gold2);" id="cRev">0 CHF</div><div style="font-size:10px;color:var(--muted);">Pipeline-Wert</div></div></div></div>
       </div>
     </div>
 
-    <!-- ══ NOTIZEN ══ -->
+    <!-- NOTIZEN -->
     <div class="panel" id="panel-notes">
       <div class="ph" style="padding-bottom:20px;"><div class="ph-title">Notizen</div><div class="ph-sub">Automatisch gespeichert</div></div>
       <div class="p" style="padding-top:0;">
-        <div class="g2">
-          <div class="card"><div class="card-title">Allgemeine Notizen</div><textarea class="ta" id="n1" placeholder="Ideen, Gesprächsnotizen, Gedanken..." oninput="sn('n1')"></textarea><div class="saved-ok" id="sv1">Gespeichert</div></div>
-          <div class="stack">
-            <div class="card"><div class="card-title">Heute — Top 3</div><textarea class="ta" id="n2" placeholder="1.&#10;2.&#10;3." style="min-height:100px;" oninput="sn('n2')"></textarea><div class="saved-ok" id="sv2">Gespeichert</div></div>
-            <div class="card"><div class="card-title">Ideen & Erkenntnisse</div><textarea class="ta" id="n3" placeholder="Was hat funktioniert?&#10;Neue Ideen..." style="min-height:100px;" oninput="sn('n3')"></textarea><div class="saved-ok" id="sv3">Gespeichert</div></div>
-          </div>
-        </div>
+        <div class="g2"><div class="card"><div class="card-title">Allgemeine Notizen</div><textarea class="ta" id="n1" placeholder="Ideen, Gespraechsnotizen, Gedanken..." oninput="sn('n1')"></textarea><div class="saved-ok" id="sv1">Gespeichert</div></div><div class="stack"><div class="card"><div class="card-title">Heute - Top 3</div><textarea class="ta" id="n2" placeholder="1.&#10;2.&#10;3." style="min-height:100px;" oninput="sn('n2')"></textarea><div class="saved-ok" id="sv2">Gespeichert</div></div><div class="card"><div class="card-title">Ideen &amp; Erkenntnisse</div><textarea class="ta" id="n3" placeholder="Was hat funktioniert?&#10;Neue Ideen..." style="min-height:100px;" oninput="sn('n3')"></textarea><div class="saved-ok" id="sv3">Gespeichert</div></div></div></div>
       </div>
     </div>
 
@@ -1051,441 +406,139 @@ select.inp option { background: var(--s2); }
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════════
-function show(name, el) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  el.classList.add('active');
-}
+function show(name,el){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('panel-'+name).classList.add('active');el.classList.add('active');}
+function openGoal(){const v=parseFloat(localStorage.getItem('fm_earned')||0);document.getElementById('gInput').value=v||'';previewGoal();document.getElementById('gModal').classList.add('open');}
+function closeGoal(){document.getElementById('gModal').classList.remove('open');}
+function previewGoal(){const v=parseFloat(document.getElementById('gInput').value)||0,pct=Math.min(100,Math.round(v/190000*100));document.getElementById('gPreviewFill').style.width=pct+'%';document.getElementById('gPreviewPct').textContent=pct+' %';}
+function saveGoal(){const v=parseFloat(document.getElementById('gInput').value)||0;localStorage.setItem('fm_earned',v);renderGoalBar(v);closeGoal();}
+function renderGoalBar(v){const total=190000,pct=Math.min(100,Math.round(v/total*100));document.getElementById('gFill').style.width=pct+'%';document.getElementById('gPct').textContent=pct+' %';document.getElementById('gNums').innerHTML='<b>'+v.toLocaleString('de-CH')+' CHF</b> verdient &middot; '+Math.max(0,total-v).toLocaleString('de-CH')+' CHF verbleibend';}
 
-// ══════════════════════════════════════════════
-// GOAL BAR
-// ══════════════════════════════════════════════
-function openGoal() {
-  const v = parseFloat(localStorage.getItem('fm_earned') || 0);
-  document.getElementById('gInput').value = v || '';
-  previewGoal();
-  document.getElementById('gModal').classList.add('open');
-}
-function closeGoal() { document.getElementById('gModal').classList.remove('open'); }
-function previewGoal() {
-  const v = parseFloat(document.getElementById('gInput').value) || 0;
-  const pct = Math.min(100, Math.round(v / 190000 * 100));
-  document.getElementById('gPreviewFill').style.width = pct + '%';
-  document.getElementById('gPreviewPct').textContent = pct + ' %';
-}
-function saveGoal() {
-  const v = parseFloat(document.getElementById('gInput').value) || 0;
-  localStorage.setItem('fm_earned', v);
-  renderGoalBar(v);
-  closeGoal();
-}
-function renderGoalBar(v) {
-  const total = 190000;
-  const pct = Math.min(100, Math.round(v / total * 100));
-  document.getElementById('gFill').style.width = pct + '%';
-  document.getElementById('gPct').textContent = pct + ' %';
-  document.getElementById('gNums').innerHTML =
-    '<b>' + v.toLocaleString('de-DE') + ' €</b> verdient &middot; ' +
-    Math.max(0, total - v).toLocaleString('de-DE') + ' € verbleibend';
-}
-
-// ══════════════════════════════════════════════
-// KANBAN DATA
-// ══════════════════════════════════════════════
-// cost: 'free' | 'paid'
-const TASKS = [
-
-  // ── BLOCK 1: KOSTENLOS — Setup & Tools ──────────────────────────────
-  { id:'t2',  text:'GitHub Pages für Repository aktivieren und testen',                              col:'offen', tag:'gratis', cost:'free' },
-  { id:'t3',  text:'n8n Cloud-Account erstellen (kostenloser Free-Plan)',                            col:'offen', tag:'gratis', cost:'free' },
-  { id:'t4',  text:'Gmail-Konto für Flowmatic einrichten + SMTP in n8n konfigurieren',              col:'offen', tag:'gratis', cost:'free' },
-  { id:'t5',  text:'Google Sheets Vorlage für Lead-Speicherung anlegen',                            col:'offen', tag:'gratis', cost:'free' },
-
-  // ── BLOCK 2: KOSTENLOS — Brand & Auftreten ───────────────────────────
-  { id:'t8',  text:'Flowmatic-Logo erstellen — Claude Code oder Canva Free',                        col:'offen', tag:'gratis', cost:'free' },
-  { id:'t9',  text:'Brand-Farben und Fonts festlegen',                                              col:'offen', tag:'gratis', cost:'free' },
-  { id:'t11', text:'LinkedIn-Profil auf Flowmatic-Brand umstellen (Foto, Headline, About)',         col:'offen', tag:'gratis', cost:'free' },
-  { id:'t12', text:'Professionelle E-Mail-Signatur erstellen',                                      col:'offen', tag:'gratis', cost:'free' },
-
-  // ── BLOCK 3: KOSTENLOS — Demos bauen ────────────────────────────────
-  { id:'t10', text:'Eigene Flowmatic-Landingpage mit Angeboten und Demo-Links live stellen',        col:'offen', tag:'gratis', cost:'free' },
-  { id:'t13', text:'Immobilien-Demo Landingpage bauen (Claude Code)',                               col:'offen', tag:'gratis', cost:'free' },
-  { id:'t14', text:'Immobilien-Demo auf GitHub Pages deployen und mobil testen',                    col:'offen', tag:'gratis', cost:'free' },
-  { id:'t15', text:'Testformular ausfüllen — n8n Webhook, Mail und Google Sheets prüfen',           col:'offen', tag:'gratis', cost:'free' },
-  { id:'t16', text:'n8n Automation 1: Webhook, Bestätigungsmail, Benachrichtigung, Sheets',        col:'offen', tag:'gratis', cost:'free' },
-  { id:'t17', text:'n8n Automation 2: Follow-up E-Mail Sequenz (Tag 0, 1, 3, 7)',                  col:'offen', tag:'gratis', cost:'free' },
-  { id:'t18', text:'n8n Automation 3: Wöchentlicher Performance-Report',                           col:'offen', tag:'gratis', cost:'free' },
-  { id:'t19', text:'Zweite Demo-Branche bauen (Coaches / Handwerker / Klinik)',                     col:'offen', tag:'gratis', cost:'free' },
-
-  // ── BLOCK 4: KOSTENLOS — Angebote & Dokumente ────────────────────────
-  { id:'t20', text:'Angebots-PDF erstellen mit Canva Free (Leistungen, Preise, Pakete)',            col:'offen', tag:'gratis', cost:'free' },
-  { id:'t21', text:'Rechnungsvorlage erstellen (Word / Google Docs — kostenlos)',                   col:'offen', tag:'gratis', cost:'free' },
-  { id:'t22', text:'Dienstleistungsvertrag / AGB Vorlage — kostenlose Muster online',              col:'offen', tag:'gratis', cost:'free' },
-  { id:'t23', text:'Onboarding-Fragebogen für neue Kunden erstellen (Google Forms)',                col:'offen', tag:'gratis', cost:'free' },
-  { id:'t24', text:'Projektübergabe-Dokumentation für Kunden erstellen',                            col:'offen', tag:'gratis', cost:'free' },
-
-  // ── BLOCK 5: KOSTENLOS — Akquise & Erster Kunde ──────────────────────
-  { id:'t25', text:'Liste mit 50 Immobilienmaklern auf XING und LinkedIn zusammenstellen',          col:'offen', tag:'gratis', cost:'free' },
-  { id:'t26', text:'Outreach-Template schreiben (kurz, Demo-Link rein)',                            col:'offen', tag:'gratis', cost:'free' },
-  { id:'t27', text:'10 erste Immobilienmakler kontaktieren (LinkedIn DM oder E-Mail)',              col:'offen', tag:'gratis', cost:'free' },
-  { id:'t28', text:'Ersten LinkedIn-Post veröffentlichen (Demo zeigen)',                            col:'offen', tag:'gratis', cost:'free' },
-  { id:'t29', text:'Follow-up nach 3 Tagen an alle kontaktierten Makler schicken',                 col:'offen', tag:'gratis', cost:'free' },
-  { id:'t32', text:'Erstgespräch führen: 30 Min, Demo zeigen, Bedarf klären',                     col:'offen', tag:'gratis', cost:'free' },
-  { id:'t33', text:'Individuelles Angebot erstellen und versenden',                                col:'offen', tag:'gratis', cost:'free' },
-  { id:'t34', text:'Ersten Auftrag annehmen und 50 % Anzahlung einholen',                         col:'offen', tag:'gratis', cost:'free' },
-  { id:'t35', text:'Kunden-Landingpage in 7 Tagen liefern und n8n-Workflow einrichten',           col:'offen', tag:'gratis', cost:'free' },
-  { id:'t36', text:'Rechnung stellen und Restzahlung einziehen',                                   col:'offen', tag:'gratis', cost:'free' },
-  { id:'t37', text:'Kundenstimme nach Projektabschluss einholen',                                  col:'offen', tag:'gratis', cost:'free' },
-  { id:'t38', text:'Retainer-Gespräch führen: Seite weiter optimieren?',                           col:'offen', tag:'gratis', cost:'free' },
-
-  // ── BLOCK 6: KOSTENLOS — Tools für dich ──────────────────────────────
-  { id:'t39', text:'Landingpage-Generator bauen: Branche eingeben, Claude generiert HTML',         col:'offen', tag:'gratis', cost:'free' },
-  { id:'t40', text:'n8n Workflow-Bibliothek aufbauen (wiederverwendbare Flows pro Branche)',       col:'offen', tag:'gratis', cost:'free' },
-  { id:'t41', text:'Outreach-Automatisierung mit n8n: Follow-up-Mails automatisch senden',        col:'offen', tag:'gratis', cost:'free' },
-  { id:'t42', text:'Kunden-Onboarding-Automation: Fragebogen, Sheets, Willkommens-Mail',          col:'offen', tag:'gratis', cost:'free' },
-  { id:'t30', text:'Wöchentlich 15 neue Makler kontaktieren (Routine etablieren)',                 col:'offen', tag:'gratis', cost:'free' },
-  { id:'t31', text:'2x pro Woche LinkedIn-Content veröffentlichen',                               col:'offen', tag:'gratis', cost:'free' },
-  { id:'t45', text:'Erste Case Study mit echten Lead-Zahlen schreiben',                           col:'offen', tag:'gratis', cost:'free' },
-
-  // ── BLOCK 7: MEILENSTEINE ─────────────────────────────────────────────
-  { id:'t44', text:'5 aktive Retainer-Kunden erreichen — 2.500 € passiv pro Monat',               col:'offen', tag:'ms',     cost:'free' },
-  { id:'t48', text:'190.000 € Gesamtziel erreicht',                                               col:'offen', tag:'ms',     cost:'free' },
-
-  // ── BLOCK 8: KOSTENPFLICHTIG ─────────────────────────────────────────
-  { id:'t1',  text:'Domain flowmatic.de registrieren — ca. 10–15 € / Jahr (Strato, Namecheap)',   col:'offen', tag:'paid',   cost:'paid' },
-  { id:'t6',  text:'Gewerbe anmelden — ca. 20–40 € Gewerbegebühr (einmalig)',                     col:'offen', tag:'paid',   cost:'paid' },
-  { id:'t7',  text:'Geschäftskonto eröffnen — z.B. Finom (ab 0 €) oder Sparkasse (ab ~5 €/Mo)',  col:'offen', tag:'paid',   cost:'paid' },
-  { id:'t43', text:'Wettbewerber-Analyse-Tool mit Claude API — API-Kosten je nach Nutzung',       col:'offen', tag:'paid',   cost:'paid' },
-  { id:'t46', text:'Google Ads Testkampagne starten — 50–100 € Budget',                           col:'offen', tag:'paid',   cost:'paid' },
-  { id:'t47', text:'Ersten Freelancer / VA engagieren — ca. 15–25 € / Stunde',                   col:'offen', tag:'paid',   cost:'paid' },
-  { id:'t49', text:'n8n Cloud auf bezahlten Plan upgraden — ab 20 € / Monat (wenn >5 Workflows)', col:'offen', tag:'paid',   cost:'paid' },
-  { id:'t50', text:'Canva Pro für professionellere Angebots-PDFs — ca. 13 € / Monat',             col:'offen', tag:'paid',   cost:'paid' },
+const TASKS=[
+  {id:'t2',text:'GitHub Pages aktivieren und testen',col:'offen',tag:'gratis'},
+  {id:'t3',text:'n8n Cloud-Account erstellen (Free-Plan)',col:'offen',tag:'gratis'},
+  {id:'t4',text:'Gmail SMTP in n8n konfigurieren',col:'offen',tag:'gratis'},
+  {id:'t5',text:'Google Sheets Vorlage fuer Lead-Speicherung anlegen',col:'offen',tag:'gratis'},
+  {id:'t8',text:'Flowmatic-Logo erstellen (Canva Free)',col:'offen',tag:'gratis'},
+  {id:'t9',text:'Brand-Farben: Navy #1E3A5F, Blue #2D7DD2, Sky #5BA4E5',col:'offen',tag:'gratis'},
+  {id:'t11',text:'LinkedIn-Profil auf Flowmatic-Brand umstellen',col:'offen',tag:'gratis'},
+  {id:'t10',text:'Flowmatic-Landingpage fuer Schweizer Immobilienmakler live stellen',col:'offen',tag:'gratis'},
+  {id:'t13',text:'Lead-Maschine Demo Eigentuemer-Funnel bauen und deployen',col:'offen',tag:'gratis'},
+  {id:'t13b',text:'Lead-Maschine Demo Kaeufer-Funnel bauen und deployen',col:'offen',tag:'gratis'},
+  {id:'t15',text:'Testformular ausfullen - n8n Webhook, Mail, Sheets pruefen',col:'offen',tag:'gratis'},
+  {id:'t16',text:'n8n: Lead-Maschine Workflow (Formular > CRM > Follow-up)',col:'offen',tag:'gratis'},
+  {id:'t17',text:'n8n: Lead-Verwaltung - alle Quellen in zentrales CRM',col:'offen',tag:'gratis'},
+  {id:'t18',text:'n8n: Expose-Generator mit Claude API verbinden',col:'offen',tag:'gratis'},
+  {id:'t19',text:'n8n: Woechentlicher Performance-Report automatisieren',col:'offen',tag:'gratis'},
+  {id:'t20',text:'Angebots-PDF erstellen (3 Services, CHF-Preise, MwSt 8.1%)',col:'offen',tag:'gratis'},
+  {id:'t21',text:'Rechnungsvorlage erstellen (CHF, MwSt 8.1%)',col:'offen',tag:'gratis'},
+  {id:'t22',text:'Dienstleistungsvertrag/AGB Vorlage',col:'offen',tag:'gratis'},
+  {id:'t25',text:'50 Immobilienmakler in Zuerich, Zug, Basel, Genf zusammenstellen',col:'offen',tag:'gratis'},
+  {id:'t26',text:'Outreach-Template schreiben (Problem ansprechen + Demo-Link)',col:'offen',tag:'gratis'},
+  {id:'t27',text:'10 erste Immobilienmakler kontaktieren',col:'offen',tag:'gratis'},
+  {id:'t28',text:'Ersten LinkedIn-Post: Lead-Maschine Demo zeigen',col:'offen',tag:'gratis'},
+  {id:'t29',text:'Follow-up nach 3 Tagen an alle kontaktierten Makler',col:'offen',tag:'gratis'},
+  {id:'t32',text:'Erstgespraech: 30 Min, Demo zeigen, Kundenproblem herausarbeiten',col:'offen',tag:'gratis'},
+  {id:'t33',text:'Individuelles Angebot erstellen und versenden (CHF, Services)',col:'offen',tag:'gratis'},
+  {id:'t34',text:'Ersten Auftrag annehmen und 50% Anzahlung einholen',col:'offen',tag:'gratis'},
+  {id:'t35',text:'Kunden-Setup in 7 Tagen liefern',col:'offen',tag:'gratis'},
+  {id:'t36',text:'Rechnung stellen und Restzahlung einziehen',col:'offen',tag:'gratis'},
+  {id:'t37',text:'Testimonial nach Projektabschluss einholen',col:'offen',tag:'gratis'},
+  {id:'t38',text:'Retainer-Gespraech fuehren',col:'offen',tag:'gratis'},
+  {id:'t40',text:'Erste Case Study mit echten Lead-Zahlen schreiben',col:'offen',tag:'gratis'},
+  {id:'t41',text:'Woechentlich 15 neue Makler kontaktieren (Routine)',col:'offen',tag:'gratis'},
+  {id:'t42',text:'2x pro Woche LinkedIn-Content veroeffentlichen',col:'offen',tag:'gratis'},
+  {id:'t44',text:'5 aktive Retainer-Kunden - ca. 3.000 CHF passiv/Monat',col:'offen',tag:'ms'},
+  {id:'t45',text:'190.000 CHF Gesamtziel erreicht',col:'offen',tag:'ms'},
+  {id:'t1',text:'Domain flowmatic.ch registrieren - ca. 10-20 CHF/Jahr',col:'offen',tag:'paid'},
+  {id:'t6',text:'Gewerbe anmelden in der Schweiz',col:'offen',tag:'paid'},
+  {id:'t7',text:'Geschaeftskonto eroeffnen (Neon Business oder Kantonalbank)',col:'offen',tag:'paid'},
+  {id:'t46',text:'Google Ads Testkampagne fuer Makler-Zielgruppe - 100-200 CHF',col:'offen',tag:'paid'},
+  {id:'t49',text:'n8n Cloud auf bezahlten Plan upgraden - ab 20 EUR/Monat',col:'offen',tag:'paid'},
 ];
+const TAG_LABELS={gratis:'Kostenlos',paid:'Kostenpflichtig',ms:'Meilenstein'};
+let taskState={};
+function loadKanban(){const s=localStorage.getItem('fm_kb5');if(s)taskState=JSON.parse(s);else TASKS.forEach(t=>taskState[t.id]=t.col);renderKanban();}
+function renderKanban(){['offen','inprog','done','online'].forEach(col=>{const el=document.getElementById('col-'+col);el.innerHTML='';const tasks=TASKS.filter(t=>taskState[t.id]===col);tasks.forEach(t=>el.appendChild(makeCard(t)));document.getElementById('cnt-'+col).textContent=tasks.length;});}
+function makeCard(t){const d=document.createElement('div');d.className='kb-card';d.draggable=true;d.dataset.id=t.id;d.innerHTML='<div class="kb-card-text">'+t.text+'</div><div class="kb-card-footer"><span class="kb-tag tag-'+t.tag+'">'+TAG_LABELS[t.tag]+'</span><div class="kb-card-grip"><span></span><span></span><span></span></div></div>';d.addEventListener('dragstart',onDragStart);d.addEventListener('dragend',onDragEnd);return d;}
+let dragged=null;
+function onDragStart(e){dragged=this;this.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',this.dataset.id);}
+function onDragEnd(){this.classList.remove('dragging');document.querySelectorAll('.kb-list').forEach(l=>l.classList.remove('drag-over'));}
+function onDragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';e.currentTarget.classList.add('drag-over');}
+function onDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function onDrop(e,col){e.preventDefault();e.currentTarget.classList.remove('drag-over');const id=e.dataTransfer.getData('text/plain');if(id){taskState[id]=col;localStorage.setItem('fm_kb5',JSON.stringify(taskState));renderKanban();}}
 
-const TAG_LABELS = { gratis:'Kostenlos', paid:'Kostenpflichtig', ms:'Meilenstein', now:'Sofort', week:'Woche 1', month:'Monat 1–2', later:'Später', legal:'Rechtlich' };
-
-let taskState = {};
-
-function loadKanban() {
-  const saved = localStorage.getItem('fm_kb3');
-  if (saved) taskState = JSON.parse(saved);
-  else TASKS.forEach(t => taskState[t.id] = t.col);
-  renderKanban();
-}
-
-function renderKanban() {
-  ['offen','inprog','done','online'].forEach(col => {
-    const el = document.getElementById('col-' + col);
-    el.innerHTML = '';
-    const tasks = TASKS.filter(t => taskState[t.id] === col);
-    tasks.forEach(t => el.appendChild(makeCard(t)));
-    document.getElementById('cnt-' + col).textContent = tasks.length;
-  });
-}
-
-function makeCard(t) {
-  const div = document.createElement('div');
-  div.className = 'kb-card';
-  div.draggable = true;
-  div.dataset.id = t.id;
-  div.innerHTML = `
-    <div class="kb-card-text">${t.text}</div>
-    <div class="kb-card-footer">
-      <span class="kb-tag tag-${t.tag}">${TAG_LABELS[t.tag]}</span>
-      <div class="kb-card-grip"><span></span><span></span><span></span></div>
-    </div>`;
-  div.addEventListener('dragstart', onDragStart);
-  div.addEventListener('dragend', onDragEnd);
-  return div;
-}
-
-// ── DRAG & DROP ──
-let dragged = null;
-
-function onDragStart(e) {
-  dragged = this;
-  this.classList.add('dragging');
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', this.dataset.id);
-}
-
-function onDragEnd() {
-  this.classList.remove('dragging');
-  document.querySelectorAll('.kb-list').forEach(l => l.classList.remove('drag-over'));
-}
-
-function onDragOver(e) {
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  e.currentTarget.classList.add('drag-over');
-}
-
-function onDragLeave(e) {
-  e.currentTarget.classList.remove('drag-over');
-}
-
-function onDrop(e, col) {
-  e.preventDefault();
-  e.currentTarget.classList.remove('drag-over');
-  const id = e.dataTransfer.getData('text/plain');
-  if (id) {
-    taskState[id] = col;
-    localStorage.setItem('fm_kb3', JSON.stringify(taskState));
-    renderKanban();
-  }
-}
-
-// ══════════════════════════════════════════════
-// CALCULATOR
-// ══════════════════════════════════════════════
-function calc() {
-  const s=+document.getElementById('cS').value||0, p=+document.getElementById('cP').value||0,
-        b=+document.getElementById('cB').value||0, r=+document.getElementById('cR').value||0,
-        a1=+document.getElementById('cA1').value||0, a2=+document.getElementById('cA2').value||0;
-  const total = s*1500+p*3500+b*4500+r*500+a1*1000+a2*1400;
-  document.getElementById('calcOut').textContent = total.toLocaleString('de-DE') + ' €';
+function calc(){
+  const lme=+document.getElementById('cLME').value||0,lmk=+document.getElementById('cLMK').value||0,lv=+document.getElementById('cLV').value||0,eg=+document.getElementById('cEG').value||0;
+  const rlme=+document.getElementById('rLME').value||0,rlmk=+document.getElementById('rLMK').value||0,rlv=+document.getElementById('rLV').value||0;
+  const setup=lme*2500+lmk*2500+lv*2500+eg*1500,ret=rlme*200+rlmk*200+rlv*250;
+  document.getElementById('calcOut').textContent=(setup+ret).toLocaleString('de-CH')+' CHF';
   const lines=[];
-  if(s)  lines.push(`${s}× Starter: <span style="color:var(--gold2)">${(s*1500).toLocaleString('de-DE')} €</span>`);
-  if(p)  lines.push(`${p}× Performance: <span style="color:var(--gold2)">${(p*3500).toLocaleString('de-DE')} €</span>`);
-  if(b)  lines.push(`${b}× Bundle: <span style="color:var(--gold2)">${(b*4500).toLocaleString('de-DE')} €</span>`);
-  if(r)  lines.push(`${r}× Retainer: <span style="color:var(--gold2)">${(r*500).toLocaleString('de-DE')} €</span>`);
-  if(a1) lines.push(`${a1}× Automation 1: <span style="color:var(--gold2)">${(a1*1000).toLocaleString('de-DE')} €</span>`);
-  if(a2) lines.push(`${a2}× Automation 2: <span style="color:var(--gold2)">${(a2*1400).toLocaleString('de-DE')} €</span>`);
-  document.getElementById('calcBreak').innerHTML = lines.join('<br>') || '<span style="color:var(--muted)">Werte eingeben...</span>';
+  if(lme)lines.push(lme+'x LM Eigentuemer: <span style="color:var(--gold2)">'+(lme*2500).toLocaleString('de-CH')+' CHF</span>');
+  if(lmk)lines.push(lmk+'x LM Kaeufer: <span style="color:var(--gold2)">'+(lmk*2500).toLocaleString('de-CH')+' CHF</span>');
+  if(lv)lines.push(lv+'x Lead-Verwaltung: <span style="color:var(--gold2)">'+(lv*2500).toLocaleString('de-CH')+' CHF</span>');
+  if(eg)lines.push(eg+'x Expose: <span style="color:var(--gold2)">'+(eg*1500).toLocaleString('de-CH')+' CHF</span>');
+  if(rlme)lines.push(rlme+'x LM-E Retainer: <span style="color:var(--accent2)">'+(rlme*200).toLocaleString('de-CH')+' CHF/Mo</span>');
+  if(rlmk)lines.push(rlmk+'x LM-K Retainer: <span style="color:var(--accent2)">'+(rlmk*200).toLocaleString('de-CH')+' CHF/Mo</span>');
+  if(rlv)lines.push(rlv+'x LV Retainer: <span style="color:var(--accent2)">'+(rlv*250).toLocaleString('de-CH')+' CHF/Mo</span>');
+  document.getElementById('calcBreak').innerHTML=lines.join('<br>')||'<span style="color:var(--muted)">Werte eingeben...</span>';
 }
-function setS(s,p,b,r,a1,a2) {
-  ['cS','cP','cB','cR','cA1','cA2'].forEach((id,i)=>document.getElementById(id).value=[s,p,b,r,a1,a2][i]);
-  calc();
+function setS(lme,lmk,lv,eg,rlme,rlmk,rlv){['cLME','cLMK','cLV','cEG','rLME','rLMK','rLV'].forEach((id,i)=>document.getElementById(id).value=[lme,lmk,lv,eg,rlme,rlmk,rlv][i]);calc();}
+
+const SVC_DEF=[
+  {name:'Lead-Maschine - Eigentuemer-Funnel',once:2500,mo:200,desc:'Eigentuemer-Funnel > Sofort-Benachrichtigung > CRM-Eintrag > Follow-up-Sequenz'},
+  {name:'Lead-Maschine - Kaeufer-Funnel',once:2500,mo:200,desc:'Kaeufer-Funnel > Suchprofil-Matching > automatische Benachrichtigung'},
+  {name:'Lead-Verwaltung',once:2500,mo:250,desc:'Alle Quellen > zentrales CRM > Follow-up-Sequenz > woechentlicher Performance-Report'},
+  {name:'Expose-Generator',once:1500,mo:0,desc:'KI-Expose aus Objektdaten in unter 2 Minuten - kein Retainer'},
+];
+const svcSelected=new Set();
+function toggleSvc(idx){if(svcSelected.has(idx))svcSelected.delete(idx);else svcSelected.add(idx);document.getElementById('si'+idx).classList.toggle('on',svcSelected.has(idx));updateOfferTotal();}
+function updateOfferTotal(){
+  let once=0,mo=0;const brkLines=[];
+  svcSelected.forEach(i=>{const s=SVC_DEF[i];once+=s.once;mo+=s.mo;brkLines.push('<div class="offer-line"><span>'+s.name+'</span><b>CHF '+s.once.toLocaleString('de-CH')+'</b></div>');});
+  const el=document.getElementById('offerTotal');
+  if(svcSelected.size===0){el.style.display='none';document.getElementById('offerPreview').innerHTML='Bitte mindestens einen Service auswaehlen...';return;}
+  el.style.display='block';
+  document.getElementById('offerBreakdown').innerHTML=brkLines.join('');
+  document.getElementById('offerSetup').textContent='CHF '+once.toLocaleString('de-CH');
+  document.getElementById('offerRetainer').textContent=mo>0?'CHF '+mo.toLocaleString('de-CH')+'/Mo':'Kein Retainer';
+  const vat=Math.round(once*0.081);
+  document.getElementById('offerVat').textContent='CHF '+vat.toLocaleString('de-CH');
+  const prev=[...svcSelected].map(i=>{const s=SVC_DEF[i];const ret=s.mo>0?' + CHF '+s.mo+'/Mo Retainer':' - kein Retainer';return '<div style="display:flex;gap:8px;margin-bottom:6px;"><span style="color:var(--accent);flex-shrink:0;">+</span><span style="color:var(--muted2)">'+s.name+'<br><span style="font-size:11px;color:var(--muted);">'+s.desc+'</span><br><span style="color:var(--gold2);font-weight:700;">CHF '+s.once.toLocaleString('de-CH')+' Setup'+ret+'</span></span></div>';}).join('');
+  document.getElementById('offerPreview').innerHTML=prev+'<div style="color:var(--muted);font-size:11px;margin-top:10px;">+ MwSt. 8,1% auf Setup (CHF '+vat.toLocaleString('de-CH')+')</div>';
 }
-
-// ══════════════════════════════════════════════
-// OFFER BUILDER — 3 PAKETE
-// ══════════════════════════════════════════════
-const PAKETE = {
-  1: {
-    name: 'Paket 1 — Lead-Eingang',
-    price: 2500,
-    retainer: 200,
-    items: [
-      'Starter Landingpage (1 Seite, Kontaktformular)',
-      'Service 1: Formular → Bestätigungsmail → Inhaber-Benachrichtigung → Google Sheets',
-    ]
-  },
-  2: {
-    name: 'Paket 2 — Lead-Eingang + Follow-up',
-    price: 4500,
-    retainer: 350,
-    items: [
-      'Performance Landingpage (Quiz-Funnel + Kalkulator)',
-      'Service 1: Formular → Bestätigungsmail → Inhaber-Benachrichtigung → Google Sheets',
-      'Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7 → stoppt automatisch bei Antwort',
-    ]
-  },
-  3: {
-    name: 'Paket 3 — Komplett-System',
-    price: 6200,
-    retainer: 500,
-    items: [
-      'Performance Landingpage (Quiz-Funnel + Kalkulator)',
-      'Service 1: Formular → Bestätigungsmail → Inhaber-Benachrichtigung → Google Sheets',
-      'Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7 → stoppt automatisch bei Antwort',
-      'Service 3: Wöchentlicher Performance-Report (Leads, Conversions, offene Kontakte)',
-    ]
-  },
-  4: {
-    name: 'Paket 4 — Gesamtsystem + Performance Pricing',
-    price: 6200,
-    performancePricing: true,
-    pricePerLead: 15,
-    items: [
-      'Performance Landingpage (Quiz-Funnel + Kalkulator)',
-      'Service 1: Formular → Bestätigungsmail → Inhaber-Benachrichtigung → Google Sheets',
-      'Service 2: Follow-up Sequenz Tag 0 / 1 / 3 / 7 → stoppt automatisch bei Antwort',
-      'Service 3: Wöchentlicher Performance-Report (Leads, Conversions, offene Kontakte)',
-      'Performance Pricing: 15 € pro qualifiziertem Lead — kein Retainer',
-    ]
-  }
-};
-
-let selectedPkg = null;
-
-function selectPkg(n) {
-  selectedPkg = n;
-  [1,2,3,4].forEach(i => {
-    const card = document.getElementById('pkg'+i);
-    const radio = document.getElementById('pkgr'+i);
-    if (!card) return;
-    const isGold = i === 3 || i === 4;
-    if (i === n) {
-      card.style.borderColor = isGold ? 'var(--gold)' : 'var(--accent)';
-      card.style.background = 'var(--s2)';
-      radio.style.borderColor = isGold ? 'var(--gold)' : 'var(--accent)';
-      radio.style.background = isGold ? 'var(--gold)' : 'var(--accent)';
-      radio.style.boxShadow = isGold ? '0 0 8px var(--gold)' : '0 0 8px var(--accent)';
-    } else {
-      card.style.borderColor = isGold ? 'rgba(201,168,76,.3)' : 'var(--border)';
-      card.style.background = 'var(--s1)';
-      radio.style.borderColor = 'var(--muted)';
-      radio.style.background = 'transparent';
-      radio.style.boxShadow = 'none';
-    }
-  });
-  const p = PAKETE[n];
-  const lines = p.items.map(item =>
-    `<div style="display:flex;gap:8px;margin-bottom:4px;"><span style="color:var(--accent);flex-shrink:0;">+</span><span style="color:var(--muted2)">${item}</span></div>`
-  ).join('');
-  document.getElementById('offerLines').innerHTML = lines;
-  document.getElementById('offerTotalB').textContent = p.price.toLocaleString('de-DE') + ' €';
-  if (p.performancePricing) {
-    document.getElementById('offerRetainer').style.display = 'block';
-    document.getElementById('retainerAmt').textContent = 'Performance Pricing: ' + p.pricePerLead + ' €/Lead statt Retainer';
-    updatePP();
-  } else {
-    document.getElementById('offerRetainer').style.display = 'block';
-    document.getElementById('retainerAmt').textContent = p.retainer.toLocaleString('de-DE') + ' €/Monat';
-  }
+function copyOffer(){
+  if(svcSelected.size===0){alert('Bitte mindestens einen Service auswaehlen.');return;}
+  let once=0,mo=0;
+  const items=[...svcSelected].map(i=>{const s=SVC_DEF[i];once+=s.once;mo+=s.mo;return'- '+s.name+': CHF '+s.once.toLocaleString('de-CH')+' Setup'+(s.mo?' + CHF '+s.mo+'/Mo Retainer':' (einmalig, kein Retainer)');}).join('\n');
+  const vat=Math.round(once*0.081);
+  const txt='ANGEBOT - FLOWMATIC\n\nLeistungsumfang:\n'+items+'\n\nSetup-Preis (netto): CHF '+once.toLocaleString('de-CH')+'\n'+(mo>0?'Monatlicher Retainer: CHF '+mo.toLocaleString('de-CH')+'/Mo\n':'')+'MwSt. 8,1%: CHF '+vat.toLocaleString('de-CH')+'\nSetup gesamt inkl. MwSt.: CHF '+(once+vat).toLocaleString('de-CH')+'\n\n50% Anzahlung bei Auftragserteilung\nZahlungsziel: 14 Tage\nLieferzeit: 7 Werktage';
+  navigator.clipboard.writeText(txt).then(()=>{const b=event.target;b.textContent='Kopiert';setTimeout(()=>b.textContent='Angebotstext kopieren',2000);});
 }
 
-function updatePP() {
-  const leads = parseInt(document.getElementById('ppLeads').value) || 0;
-  const monthly = leads * 15;
-  document.getElementById('ppMonthly').textContent = monthly.toLocaleString('de-DE') + ' €/Mo';
-  if (selectedPkg === 4) {
-    document.getElementById('retainerAmt').textContent = 'Performance Pricing: 15 €/Lead → ca. ' + monthly.toLocaleString('de-DE') + ' €/Monat bei ' + leads + ' Leads';
-  }
-}
-
-function copyOffer() {
-  if (!selectedPkg) { alert('Bitte zuerst ein Paket auswählen.'); return; }
-  const p = PAKETE[selectedPkg];
-  const items = p.items.map(i => '- ' + i).join('\n');
-  const leads = parseInt((document.getElementById('ppLeads') || {}).value) || 20;
-  const recurring = p.performancePricing
-    ? 'Performance Pricing: ' + p.pricePerLead + ' € pro qualifiziertem Lead (ca. ' + (leads * p.pricePerLead).toLocaleString('de-DE') + ' €/Monat bei ' + leads + ' Leads)'
-    : 'Monatlicher Retainer ab Monat 2: ' + p.retainer.toLocaleString('de-DE') + ' €/Monat';
-  const txt =
-    'ANGEBOT — FLOWMATIC\n\n' +
-    p.name + '\n\n' +
-    'Leistungsumfang:\n' + items + '\n\n' +
-    recurring + '\n\n' +
-    'Setup-Preis (netto): ' + p.price.toLocaleString('de-DE') + ' €\n' +
-    'zzgl. 19 % MwSt.\n' +
-    '50 % Anzahlung bei Auftragserteilung\n' +
-    'Zahlungsziel: 14 Tage';
-  navigator.clipboard.writeText(txt).then(() => {
-    const b = event.target;
-    b.textContent = 'Kopiert';
-    setTimeout(() => b.textContent = 'Angebotstext kopieren', 2000);
-  });
-}
-
-function updateOffer() {} // kept for compatibility
-
-// ══════════════════════════════════════════════
-// PITCH TIMER
-// ══════════════════════════════════════════════
-let tInt=null, tLeft=30, tRun=false;
-function tStart() {
-  if(tRun){ clearInterval(tInt); tRun=false; return; }
-  if(tLeft<=0){ tLeft=30; updT(); }
-  tRun=true;
-  tInt=setInterval(()=>{ tLeft--; updT(); if(tLeft<=0){ clearInterval(tInt); tRun=false; }},1000);
-}
-function tReset(){ clearInterval(tInt); tRun=false; tLeft=30; updT(); }
-function updT(){
-  const el=document.getElementById('timerD');
-  el.textContent='0:'+String(tLeft).padStart(2,'0');
-  el.style.color=tLeft<=0?'var(--green)':tLeft<=10?'var(--red)':'var(--text)';
-  if(tLeft<=0) el.textContent='Fertig';
-}
+let tInt=null,tLeft=30,tRun=false;
+function tStart(){if(tRun){clearInterval(tInt);tRun=false;return;}if(tLeft<=0){tLeft=30;updT();}tRun=true;tInt=setInterval(()=>{tLeft--;updT();if(tLeft<=0){clearInterval(tInt);tRun=false;}},1000);}
+function tReset(){clearInterval(tInt);tRun=false;tLeft=30;updT();}
+function updT(){const el=document.getElementById('timerD');el.textContent='0:'+String(tLeft).padStart(2,'0');el.style.color=tLeft<=0?'var(--green)':tLeft<=10?'var(--red)':'var(--text)';if(tLeft<=0)el.textContent='Fertig';}
 const pitches={
-  std:`<b style="color:var(--gold2)">"Ich baue Landingpages, die Anfragen automatisch weiterleiten</b> — kein IT-Aufwand, fertig in einer Woche.<br><br>Ihr Interessent füllt ein Quiz aus, Sie bekommen sofort alle Kontaktdaten, automatisch in Ihrer Datenbank gespeichert.<br><br><b style="color:var(--gold2)">Darf ich Ihnen kurz eine Demo zeigen?"</b><br><br><span style="font-size:11px;color:var(--muted);">Demo zeigen — Seite verkauft sich selbst.</span>`,
-  immo:`<b style="color:var(--gold2)">"Ich baue für Immobilienmakler automatisierte Bewertungs-Funnels</b> — Interessenten fragen online 'Was ist meine Immobilie wert?', Sie bekommen die Kontaktdaten sofort, kein manueller Aufwand.<br><br>Fertig in 7 Tagen, inkl. automatischer Follow-up-Mails.<br><br><b style="color:var(--gold2)">Darf ich Ihnen kurz die Demo zeigen?"</b>`,
-  kalt:`<b style="color:var(--gold2)">"Guten Tag — ich helfe Maklern dabei, qualifizierte Anfragen automatisch online zu generieren</b>, ohne IT-Aufwand.<br><br>Ich habe eine Demo speziell für die Immobilienbranche gebaut. 2 Minuten, dann sehen Sie ob das relevant ist.<br><br><b style="color:var(--gold2)">Haben Sie kurz Zeit?"</b>`
+  std:'<b style="color:var(--gold2)">"Ich baue fuer Schweizer Immobilienmakler automatisierte Lead-Systeme</b> - qualifizierte Anfragen automatisch erfassen, sofort reagieren, Follow-up ohne Aufwand.<br><br>Fertig in 7 Tagen, CHF 2.500 einmalig.<br><br><b style="color:var(--gold2)">Darf ich Ihnen kurz die Demo zeigen?"</b>',
+  immo:'<b style="color:var(--gold2)">"Ich baue fuer Immobilienmakler automatisierte Bewertungs-Funnels</b> - Eigentuemer fragen online die Immobilienbewertung an, Sie bekommen sofort alle Kontaktdaten, Follow-up laeuft von alleine.<br><br>Fertig in 7 Tagen, CHF 2.500 einmalig.<br><br><b style="color:var(--gold2)">Darf ich Ihnen kurz die Demo zeigen?"</b>',
+  expose:'<b style="color:var(--gold2)">"Ein professionelles Expose kostet Sie heute 2-4 Stunden pro Objekt.</b> Ich baue Ihnen ein KI-Tool, das das in unter 2 Minuten erledigt.<br><br>Einmalig CHF 1.500, kein Abo, keine laufenden Kosten.<br><br><b style="color:var(--gold2)">Darf ich Ihnen das kurz zeigen?"</b>'
 };
-function setPitch(k){ document.getElementById('pitchText').innerHTML=pitches[k]; }
+function setPitch(k){document.getElementById('pitchText').innerHTML=pitches[k];}
 
-// ══════════════════════════════════════════════
-// OUTREACH
-// ══════════════════════════════════════════════
-function adj(id, d) {
-  const el=document.getElementById(id);
-  el.textContent=Math.max(0,parseInt(el.textContent)+d);
-  const c=parseInt(document.getElementById('oC').textContent),
-        r=parseInt(document.getElementById('oR').textContent),
-        d2=parseInt(document.getElementById('oD').textContent);
-  document.getElementById('rR').textContent=c?Math.round(r/c*100)+'%':'—';
-  document.getElementById('rC').textContent=r?Math.round(d2/r*100)+'%':'—';
-  document.getElementById('rT').textContent=c?Math.round(d2/c*100)+'%':'—';
-  localStorage.setItem('fm_out3',JSON.stringify({c,r,d:d2}));
-}
-function loadOut(){
-  const s=localStorage.getItem('fm_out3'); if(!s)return;
-  const d=JSON.parse(s);
-  document.getElementById('oC').textContent=d.c||0;
-  document.getElementById('oR').textContent=d.r||0;
-  document.getElementById('oD').textContent=d.d||0;
-  adj('oC',0);
-}
+function adj(id,d){const el=document.getElementById(id);el.textContent=Math.max(0,parseInt(el.textContent)+d);const c=parseInt(document.getElementById('oC').textContent),r=parseInt(document.getElementById('oR').textContent),d2=parseInt(document.getElementById('oD').textContent);document.getElementById('rR').textContent=c?Math.round(r/c*100)+'%':'-';document.getElementById('rC').textContent=r?Math.round(d2/r*100)+'%':'-';document.getElementById('rT').textContent=c?Math.round(d2/c*100)+'%':'-';localStorage.setItem('fm_out5',JSON.stringify({c,r,d:d2}));}
+function loadOut(){const s=localStorage.getItem('fm_out5');if(!s)return;const d=JSON.parse(s);document.getElementById('oC').textContent=d.c||0;document.getElementById('oR').textContent=d.r||0;document.getElementById('oD').textContent=d.d||0;adj('oC',0);}
 
-// ══════════════════════════════════════════════
-// CLIENTS
-// ══════════════════════════════════════════════
-let clients=JSON.parse(localStorage.getItem('fm_cl3')||'[]');
-function renderClients(){
-  const list=document.getElementById('clientList');
-  list.innerHTML=clients.length?clients.map((c,i)=>`
-    <div class="client-row">
-      <div class="client-name">${c.n}</div>
-      <div class="client-val">${parseInt(c.v).toLocaleString('de-DE')} €</div>
-      <div style="font-size:11px;color:var(--muted)">${c.s==='lead'?'Lead':c.s==='active'?'Aktiv':'Fertig'}</div>
-      <div style="display:flex;align-items:center;gap:8px;"><div class="sdot sdot-${c.s}"></div><button onclick="rmC(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;">×</button></div>
-    </div>`).join('')
-    :'<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">Noch keine Einträge</div>';
-  document.getElementById('cL').textContent=clients.filter(c=>c.s==='lead').length;
-  document.getElementById('cA').textContent=clients.filter(c=>c.s==='active').length;
-  document.getElementById('cRev').textContent=clients.reduce((s,c)=>s+parseInt(c.v),0).toLocaleString('de-DE')+' €';
-}
-function addC(){
-  const n=document.getElementById('nN').value.trim(), v=document.getElementById('nV').value||0, s=document.getElementById('nS').value;
-  if(!n)return;
-  clients.push({n,v,s}); localStorage.setItem('fm_cl3',JSON.stringify(clients));
-  document.getElementById('nN').value=''; document.getElementById('nV').value='';
-  renderClients();
-}
-function rmC(i){ clients.splice(i,1); localStorage.setItem('fm_cl3',JSON.stringify(clients)); renderClients(); }
+let clients=JSON.parse(localStorage.getItem('fm_cl5')||'[]');
+function renderClients(){const list=document.getElementById('clientList');list.innerHTML=clients.length?clients.map((c,i)=>'<div class="client-row"><div class="client-name">'+c.n+'</div><div class="client-val">'+parseInt(c.v).toLocaleString('de-CH')+' CHF</div><div style="font-size:11px;color:var(--muted);">'+( c.s==='lead'?'Lead':c.s==='active'?'Aktiv':'Fertig')+'</div><div style="display:flex;align-items:center;gap:8px;"><div class="sdot sdot-'+c.s+'"></div><button onclick="rmC('+i+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:13px;">x</button></div></div>').join(''):'<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">Noch keine Eintraege</div>';document.getElementById('cL').textContent=clients.filter(c=>c.s==='lead').length;document.getElementById('cA').textContent=clients.filter(c=>c.s==='active').length;document.getElementById('cRev').textContent=clients.reduce((s,c)=>s+parseInt(c.v),0).toLocaleString('de-CH')+' CHF';}
+function addC(){const n=document.getElementById('nN').value.trim(),v=document.getElementById('nV').value||0,s=document.getElementById('nS').value;if(!n)return;clients.push({n,v,s});localStorage.setItem('fm_cl5',JSON.stringify(clients));document.getElementById('nN').value='';document.getElementById('nV').value='';renderClients();}
+function rmC(i){clients.splice(i,1);localStorage.setItem('fm_cl5',JSON.stringify(clients));renderClients();}
 
-// ══════════════════════════════════════════════
-// NOTES
-// ══════════════════════════════════════════════
 const nT={};
-function sn(id){
-  clearTimeout(nT[id]);
-  nT[id]=setTimeout(()=>{
-    localStorage.setItem('fm_n_'+id,document.getElementById(id).value);
-    const sv=document.getElementById('sv'+id.slice(1));
-    if(sv){sv.classList.add('show');setTimeout(()=>sv.classList.remove('show'),1800);}
-  },500);
-}
+function sn(id){clearTimeout(nT[id]);nT[id]=setTimeout(()=>{localStorage.setItem('fm_n_'+id,document.getElementById(id).value);const sv=document.getElementById('sv'+id.slice(1));if(sv){sv.classList.add('show');setTimeout(()=>sv.classList.remove('show'),1800);}},500);}
 function loadNotes(){['n1','n2','n3'].forEach(id=>{const v=localStorage.getItem('fm_n_'+id);if(v)document.getElementById(id).value=v;});}
 
-// ══════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
-  renderGoalBar(parseFloat(localStorage.getItem('fm_earned')||0));
-  loadKanban();
-  calc();
-  updateOffer();
-  updT();
-  loadOut();
-  loadNotes();
-  renderClients();
-});
+document.addEventListener('DOMContentLoaded',()=>{renderGoalBar(parseFloat(localStorage.getItem('fm_earned')||0));loadKanban();calc();updT();loadOut();loadNotes();renderClients();});
 </script>
 </body>
 </html>
