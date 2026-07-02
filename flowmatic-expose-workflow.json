@@ -1,0 +1,709 @@
+{
+  "name": "Flowmatic — Exposé Generator PRO v4",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "flowmatic-expose",
+        "responseMode": "lastNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "n-get",
+      "name": "GET — Tool öffnen",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        100,
+        160
+      ],
+      "webhookId": "flowmatic-expose-get-v4"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n<!--\n  FLOWMATIC EXPOSÉ GENERATOR — SETUP ANLEITUNG\n\n  Schritt 1: n8n Workflow importieren\n  → n8n öffnen → Workflows → Import → flowmatic-expose-workflow.json hochladen\n\n  Schritt 2: Claude API Key hinterlegen\n  → In n8n: Settings → Environment Variables\n  → Variable: CLAUDE_API_KEY → Wert: Ihr Claude API Key\n  → API Key holen: console.anthropic.com\n\n  Schritt 3: Webhook URL kopieren\n  → Im importierten Workflow den Webhook Node öffnen\n  → \"Webhook URL\" kopieren (Test-URL für Tests, Production URL für Echtbetrieb)\n\n  Schritt 4: URL ins Tool eintragen\n  → Diese HTML-Datei im Browser öffnen\n  → Webhook URL oben rechts eintragen\n  → Grüner Punkt erscheint → Fertig!\n\n  Nutzung: Formular ausfüllen, Bilder hochladen, \"Exposé generieren\" klicken.\n  Das Exposé erscheint direkt im Tool — bereit zum Kopieren oder Drucken.\n-->\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Flowmatic — Exposé Generator</title>\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n<style>\n:root {\n  --navy:#1E3A5F; --blue:#2D7DD2; --sky:#5BA4E5;\n  --dark:#0F1826; --mid:#162032; --card:#1a2a42;\n  --light:#E8EDF4; --border-light:#D0D8E4;\n  --white:#FFFFFF; --success:#1D9E75; --danger:#E05555; --warning:#F59E0B;\n  --text:#1E3A5F; --muted:#5a7a9a; --muted2:#7d99b8;\n  --r:8px; --r2:12px;\n}\n*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}\nhtml{font-size:14px;scroll-behavior:smooth;}\nbody{background:var(--light);color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;}\n::-webkit-scrollbar{width:5px;}\n::-webkit-scrollbar-track{background:transparent;}\n::-webkit-scrollbar-thumb{background:#c5d0de;border-radius:9px;}\n\n/* HEADER */\nheader{background:var(--dark);border-bottom:2px solid var(--blue);height:60px;display:flex;align-items:center;padding:0 24px;gap:20px;position:sticky;top:0;z-index:500;}\n.h-logo{display:flex;align-items:center;flex-shrink:0;}\n.h-title{display:flex;flex-direction:column;gap:1px;border-left:1px solid rgba(255,255,255,.12);padding-left:18px;margin-left:4px;}\n.h-title-main{font-size:13px;font-weight:600;color:var(--blue);letter-spacing:.5px;}\n.h-title-sub{font-size:10px;color:var(--muted2);letter-spacing:.3px;}\n.h-webhook{margin-left:auto;display:flex;align-items:center;gap:8px;}\n.h-dot{width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0;transition:background .3s;}\n.h-dot.on{background:var(--success);}\n.webhook-inp{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);color:#c5d5e8;font-size:11px;padding:6px 12px;width:260px;font-family:inherit;outline:none;transition:border-color .15s;}\n.webhook-inp:focus{border-color:var(--blue);}\n.webhook-inp::placeholder{color:#4a5f78;}\n@media(max-width:700px){.webhook-inp{width:160px;}.h-title{display:none;}}\n\n/* LAYOUT */\n.main{display:grid;grid-template-columns:44% 56%;min-height:calc(100vh - 60px);}\n@media(max-width:900px){.main{grid-template-columns:1fr;}}\n\n/* FORM SIDE */\n.form-side{background:var(--white);border-right:1px solid var(--border-light);overflow-y:auto;padding:0 0 100px;}\n\n/* ACCORDION */\n.acc{border-bottom:1px solid var(--border-light);}\n.acc-hdr{padding:16px 20px;cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none;background:var(--white);transition:background .1s;}\n.acc-hdr:hover{background:#f8fafc;}\n.acc-num{width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}\n.acc-ttl{font-size:13px;font-weight:600;color:var(--navy);flex:1;}\n.acc-chev{color:var(--muted);font-size:11px;transition:transform .2s;}\n.acc-hdr.open .acc-chev{transform:rotate(180deg);}\n.acc-body{padding:0 20px 20px;display:none;}\n.acc-body.open{display:block;}\n\n/* FORM ELEMENTS */\n.field{margin-bottom:12px;}\n.lbl{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:4px;display:flex;gap:3px;}\n.req{color:var(--danger);}\n.inp,.sel,.ta{width:100%;background:var(--white);border:1px solid var(--border-light);border-radius:var(--r);color:var(--navy);padding:9px 12px;font-size:13px;font-family:inherit;outline:none;transition:border-color .15s;-webkit-appearance:none;}\n.inp:focus,.sel:focus,.ta:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(45,125,210,.08);}\n.sel{cursor:pointer;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a7a9a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}\n.ta{resize:vertical;min-height:72px;line-height:1.6;}\n.inp-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}\n.inp-unit{display:flex;}\n.inp-unit .inp{border-radius:var(--r) 0 0 var(--r);border-right:none;}\n.inp-unit .unit{background:#f4f7fb;border:1px solid var(--border-light);border-radius:0 var(--r) var(--r) 0;padding:0 12px;display:flex;align-items:center;font-size:12px;color:var(--muted);white-space:nowrap;font-weight:500;}\n\n/* CHECKBOXES */\n.chk-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}\n.chk-item{display:flex;align-items:center;gap:8px;cursor:pointer;padding:7px 10px;border-radius:var(--r);border:1px solid var(--border-light);transition:all .15s;user-select:none;}\n.chk-item:hover{border-color:var(--blue);background:rgba(45,125,210,.04);}\n.chk-item input{accent-color:var(--blue);width:14px;height:14px;cursor:pointer;flex-shrink:0;}\n.chk-item span{font-size:12px;color:var(--muted);}\n.chk-item.on{border-color:rgba(45,125,210,.4);background:rgba(45,125,210,.06);}\n.chk-item.on span{color:var(--navy);}\n\n/* UPLOAD */\n.upload-zone{border:2px dashed var(--blue);border-radius:var(--r2);padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s;background:#f8fbff;}\n.upload-zone:hover,.upload-zone.drag{background:rgba(45,125,210,.06);border-style:solid;}\n.upload-icon{font-size:28px;color:var(--blue);margin-bottom:8px;}\n.upload-txt{font-size:13px;color:var(--muted);line-height:1.7;}\n.upload-txt b{color:var(--blue);}\n#fileInput{display:none;}\n.thumb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}\n.thumb{position:relative;border-radius:var(--r);overflow:visible;border:1px solid var(--border-light);background:#f8fafc;}\n.thumb img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:var(--r) var(--r) 0 0;display:block;}\n.thumb-badge{position:absolute;top:6px;left:6px;background:var(--blue);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;letter-spacing:.5px;}\n.thumb-del{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;background:var(--danger);border:2px solid var(--white);color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1;line-height:1;}\n.thumb-lbl{padding:5px 6px;}\n.thumb-lbl input{width:100%;border:none;border-bottom:1px solid var(--border-light);font-size:10px;color:var(--muted);font-family:inherit;outline:none;background:transparent;padding:2px 0;}\n.thumb-lbl input:focus{border-color:var(--blue);color:var(--navy);}\n.img-count{font-size:11px;color:var(--muted);margin-top:8px;}\n\n/* GENERATE */\n.gen-wrap{padding:0 20px 20px;}\n.btn-gen{width:100%;padding:15px;background:var(--blue);border:none;border-radius:var(--r2);color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:10px;letter-spacing:.3px;}\n.btn-gen:hover:not(:disabled){background:#2570be;transform:translateY(-1px);box-shadow:0 6px 20px rgba(45,125,210,.35);}\n.btn-gen:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none;}\n.btn-gen .spin{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none;flex-shrink:0;}\n.btn-gen.loading .spin{display:block;}\n.gen-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:8px;}\n\n/* OUTPUT SIDE */\n.out-side{background:#f4f7fb;display:flex;flex-direction:column;}\n.out-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--muted);padding:40px;text-align:center;}\n.empty-node{opacity:.15;}\n.empty-ttl{font-size:15px;font-weight:600;color:var(--navy);opacity:.4;}\n.empty-sub{font-size:12px;line-height:1.7;max-width:260px;opacity:.7;}\n\n.load-state{display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;gap:16px;}\n.load-state.on{display:flex;}\n.load-ring{width:40px;height:40px;border:2.5px solid rgba(45,125,210,.2);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;}\n.load-txt{font-size:13px;color:var(--muted);font-weight:500;}\n\n.out-result{display:none;flex-direction:column;flex:1;overflow:hidden;}\n.out-result.on{display:flex;}\n\n/* TABS */\n.tabs{display:flex;border-bottom:2px solid var(--border-light);background:var(--white);}\n.tab{padding:14px 20px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap;}\n.tab.on{color:var(--navy);border-bottom-color:var(--blue);font-weight:600;}\n.tab:hover:not(.on){color:var(--navy);}\n\n.tab-panels{flex:1;overflow:hidden;}\n.tab-panel{display:none;height:100%;flex-direction:column;padding:16px 20px;}\n.tab-panel.on{display:flex;}\n.out-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px;}\n.char-cnt{font-size:11px;color:var(--muted);flex:1;}\n.char-cnt b{color:var(--navy);}\n.char-cnt.over b{color:var(--danger);}\n.out-ta{flex:1;background:var(--white);border:1px solid var(--border-light);border-radius:var(--r2);color:var(--navy);padding:16px;font-size:13px;font-family:inherit;line-height:1.85;resize:none;outline:none;overflow-y:auto;}\n.out-ta:focus{border-color:var(--border-light);}\n.tab-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}\n.btn-act{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r);color:var(--muted);font-size:12px;font-weight:500;padding:8px 14px;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:6px;}\n.btn-act:hover{border-color:var(--blue);color:var(--navy);}\n.btn-act.copied{background:rgba(29,158,117,.06);border-color:var(--success);color:var(--success);}\n.btn-act.primary{background:var(--blue);color:#fff;border-color:var(--blue);}\n.btn-act.primary:hover{background:#2570be;}\n\n.export-bar{padding:12px 20px;border-top:1px solid var(--border-light);background:var(--white);display:flex;gap:8px;}\n\n/* TOAST */\n.toast-wrap{position:fixed;top:72px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}\n.toast{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r2);padding:12px 16px;font-size:12px;font-weight:500;color:var(--navy);box-shadow:0 4px 20px rgba(0,0,0,.12);min-width:240px;border-left:3px solid var(--blue);animation:slideIn .2s ease;pointer-events:all;}\n.toast.success{border-left-color:var(--success);}\n.toast.error{border-left-color:var(--danger);}\n.toast.warning{border-left-color:var(--warning);}\n@keyframes slideIn{from{transform:translateX(20px);opacity:0;}to{transform:translateX(0);opacity:1;}}\n@keyframes fadeOut{to{opacity:0;transform:translateX(10px);}}\n@keyframes spin{to{transform:rotate(360deg);}}\n\n/* PRINT */\n@media print {\n  header,.form-side,.tabs,.out-meta,.tab-actions,.export-bar,.load-state,.out-empty,\n  .toast-wrap,.btn-act{display:none!important;}\n  body{background:#fff;color:#111;}\n  .main{display:block;}\n  .out-side{background:#fff;}\n  .out-result{display:block!important;}\n  .tab-panels{overflow:visible;}\n  .tab-panel{display:block!important;padding:0;}\n  #panel-vollstaendig{display:block!important;}\n  .out-ta{border:none;height:auto;min-height:unset;overflow:visible;font-size:12px;line-height:1.8;}\n  #printHead,#printImgs,#printData{display:block!important;}\n  #printHead{display:flex!important;justify-content:space-between;align-items:flex-start;padding-bottom:16px;border-bottom:2px solid #1E3A5F;margin-bottom:20px;}\n  .print-logo-txt{font-size:18px;font-weight:700;color:#1E3A5F;letter-spacing:2px;}\n  .print-logo-txt span{color:#2D7DD2;}\n  .print-date{font-size:11px;color:#888;}\n  #printImgs img:first-child{width:100%;max-height:400px;object-fit:cover;border-radius:8px;margin-bottom:10px;display:block;}\n  #printImgs{display:grid!important;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0;}\n  #printImgs img:not(:first-child){border-radius:6px;width:100%;aspect-ratio:16/9;object-fit:cover;}\n  #printData{margin-top:20px;border:1px solid #dde5ef;border-radius:8px;overflow:hidden;font-size:12px;}\n  #printData table{width:100%;border-collapse:collapse;}\n  #printData td{padding:8px 14px;border-bottom:1px solid #eee;}\n  #printData td:first-child{font-weight:600;color:#5a7a9a;background:#f4f7fb;width:35%;}\n  @page{margin:15mm;}\n}\n#printHead,#printImgs,#printData{display:none;}\n</style>\n</head>\n<body>\n\n<!-- HEADER -->\n<header>\n  <div class=\"h-logo\">\n    <svg width=\"130\" height=\"40\" viewBox=\"0 0 200 80\" xmlns=\"http://www.w3.org/2000/svg\">\n      <path d=\"M78 37 L90 22\" fill=\"none\" stroke=\"#2D7DD2\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n      <path d=\"M110 22 L122 37\" fill=\"none\" stroke=\"#2D7DD2\" stroke-width=\"1.5\" stroke-linecap=\"round\"/>\n      <circle cx=\"84\" cy=\"30\" r=\"2.5\" fill=\"#2D7DD2\"/>\n      <circle cx=\"116\" cy=\"30\" r=\"2.5\" fill=\"#2D7DD2\"/>\n      <rect x=\"90\" y=\"11\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#2D7DD2\"/>\n      <rect x=\"60\" y=\"37\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#2D7DD2\" opacity=\"0.6\"/>\n      <rect x=\"120\" y=\"37\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#2D7DD2\" opacity=\"0.6\"/>\n      <text x=\"62\" y=\"68\" font-family=\"system-ui,sans-serif\" font-size=\"18\" font-weight=\"500\" fill=\"white\" letter-spacing=\"0.5\">flow</text>\n      <text x=\"100\" y=\"68\" font-family=\"system-ui,sans-serif\" font-size=\"18\" font-weight=\"500\" fill=\"#2D7DD2\" letter-spacing=\"0.5\">matic</text>\n    </svg>\n  </div>\n  <div class=\"h-title\">\n    <span class=\"h-title-main\">Exposé Generator</span>\n    <span class=\"h-title-sub\">Schweizer Immobilienmakler</span>\n  </div>\n  <div class=\"h-webhook\">\n    <div class=\"h-dot\" id=\"wDot\"></div>\n    <input class=\"webhook-inp\" id=\"webhookInp\" type=\"text\" placeholder=\"Ihre n8n Webhook URL eintragen...\" autocomplete=\"off\">\n  </div>\n</header>\n\n<div class=\"main\">\n  <!-- FORM SIDE -->\n  <div class=\"form-side\">\n\n    <!-- S1: Objekt -->\n    <div class=\"acc\">\n      <div class=\"acc-hdr open\" onclick=\"toggleAcc(this)\">\n        <div class=\"acc-num\">1</div>\n        <div class=\"acc-ttl\">Objekt-Grunddaten</div>\n        <div class=\"acc-chev\">▼</div>\n      </div>\n      <div class=\"acc-body open\">\n        <div class=\"inp-row\">\n          <div class=\"field\">\n            <div class=\"lbl\">Objekttyp <span class=\"req\">*</span></div>\n            <select class=\"sel\" id=\"fTyp\" onchange=\"validate()\">\n              <option value=\"\">Wählen...</option>\n              <option>Wohnung</option><option>Einfamilienhaus</option>\n              <option>Mehrfamilienhaus</option><option>Villa</option>\n              <option>Penthouse</option><option>Gewerbe</option><option>Grundstück</option>\n            </select>\n          </div>\n          <div class=\"field\">\n            <div class=\"lbl\">Angebotstyp <span class=\"req\">*</span></div>\n            <select class=\"sel\" id=\"fAngebot\" onchange=\"validate()\">\n              <option value=\"\">Wählen...</option>\n              <option>Verkauf</option><option>Vermietung</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"field\">\n          <div class=\"lbl\">Adresse <span class=\"req\">*</span></div>\n          <input class=\"inp\" id=\"fAdresse\" placeholder=\"Musterstrasse 12, 8001 Zürich\" oninput=\"validate()\">\n        </div>\n        <div class=\"field\">\n          <div class=\"lbl\">Kanton</div>\n          <select class=\"sel\" id=\"fKanton\">\n            <option value=\"\">–</option>\n            <option>ZH</option><option>ZG</option><option>BS</option><option>GE</option>\n            <option>BE</option><option>LU</option><option>AG</option><option>SZ</option>\n            <option>NW</option><option>OW</option><option>UR</option><option>GL</option>\n            <option>AR</option><option>AI</option><option>SG</option><option>GR</option>\n            <option>TG</option><option>SH</option><option>TI</option><option>VD</option>\n            <option>VS</option><option>FR</option><option>NE</option><option>JU</option>\n            <option>SO</option><option>BL</option>\n          </select>\n        </div>\n        <div class=\"inp-row\">\n          <div class=\"field\">\n            <div class=\"lbl\">Wohnfläche <span class=\"req\">*</span></div>\n            <div class=\"inp-unit\">\n              <input class=\"inp\" type=\"number\" id=\"fFlaeche\" placeholder=\"95\" min=\"0\" oninput=\"validate()\">\n              <span class=\"unit\">m²</span>\n            </div>\n          </div>\n          <div class=\"field\">\n            <div class=\"lbl\">Zimmer <span class=\"req\">*</span></div>\n            <select class=\"sel\" id=\"fZimmer\" onchange=\"validate()\">\n              <option value=\"\">–</option>\n              <option>1</option><option>1.5</option><option>2</option><option>2.5</option>\n              <option>3</option><option>3.5</option><option>4</option><option>4.5</option>\n              <option>5</option><option>5.5</option><option>6+</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"inp-row\">\n          <div class=\"field\">\n            <div class=\"lbl\">Stockwerk</div>\n            <select class=\"sel\" id=\"fStockwerk\">\n              <option value=\"\">–</option>\n              <option>EG</option><option>1. OG</option><option>2. OG</option>\n              <option>3. OG</option><option>4. OG</option><option>DG</option>\n            </select>\n          </div>\n          <div class=\"field\">\n            <div class=\"lbl\">Baujahr</div>\n            <input class=\"inp\" type=\"number\" id=\"fBaujahr\" placeholder=\"1985\" min=\"1800\" max=\"2030\">\n          </div>\n        </div>\n        <div class=\"inp-row\">\n          <div class=\"field\">\n            <div class=\"lbl\">Letzte Renovation</div>\n            <input class=\"inp\" type=\"number\" id=\"fRenovation\" placeholder=\"2019\" min=\"1800\" max=\"2030\">\n          </div>\n          <div class=\"field\">\n            <div class=\"lbl\">Preis <span class=\"req\">*</span></div>\n            <div class=\"inp-unit\">\n              <span class=\"unit\" style=\"border-radius:var(--r) 0 0 var(--r);border-right:none;border:1px solid var(--border-light);\">CHF</span>\n              <input class=\"inp\" type=\"number\" id=\"fPreis\" placeholder=\"750000\" style=\"border-radius:0 var(--r) var(--r) 0;\" oninput=\"validate()\">\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <!-- S2: Zustand -->\n    <div class=\"acc\">\n      <div class=\"acc-hdr\" onclick=\"toggleAcc(this)\">\n        <div class=\"acc-num\">2</div>\n        <div class=\"acc-ttl\">Zustand &amp; Merkmale</div>\n        <div class=\"acc-chev\">▼</div>\n      </div>\n      <div class=\"acc-body\">\n        <div class=\"inp-row\">\n          <div class=\"field\">\n            <div class=\"lbl\">Zustand <span class=\"req\">*</span></div>\n            <select class=\"sel\" id=\"fZustand\" onchange=\"validate()\">\n              <option value=\"\">Wählen...</option>\n              <option>Renovierungsbedarf</option><option>Gepflegt</option>\n              <option>Teilrenoviert</option><option>Neuwertig</option><option>Neubau</option>\n            </select>\n          </div>\n          <div class=\"field\">\n            <div class=\"lbl\">Heizung</div>\n            <select class=\"sel\" id=\"fHeizung\">\n              <option value=\"\">–</option>\n              <option>Öl</option><option>Gas</option><option>Wärmepumpe</option>\n              <option>Fernwärme</option><option>Solar</option><option>Elektro</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"field\">\n          <div class=\"lbl\">Parkierung</div>\n          <select class=\"sel\" id=\"fParkierung\">\n            <option value=\"\">Keine</option>\n            <option>Aussenplatz</option><option>Carport</option>\n            <option>Garage</option><option>Tiefgarage</option>\n          </select>\n        </div>\n        <div class=\"field\">\n          <div class=\"lbl\">Merkmale</div>\n          <div class=\"chk-grid\" id=\"merkmaleGrid\">\n            <label class=\"chk-item\" onclick=\"chkToggle(this)\"><input type=\"checkbox\" value=\"Seesicht\"><span>🌊 Seesicht</span></label>\n            <label class=\"chk-item\" onclick=\"chkToggle(this)\"><input type=\"checkbox\" value=\"Bergsicht\"><span>🏔 Bergsicht</span></label>\n            <label class=\"chk-item\" onclick=\"chkToggle(this)\"><input type=\"checkbox\" value=\"Garten\"><span>🌿 Garten</span></label>\n            <label class=\"chk-item\" onclick=\"chkToggle(this)\"><input type=\"checkbox\" value=\"Terrasse / Balkon\"><span>🏠 Terrasse / Balkon</span></label>\n            <label class=\"chk-item\" onclick=\"chkToggle(this)\"><input type=\"checkbox\" value=\"Südausrichtung\"><span>☀️ Südausrichtung</span></label>\n            <label class=\"chk-item\" onclick=\"chkToggle(this)\"><input type=\"checkbox\" value=\"Lift\"><span>🔼 Lift</span></label>\n            <label class=\"chk-item\" onclick=\"chkToggle(this)\"><input type=\"checkbox\" value=\"Minergie\"><span>🌱 Minergie</span></label>\n            <label class=\"chk-item\" onclick=\"chkToggle(this)\"><input type=\"checkbox\" value=\"Smart Home\"><span>📱 Smart Home</span></label>\n            <label class=\"chk-item\" onclick=\"chkToggle(this)\"><input type=\"checkbox\" value=\"Cheminée\"><span>🔥 Cheminée</span></label>\n            <label class=\"chk-item\" onclick=\"chkToggle(this)\"><input type=\"checkbox\" value=\"Einbauküche\"><span>🍳 Einbauküche</span></label>\n          </div>\n        </div>\n        <div class=\"field\">\n          <div class=\"lbl\">Weitere Infos für Claude</div>\n          <textarea class=\"ta\" id=\"fWeiteres\" placeholder=\"Was soll Claude noch wissen? Besonderheiten, Renovierungsdetails, Alleinstellungsmerkmale...\"></textarea>\n        </div>\n      </div>\n    </div>\n\n    <!-- S3: Lage -->\n    <div class=\"acc\">\n      <div class=\"acc-hdr\" onclick=\"toggleAcc(this)\">\n        <div class=\"acc-num\">3</div>\n        <div class=\"acc-ttl\">Lage-Beschreibung</div>\n        <div class=\"acc-chev\">▼</div>\n      </div>\n      <div class=\"acc-body\">\n        <div class=\"field\">\n          <div class=\"lbl\">Umgebung / Quartier</div>\n          <textarea class=\"ta\" id=\"fUmgebung\" placeholder=\"Ruhige Wohnlage im Sonnenhügel-Quartier, 5 Min. zum See, idyllische Aussicht...\"></textarea>\n        </div>\n        <div class=\"field\">\n          <div class=\"lbl\">Öffentlicher Verkehr</div>\n          <input class=\"inp\" id=\"fOev\" placeholder=\"Bus Linie 31, 3 Min. zu Fuss, Bahnhof Küsnacht 8 Min.\">\n        </div>\n        <div class=\"field\">\n          <div class=\"lbl\">Einkauf / Schulen</div>\n          <input class=\"inp\" id=\"fSchule\" placeholder=\"Migros 5 Min., Primarschule 8 Min., Coop 3 Min.\">\n        </div>\n      </div>\n    </div>\n\n    <!-- S4: Bilder -->\n    <div class=\"acc\">\n      <div class=\"acc-hdr open\" onclick=\"toggleAcc(this)\">\n        <div class=\"acc-num\">4</div>\n        <div class=\"acc-ttl\">Bilder hochladen</div>\n        <div class=\"acc-chev\">▼</div>\n      </div>\n      <div class=\"acc-body open\">\n        <div class=\"upload-zone\" id=\"uploadZone\" onclick=\"document.getElementById('fileInput').click()\" ondragover=\"dragOver(event)\" ondragleave=\"dragLeave()\" ondrop=\"dropFiles(event)\">\n          <div class=\"upload-icon\">↑</div>\n          <div class=\"upload-txt\"><b>Bilder hier ablegen oder klicken</b><br>JPG, PNG · Max. 10 Bilder · Max. 5 MB pro Bild</div>\n        </div>\n        <input type=\"file\" id=\"fileInput\" multiple accept=\".jpg,.jpeg,.png,.webp\" onchange=\"handleFiles(this.files)\">\n        <div class=\"thumb-grid\" id=\"thumbGrid\"></div>\n        <div class=\"img-count\" id=\"imgCount\"></div>\n      </div>\n    </div>\n\n    <!-- S5: Vorlage -->\n    <div class=\"acc\">\n      <div class=\"acc-hdr open\" onclick=\"toggleAcc(this)\">\n        <div class=\"acc-num\">5</div>\n        <div class=\"acc-ttl\">Vorlage &amp; Stil-Analyse</div>\n        <div class=\"acc-chev\">▼</div>\n      </div>\n      <div class=\"acc-body open\">\n        <div class=\"field\">\n          <div class=\"lbl\">Link zu bestehendem Exposé</div>\n          <input class=\"inp\" id=\"fVorlage\" placeholder=\"https://www.makler-website.ch/expose/objekt-123\" type=\"url\" oninput=\"updateVorlageHint()\">\n          <div id=\"vorlageHint\" style=\"font-size:11px;color:var(--muted2);margin-top:5px;line-height:1.6;\">\n            Optional — Claude analysiert Stil, Aufbau und CI des verlinkten Exposés und passt das neue daran an.\n          </div>\n        </div>\n        <div class=\"inp-row\">\n          <div class=\"field\">\n            <div class=\"lbl\">Ton / Stil</div>\n            <select class=\"sel\" id=\"fTon\">\n              <option>Wie Vorlage</option>\n              <option>Professionell</option><option>Emotional</option>\n              <option>Premium</option><option>Familiär</option>\n            </select>\n          </div>\n          <div class=\"field\">\n            <div class=\"lbl\">Zielgruppe</div>\n            <select class=\"sel\" id=\"fZielgruppe\">\n              <option>Keine Vorgabe</option><option>Familien</option>\n              <option>Paare / Singles</option><option>Investoren</option>\n            </select>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <!-- GENERATE -->\n    <div class=\"gen-wrap\" style=\"padding-top:16px;\">\n      <button class=\"btn-gen\" id=\"genBtn\" onclick=\"generate()\" disabled>\n        <div class=\"spin\"></div>\n        <span id=\"genTxt\">✦ &nbsp;Exposé generieren</span>\n      </button>\n      <div class=\"gen-hint\" id=\"genHint\">Webhook URL und Pflichtfelder ausfüllen um zu starten</div>\n    </div>\n\n  </div>\n\n  <!-- OUTPUT SIDE -->\n  <div class=\"out-side\">\n    <div class=\"out-empty\" id=\"outEmpty\">\n      <svg class=\"empty-node\" width=\"64\" height=\"64\" viewBox=\"0 0 200 80\" xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M78 37 L90 22\" fill=\"none\" stroke=\"#2D7DD2\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <path d=\"M110 22 L122 37\" fill=\"none\" stroke=\"#2D7DD2\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n        <circle cx=\"84\" cy=\"30\" r=\"3\" fill=\"#2D7DD2\"/>\n        <circle cx=\"116\" cy=\"30\" r=\"3\" fill=\"#2D7DD2\"/>\n        <rect x=\"90\" y=\"11\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#2D7DD2\"/>\n        <rect x=\"60\" y=\"37\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#1E3A5F\"/>\n        <rect x=\"120\" y=\"37\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#1E3A5F\"/>\n      </svg>\n      <div class=\"empty-ttl\">Bereit</div>\n      <div class=\"empty-sub\">Füllen Sie die Daten aus und klicken Sie auf <b>«Exposé generieren»</b></div>\n    </div>\n\n    <div class=\"load-state\" id=\"loadState\">\n      <div class=\"load-ring\"></div>\n      <div class=\"load-txt\" id=\"loadTxt\">Bilder werden analysiert...</div>\n    </div>\n\n    <div class=\"out-result\" id=\"outResult\">\n      <div class=\"tabs\">\n        <div class=\"tab on\" onclick=\"switchTab('vollstaendig',this)\">Vollständiges Exposé</div>\n        <div class=\"tab\" onclick=\"switchTab('portal',this)\">Portal-Version</div>\n      </div>\n      <div class=\"tab-panels\">\n        <div class=\"tab-panel on\" id=\"panel-vollstaendig\">\n          <div class=\"out-meta\">\n            <div class=\"char-cnt\" id=\"cc-v\"></div>\n            <button class=\"btn-act\" onclick=\"copyTab('vollstaendig')\">📋 Kopieren</button>\n            <button class=\"btn-act\" onclick=\"regenTab()\">🔄 Neu generieren</button>\n          </div>\n          <textarea class=\"out-ta\" id=\"ta-v\" oninput=\"countChars('v')\"></textarea>\n        </div>\n        <div class=\"tab-panel\" id=\"panel-portal\">\n          <div class=\"out-meta\">\n            <div class=\"char-cnt\" id=\"cc-p\"></div>\n            <button class=\"btn-act\" onclick=\"copyTab('portal')\">📋 Kopieren</button>\n            <button class=\"btn-act\" onclick=\"regenTab()\">🔄 Neu generieren</button>\n          </div>\n          <textarea class=\"out-ta\" id=\"ta-p\" oninput=\"countChars('p',1800)\"></textarea>\n        </div>\n      </div>\n      <div class=\"export-bar\">\n        <button class=\"btn-act\" onclick=\"window.print()\">🖨 Als PDF drucken</button>\n        <button class=\"btn-act\" onclick=\"saveTxt()\">⬇ Als TXT speichern</button>\n      </div>\n    </div>\n\n    <!-- Print-only -->\n    <div id=\"printHead\">\n      <div><div class=\"print-logo-txt\">flow<span>matic</span></div><div id=\"printSub\" style=\"font-size:11px;color:#888;margin-top:3px;\"></div></div>\n      <div class=\"print-date\" id=\"printDate\"></div>\n    </div>\n    <div id=\"printImgs\"></div>\n    <div id=\"printData\"></div>\n  </div>\n</div>\n\n<!-- TOASTS -->\n<div class=\"toast-wrap\" id=\"toastWrap\"></div>\n\n<script>\n// ─── STATE ──────────────────────────────────────────────────────────\nlet images = []; // {file, label, dataUrl}\nlet lastFormData = null;\n\n// ─── INIT ────────────────────────────────────────────────────────────\nwindow.addEventListener('load', () => {\n  const saved = localStorage.getItem('fm_webhook');\n  const inp = document.getElementById('webhookInp');\n  if (saved) { inp.value = saved; setDot(true); }\n\n  inp.addEventListener('input', () => {\n    const v = inp.value.trim();\n    localStorage.setItem('fm_webhook', v);\n    setDot(!!v);\n    validate();\n  });\n\n  const last = localStorage.getItem('fm_last_output');\n  if (last) {\n    try { showOutput(JSON.parse(last)); } catch(e) {}\n  }\n  validate();\n});\n\nfunction setDot(on) {\n  document.getElementById('wDot').className = 'h-dot' + (on ? ' on' : '');\n}\n\n// ─── ACCORDION ───────────────────────────────────────────────────────\nfunction toggleAcc(hdr) {\n  hdr.classList.toggle('open');\n  hdr.nextElementSibling.classList.toggle('open');\n}\n\nfunction chkToggle(label) {\n  setTimeout(() => label.classList.toggle('on', label.querySelector('input').checked), 0);\n}\n\n// ─── VALIDATE ────────────────────────────────────────────────────────\nfunction updateVorlageHint() {\n  const url = document.getElementById('fVorlage').value.trim();\n  const hint = document.getElementById('vorlageHint');\n  if (url) {\n    hint.innerHTML = '<span style=\"color:var(--success);font-weight:600;\">✓ Vorlage wird analysiert</span> — Claude übernimmt Stil und CI des verlinkten Exposés.';\n    document.getElementById('fTon').value = 'Wie Vorlage';\n  } else {\n    hint.textContent = 'Optional — Claude analysiert Stil, Aufbau und CI des verlinkten Exposés und passt das neue daran an.';\n  }\n}\n\nfunction validate() {\n  const hasWebhook = !!document.getElementById('webhookInp').value.trim();\n  const req = ['fTyp','fAngebot','fAdresse','fFlaeche','fZimmer','fPreis','fZustand'];\n  const allFilled = req.every(id => document.getElementById(id).value.trim());\n  const btn = document.getElementById('genBtn');\n  btn.disabled = !(hasWebhook && allFilled);\n  const hint = document.getElementById('genHint');\n  if (!hasWebhook) hint.textContent = 'Webhook URL oben rechts eintragen';\n  else if (!allFilled) hint.textContent = 'Pflichtfelder (*) ausfüllen';\n  else hint.textContent = '';\n}\n\n// ─── FILE UPLOAD ─────────────────────────────────────────────────────\nfunction dragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('drag'); }\nfunction dragLeave() { document.getElementById('uploadZone').classList.remove('drag'); }\nfunction dropFiles(e) { e.preventDefault(); dragLeave(); handleFiles(e.dataTransfer.files); }\n\nfunction handleFiles(files) {\n  for (const f of files) {\n    if (images.length >= 10) { toast('Maximum 10 Bilder erlaubt', 'warning'); break; }\n    if (f.size > 5 * 1024 * 1024) { toast(`${f.name}: Datei zu gross (max. 5 MB)`, 'error'); continue; }\n    if (!f.type.match(/image\\/(jpeg|png|webp)/)) continue;\n    const reader = new FileReader();\n    reader.onload = e => {\n      images.push({ file: f, label: guessLabel(f.name, images.length), dataUrl: e.target.result });\n      renderThumbs();\n    };\n    reader.readAsDataURL(f);\n  }\n  document.getElementById('fileInput').value = '';\n}\n\nfunction guessLabel(name, idx) {\n  const n = name.toLowerCase();\n  if (n.includes('wohn')) return 'Wohnzimmer';\n  if (n.includes('kuch')) return 'Küche';\n  if (n.includes('bad') || n.includes('dusch')) return 'Badezimmer';\n  if (n.includes('schlaf') || n.includes('bett')) return 'Schlafzimmer';\n  if (n.includes('garten')) return 'Garten';\n  if (n.includes('aussen') || n.includes('fassade')) return 'Aussenansicht';\n  if (n.includes('balkon') || n.includes('terrasse')) return 'Balkon / Terrasse';\n  return idx === 0 ? 'Hauptansicht' : `Zimmer ${idx + 1}`;\n}\n\nfunction renderThumbs() {\n  const g = document.getElementById('thumbGrid');\n  g.innerHTML = images.map((img, i) => `\n    <div class=\"thumb\">\n      <img src=\"${img.dataUrl}\" alt=\"${img.label}\">\n      ${i === 0 ? '<div class=\"thumb-badge\">HAUPTBILD</div>' : ''}\n      <button class=\"thumb-del\" onclick=\"delImg(${i})\">×</button>\n      <div class=\"thumb-lbl\"><input id=\"img-label-${i}\" value=\"${img.label}\" placeholder=\"Bezeichnung\" onchange=\"images[${i}].label=this.value\"></div>\n    </div>`).join('');\n  document.getElementById('imgCount').textContent = images.length ? `${images.length} Bild${images.length > 1 ? 'er' : ''} hochgeladen` : '';\n}\n\nfunction delImg(i) { images.splice(i, 1); renderThumbs(); }\n\n// ─── COLLECT FORM ────────────────────────────────────────────────────\nfunction collectForm() {\n  return {\n    typ: v('fTyp'), angebot: v('fAngebot'), adresse: v('fAdresse'),\n    kanton: v('fKanton'), flaeche: v('fFlaeche'), zimmer: v('fZimmer'),\n    stockwerk: v('fStockwerk'), baujahr: v('fBaujahr'), renovation: v('fRenovation'),\n    preis: v('fPreis'), zustand: v('fZustand'), heizung: v('fHeizung'),\n    parkierung: v('fParkierung'),\n    merkmale: [...document.querySelectorAll('#merkmaleGrid input:checked')].map(c => c.value),\n    weiteres: v('fWeiteres'), umgebung: v('fUmgebung'), oev: v('fOev'), schule: v('fSchule'),\n    ton: v('fTon'), zielgruppe: v('fZielgruppe'),\n    vorlageUrl: v('fVorlage'),\n    bildAnzahl: images.length,\n    bildLabels: images.map(img => img.label)\n  };\n}\nfunction v(id) { return document.getElementById(id).value.trim(); }\n\n// ─── GENERATE ────────────────────────────────────────────────────────\nasync function generate() {\n  const btn = document.getElementById('genBtn');\n  const webhookUrl = document.getElementById('webhookInp').value.trim();\n\n  btn.disabled = true;\n  btn.classList.add('loading');\n  document.getElementById('genTxt').textContent = 'Wird generiert...';\n  document.getElementById('outEmpty').style.display = 'none';\n  document.getElementById('loadState').classList.add('on');\n  document.getElementById('outResult').classList.remove('on');\n\n  const msgs = ['Bilder werden analysiert...','Objekt wird erfasst...','Exposé wird verfasst...','Fast fertig...'];\n  let mi = 0;\n  const lt = setInterval(() => {\n    document.getElementById('loadTxt').textContent = msgs[Math.min(mi++, msgs.length - 1)];\n  }, 2500);\n\n  try {\n    const fd = collectForm();\n    lastFormData = fd;\n\n    // Bilder zu Base64\n    const bilder = await Promise.all(images.map(async (img, i) => ({\n      data: img.dataUrl.split(',')[1],\n      type: img.file.type,\n      label: document.getElementById(`img-label-${i}`)?.value || img.label\n    })));\n\n    const payload = { ...fd, bilder };\n\n    const resp = await fetch(webhookUrl, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(payload)\n    });\n\n    if (!resp.ok) throw new Error(`Webhook Fehler ${resp.status}`);\n\n    const result = await resp.json();\n    if (!result.success) throw new Error(result.error || 'Unbekannter Fehler');\n\n    clearInterval(lt);\n    showOutput(result);\n    localStorage.setItem('fm_last_output', JSON.stringify(result));\n    toast('Exposé erfolgreich generiert!', 'success');\n\n  } catch(err) {\n    clearInterval(lt);\n    document.getElementById('loadState').classList.remove('on');\n    document.getElementById('outEmpty').style.display = 'flex';\n    toast('Fehler: ' + err.message, 'error');\n  } finally {\n    btn.disabled = false;\n    btn.classList.remove('loading');\n    document.getElementById('genTxt').textContent = '✦  Exposé generieren';\n    validate();\n  }\n}\n\nfunction showOutput(result) {\n  document.getElementById('loadState').classList.remove('on');\n  document.getElementById('outEmpty').style.display = 'none';\n  document.getElementById('outResult').classList.add('on');\n\n  document.getElementById('ta-v').value = result.vollstaendig || '';\n  document.getElementById('ta-p').value = result.portal || '';\n  countChars('v');\n  countChars('p', 1800);\n\n  // Print setup\n  if (lastFormData) {\n    const fd = lastFormData;\n    document.getElementById('printSub').textContent =\n      `${fd.typ} · ${fd.adresse} · ${fd.angebot} · CHF ${Number(fd.preis).toLocaleString('de-CH')}`;\n    document.getElementById('printDate').textContent = new Date().toLocaleDateString('de-CH');\n    const pi = document.getElementById('printImgs');\n    pi.innerHTML = images.map(img => `<img src=\"${img.dataUrl}\" alt=\"${img.label}\">`).join('');\n    document.getElementById('printData').innerHTML = `<table>\n      <tr><td>Objekttyp</td><td>${fd.typ}</td></tr>\n      <tr><td>Angebot</td><td>${fd.angebot}</td></tr>\n      <tr><td>Adresse</td><td>${fd.adresse}</td></tr>\n      <tr><td>Zimmer</td><td>${fd.zimmer}</td></tr>\n      <tr><td>Wohnfläche</td><td>${fd.flaeche} m²</td></tr>\n      <tr><td>Baujahr</td><td>${fd.baujahr || '–'}</td></tr>\n      <tr><td>Zustand</td><td>${fd.zustand}</td></tr>\n      <tr><td>Heizung</td><td>${fd.heizung || '–'}</td></tr>\n      <tr><td>Parkierung</td><td>${fd.parkierung || 'Keine'}</td></tr>\n      <tr><td>Preis</td><td>CHF ${Number(fd.preis).toLocaleString('de-CH')}</td></tr>\n    </table>`;\n  }\n}\n\n// ─── TABS ────────────────────────────────────────────────────────────\nfunction switchTab(name, el) {\n  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));\n  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('on'));\n  el.classList.add('on');\n  document.getElementById('panel-' + name).classList.add('on');\n}\n\n// ─── CHAR COUNT ──────────────────────────────────────────────────────\nfunction countChars(key, max) {\n  const n = document.getElementById('ta-' + key).value.length;\n  const el = document.getElementById('cc-' + key);\n  if (!el) return;\n  el.innerHTML = max\n    ? `<b>${n.toLocaleString('de-CH')}</b> / ${max.toLocaleString('de-CH')} Zeichen`\n    : `<b>${n.toLocaleString('de-CH')}</b> Zeichen`;\n  el.className = 'char-cnt' + (max && n > max ? ' over' : '');\n}\n\n// ─── COPY ────────────────────────────────────────────────────────────\nfunction copyTab(name) {\n  const key = name === 'vollstaendig' ? 'v' : 'p';\n  navigator.clipboard.writeText(document.getElementById('ta-' + key).value).then(() => {\n    toast('Text kopiert!', 'success');\n  });\n}\n\n// ─── REGEN ───────────────────────────────────────────────────────────\nfunction regenTab() { generate(); }\n\n// ─── SAVE TXT ────────────────────────────────────────────────────────\nfunction saveTxt() {\n  const v = document.getElementById('ta-v').value;\n  const p = document.getElementById('ta-p').value;\n  const txt = `=== VOLLSTÄNDIGES EXPOSÉ ===\\n\\n${v}\\n\\n=== PORTAL-VERSION ===\\n\\n${p}`;\n  const a = document.createElement('a');\n  a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(txt);\n  a.download = 'expose-' + new Date().toISOString().slice(0,10) + '.txt';\n  a.click();\n}\n\n// ─── TOAST ───────────────────────────────────────────────────────────\nfunction toast(msg, type = 'info') {\n  const wrap = document.getElementById('toastWrap');\n  const el = document.createElement('div');\n  el.className = 'toast ' + type;\n  el.textContent = msg;\n  wrap.appendChild(el);\n  setTimeout(() => {\n    el.style.animation = 'fadeOut .3s ease forwards';\n    setTimeout(() => el.remove(), 300);\n  }, 4000);\n}\n\n// ─── KEYBOARD ────────────────────────────────────────────────────────\ndocument.addEventListener('keydown', e => {\n  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {\n    e.preventDefault();\n    if (!document.getElementById('genBtn').disabled) generate();\n  }\n  if ((e.metaKey || e.ctrlKey) && e.key === '1') {\n    e.preventDefault();\n    document.querySelectorAll('.tab')[0]?.click();\n  }\n  if ((e.metaKey || e.ctrlKey) && e.key === '2') {\n    e.preventDefault();\n    document.querySelectorAll('.tab')[1]?.click();\n  }\n});\n</script>\n</body>\n</html>\n",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html; charset=utf-8"
+              },
+              {
+                "name": "Cache-Control",
+                "value": "no-cache"
+              }
+            ]
+          }
+        }
+      },
+      "id": "n-html",
+      "name": "01 · HTML Tool senden",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "flowmatic-expose",
+        "responseMode": "lastNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "n-post",
+      "name": "POST — Exposé Anfrage",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        100,
+        500
+      ],
+      "webhookId": "flowmatic-expose-post-v4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 02 · PFLICHTFELDER VALIDIEREN\nconst body = $input.first().json.body || $input.first().json;\nconst errors = [], warnings = [];\nconst required = {typ:'Objekttyp',ang:'Angebotstyp',adr:'Adresse',fl:'Wohnfläche',zi:'Zimmer',pr:'Preis',zu:'Zustand'};\nfor(const [k,l] of Object.entries(required)){\n  if(!body[k]||String(body[k]).trim()==='') errors.push('Pflichtfeld fehlt: '+l);\n}\nif(body.fl&&parseFloat(body.fl)<5) errors.push('Wohnfläche zu klein');\nif(body.pr){\n  const p=parseInt(String(body.pr).replace(/[^0-9]/g,''));\n  if(p<100) errors.push('Preis zu niedrig — CHF-Betrag eingeben');\n  if(body.ang==='Verkauf'&&p<50000) warnings.push('Kaufpreis unter CHF 50.000 — prüfen');\n  if(body.ang==='Vermietung'&&p>50000) warnings.push('Mietpreis über CHF 50.000 — prüfen');\n}\nif(body.bj&&(parseInt(body.bj)<1800||parseInt(body.bj)>2030)) errors.push('Baujahr ungültig');\nif(errors.length>0) return [{json:{_error:true,step:'Eingabe-Validierung',error:errors.join(' | '),warnings}}];\nreturn [{json:{_error:false,body,warnings,validatedAt:new Date().toISOString()}}];"
+      },
+      "id": "n2",
+      "name": "02 · Pflichtfelder validieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 03 · BILDER VALIDIEREN\nconst input = $input.first().json;\nif(input._error) return [{json:input}];\nconst body=input.body, bilder=Array.isArray(body.bilder)?body.bilder:[];\nconst errors=[],warnings=[],validBilder=[];\nconst VALID=['image/jpeg','image/png','image/webp'];\nif(bilder.length===0) warnings.push('Keine Bilder — Exposé ohne Bildbeschreibungen');\nfor(let i=0;i<Math.min(bilder.length,10);i++){\n  const b=bilder[i],be=[];\n  if(!b.type||!VALID.includes(b.type)) be.push('Bild '+(i+1)+': ungültiger Typ');\n  if(!b.data||b.data.length<100) be.push('Bild '+(i+1)+': Daten fehlen');\n  if(b.data&&b.data.length*0.75>5*1024*1024) be.push('Bild '+(i+1)+' zu gross (max 5 MB)');\n  if(be.length>0) errors.push(...be);\n  else validBilder.push({...b,index:i,label:b.label||(i===0?'Hauptbild':'Bild '+(i+1)),mediaType:b.type});\n}\nif(errors.length>0) return [{json:{_error:true,step:'Bild-Validierung',error:errors.join(' | '),warnings}}];\nreturn [{json:{...input,validBilder,bildAnzahl:validBilder.length,bildWarnings:warnings}}];"
+      },
+      "id": "n3",
+      "name": "03 · Bilder validieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.body.vorlageUrl || 'https://httpbin.org/get' }}",
+        "options": {
+          "timeout": 15000,
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (compatible; FlowmaticBot/1.0)"
+            },
+            {
+              "name": "Accept",
+              "value": "text/html,text/plain,*/*"
+            }
+          ]
+        }
+      },
+      "id": "n4-vorlage",
+      "name": "04 · Vorlage laden",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        760,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 04b · VORLAGE VERARBEITEN\nconst prev = $('03 · Bilder validieren').first().json;\nif(prev._error) return [{json:prev}];\n\nconst vorlageUrl = prev.body?.vorlageUrl || '';\nlet vorlageText = '';\nlet vorlageAnalyse = '';\n\nif(vorlageUrl) {\n  try {\n    const raw = $input.first().json.data || $input.first().json.body || '';\n    const text = typeof raw === 'string' ? raw : JSON.stringify(raw);\n\n    // HTML-Tags entfernen, Text extrahieren\n    vorlageText = text\n      .replace(/<script[\\s\\S]*?<\\/script>/gi, '')\n      .replace(/<style[\\s\\S]*?<\\/style>/gi, '')\n      .replace(/<[^>]+>/g, ' ')\n      .replace(/\\s+/g, ' ')\n      .trim()\n      .slice(0, 4000); // Max 4000 Zeichen für den Prompt\n\n    vorlageAnalyse = vorlageText.length > 100\n      ? `VORLAGE-ANALYSE:\\nDer Makler hat folgendes bestehendes Exposé als Stilvorlage hinterlegt (URL: ${vorlageUrl}).\\nAnalysiere Schreibstil, Aufbau, Ton, Sprache und CI dieses Textes GENAU.\\nDas neue Exposé soll in GLEICHEM Stil, gleicher Struktur und gleichem Ton verfasst sein — nur mit den neuen Objektdaten.\\n\\nVORLAGE-TEXT (gekürzt):\\n${vorlageText}\\n\\n`\n      : '';\n  } catch(e) {\n    vorlageAnalyse = '';\n  }\n}\n\nreturn [{json:{...prev,vorlageUrl,vorlageAnalyse,vorlageGeladen:!!vorlageText}}];"
+      },
+      "id": "n4b",
+      "name": "04b · Vorlage verarbeiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        980,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 05 · DATEN ANREICHERN\nconst input = $input.first().json;\nif(input._error) return [{json:input}];\nconst body=input.body;\nconst preisRaw=parseInt(String(body.pr).replace(/[^0-9]/g,''));\nconst preisFormatiert=new Intl.NumberFormat('de-CH').format(preisRaw);\nconst preisLabel=body.ang==='Vermietung'?'Mietzins':'Kaufpreis';\nconst kantone={ZH:'Zürich',ZG:'Zug',BS:'Basel-Stadt',GE:'Genf',BE:'Bern',LU:'Luzern',AG:'Aargau',SZ:'Schwyz',NW:'Nidwalden',OW:'Obwalden',UR:'Uri',GL:'Glarus',AR:'Appenzell AR',AI:'Appenzell IR',SG:'St. Gallen',GR:'Graubünden',TG:'Thurgau',SH:'Schaffhausen',TI:'Tessin',VD:'Waadt',VS:'Wallis',FR:'Freiburg',NE:'Neuenburg',JU:'Jura',SO:'Solothurn',BL:'Basel-Landschaft'};\nconst kantonName=kantone[body.kt]||body.kt||'';\nconst adresseVoll=body.adr+(kantonName?', '+kantonName:'');\nconst alter=body.bj?(2025-parseInt(body.bj)):null;\nconst objektAlter=alter===null?'':alter<=0?'Neubau':alter<=5?'nahezu neu':alter+' Jahre alt';\nconst jahreSeitReno=body.re?(2025-parseInt(body.re)):null;\nconst renovationsInfo=jahreSeitReno===null?'':jahreSeitReno<=0?'frisch renoviert':jahreSeitReno<=3?'kürzlich renoviert':jahreSeitReno<=10?'vor '+jahreSeitReno+' Jahren renoviert':'Renovation '+body.re;\nconst merkmale=Array.isArray(body.merkmale)&&body.merkmale.length>0?body.merkmale.join(', '):'keine besonderen Merkmale';\nreturn [{json:{...input,enriched:{preisRaw,preisFormatiert,preisLabel,kantonName,adresseVoll,objektAlter,renovationsInfo,merkmale},enrichedAt:new Date().toISOString()}}];"
+      },
+      "id": "n5",
+      "name": "05 · Daten anreichern",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 06 · SYSTEM PROMPT AUFBAUEN\nconst input = $input.first().json;\nif(input._error) return [{json:input}];\nconst body=input.body, e=input.enriched;\nconst hatVorlage = !!input.vorlageAnalyse;\n\nconst stilMap={'Professionell':'Sachlich, präzise, seriös. Keine Superlative.','Emotional':'Wärmend, einladend. Lässt den Leser sich vorstellen dort zu leben.','Premium':'Exklusiv, distinguiert. Für anspruchsvolle Käufer.','Familiär':'Herzlich, praktisch. Alltag und Familie betonen.','Wie Vorlage':'Exakt wie die analysierte Vorlage.'};\nconst zgMap={'Familien':'Schulen, Garten, Platz, Gemeinschaft betonen.','Paare / Singles':'Lage, Lifestyle, moderne Küche betonen.','Investoren':'Rendite, Substanz, Lage-Entwicklung betonen.','Keine Vorgabe':'Breite Ansprache.'};\n\nconst systemPrompt=`Du bist der beste Immobilien-Texter der Schweiz mit 20 Jahren Erfahrung.\n\nGRUNDSÄTZE:\n- Nur Schweizer Hochdeutsch\n- Keine Klischees, keine leeren Versprechen\n- Bilder präzise analysieren, Details natürlich einweben\n- Jeder Satz trägt zum Gesamteindruck bei\n${hatVorlage ? `\nWICHTIG — STILVORLAGE:\nDer Makler hat ein bestehendes Exposé als Vorlage hinterlegt.\nAnalysiere dessen Stil, Ton, Aufbau und Sprache SEHR GENAU.\nDas neue Exposé muss sich anfühlen wie vom selben Texter — gleiche Stimme, gleiche Struktur, gleicher CI-Ton.\nNur die Objektdaten werden ausgetauscht.\n` : `STIL: ${stilMap[body.ton]||stilMap['Professionell']}`}\nZIELGRUPPE: ${zgMap[body.zg]||zgMap['Keine Vorgabe']}\n\nGib exakt diese zwei Blöcke aus:\n===VOLLSTAENDIG===\n[500–700 Wörter: emotionaler Einstieg, alle Details, Bilder eingeflochten]\n===PORTAL===\n[Max. 1800 Zeichen: kompakt, alle Pflichtinfos, für ImmoScout24 / Homegate]`;\n\nreturn [{json:{...input,systemPrompt}}];"
+      },
+      "id": "n6",
+      "name": "06 · System Prompt aufbauen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1420,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 07 · USER PROMPT AUFBAUEN\nconst input = $input.first().json;\nif(input._error) return [{json:input}];\nconst body=input.body, e=input.enriched;\nconst bilder=input.validBilder||[];\nconst bildInfo=bilder.length>0?bilder.map((b,i)=>'Bild '+(i+1)+' ('+b.label+')').join(', '):'Keine Bilder';\nconst userPrompt=`${input.vorlageAnalyse||''}OBJEKT: ${body.typ} | ${body.ang} | ${e.adresseVoll}\nFLÄCHE: ${body.fl} m² | ZIMMER: ${body.zi}${body.st_?' | '+body.st_:''}\nBAUJAHR: ${body.bj||'–'}${e.objektAlter?' ('+e.objektAlter+')':''}${e.renovationsInfo?' | '+e.renovationsInfo:''}\n${e.preisLabel}: CHF ${e.preisFormatiert}\nZUSTAND: ${body.zu} | HEIZUNG: ${body.hz||'–'} | PARKIERUNG: ${body.pk||'keine'}\nMERKMALE: ${e.merkmale}\nWEITERE DETAILS: ${body.we||'keine'}\nLAGE: ${body.um||'–'}\nÖV: ${body.ov||'–'} | EINKAUF/SCHULEN: ${body.sc||'–'}\nBILDER: ${bildInfo}\n\n${bilder.length>0?'Analysiere zuerst die Bilder sorgfältig. Integriere visuelle Details natürlich in beide Texte.':''}\nErstelle dann die zwei Versionen exakt wie im System Prompt vorgegeben.`;\nreturn [{json:{...input,userPrompt}}];"
+      },
+      "id": "n7",
+      "name": "07 · User Prompt aufbauen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1640,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 08 · CLAUDE MESSAGE BAUEN\nconst input = $input.first().json;\nif(input._error) return [{json:input}];\nconst bilder=input.validBilder||[], content=[];\nfor(const b of bilder){\n  content.push({type:'image',source:{type:'base64',media_type:b.mediaType||'image/jpeg',data:b.data}});\n  content.push({type:'text',text:'↑ '+b.label+' (Bild '+(b.index+1)+' von '+bilder.length+')'});\n}\ncontent.push({type:'text',text:input.userPrompt});\nreturn [{json:{...input,apiBody:{model:'claude-sonnet-4-6',max_tokens:3000,system:input.systemPrompt,messages:[{role:'user',content}]}}}];"
+      },
+      "id": "n8",
+      "name": "08 · Claude Message bauen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1860,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "={{ $env.CLAUDE_API_KEY }}"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.apiBody) }}",
+        "options": {
+          "timeout": 90000
+        }
+      },
+      "id": "n9",
+      "name": "09 · Claude API Call",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2080,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 10 · API ANTWORT PRÜFEN\nconst r=$input.first().json;\nif(r.error){\n  const codes={'authentication_error':'Ungültiger API Key — CLAUDE_API_KEY in n8n prüfen.','rate_limit_error':'Rate Limit — 60 Sek. warten.','overloaded_error':'Claude überlastet — erneut versuchen.'};\n  return [{json:{_error:true,step:'Claude API',error:codes[r.error.type]||'API Fehler: '+r.error.message}}];\n}\nconst rawText=r.content?.[0]?.text||'';\nif(!rawText||rawText.length<100) return [{json:{_error:true,step:'API Antwort',error:'Claude hat keinen Text zurückgegeben — bitte erneut versuchen'}}];\nreturn [{json:{rawText,usage:r.usage||{},model:r.model||'claude-sonnet-4-6'}}];"
+      },
+      "id": "n10",
+      "name": "10 · API Antwort prüfen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2300,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 11 · VERSIONEN EXTRAHIEREN\nconst input=$input.first().json;\nif(input._error) return [{json:input}];\nconst raw=input.rawText;\nfunction extr(text,start,end){\n  const si=text.indexOf(start);if(si===-1)return null;\n  const after=text.slice(si+start.length);if(!end)return after.trim();\n  const ei=after.indexOf(end);return ei===-1?after.trim():after.slice(0,ei).trim();\n}\nlet vollstaendig=extr(raw,'===VOLLSTAENDIG===','===PORTAL===');\nlet portal=extr(raw,'===PORTAL===',null);\nif(!vollstaendig) vollstaendig=extr(raw,'=== VOLLSTÄNDIGES EXPOSÉ ===','===')||raw.trim();\nif(!portal) portal=vollstaendig.slice(0,1800);\nreturn [{json:{...input,vollstaendig,portal}}];"
+      },
+      "id": "n11",
+      "name": "11 · Versionen extrahieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2520,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 12 · VOLLSTÄNDIGES EXPOSÉ PRÜFEN\nconst input=$input.first().json;\nif(input._error) return [{json:input}];\nconst text=input.vollstaendig, warnings=[];\nconst worte=text.trim().split(/\\s+/).filter(w=>w.length>0).length;\nif(worte<200) warnings.push('Exposé kurz ('+worte+' Wörter)');\nif(worte>950) warnings.push('Exposé lang ('+worte+' Wörter)');\nconst klischees=['einzigartiges Schmuckstück','Traumlage','traumhaft','einzigartig'];\nconst gefunden=klischees.filter(k=>text.toLowerCase().includes(k.toLowerCase()));\nif(gefunden.length>0) warnings.push('Klischees: '+gefunden.join(', '));\nreturn [{json:{...input,qcVollstaendig:{worte,zeichen:text.length,warnings,ok:warnings.length===0}}}];"
+      },
+      "id": "n12",
+      "name": "12 · Vollständiges Exposé prüfen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2740,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 13 · PORTAL-VERSION PRÜFEN\nconst input=$input.first().json;\nif(input._error) return [{json:input}];\nlet portal=input.portal; const warnings=[]; let trimmed=false;\nif(portal.length>1800){\n  let cut=portal.slice(0,1780);\n  const last=Math.max(cut.lastIndexOf('.'),cut.lastIndexOf('!'),cut.lastIndexOf('?'));\n  portal=last>1600?cut.slice(0,last+1):cut.trim()+'...';\n  trimmed=true;warnings.push('Portal auf '+portal.length+' Zeichen gekürzt');\n}\nif(portal.length<300) warnings.push('Portal-Version sehr kurz');\nif(!portal.includes('m²')) warnings.push('Fläche (m²) fehlt in Portal-Version');\nif(!portal.includes('CHF')) warnings.push('Preis (CHF) fehlt in Portal-Version');\nreturn [{json:{...input,portal,qcPortal:{zeichen:portal.length,trimmed,warnings,ok:!trimmed&&warnings.length===0}}}];"
+      },
+      "id": "n13",
+      "name": "13 · Portal-Version prüfen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2740,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 14 · ZUSAMMENFÜHREN\nconst input=$input.first().json;\nif(input._error) return [{json:input}];\nconst allWarnings=[...(input.warnings||[]),...(input.bildWarnings||[]),...(input.qcVollstaendig?.warnings||[]),...(input.qcPortal?.warnings||[])].filter(Boolean);\nreturn [{json:{...input,allWarnings}}];"
+      },
+      "id": "n14",
+      "name": "14 · Ergebnisse zusammenführen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2960,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 15 · FINAL QC\nconst input=$input.first().json;\nif(input._error) return [{json:input}];\nconst v=input.vollstaendig||'',p=input.portal||'',c=[];\nif(v.length<50) c.push('Vollständiges Exposé fehlt');\nif(p.length<50) c.push('Portal-Version fehlt');\nif(p.length>1800) c.push('Portal überschreitet 1800 Zeichen');\nif(c.length>0) return [{json:{_error:true,step:'Final QC',error:c.join(' | ')}}];\nreturn [{json:{...input,finalQcPassed:true}}];"
+      },
+      "id": "n15",
+      "name": "15 · Final QC",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3180,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json._error }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "n16",
+      "name": "16 · Fehler-Weiche",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [
+        3180,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 17 · RESPONSE FORMATIEREN\nconst input=$input.first().json;\nif(input._error) return [{json:input}];\nconst e=input.enriched||{},body=input.body||{};\nconst zusammenfassung=[body.zi?body.zi+'-Zimmer-'+body.typ:body.typ,body.fl?body.fl+' m²':null,e.adresseVoll||body.adr,e.preisFormatiert?'CHF '+e.preisFormatiert:null].filter(Boolean).join(' · ');\nreturn [{json:{success:true,vollstaendig:input.vollstaendig,portal:input.portal,meta:{zusammenfassung,bildAnzahl:input.bildAnzahl||0,worte:input.qcVollstaendig?.worte||0,zeichenPortal:input.qcPortal?.zeichen||0,vorlageVerwendet:input.vorlageGeladen||false,model:input.model||'claude-sonnet-4-6',generatedAt:new Date().toISOString()},warnings:input.allWarnings||[]}}];"
+      },
+      "id": "n17",
+      "name": "17 · Response formatieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3400,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 18 · FEHLER-RESPONSE\nconst input=$input.first().json;\nconst msg=typeof input.error==='string'?input.error:JSON.stringify(input.error||'Unbekannter Fehler');\nreturn [{json:{success:false,error:msg,step:input.step||'Verarbeitung',errorAt:new Date().toISOString()}}];"
+      },
+      "id": "n18",
+      "name": "18 · Fehler-Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3400,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "n19",
+      "name": "19 · Antwort senden",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        3620,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 20 · FEHLER-HANDLER API\nconst e=$input.first().json;\nconst msg=e?.message||e?.error?.message||'Verbindungsfehler';\nconst code=String(e?.statusCode||'');\nconst map={'401':'Ungültiger API Key.','403':'Zugriff verweigert.','429':'Rate Limit — 60 Sek. warten.','529':'Claude überlastet.'};\nreturn [{json:{_error:true,step:'Claude API (HTTP)',error:map[code]||'API Fehler: '+msg}}];"
+      },
+      "id": "n20",
+      "name": "20 · Fehler-Handler API",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2300,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// NODE 21 · VORLAGE-FEHLER-HANDLER\n// Wenn die Vorlage-URL nicht geladen werden kann, weitermachen ohne Vorlage\nconst prev = $('03 · Bilder validieren').first().json;\nif(prev._error) return [{json:prev}];\nreturn [{json:{...prev,vorlageUrl:'',vorlageAnalyse:'',vorlageGeladen:false,vorlageWarning:'Vorlage-URL konnte nicht geladen werden — wird ohne Stilvorlage fortgefahren'}}];"
+      },
+      "id": "n21",
+      "name": "21 · Vorlage-Fehler (weitermachen)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        980,
+        700
+      ]
+    }
+  ],
+  "connections": {
+    "GET — Tool öffnen": {
+      "main": [
+        [
+          {
+            "node": "01 · HTML Tool senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST — Exposé Anfrage": {
+      "main": [
+        [
+          {
+            "node": "02 · Pflichtfelder validieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "02 · Pflichtfelder validieren": {
+      "main": [
+        [
+          {
+            "node": "03 · Bilder validieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "03 · Bilder validieren": {
+      "main": [
+        [
+          {
+            "node": "04 · Vorlage laden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04 · Vorlage laden": {
+      "main": [
+        [
+          {
+            "node": "04b · Vorlage verarbeiten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "21 · Vorlage-Fehler (weitermachen)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "04b · Vorlage verarbeiten": {
+      "main": [
+        [
+          {
+            "node": "05 · Daten anreichern",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "21 · Vorlage-Fehler (weitermachen)": {
+      "main": [
+        [
+          {
+            "node": "05 · Daten anreichern",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "05 · Daten anreichern": {
+      "main": [
+        [
+          {
+            "node": "06 · System Prompt aufbauen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "06 · System Prompt aufbauen": {
+      "main": [
+        [
+          {
+            "node": "07 · User Prompt aufbauen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "07 · User Prompt aufbauen": {
+      "main": [
+        [
+          {
+            "node": "08 · Claude Message bauen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "08 · Claude Message bauen": {
+      "main": [
+        [
+          {
+            "node": "09 · Claude API Call",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "09 · Claude API Call": {
+      "main": [
+        [
+          {
+            "node": "10 · API Antwort prüfen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ],
+      "error": [
+        [
+          {
+            "node": "20 · Fehler-Handler API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "10 · API Antwort prüfen": {
+      "main": [
+        [
+          {
+            "node": "11 · Versionen extrahieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "11 · Versionen extrahieren": {
+      "main": [
+        [
+          {
+            "node": "12 · Vollständiges Exposé prüfen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "13 · Portal-Version prüfen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "12 · Vollständiges Exposé prüfen": {
+      "main": [
+        [
+          {
+            "node": "14 · Ergebnisse zusammenführen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "13 · Portal-Version prüfen": {
+      "main": [
+        [
+          {
+            "node": "14 · Ergebnisse zusammenführen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "14 · Ergebnisse zusammenführen": {
+      "main": [
+        [
+          {
+            "node": "15 · Final QC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "15 · Final QC": {
+      "main": [
+        [
+          {
+            "node": "16 · Fehler-Weiche",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "16 · Fehler-Weiche": {
+      "main": [
+        [
+          {
+            "node": "18 · Fehler-Response",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "17 · Response formatieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "17 · Response formatieren": {
+      "main": [
+        [
+          {
+            "node": "19 · Antwort senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "18 · Fehler-Response": {
+      "main": [
+        [
+          {
+            "node": "19 · Antwort senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "20 · Fehler-Handler API": {
+      "main": [
+        [
+          {
+            "node": "18 · Fehler-Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "name": "Flowmatic"
+    }
+  ],
+  "versionId": "flowmatic-expose-pro-v4"
+}
