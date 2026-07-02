@@ -422,18 +422,26 @@ header{background:var(--dark);border-bottom:2px solid var(--blue);height:60px;di
       </div>
     </div>
 
-    <!-- S5: Stil -->
+    <!-- S5: Vorlage -->
     <div class="acc">
-      <div class="acc-hdr" onclick="toggleAcc(this)">
+      <div class="acc-hdr open" onclick="toggleAcc(this)">
         <div class="acc-num">5</div>
-        <div class="acc-ttl">Stil &amp; Zielgruppe</div>
+        <div class="acc-ttl">Vorlage &amp; Stil-Analyse</div>
         <div class="acc-chev">▼</div>
       </div>
-      <div class="acc-body">
+      <div class="acc-body open">
+        <div class="field">
+          <div class="lbl">Link zu bestehendem Exposé</div>
+          <input class="inp" id="fVorlage" placeholder="https://www.makler-website.ch/expose/objekt-123" type="url" oninput="updateVorlageHint()">
+          <div id="vorlageHint" style="font-size:11px;color:var(--muted2);margin-top:5px;line-height:1.6;">
+            Optional — Claude analysiert Stil, Aufbau und CI des verlinkten Exposés und passt das neue daran an.
+          </div>
+        </div>
         <div class="inp-row">
           <div class="field">
             <div class="lbl">Ton / Stil</div>
             <select class="sel" id="fTon">
+              <option>Wie Vorlage</option>
               <option>Professionell</option><option>Emotional</option>
               <option>Premium</option><option>Familiär</option>
             </select>
@@ -563,6 +571,17 @@ function chkToggle(label) {
 }
 
 // ─── VALIDATE ────────────────────────────────────────────────────────
+function updateVorlageHint() {
+  const url = document.getElementById('fVorlage').value.trim();
+  const hint = document.getElementById('vorlageHint');
+  if (url) {
+    hint.innerHTML = '<span style="color:var(--success);font-weight:600;">✓ Vorlage wird analysiert</span> — Claude übernimmt Stil und CI des verlinkten Exposés.';
+    document.getElementById('fTon').value = 'Wie Vorlage';
+  } else {
+    hint.textContent = 'Optional — Claude analysiert Stil, Aufbau und CI des verlinkten Exposés und passt das neue daran an.';
+  }
+}
+
 function validate() {
   const hasWebhook = !!document.getElementById('webhookInp').value.trim();
   const req = ['fTyp','fAngebot','fAdresse','fFlaeche','fZimmer','fPreis','fZustand'];
@@ -632,6 +651,7 @@ function collectForm() {
     merkmale: [...document.querySelectorAll('#merkmaleGrid input:checked')].map(c => c.value),
     weiteres: v('fWeiteres'), umgebung: v('fUmgebung'), oev: v('fOev'), schule: v('fSchule'),
     ton: v('fTon'), zielgruppe: v('fZielgruppe'),
+    vorlageUrl: v('fVorlage'),
     bildAnzahl: images.length,
     bildLabels: images.map(img => img.label)
   };
