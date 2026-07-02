@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pq-Formel Rechner</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --accent: #38bdf8;
+    --accent-dark: #0ea5e9;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --error: #f87171;
+    --ok: #4ade80;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: var(--text);
+    padding: 24px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 32px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  h1 {
+    font-size: 1.4rem;
+    margin: 0 0 4px;
+    text-align: center;
+  }
+  .formula {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+  }
+  .formula code {
+    background: rgba(255,255,255,0.06);
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+  label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .field {
+    margin-bottom: 16px;
+  }
+  input[type="number"] {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: #0f172a;
+    color: var(--text);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  input[type="number"]:focus {
+    border-color: var(--accent);
+  }
+  button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #0f172a;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  button:hover { background: var(--accent-dark); }
+  .result {
+    margin-top: 22px;
+    padding: 16px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    min-height: 24px;
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
+  .result .x {
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .result.error { color: var(--error); }
+  .result .discriminant {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>pq-Formel Rechner</h1>
+    <div class="formula">Löst <code>x² + px + q = 0</code></div>
+
+    <div class="field">
+      <label for="p">p</label>
+      <input type="number" id="p" step="any" placeholder="z. B. -4">
+    </div>
+    <div class="field">
+      <label for="q">q</label>
+      <input type="number" id="q" step="any" placeholder="z. B. 3">
+    </div>
+
+    <button id="calc">Berechnen</button>
+
+    <div class="result" id="result">Trage p und q ein und klicke auf „Berechnen“.</div>
+  </div>
+
+<script>
+  const pInput = document.getElementById('p');
+  const qInput = document.getElementById('q');
+  const resultEl = document.getElementById('result');
+
+  function calculate() {
+    const p = parseFloat(pInput.value);
+    const q = parseFloat(qInput.value);
+
+    if (Number.isNaN(p) || Number.isNaN(q)) {
+      resultEl.className = 'result error';
+      resultEl.innerHTML = 'Bitte gültige Zahlen für p und q eingeben.';
+      return;
+    }
+
+    const halfP = p / 2;
+    const discriminant = halfP * halfP - q;
+
+    if (discriminant > 0) {
+      const sqrtD = Math.sqrt(discriminant);
+      const x1 = -halfP + sqrtD;
+      const x2 = -halfP - sqrtD;
+      resultEl.className = 'result';
+      resultEl.innerHTML =
+        `<span class="x">x₁ = ${formatNum(x1)}</span><br>` +
+        `<span class="x">x₂ = ${formatNum(x2)}</span>` +
+        `<div class="discriminant">Diskriminante D = ${formatNum(discriminant)} (zwei Lösungen)</div>`;
+    } else if (discriminant === 0) {
+      const x = -halfP;
+      resultEl.className = 'result';
+      resultEl.innerHTML =
+        `<span class="x">x = ${formatNum(x)}</span>` +
+        `<div class="discriminant">Diskriminante D = 0 (eine doppelte Lösung)</div>`;
+    } else {
+      const sqrtD = Math.sqrt(-discriminant);
+      resultEl.className = 'result';
+      resultEl.innerHTML =
+        `<span class="x">x₁ = ${formatNum(-halfP)} + ${formatNum(sqrtD)}i</span><br>` +
+        `<span class="x">x₂ = ${formatNum(-halfP)} − ${formatNum(sqrtD)}i</span>` +
+        `<div class="discriminant">Diskriminante D = ${formatNum(discriminant)} (keine reelle Lösung)</div>`;
+    }
+  }
+
+  function formatNum(n) {
+    const rounded = Math.round(n * 10000) / 10000;
+    return rounded.toString().replace('.', ',');
+  }
+
+  document.getElementById('calc').addEventListener('click', calculate);
+  [pInput, qInput].forEach(el => el.addEventListener('keydown', e => {
+    if (e.key === 'Enter') calculate();
+  }));
+</script>
+</body>
+</html>
