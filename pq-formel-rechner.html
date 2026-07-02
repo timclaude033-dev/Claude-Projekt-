@@ -6,14 +6,16 @@
 <title>pq-Formel Rechner</title>
 <style>
   :root {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --accent: #38bdf8;
-    --accent-dark: #0ea5e9;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --error: #f87171;
-    --ok: #4ade80;
+    --bg1: #0a0118;
+    --bg2: #1a0b3d;
+    --card: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.12);
+    --accent: #a855f7;
+    --accent2: #38bdf8;
+    --accent3: #f472b6;
+    --text: #f1f5f9;
+    --muted: #a5adc4;
+    --error: #fb7185;
   }
   * { box-sizing: border-box; }
   body {
@@ -22,111 +24,208 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
+    background: radial-gradient(circle at 20% 20%, #2e1065 0%, transparent 45%),
+                radial-gradient(circle at 80% 0%, #0c4a6e 0%, transparent 40%),
+                radial-gradient(circle at 50% 100%, #831843 0%, transparent 45%),
+                var(--bg1);
+    background-attachment: fixed;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     color: var(--text);
     padding: 24px;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(2px 2px at 80% 60%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 50% 80%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1.5px 1.5px at 90% 15%, rgba(255,255,255,0.35), transparent),
+      radial-gradient(1.5px 1.5px at 30% 90%, rgba(255,255,255,0.3), transparent);
+    pointer-events: none;
+    z-index: 0;
   }
   .card {
+    position: relative;
+    z-index: 1;
     background: var(--card);
-    border-radius: 16px;
-    padding: 32px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 36px;
     width: 100%;
-    max-width: 420px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    border: 1px solid rgba(255,255,255,0.06);
+    max-width: 460px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.03) inset;
+    border: 1px solid var(--border);
+    animation: rise 0.5s ease-out;
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .eyebrow {
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 700;
+    margin-bottom: 8px;
   }
   h1 {
-    font-size: 1.4rem;
-    margin: 0 0 4px;
+    font-size: 1.9rem;
+    margin: 0 0 6px;
     text-align: center;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.01em;
   }
   .formula {
     text-align: center;
     color: var(--muted);
     font-size: 0.95rem;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
   }
   .formula code {
-    background: rgba(255,255,255,0.06);
-    padding: 2px 6px;
-    border-radius: 6px;
-  }
-  label {
-    display: block;
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-bottom: 6px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--text);
   }
   .field {
-    margin-bottom: 16px;
+    margin-bottom: 18px;
+    position: relative;
+  }
+  label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .optional-tag {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--accent2);
+    background: rgba(56,189,248,0.12);
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: none;
+    letter-spacing: 0;
   }
   input[type="number"] {
     width: 100%;
-    padding: 12px 14px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: #0f172a;
+    padding: 15px 16px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    background: rgba(10,1,24,0.5);
     color: var(--text);
-    font-size: 1rem;
+    font-size: 1.15rem;
+    font-weight: 600;
     outline: none;
-    transition: border-color 0.15s;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+  }
+  input[type="number"]::placeholder {
+    color: #565f7a;
+    font-weight: 400;
   }
   input[type="number"]:focus {
     border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(168,85,247,0.18);
   }
-  button {
-    width: 100%;
-    padding: 13px;
-    margin-top: 8px;
-    border: none;
-    border-radius: 10px;
-    background: var(--accent);
-    color: #0f172a;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.15s;
+  .hint {
+    font-size: 0.78rem;
+    color: #6b7591;
+    margin-top: 20px;
+    text-align: center;
   }
-  button:hover { background: var(--accent-dark); }
   .result {
-    margin-top: 22px;
-    padding: 16px;
-    border-radius: 10px;
-    background: rgba(255,255,255,0.04);
+    margin-top: 24px;
+    padding: 22px;
+    border-radius: 18px;
+    background: linear-gradient(160deg, rgba(168,85,247,0.14), rgba(56,189,248,0.08));
+    border: 1px solid rgba(168,85,247,0.25);
     min-height: 24px;
-    font-size: 0.98rem;
+    font-size: 1rem;
     line-height: 1.7;
+    transition: all 0.2s;
   }
-  .result .x {
+  .result.error {
+    color: var(--error);
+    background: rgba(251,113,133,0.1);
+    border-color: rgba(251,113,133,0.3);
+    text-align: center;
     font-weight: 600;
-    color: var(--accent);
   }
-  .result.error { color: var(--error); }
-  .result .discriminant {
+  .result.placeholder {
+    color: #6b7591;
+    text-align: center;
+    background: rgba(255,255,255,0.03);
+    border-color: var(--border);
+    font-weight: 500;
+  }
+  .x-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+  }
+  .x-label {
     color: var(--muted);
-    font-size: 0.85rem;
-    margin-top: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    min-width: 28px;
+  }
+  .x-val {
+    background: linear-gradient(90deg, var(--accent2), var(--accent3));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .meta {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  .steps {
+    margin-top: 10px;
+    color: #8b93ad;
+    font-size: 0.8rem;
+    font-family: "SF Mono", "Fira Code", monospace;
+    line-height: 1.9;
   }
 </style>
 </head>
 <body>
   <div class="card">
+    <div class="eyebrow">Mathe · Quadratische Gleichung</div>
     <h1>pq-Formel Rechner</h1>
     <div class="formula">Löst <code>x² + px + q = 0</code></div>
 
     <div class="field">
       <label for="p">p</label>
-      <input type="number" id="p" step="any" placeholder="z. B. -4">
+      <input type="number" id="p" step="any" placeholder="z. B. -4" autofocus>
     </div>
     <div class="field">
-      <label for="q">q</label>
-      <input type="number" id="q" step="any" placeholder="z. B. 3">
+      <label for="q">q <span class="optional-tag">optional · Standard 0</span></label>
+      <input type="number" id="q" step="any" placeholder="leer lassen = 0">
     </div>
 
-    <button id="calc">Berechnen</button>
-
-    <div class="result" id="result">Trage p und q ein und klicke auf „Berechnen“.</div>
+    <div class="result placeholder" id="result">Trage p ein — q kann leer bleiben.</div>
+    <div class="hint">Ergebnis aktualisiert sich live, sobald du tippst.</div>
   </div>
 
 <script>
@@ -135,40 +234,51 @@
   const resultEl = document.getElementById('result');
 
   function calculate() {
-    const p = parseFloat(pInput.value);
-    const q = parseFloat(qInput.value);
+    const pRaw = pInput.value.trim();
+    const qRaw = qInput.value.trim();
+
+    if (pRaw === '') {
+      resultEl.className = 'result placeholder';
+      resultEl.innerHTML = 'Trage p ein — q kann leer bleiben.';
+      return;
+    }
+
+    const p = parseFloat(pRaw);
+    const q = qRaw === '' ? 0 : parseFloat(qRaw);
 
     if (Number.isNaN(p) || Number.isNaN(q)) {
       resultEl.className = 'result error';
-      resultEl.innerHTML = 'Bitte gültige Zahlen für p und q eingeben.';
+      resultEl.innerHTML = 'Bitte eine gültige Zahl für p (und ggf. q) eingeben.';
       return;
     }
 
     const halfP = p / 2;
     const discriminant = halfP * halfP - q;
+    const stepsHtml = `<div class="steps">
+      D = (p/2)² − q = (${formatNum(halfP)})² − ${formatNum(q)} = ${formatNum(discriminant)}
+    </div>`;
+
+    resultEl.className = 'result';
 
     if (discriminant > 0) {
       const sqrtD = Math.sqrt(discriminant);
       const x1 = -halfP + sqrtD;
       const x2 = -halfP - sqrtD;
-      resultEl.className = 'result';
       resultEl.innerHTML =
-        `<span class="x">x₁ = ${formatNum(x1)}</span><br>` +
-        `<span class="x">x₂ = ${formatNum(x2)}</span>` +
-        `<div class="discriminant">Diskriminante D = ${formatNum(discriminant)} (zwei Lösungen)</div>`;
+        `<div class="x-row"><span class="x-label">x₁</span><span class="x-val">${formatNum(x1)}</span></div>` +
+        `<div class="x-row"><span class="x-label">x₂</span><span class="x-val">${formatNum(x2)}</span></div>` +
+        `<div class="meta">Zwei reelle Lösungen${stepsHtml}</div>`;
     } else if (discriminant === 0) {
       const x = -halfP;
-      resultEl.className = 'result';
       resultEl.innerHTML =
-        `<span class="x">x = ${formatNum(x)}</span>` +
-        `<div class="discriminant">Diskriminante D = 0 (eine doppelte Lösung)</div>`;
+        `<div class="x-row"><span class="x-label">x</span><span class="x-val">${formatNum(x)}</span></div>` +
+        `<div class="meta">Eine doppelte Lösung${stepsHtml}</div>`;
     } else {
       const sqrtD = Math.sqrt(-discriminant);
-      resultEl.className = 'result';
       resultEl.innerHTML =
-        `<span class="x">x₁ = ${formatNum(-halfP)} + ${formatNum(sqrtD)}i</span><br>` +
-        `<span class="x">x₂ = ${formatNum(-halfP)} − ${formatNum(sqrtD)}i</span>` +
-        `<div class="discriminant">Diskriminante D = ${formatNum(discriminant)} (keine reelle Lösung)</div>`;
+        `<div class="x-row"><span class="x-label">x₁</span><span class="x-val">${formatNum(-halfP)} + ${formatNum(sqrtD)}i</span></div>` +
+        `<div class="x-row"><span class="x-label">x₂</span><span class="x-val">${formatNum(-halfP)} − ${formatNum(sqrtD)}i</span></div>` +
+        `<div class="meta">Keine reelle Lösung (komplex)${stepsHtml}</div>`;
     }
   }
 
@@ -177,10 +287,7 @@
     return rounded.toString().replace('.', ',');
   }
 
-  document.getElementById('calc').addEventListener('click', calculate);
-  [pInput, qInput].forEach(el => el.addEventListener('keydown', e => {
-    if (e.key === 'Enter') calculate();
-  }));
+  [pInput, qInput].forEach(el => el.addEventListener('input', calculate));
 </script>
 </body>
 </html>
