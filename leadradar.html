@@ -36,8 +36,9 @@ a{color:inherit;text-decoration:none}
 .ic{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
 
 .app{display:grid;grid-template-rows:68px 1fr;height:100vh}
-.main{display:grid;grid-template-columns:490px 1fr;min-height:0}
-@media(max-width:900px){.main{grid-template-columns:1fr}.side{display:none}}
+.main{display:grid;grid-template-columns:330px 1fr 420px;min-height:0}
+@media(max-width:1200px){.main{grid-template-columns:300px 1fr 380px}}
+@media(max-width:980px){.main{grid-template-columns:1fr}.side{display:none}}
 
 /* ── Topbar ── */
 .top{display:flex;align-items:center;gap:18px;padding:0 20px;background:var(--panel);border-bottom:1px solid var(--line);position:relative;z-index:10}
@@ -57,6 +58,7 @@ a{color:inherit;text-decoration:none}
 
 /* ── Sidebar ── */
 .side{display:flex;flex-direction:column;background:var(--panel);border-right:1px solid var(--line);min-height:0}
+.side.right{border-right:0;border-left:1px solid var(--line)}
 .sect-h{display:flex;align-items:center;gap:10px;font-size:10.5px;font-weight:800;letter-spacing:.2em;
   text-transform:uppercase;color:var(--faint);padding:22px 24px 0}
 .sect-h::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -198,12 +200,12 @@ select option,select optgroup{background:var(--panel2)}
 .hud-scan.on{display:flex}
 .hud-scan .sp{width:11px;height:11px;border:2px solid rgba(95,160,220,.3);border-top-color:var(--sky);border-radius:50%;animation:rot .7s linear infinite}
 
-/* Legende */
-.legend{position:absolute;bottom:22px;right:16px;z-index:700;background:rgba(12,24,40,.92);border:1px solid var(--line2);
-  border-radius:12px;padding:12px 16px;font-size:11.5px;color:var(--sub);display:grid;gap:7px}
-.legend b{color:#fff;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
-.lg-row{display:flex;align-items:center;gap:9px}
-.lg-dot{width:11px;height:11px;border-radius:50%;border:1.5px solid #fff}
+/* Legende (links unten im Filter-Panel) */
+.legend-side{margin:0 24px 22px;background:var(--panel2);border:1px solid var(--line);
+  border-radius:14px;padding:16px 18px;font-size:11.5px;color:var(--sub);display:grid;gap:8px}
+.legend-side b{color:#fff;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800}
+.lg-row{display:flex;align-items:center;gap:9px;line-height:1.4}
+.lg-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid #fff;flex:none}
 
 .toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,120px);z-index:900;background:var(--panel);
   border:1px solid var(--line2);border-radius:12px;padding:13px 22px;font-size:13px;color:var(--txt);
@@ -268,7 +270,33 @@ select option,select optgroup{background:var(--panel2)}
         <div class="bar"><i id="smBar"></i></div>
       </div>
       <div class="status" id="status"><span class="spin"></span><span id="statusTxt">Bereit. Gebiet wählen und Scan starten.</span></div>
-      <div class="sect-h" style="padding-top:18px">Ergebnisse</div>
+      <div style="flex:1"></div>
+      <div class="legend-side">
+        <b>Potenzial</b>
+        <div class="lg-row"><span class="lg-dot" style="background:#3DDC97"></span>A — vollständige Kontaktdaten</div>
+        <div class="lg-row"><span class="lg-dot" style="background:#5FA0DC"></span>B — teilweise erreichbar</div>
+        <div class="lg-row"><span class="lg-dot" style="background:#8DA2BC"></span>C — nur Name/Adresse</div>
+        <b style="margin-top:6px">Service-Empfehlung</b>
+        <div class="lg-row"><span class="lg-dot" style="background:#E5C588"></span>Lead-Maschine — kein Webauftritt</div>
+        <div class="lg-row"><span class="lg-dot" style="background:#7FC4A8"></span>Follow-up — Web da, wenig erreichbar</div>
+        <div class="lg-row"><span class="lg-dot" style="background:#A9A6E8"></span>Individual — digital fit</div>
+      </div>
+    </aside>
+
+    <div class="maparea">
+      <div id="map"></div>
+      <div class="radar-stage" id="radarStage">
+        <div class="radar" id="radar"><div class="cross-h"></div><div class="cross-v"></div><div class="ring"></div><div class="beam"></div><div class="core"></div></div>
+      </div>
+      <div class="map-hud">
+        <div class="hud-scan" id="hudScan"><span class="sp"></span><span id="hudScanTxt">Scanne …</span></div>
+        <div class="hud-chip">Im letzten Scan: <b id="scanCount">0</b></div>
+        <div class="hud-chip" id="hudRegion">—</div>
+      </div>
+    </div>
+
+    <aside class="side right">
+      <div class="sect-h">Ergebnisse</div>
       <div class="search">
         <input type="text" id="q" placeholder="Suchen (Name, Ort) …" style="flex:1.2">
         <select id="selSvc" style="flex:1">
@@ -284,24 +312,6 @@ select option,select optgroup{background:var(--panel2)}
         <button class="ghostbtn" id="btnClear"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14"/></svg>Liste leeren</button>
       </div>
     </aside>
-
-    <div class="maparea">
-      <div id="map"></div>
-      <div class="radar-stage" id="radarStage">
-        <div class="radar" id="radar"><div class="cross-h"></div><div class="cross-v"></div><div class="ring"></div><div class="beam"></div><div class="core"></div></div>
-      </div>
-      <div class="map-hud">
-        <div class="hud-scan" id="hudScan"><span class="sp"></span><span id="hudScanTxt">Scanne …</span></div>
-        <div class="hud-chip">Im letzten Scan: <b id="scanCount">0</b></div>
-        <div class="hud-chip" id="hudRegion">—</div>
-      </div>
-      <div class="legend">
-        <b>Potenzial</b>
-        <div class="lg-row"><span class="lg-dot" style="background:#3DDC97"></span>A — vollständige Kontaktdaten</div>
-        <div class="lg-row"><span class="lg-dot" style="background:#5FA0DC"></span>B — teilweise erreichbar</div>
-        <div class="lg-row"><span class="lg-dot" style="background:#8DA2BC"></span>C — nur Name/Adresse</div>
-      </div>
-    </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
