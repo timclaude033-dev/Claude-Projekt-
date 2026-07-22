@@ -330,39 +330,29 @@ const TIER_TXT={
 const WEBSITE='https://timclaude033-dev.github.io/Claude-Projekt-/';
 function gmailUrl(l){
   const city=(l.addr.split(',').pop()||l.region||'').trim().replace(/^\d{4,5}\s*/,'');
-  const su=`Kein Interessent geht mehr verloren — Automatisierung für ${l.name}`;
+  const su=`${l.name}: Wie viele Anfragen bleiben bei Ihnen liegen?`;
   const body=
-`Guten Tag,
+`Guten Tag
 
-ich bin auf ${l.name} gestossen und habe mir Ihren Auftritt kurz angesehen — Sie betreuen schöne Objekte${city?' in '+city:''}, und genau für Büros wie Ihres habe ich Walter Workflows aufgebaut.
+Kurz und ehrlich: Die meisten Maklerbüros verlieren jede Woche Interessenten — nicht aus Nachlässigkeit, sondern weil niemand Zeit hat, jede Anfrage sofort zu beantworten und dreimal nachzufassen. Immer mehr Büros lösen genau das mit Automatisierung. Wer es nicht tut, verliert die Interessenten an die, die es tun.
 
-Was ich für Maklerbüros mache — kurz und ehrlich:
+Dabei helfe ich${city?' — auch in '+city:''}:
 
-1) LEAD-MASCHINE
-   Eigene Objektseite pro Immobilie mit intelligentem Anfrageformular.
-   Jede Anfrage wird automatisch einsortiert: kaufbereit oder unverbindlich.
-   Sie wissen sofort, wen Sie zuerst anrufen.
+• Neue Anfragen werden automatisch sortiert: Sie sehen sofort, wer wirklich kaufen will.
+• Jeder Interessent erhält sofort das Exposé und wird danach automatisch nachgefasst — in Ihrem Ton, bis er antwortet.
+• Und den einen Ablauf, der Sie am meisten Zeit kostet? Den automatisieren wir gleich mit.
 
-2) FOLLOW-UP-AUTOMATIK
-   Jeder Interessent erhaelt automatisch das Exposé und danach
-   freundliches Nachfassen im richtigen Abstand — in Ihrem Ton.
-   Kein Interessent wird mehr vergessen. Bei Antwort stoppt alles von selbst.
+Einmaliger Fixpreis, keine laufenden Gebühren, einsatzbereit in rund zwei Wochen. Sie müssen nichts installieren und nichts können — ich richte alles ein und übergebe fertig.
 
-3) IHRE EIGENE AUTOMATISIERUNG
-   Sie nennen mir den Ablauf, der Sie jede Woche Zeit kostet
-   (Besichtigungstermine, Bewerberdossiers, Unterlagen) —
-   ich prüfe ehrlich, ob und wie er sich automatisieren laesst.
+Alles Weitere auf einen Blick: ${WEBSITE}
 
-Die Preise sind einmalig, ohne laufende Gebühren. Einrichtung dauert in der Regel zwei Wochen — Sie müssen nichts installieren und nichts können.
-
-Alle Details: ${WEBSITE}
-
-Haetten Sie 30 Minuten für ein kostenloses Erstgespraech? Sie bekommen eine ehrliche Einschaetzung, was sich für Ihr Büro lohnt — auch wenn am Ende keine Zusammenarbeit daraus wird.
+Haben Sie diese Woche 30 Minuten für ein kostenloses Erstgespräch? Sie bekommen eine ehrliche Einschätzung, was sich für Ihr Büro lohnt — auch wenn daraus keine Zusammenarbeit wird.
 
 Freundliche Grüsse
 Tim Walter
+
 Walter Workflows — Automatisierung für Maklerbüros
-${WEBSITE}`;
+Schweiz & Deutschland · ${WEBSITE}`;
   return 'https://mail.google.com/mail/?view=cm&fs=1'
     +(l.email?'&to='+encodeURIComponent(l.email):'')
     +'&su='+encodeURIComponent(su)
