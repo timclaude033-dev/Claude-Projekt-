@@ -12,15 +12,15 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230C1626'/><path d='M18 24L34 78L50 42L66 78L82 24' fill='none' stroke='%235FA0DC' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 <style>
 /* ════════════════════════════════════════════════
-   WALTER WORKFLOWS · LeadRadar
-   Internes Tool — Maklersuche CH/DE via OpenStreetMap
+   WALTER WORKFLOWS · LeadRadar v2
+   Ländescan CH/DE · grünes Live-Radar · Canvas-Marker
 ════════════════════════════════════════════════ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --blue:#2F6DA8;--sky:#5FA0DC;--mid:#1F4A77;--navy:#142B47;
-  --bg:#0A1422;--panel:#0F1B2D;--panel2:#13233A;--line:#1E3450;--line2:#27415F;
+  --bg:#070F1A;--panel:#0C1828;--panel2:#112238;--line:#1B3050;--line2:#264260;
   --txt:#E6EEF7;--sub:#8DA2BC;--faint:#5F7590;
-  --green:#4CAF82;--amber:#D9A94C;--red:#D96A55;
+  --green:#3DDC97;--green-dim:#2AA873;--amber:#D9A94C;
   --grad:linear-gradient(120deg,#2F6DA8,#142B47);
   --gradup:linear-gradient(120deg,#5FA0DC,#2F6DA8);
   --head:"Manrope",sans-serif;--text:"Inter",sans-serif;
@@ -33,134 +33,162 @@ body{font-family:var(--text);background:var(--bg);color:var(--txt);font-size:14p
 button{font-family:inherit;cursor:pointer}
 a{color:inherit;text-decoration:none}
 
-/* ── Layout ── */
 .app{display:grid;grid-template-rows:64px 1fr;height:100vh}
-.main{display:grid;grid-template-columns:400px 1fr;min-height:0}
+.main{display:grid;grid-template-columns:420px 1fr;min-height:0}
 @media(max-width:900px){.main{grid-template-columns:1fr}.side{display:none}}
 
 /* ── Topbar ── */
-.top{display:flex;align-items:center;gap:18px;padding:0 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;gap:18px;padding:0 20px;background:var(--panel);border-bottom:1px solid var(--line);position:relative;z-index:10}
 .logo{display:flex;align-items:center;gap:12px}
 .logo svg{width:34px;height:34px}
 .logo .t{display:flex;flex-direction:column;line-height:1}
 .logo .t b{font-family:var(--head);font-weight:800;font-size:13.5px;letter-spacing:.1em;color:#fff}
 .logo .t small{font-size:8px;font-weight:600;letter-spacing:.28em;color:var(--faint);margin-top:4px;text-transform:uppercase}
 .top .divider{width:1px;height:28px;background:var(--line)}
-.toolname{font-family:var(--head);font-weight:800;font-size:16px;letter-spacing:-.01em;
-  background:var(--gradup);-webkit-background-clip:text;background-clip:text;color:transparent}
+.toolname{font-family:var(--head);font-weight:800;font-size:17px;letter-spacing:-.01em;
+  background:var(--gradup);-webkit-background-clip:text;background-clip:text;color:transparent;
+  display:flex;align-items:center;gap:9px}
+.toolname .rdot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 2s infinite}
+@keyframes blink{50%{opacity:.35}}
 .top-right{margin-left:auto;display:flex;align-items:center;gap:12px}
 .stat-pill{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--sub);
   background:var(--panel2);border:1px solid var(--line);padding:7px 14px;border-radius:999px}
-.stat-pill b{color:#fff;font-variant-numeric:tabular-nums}
-.stat-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
-@keyframes blink{50%{opacity:.3}}
+.stat-pill b{color:#fff;font-variant-numeric:tabular-nums;font-family:var(--head);font-size:14px}
+.stat-pill.green{color:#9FE8C9;border-color:rgba(61,220,151,.3);background:rgba(61,220,151,.06)}
+.stat-pill.green b{color:var(--green)}
 
 /* ── Sidebar ── */
 .side{display:flex;flex-direction:column;background:var(--panel);border-right:1px solid var(--line);min-height:0}
 .controls{padding:18px;border-bottom:1px solid var(--line);display:grid;gap:12px}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row{display:grid;grid-template-columns:1.4fr 1fr;gap:10px}
 .fld label{display:block;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
 select,input[type=text]{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;
-  color:var(--txt);font-family:var(--text);font-size:13.5px;padding:10px 12px;outline:0;transition:border-color .2s;appearance:auto}
-select:focus,input[type=text]:focus{border-color:var(--blue)}
-select option{background:var(--panel2)}
-.scanbtn{position:relative;width:100%;border:0;border-radius:12px;padding:14px;font-family:var(--head);
-  font-weight:800;font-size:15px;color:#fff;background:var(--grad);overflow:hidden;
+  color:var(--txt);font-family:var(--text);font-size:13.5px;padding:10px 12px;outline:0;transition:border-color .2s}
+select:focus,input[type=text]:focus{border-color:var(--sky)}
+select option,select optgroup{background:var(--panel2)}
+.scanbtn{position:relative;width:100%;border:0;border-radius:13px;padding:15px;font-family:var(--head);
+  font-weight:800;font-size:15px;color:#06231A;background:linear-gradient(120deg,#3DDC97,#1FA76F);overflow:hidden;
+  box-shadow:0 8px 26px rgba(61,220,151,.25);
   transition:transform .3s var(--ez),box-shadow .3s var(--ez)}
-.scanbtn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(47,109,168,.35)}
-.scanbtn:disabled{opacity:.55;cursor:wait;transform:none}
-.scanbtn .sweepline{position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%);
-  transform:translateX(-100%);animation:none}
-.scanbtn.scanning .sweepline{animation:sweep 1.4s linear infinite}
+.scanbtn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(61,220,151,.38)}
+.scanbtn:disabled{cursor:wait;transform:none;color:#0A2E22}
+.scanbtn .sweepline{position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);
+  transform:translateX(-100%)}
+.scanbtn.scanning .sweepline{animation:sweep 1.2s linear infinite}
 @keyframes sweep{to{transform:translateX(100%)}}
 .opt{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--sub);user-select:none;cursor:pointer}
-.opt input{width:15px;height:15px;accent-color:var(--blue)}
+.opt input{width:15px;height:15px;accent-color:var(--green)}
 
-/* Status */
-.status{padding:10px 18px;font-size:12px;color:var(--faint);border-bottom:1px solid var(--line);
-  display:flex;align-items:center;gap:9px;min-height:38px}
-.status .spin{width:12px;height:12px;border:2px solid var(--line2);border-top-color:var(--sky);border-radius:50%;
-  animation:rot 1s linear infinite;display:none}
+/* Status + Progress */
+.status{padding:11px 18px;font-size:12px;color:var(--sub);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;min-height:40px}
+.status .spin{width:13px;height:13px;border:2px solid var(--line2);border-top-color:var(--green);border-radius:50%;
+  animation:rot .8s linear infinite;display:none;flex:none}
 .status.busy .spin{display:block}
+.status.busy{color:#9FE8C9}
 @keyframes rot{to{transform:rotate(360deg)}}
+.progress{height:2px;background:var(--line);position:relative;overflow:hidden;display:none}
+.progress.on{display:block}
+.progress i{position:absolute;inset:0;width:40%;background:linear-gradient(90deg,transparent,var(--green),transparent);
+  animation:prog 1.3s linear infinite}
+@keyframes prog{from{transform:translateX(-100%)}to{transform:translateX(350%)}}
+
+/* Suche */
+.search{padding:12px 18px;border-bottom:1px solid var(--line)}
+.search input{background:var(--panel2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235F7590' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E") 12px center/15px no-repeat;padding-left:36px}
 
 /* Liste */
 .list{flex:1;overflow-y:auto;min-height:0;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
 .list::-webkit-scrollbar{width:8px}
 .list::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px}
 .empty{padding:44px 26px;text-align:center;color:var(--faint);font-size:13px;line-height:1.7}
-.empty svg{width:44px;height:44px;stroke:var(--line2);margin:0 auto 14px;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
-.lead{padding:15px 18px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .2s;position:relative;
-  animation:pop .5s var(--ez) both}
+.empty .pulse-ico{width:64px;height:64px;margin:0 auto 18px;position:relative}
+.empty .pulse-ico::before,.empty .pulse-ico::after{content:"";position:absolute;inset:0;border-radius:50%;
+  border:1.5px solid var(--green);opacity:0;animation:emptyPing 2.6s var(--ez) infinite}
+.empty .pulse-ico::after{animation-delay:1.3s}
+@keyframes emptyPing{from{transform:scale(.3);opacity:.8}to{transform:scale(1.15);opacity:0}}
+.empty .pulse-ico svg{position:absolute;inset:16px;stroke:var(--green);fill:none;stroke-width:1.6;stroke-linecap:round}
+.lead{padding:14px 18px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .2s;position:relative;
+  animation:pop .45s var(--ez) both}
 @keyframes pop{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
 .lead:hover{background:var(--panel2)}
-.lead.active{background:var(--panel2);box-shadow:inset 3px 0 0 var(--sky)}
-.lead .nm{font-family:var(--head);font-weight:700;font-size:14px;color:#fff;margin-bottom:3px;padding-right:64px}
-.lead .ad{font-size:12px;color:var(--sub);margin-bottom:8px;line-height:1.45}
-.lead .tags{display:flex;flex-wrap:wrap;gap:6px}
-.tg{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;
+.lead.active{background:var(--panel2);box-shadow:inset 3px 0 0 var(--green)}
+.lead .nm{font-family:var(--head);font-weight:700;font-size:13.5px;color:#fff;margin-bottom:3px;padding-right:70px}
+.lead .ad{font-size:11.5px;color:var(--sub);margin-bottom:7px;line-height:1.45}
+.lead .tags{display:flex;flex-wrap:wrap;gap:5px}
+.tg{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;padding:2.5px 8px;border-radius:999px;
   background:var(--panel2);border:1px solid var(--line2);color:var(--sub)}
-.tg.ok{color:#8FD6B4;border-color:rgba(76,175,130,.35);background:rgba(76,175,130,.08)}
-.tg.warn{color:#E5C588;border-color:rgba(217,169,76,.35);background:rgba(217,169,76,.08)}
-.lead .mark{position:absolute;top:13px;right:14px;font-size:10.5px;font-weight:700;letter-spacing:.06em;
+.tg.ok{color:#9FE8C9;border-color:rgba(61,220,151,.3);background:rgba(61,220,151,.07)}
+.tg.warn{color:#E5C588;border-color:rgba(217,169,76,.3);background:rgba(217,169,76,.07)}
+.lead .mark{position:absolute;top:12px;right:14px;font-size:10px;font-weight:700;letter-spacing:.05em;
   padding:3px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--faint);background:var(--panel2);transition:.2s}
-.lead .mark.done{color:#8FD6B4;border-color:rgba(76,175,130,.4);background:rgba(76,175,130,.1)}
+.lead .mark.done{color:#06231A;border-color:transparent;background:var(--green)}
+.more-hint{padding:14px 18px;text-align:center;font-size:12px;color:var(--faint)}
 
-/* Footer der Liste */
 .side-foot{padding:14px 18px;border-top:1px solid var(--line);display:flex;gap:10px}
 .ghostbtn{flex:1;background:var(--panel2);border:1px solid var(--line2);color:var(--sub);border-radius:10px;
   padding:10px;font-size:12.5px;font-weight:600;transition:.25s}
-.ghostbtn:hover{color:#fff;border-color:var(--blue)}
+.ghostbtn:hover{color:#fff;border-color:var(--sky)}
 
 /* ── Karte ── */
-.maparea{position:relative;min-height:0}
-#map{position:absolute;inset:0;background:#0A1422}
+.maparea{position:relative;min-height:0;overflow:hidden}
+#map{position:absolute;inset:0;background:#070F1A}
 .leaflet-container{font-family:var(--text)}
 .leaflet-popup-content-wrapper{background:var(--panel);color:var(--txt);border-radius:14px;border:1px solid var(--line2);
-  box-shadow:0 20px 50px rgba(0,0,0,.5)}
+  box-shadow:0 20px 50px rgba(0,0,0,.55)}
 .leaflet-popup-tip{background:var(--panel);border:1px solid var(--line2)}
 .leaflet-popup-content{margin:16px 18px;font-size:13px;line-height:1.6}
 .pop-nm{font-family:var(--head);font-weight:800;font-size:15px;color:#fff;margin-bottom:4px}
 .pop-ad{color:var(--sub);font-size:12px;margin-bottom:10px}
 .pop-row{display:flex;align-items:center;gap:8px;padding:5px 0;color:var(--txt);font-size:12.5px}
-.pop-row svg{width:14px;height:14px;flex:none;stroke:var(--sky);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pop-row svg{width:14px;height:14px;flex:none;stroke:var(--green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .pop-row a{color:var(--sky);text-decoration:underline;word-break:break-all}
 .leaflet-popup-close-button{color:var(--faint)!important}
 
-/* Radar-Overlay */
-.radar{position:absolute;pointer-events:none;z-index:600;border-radius:50%;
-  border:2px solid rgba(95,160,220,.35);
+/* ═══ GRÜNES RADAR ═══ */
+.radar-stage{position:absolute;inset:0;pointer-events:none;z-index:600;display:none}
+.radar-stage.on{display:block}
+.radar{position:absolute;border-radius:50%;
+  border:1.5px solid rgba(61,220,151,.4);
+  box-shadow:0 0 60px rgba(61,220,151,.15) inset,0 0 40px rgba(61,220,151,.1)}
+.radar::before{content:"";position:absolute;inset:0;border-radius:50%;
   background:
-    radial-gradient(circle,rgba(47,109,168,.06) 30%,rgba(47,109,168,.12) 70%,transparent 71%);
-  display:none}
-.radar.on{display:block}
+    radial-gradient(circle,transparent 0 24%,rgba(61,220,151,.25) 24.5% 25%,transparent 25.5% 49%,rgba(61,220,151,.25) 49.5% 50%,transparent 50.5% 74%,rgba(61,220,151,.25) 74.5% 75%,transparent 75.5%)}
+.radar::after{content:"";position:absolute;left:0;top:50%;width:100%;height:1px;background:rgba(61,220,151,.2)}
+.radar .cross{position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(61,220,151,.2)}
 .radar .beam{position:absolute;inset:0;border-radius:50%;
-  background:conic-gradient(from 0deg,rgba(95,160,220,.55) 0deg,rgba(95,160,220,.15) 40deg,transparent 70deg);
-  animation:spinbeam 2.4s linear infinite;
-  -webkit-mask:radial-gradient(circle,transparent 0%, #000 0%);
-}
+  background:conic-gradient(from 0deg,rgba(61,220,151,.65) 0deg,rgba(61,220,151,.28) 30deg,rgba(61,220,151,.08) 60deg,transparent 90deg);
+  animation:spinbeam 2s linear infinite;filter:drop-shadow(0 0 20px rgba(61,220,151,.35))}
 @keyframes spinbeam{to{transform:rotate(360deg)}}
-.radar .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(95,160,220,.5);
-  animation:ringpulse 2s var(--ez) infinite}
-@keyframes ringpulse{from{transform:scale(.2);opacity:.9}to{transform:scale(1);opacity:0}}
+.radar .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(61,220,151,.55);
+  animation:ringpulse 1.8s var(--ez) infinite}
+.radar .ring:nth-child(3){animation-delay:.9s}
+@keyframes ringpulse{from{transform:scale(.15);opacity:1}to{transform:scale(1);opacity:0}}
+.radar .core{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border-radius:50%;
+  background:var(--green);box-shadow:0 0 16px var(--green),0 0 40px rgba(61,220,151,.5);animation:blink 1.2s infinite}
+/* Scanline über die ganze Karte */
+.scanline{position:absolute;left:0;right:0;height:26%;top:-30%;
+  background:linear-gradient(180deg,transparent,rgba(61,220,151,.05) 60%,rgba(61,220,151,.14));
+  border-bottom:1.5px solid rgba(61,220,151,.4);
+  animation:scanmove 3.4s linear infinite}
+@keyframes scanmove{from{top:-30%}to{top:110%}}
 
-/* Map-Overlay-Infos */
+/* HUD */
 .map-hud{position:absolute;top:16px;right:16px;z-index:700;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
-.hud-chip{background:rgba(15,27,45,.92);backdrop-filter:blur(8px);border:1px solid var(--line2);border-radius:12px;
+.hud-chip{background:rgba(12,24,40,.92);backdrop-filter:blur(8px);border:1px solid var(--line2);border-radius:12px;
   padding:10px 16px;font-size:12px;color:var(--sub);display:flex;align-items:center;gap:10px}
-.hud-chip b{color:#fff;font-variant-numeric:tabular-nums;font-size:15px;font-family:var(--head)}
-
-/* Marker */
-.pin{background:none;border:none}
-.pin .pd{width:16px;height:16px;border-radius:50%;background:var(--gradup);border:2.5px solid #fff;
-  box-shadow:0 0 0 4px rgba(95,160,220,.25),0 4px 10px rgba(0,0,0,.5);transition:transform .2s}
-.pin.sel .pd{transform:scale(1.5);background:linear-gradient(120deg,#8FD6B4,#4CAF82)}
-.pin .pd.contacted{background:linear-gradient(120deg,#8FD6B4,#4CAF82)}
+.hud-chip b{color:#fff;font-variant-numeric:tabular-nums;font-size:16px;font-family:var(--head)}
+.hud-chip.green{border-color:rgba(61,220,151,.35)}
+.hud-chip.green b{color:var(--green)}
+.hud-scan{display:none;background:rgba(6,20,15,.92);border:1px solid rgba(61,220,151,.4);border-radius:12px;
+  padding:10px 16px;font-size:12px;color:#9FE8C9;align-items:center;gap:10px}
+.hud-scan.on{display:flex}
+.hud-scan .sp{width:11px;height:11px;border:2px solid rgba(61,220,151,.3);border-top-color:var(--green);border-radius:50%;animation:rot .7s linear infinite}
 
 /* Toast */
 .toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,120px);z-index:900;background:var(--panel);
   border:1px solid var(--line2);border-radius:12px;padding:13px 22px;font-size:13px;color:var(--txt);
-  box-shadow:0 20px 50px rgba(0,0,0,.5);transition:transform .5s var(--ez)}
+  box-shadow:0 20px 50px rgba(0,0,0,.55);transition:transform .5s var(--ez)}
 .toast.show{transform:translate(-50%,0)}
 
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
@@ -169,7 +197,6 @@ select option{background:var(--panel2)}
 <body>
 <div class="app">
 
-  <!-- ═══ TOPBAR ═══ -->
   <header class="top">
     <span class="logo">
       <svg viewBox="0 0 100 100"><defs><linearGradient id="lw" x1="0" y1="0" x2="1" y2="1">
@@ -178,23 +205,27 @@ select option{background:var(--panel2)}
       <span class="t"><b>WALTER WORKFLOWS</b><small>Internes Tool</small></span>
     </span>
     <span class="divider"></span>
-    <span class="toolname">LeadRadar</span>
+    <span class="toolname"><span class="rdot"></span>LeadRadar</span>
     <div class="top-right">
-      <span class="stat-pill"><span class="dot"></span>OpenStreetMap · kein API-Key</span>
-      <span class="stat-pill">Leads gesamt: <b id="totalCount">0</b></span>
+      <span class="stat-pill">OpenStreetMap · kein API-Key</span>
+      <span class="stat-pill green">Leads: <b id="totalCount">0</b></span>
+      <span class="stat-pill">Kontaktiert: <b id="doneCount">0</b></span>
     </div>
   </header>
 
   <div class="main">
-    <!-- ═══ SIDEBAR ═══ -->
     <aside class="side">
       <div class="controls">
         <div class="row">
           <div class="fld">
-            <label for="selRegion">Region</label>
+            <label for="selRegion">Scan-Gebiet</label>
             <select id="selRegion">
-              <optgroup label="Schweiz">
-                <option value="47.3769,8.5417,Zürich">Zürich</option>
+              <optgroup label="— Ländescan (dauert 1–3 Min.) —">
+                <option value="CC:CH:Schweiz">🇨🇭 Ganze Schweiz</option>
+                <option value="CC:DE:Deutschland">🇩🇪 Ganz Deutschland</option>
+              </optgroup>
+              <optgroup label="Schweiz — Städte">
+                <option value="47.3769,8.5417,Zürich" selected>Zürich</option>
                 <option value="47.5596,7.5886,Basel">Basel</option>
                 <option value="46.9480,7.4474,Bern">Bern</option>
                 <option value="46.2044,6.1432,Genf">Genf</option>
@@ -205,7 +236,7 @@ select option{background:var(--panel2)}
                 <option value="47.5056,8.7241,Winterthur">Winterthur</option>
                 <option value="46.8508,9.5320,Chur">Chur</option>
               </optgroup>
-              <optgroup label="Deutschland">
+              <optgroup label="Deutschland — Städte">
                 <option value="48.1351,11.5820,München">München</option>
                 <option value="48.7758,9.1829,Stuttgart">Stuttgart</option>
                 <option value="50.1109,8.6821,Frankfurt">Frankfurt</option>
@@ -222,7 +253,7 @@ select option{background:var(--panel2)}
             </select>
           </div>
           <div class="fld">
-            <label for="selRad">Radius</label>
+            <label for="selRad">Radius (Städte)</label>
             <select id="selRad">
               <option value="5000">5 km</option>
               <option value="10000" selected>10 km</option>
@@ -232,28 +263,28 @@ select option{background:var(--panel2)}
           </div>
         </div>
         <label class="opt"><input type="checkbox" id="chkSmall" checked>Grosse Ketten ausblenden (E&amp;V, RE/MAX, von Poll …)</label>
-        <label class="opt"><input type="checkbox" id="chkContact" >Nur Einträge mit Kontaktdaten (Tel/Mail/Web)</label>
-        <button class="scanbtn" id="btnScan"><span class="sweepline"></span><span id="btnTxt">◉ &nbsp;Region scannen</span></button>
+        <label class="opt"><input type="checkbox" id="chkContact">Nur Einträge mit Kontaktdaten (Tel/Mail/Web)</label>
+        <button class="scanbtn" id="btnScan"><span class="sweepline"></span><span id="btnTxt">◉ &nbsp;Scan starten</span></button>
       </div>
-      <div class="status" id="status"><span class="spin"></span><span id="statusTxt">Bereit. Region wählen und scannen.</span></div>
-      <div class="list" id="list">
-        <div class="empty" id="emptyState">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="1.5"/></svg>
-          Noch keine Leads.<br>Wähle links oben eine Region und starte den Scan — die Makler erscheinen hier und auf der Karte.
-        </div>
-      </div>
+      <div class="progress" id="prog"><i></i></div>
+      <div class="status" id="status"><span class="spin"></span><span id="statusTxt">Bereit. Gebiet wählen und Scan starten.</span></div>
+      <div class="search"><input type="text" id="q" placeholder="Leads durchsuchen (Name, Ort) …"></div>
+      <div class="list" id="list"></div>
       <div class="side-foot">
         <button class="ghostbtn" id="btnCsv">⬇ CSV exportieren</button>
         <button class="ghostbtn" id="btnClear">Liste leeren</button>
       </div>
     </aside>
 
-    <!-- ═══ KARTE ═══ -->
     <div class="maparea">
       <div id="map"></div>
-      <div class="radar" id="radar"><div class="beam"></div><div class="ring"></div></div>
+      <div class="radar-stage" id="radarStage">
+        <div class="scanline"></div>
+        <div class="radar" id="radar"><div class="cross"></div><div class="ring"></div><div class="ring"></div><div class="beam"></div><div class="core"></div></div>
+      </div>
       <div class="map-hud">
-        <div class="hud-chip">Im Scan gefunden: <b id="scanCount">0</b></div>
+        <div class="hud-scan" id="hudScan"><span class="sp"></span><span id="hudScanTxt">Scanne …</span></div>
+        <div class="hud-chip green">Im letzten Scan: <b id="scanCount">0</b></div>
         <div class="hud-chip" id="hudRegion">—</div>
       </div>
     </div>
@@ -264,52 +295,41 @@ select option{background:var(--panel2)}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* ════════════════════════════════════════════════
-   LeadRadar — Maklersuche über OpenStreetMap/Overpass
-   Kein API-Key, kein Backend. Daten © OpenStreetMap-Mitwirkende.
+   LeadRadar v2 — OSM/Overpass · Ländescan · Canvas
+   Daten © OpenStreetMap-Mitwirkende (ODbL)
 ════════════════════════════════════════════════ */
-
-/* ── Karte ── */
-const map=L.map('map',{zoomControl:true,attributionControl:true}).setView([47.8,8.8],7);
+const map=L.map('map',{preferCanvas:true,zoomControl:true}).setView([49.4,8.6],6);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
   attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © CARTO',
-  subdomains:'abcd',maxZoom:19
-}).addTo(map);
+  subdomains:'abcd',maxZoom:19}).addTo(map);
 
-/* ── State ── */
 let leads=JSON.parse(localStorage.getItem('wwLeads')||'[]');
-let markers={};
-let activeId=null;
-const CHAINS=/engel\s*&\s*v[öo]lkers|re\/?max|von\s*poll|mc\s*makler|homeday|dahler|sotheby|immoscout|planethome|falc\s*immobilien|city\s*immobilien\s*ag/i;
+let markers={};let activeId=null;let filterQ='';
+const LIST_CAP=500;
+const CHAINS=/engel\s*&\s*v[öo]lkers|re\/?max|von\s*poll|mc\s*makler|homeday|dahler|sotheby|immoscout|planethome|falc\s*immobilien|city\s*immobilien\s*ag|garant\s*immo|deutsche\s*bank\s*immobilien|sparkassen?-?immobilien|volksbank\s*immobilien|postfinance|ubs\b|raiffeisen/i;
 
 const $=id=>document.getElementById(id);
 const list=$('list'),status=$('status'),statusTxt=$('statusTxt');
 
-/* ── Radar-Overlay ── */
-function showRadar(latlng,radiusM){
-  const radar=$('radar');
+/* ── Radar ── */
+function radarAt(latlng,radiusM){
+  const stage=$('radarStage'),radar=$('radar');
   const update=()=>{
     const c=map.latLngToContainerPoint(latlng);
     const edge=map.latLngToContainerPoint(L.latLng(latlng.lat,latlng.lng+radiusM/(111320*Math.cos(latlng.lat*Math.PI/180))));
-    const r=Math.abs(edge.x-c.x);
+    const r=Math.max(Math.abs(edge.x-c.x),90);
     radar.style.width=radar.style.height=(r*2)+'px';
     radar.style.left=(c.x-r)+'px';radar.style.top=(c.y-r)+'px';
   };
-  update();
-  radar.classList.add('on');
+  update();stage.classList.add('on');
   map.on('move zoom',update);
-  radar._cleanup=()=>{map.off('move zoom',update);radar.classList.remove('on')};
+  stage._cleanup=()=>{map.off('move zoom',update);stage.classList.remove('on')};
 }
-function hideRadar(){const r=$('radar');if(r._cleanup)r._cleanup()}
+function radarOff(){const s=$('radarStage');if(s._cleanup)s._cleanup()}
 
-/* ── Overpass-Abfrage (mehrere Server als Fallback) ── */
+/* ── Overpass ── */
 const OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
-async function queryOverpass(lat,lon,radius){
-  const q=`[out:json][timeout:60];
-(
-  node["office"="estate_agent"](around:${radius},${lat},${lon});
-  way["office"="estate_agent"](around:${radius},${lat},${lon});
-);
-out center tags;`;
+async function overpass(q){
   let lastErr;
   for(const url of OVERPASS){
     try{
@@ -321,30 +341,38 @@ out center tags;`;
   }
   throw lastErr;
 }
+const qCity=(lat,lon,rad)=>`[out:json][timeout:90];
+(node["office"="estate_agent"](around:${rad},${lat},${lon});
+ way["office"="estate_agent"](around:${rad},${lat},${lon}););
+out center tags;`;
+const qCountry=cc=>`[out:json][timeout:600];
+area["ISO3166-1"="${cc}"][admin_level=2]->.c;
+(node["office"="estate_agent"](area.c);
+ way["office"="estate_agent"](area.c););
+out center tags;`;
 
-/* ── Datenaufbereitung ── */
+/* ── Lead-Aufbereitung ── */
 function toLead(el,regionName){
   const t=el.tags||{};
-  const lat=el.lat??el.center?.lat, lon=el.lon??el.center?.lon;
+  const lat=el.lat??el.center?.lat,lon=el.lon??el.center?.lon;
   if(!lat||!t.name)return null;
   const addr=[[t['addr:street'],t['addr:housenumber']].filter(Boolean).join(' '),
     [t['addr:postcode'],t['addr:city']].filter(Boolean).join(' ')].filter(Boolean).join(', ');
-  return{
-    id:el.type+'_'+el.id,
-    name:t.name,
-    addr:addr||regionName,
-    phone:t['contact:phone']||t.phone||'',
-    email:t['contact:email']||t.email||'',
-    web:t['contact:website']||t.website||'',
-    lat,lon,region:regionName,
-    contacted:false,ts:Date.now()
-  };
+  return{id:el.type+'_'+el.id,name:t.name,addr:addr||regionName,
+    phone:t['contact:phone']||t.phone||'',email:t['contact:email']||t.email||'',
+    web:t['contact:website']||t.website||'',lat,lon,region:regionName,contacted:false,ts:Date.now()};
 }
 
-/* ── Marker ── */
-function pinIcon(lead,sel){
-  return L.divIcon({className:'pin'+(sel?' sel':''),
-    html:`<div class="pd${lead.contacted?' contacted':''}"></div>`,iconSize:[16,16],iconAnchor:[8,8]});
+/* ── Marker (Canvas-CircleMarker → auch 10'000+ flüssig) ── */
+function mkStyle(l,sel){
+  return{radius:sel?9:5.5,weight:sel?2.5:1.5,color:'#fff',
+    fillColor:l.contacted?'#3DDC97':(sel?'#5FA0DC':'#2F6DA8'),fillOpacity:.95};
+}
+function addMarker(l){
+  if(markers[l.id])return;
+  const m=L.circleMarker([l.lat,l.lon],mkStyle(l,false)).addTo(map).bindPopup(()=>popupHtml(l));
+  m.on('click',()=>selectLead(l.id,false));
+  markers[l.id]=m;
 }
 function popupHtml(l){
   const esc=s=>String(s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
@@ -353,25 +381,24 @@ function popupHtml(l){
   if(l.email)h+=`<div class="pop-row"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></div>`;
   if(l.web){const u=l.web.startsWith('http')?l.web:'https://'+l.web;
     h+=`<div class="pop-row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg><a href="${esc(u)}" target="_blank" rel="noopener">${esc(l.web.replace(/^https?:\/\//,''))}</a></div>`;}
-  if(!l.phone&&!l.email&&!l.web)h+=`<div class="pop-row" style="color:var(--faint)">Keine Kontaktdaten hinterlegt — Name googeln lohnt sich.</div>`;
+  if(!l.phone&&!l.email&&!l.web)h+=`<div class="pop-row" style="color:var(--faint)">Keine Kontaktdaten hinterlegt — Name + Ort googeln.</div>`;
   return h;
-}
-function addMarker(l){
-  if(markers[l.id])return;
-  const m=L.marker([l.lat,l.lon],{icon:pinIcon(l,false)}).addTo(map).bindPopup(popupHtml(l));
-  m.on('click',()=>selectLead(l.id,false));
-  markers[l.id]=m;
 }
 
 /* ── Liste ── */
+function fLeads(){
+  if(!filterQ)return leads;
+  const q=filterQ.toLowerCase();
+  return leads.filter(l=>(l.name+' '+l.addr+' '+l.region).toLowerCase().includes(q));
+}
 function leadHtml(l,idx){
   const esc=s=>String(s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
   const tags=[];
-  if(l.phone)tags.push('<span class="tg ok">✆ Telefon</span>');
-  if(l.email)tags.push('<span class="tg ok">✉ E-Mail</span>');
+  if(l.phone)tags.push('<span class="tg ok">✆ Tel</span>');
+  if(l.email)tags.push('<span class="tg ok">✉ Mail</span>');
   if(l.web)tags.push('<span class="tg ok">⌂ Web</span>');
   if(!tags.length)tags.push('<span class="tg warn">keine Kontaktdaten</span>');
-  return `<div class="lead${l.id===activeId?' active':''}" data-id="${l.id}" style="animation-delay:${Math.min(idx*40,400)}ms">
+  return `<div class="lead${l.id===activeId?' active':''}" data-id="${l.id}" style="animation-delay:${Math.min(idx*30,360)}ms">
     <div class="nm">${esc(l.name)}</div>
     <div class="ad">${esc(l.addr)}${l.region?' · '+esc(l.region):''}</div>
     <div class="tags">${tags.join('')}</div>
@@ -379,18 +406,26 @@ function leadHtml(l,idx){
   </div>`;
 }
 function renderList(){
+  const fl=fLeads();
   $('totalCount').textContent=leads.length;
-  if(!leads.length){list.innerHTML='';list.appendChild($('emptyState')||buildEmpty());$('emptyState').style.display='block';return}
-  const e=$('emptyState');if(e)e.style.display='none';
-  list.innerHTML=leads.map((l,i)=>leadHtml(l,i)).join('');
+  $('doneCount').textContent=leads.filter(l=>l.contacted).length;
+  if(!fl.length){
+    list.innerHTML=`<div class="empty">
+      <div class="pulse-ico"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4"/><circle cx="16" cy="16" r="2" fill="currentColor"/></svg></div>
+      ${leads.length?'Kein Treffer für deine Suche.':'Noch keine Leads.<br>Wähle ein Gebiet und starte den Scan —<br>die Makler erscheinen hier und auf der Karte.'}</div>`;
+    return;
+  }
+  const shown=fl.slice(0,LIST_CAP);
+  list.innerHTML=shown.map((l,i)=>leadHtml(l,i)).join('')+
+    (fl.length>LIST_CAP?`<div class="more-hint">… und ${fl.length-LIST_CAP} weitere — Suche nutzen, um einzugrenzen.</div>`:'');
 }
-function buildEmpty(){const d=document.createElement('div');d.id='emptyState';d.className='empty';d.textContent='Noch keine Leads.';return d}
+$('q').addEventListener('input',e=>{filterQ=e.target.value.trim();renderList()});
 
 list.addEventListener('click',e=>{
   const mk=e.target.closest('[data-mark]');
   if(mk){const id=mk.dataset.mark;const l=leads.find(x=>x.id===id);
     if(l){l.contacted=!l.contacted;save();renderList();
-      if(markers[id])markers[id].setIcon(pinIcon(l,id===activeId));}
+      if(markers[id])markers[id].setStyle(mkStyle(l,id===activeId));}
     e.stopPropagation();return}
   const card=e.target.closest('.lead');
   if(card)selectLead(card.dataset.id,true);
@@ -398,51 +433,76 @@ list.addEventListener('click',e=>{
 function selectLead(id,fly){
   const prev=activeId;activeId=id;
   const l=leads.find(x=>x.id===id);if(!l)return;
-  if(prev&&markers[prev]){const pl=leads.find(x=>x.id===prev);if(pl)markers[prev].setIcon(pinIcon(pl,false))}
-  if(markers[id]){markers[id].setIcon(pinIcon(l,true));markers[id].openPopup()}
+  if(prev&&markers[prev]){const pl=leads.find(x=>x.id===prev);if(pl)markers[prev].setStyle(mkStyle(pl,false))}
+  if(markers[id]){markers[id].setStyle(mkStyle(l,true));markers[id].openPopup()}
   if(fly)map.flyTo([l.lat,l.lon],Math.max(map.getZoom(),14),{duration:.8});
   renderList();
   const el=list.querySelector(`[data-id="${id}"]`);if(el)el.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
 
 /* ── Scan ── */
+let elapsedTimer;
 $('btnScan').addEventListener('click',async()=>{
-  const [lat,lon,name]=$('selRegion').value.split(',');
-  const radius=+$('selRad').value;
+  const val=$('selRegion').value;
   const onlySmall=$('chkSmall').checked,onlyContact=$('chkContact').checked;
   const btn=$('btnScan');
-  btn.disabled=true;btn.classList.add('scanning');$('btnTxt').textContent='Scanne '+name+' …';
-  status.classList.add('busy');statusTxt.textContent='Frage OpenStreetMap ab — kann 10–30 Sekunden dauern …';
-  $('hudRegion').textContent=name+' · '+(radius/1000)+' km';
-  const center=L.latLng(+lat,+lon);
-  map.flyTo(center,radius>20000?10:11,{duration:1});
-  setTimeout(()=>showRadar(center,radius),1000);
+  const isCountry=val.startsWith('CC:');
+  let name,query,center,radius;
+  if(isCountry){
+    const cc=val.split(':')[1];name=val.split(':')[2];
+    query=qCountry(cc);
+    center=cc==='CH'?L.latLng(46.8,8.2):L.latLng(51.1,10.4);
+    radius=cc==='CH'?230000:440000;
+    map.flyTo(center,cc==='CH'?8:6,{duration:1.2});
+  }else{
+    const[lat,lon,n]=val.split(',');name=n;radius=+$('selRad').value;
+    query=qCity(lat,lon,radius);center=L.latLng(+lat,+lon);
+    map.flyTo(center,radius>20000?10:11,{duration:1});
+  }
+  btn.disabled=true;btn.classList.add('scanning');
+  $('btnTxt').textContent='Scanne '+name+' …';
+  status.classList.add('busy');$('prog').classList.add('on');
+  $('hudRegion').textContent=name;
+  $('hudScan').classList.add('on');
+  const t0=Date.now();
+  elapsedTimer=setInterval(()=>{
+    const s=Math.round((Date.now()-t0)/1000);
+    $('hudScanTxt').textContent='Scanne '+name+' … '+s+'s';
+    statusTxt.textContent=isCountry
+      ?'Ländescan läuft — bei ganz '+name+' dauert das 1–3 Minuten. Radar läuft … ('+s+'s)'
+      :'Frage OpenStreetMap ab … ('+s+'s)';
+  },500);
+  setTimeout(()=>radarAt(center,radius),1100);
   try{
-    const els=await queryOverpass(lat,lon,radius);
+    const els=await overpass(query);
     let neu=0,total=0;
     for(const el of els){
       const l=toLead(el,name);if(!l)continue;
       total++;
       if(onlySmall&&CHAINS.test(l.name))continue;
       if(onlyContact&&!l.phone&&!l.email&&!l.web)continue;
-      if(leads.some(x=>x.id===l.id))continue;
+      if(markers[l.id]||leads.some(x=>x.id===l.id))continue;
       leads.push(l);addMarker(l);neu++;
     }
     save();renderList();
     $('scanCount').textContent=neu;
     statusTxt.textContent=`${total} Büros gefunden · ${neu} neue Leads übernommen (${name}).`;
-    toast(neu?`✓ ${neu} neue Makler in ${name} gefunden`:`Keine neuen Treffer in ${name} — Radius vergrössern?`);
+    toast(neu?`✓ ${neu} neue Makler — ${name}`:`Keine neuen Treffer in ${name}.`);
   }catch(err){
-    statusTxt.textContent='Fehler bei der Abfrage — kurz warten und erneut versuchen (Server ausgelastet).';
+    statusTxt.textContent='Abfrage fehlgeschlagen — Server ausgelastet. 1 Minute warten, dann erneut. (Ländescans sind gross!)';
     toast('⚠ Abfrage fehlgeschlagen — gleich nochmal versuchen');
   }
-  hideRadar();
-  status.classList.remove('busy');
-  btn.disabled=false;btn.classList.remove('scanning');$('btnTxt').textContent='◉  Region scannen';
+  clearInterval(elapsedTimer);
+  radarOff();$('hudScan').classList.remove('on');
+  status.classList.remove('busy');$('prog').classList.remove('on');
+  btn.disabled=false;btn.classList.remove('scanning');$('btnTxt').textContent='◉  Scan starten';
 });
 
-/* ── CSV / Clear / Storage ── */
-function save(){localStorage.setItem('wwLeads',JSON.stringify(leads))}
+/* ── CSV / Clear / Save ── */
+function save(){
+  try{localStorage.setItem('wwLeads',JSON.stringify(leads))}
+  catch(e){toast('⚠ Speicher voll — exportiere als CSV und leere die Liste')}
+}
 $('btnCsv').addEventListener('click',()=>{
   if(!leads.length)return toast('Keine Leads zum Exportieren');
   const esc=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
@@ -461,16 +521,13 @@ $('btnClear').addEventListener('click',()=>{
   activeId=null;renderList();$('scanCount').textContent=0;
   toast('Liste geleert');
 });
-
 let toastTimer;
-function toast(msg){
-  const t=$('toast');t.textContent=msg;t.classList.add('show');
-  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
-}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),4000)}
 
-/* ── Gespeicherte Leads laden ── */
+/* ── Init ── */
 leads.forEach(addMarker);renderList();
-if(leads.length){statusTxt.textContent=leads.length+' gespeicherte Leads geladen.'}
+if(leads.length)statusTxt.textContent=leads.length+' gespeicherte Leads geladen.';
 </script>
 </body>
 </html>
