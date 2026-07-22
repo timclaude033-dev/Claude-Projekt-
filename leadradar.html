@@ -124,6 +124,8 @@ select option,select optgroup{background:var(--panel2)}
   background:var(--panel2);border:1px solid var(--line2);color:var(--sub)}
 .tg svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .tg.ok{color:#A9C8E8;border-color:rgba(95,160,220,.35);background:rgba(95,160,220,.08)}
+.mailquick{cursor:pointer;transition:.2s}
+.mailquick:hover{color:#fff;border-color:var(--sky);background:rgba(95,160,220,.2)}
 .lead .mark{position:absolute;top:13px;right:14px;font-size:10px;font-weight:700;
   padding:3.5px 9px;border-radius:7px;border:1px solid var(--line2);color:var(--faint);background:var(--panel2);transition:.2s}
 .lead .mark.done{color:#06231A;border-color:transparent;background:var(--gA)}
@@ -148,6 +150,14 @@ select option,select optgroup{background:var(--panel2)}
 .pop-row{display:flex;align-items:center;gap:8px;padding:5px 0;color:var(--txt);font-size:12.5px}
 .pop-row svg{width:14px;height:14px;flex:none;stroke:var(--sky);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .pop-row a{color:var(--sky);text-decoration:underline;word-break:break-all}
+.pop-pot{font-size:11.5px;color:var(--sub);background:var(--panel2);border:1px solid var(--line2);
+  border-radius:8px;padding:8px 11px;margin:8px 0 4px;line-height:1.5}
+.pop-pot b{color:#fff}
+.pop-mail{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;
+  background:var(--grad);color:#fff;border:0;border-radius:10px;padding:11px;
+  font-family:var(--head);font-weight:700;font-size:13px;transition:transform .25s var(--ez),box-shadow .25s}
+.pop-mail:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(47,109,168,.4)}
+.pop-mail svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .leaflet-popup-close-button{color:var(--faint)!important}
 
 /* ═══ BLAUES RADAR ═══ */
@@ -310,6 +320,54 @@ function score(l){
 }
 const tier=l=>{const s=score(l);return s>=70?'A':s>=25?'B':'C'};
 const TIER_COL={A:'#3DDC97',B:'#5FA0DC',C:'#8DA2BC'};
+const TIER_TXT={
+  A:'<b>Potenzial A — sofort ansprechbar.</b> E-Mail hinterlegt: kleines Büro, digital erreichbar, ideal für deine Automatisierungen. Direkt anschreiben.',
+  B:'<b>Potenzial B — gut erreichbar.</b> Telefon/Webseite vorhanden: E-Mail steht meist im Impressum der Webseite. Kurz nachschauen, dann anschreiben oder anrufen.',
+  C:'<b>Potenzial C — Recherche nötig.</b> Nur Name/Adresse hinterlegt. Name + Ort googeln, wenn die Region strategisch interessant ist.'
+};
+
+/* ── Gmail: vorgefertigte Akquise-Mail ── */
+const WEBSITE='https://timclaude033-dev.github.io/Claude-Projekt-/';
+function gmailUrl(l){
+  const city=(l.addr.split(',').pop()||l.region||'').trim().replace(/^\d{4,5}\s*/,'');
+  const su=`Kein Interessent geht mehr verloren — Automatisierung für ${l.name}`;
+  const body=
+`Guten Tag,
+
+ich bin auf ${l.name} gestossen und habe mir Ihren Auftritt kurz angesehen — Sie betreuen schöne Objekte${city?' in '+city:''}, und genau für Büros wie Ihres habe ich Walter Workflows aufgebaut.
+
+Was ich für Maklerbüros mache — kurz und ehrlich:
+
+1) LEAD-MASCHINE
+   Eigene Objektseite pro Immobilie mit intelligentem Anfrageformular.
+   Jede Anfrage wird automatisch einsortiert: kaufbereit oder unverbindlich.
+   Sie wissen sofort, wen Sie zuerst anrufen.
+
+2) FOLLOW-UP-AUTOMATIK
+   Jeder Interessent erhaelt automatisch das Exposé und danach
+   freundliches Nachfassen im richtigen Abstand — in Ihrem Ton.
+   Kein Interessent wird mehr vergessen. Bei Antwort stoppt alles von selbst.
+
+3) IHRE EIGENE AUTOMATISIERUNG
+   Sie nennen mir den Ablauf, der Sie jede Woche Zeit kostet
+   (Besichtigungstermine, Bewerberdossiers, Unterlagen) —
+   ich prüfe ehrlich, ob und wie er sich automatisieren laesst.
+
+Die Preise sind einmalig, ohne laufende Gebühren. Einrichtung dauert in der Regel zwei Wochen — Sie müssen nichts installieren und nichts können.
+
+Alle Details: ${WEBSITE}
+
+Haetten Sie 30 Minuten für ein kostenloses Erstgespraech? Sie bekommen eine ehrliche Einschaetzung, was sich für Ihr Büro lohnt — auch wenn am Ende keine Zusammenarbeit daraus wird.
+
+Freundliche Grüsse
+Tim Walter
+Walter Workflows — Automatisierung für Maklerbüros
+${WEBSITE}`;
+  return 'https://mail.google.com/mail/?view=cm&fs=1'
+    +(l.email?'&to='+encodeURIComponent(l.email):'')
+    +'&su='+encodeURIComponent(su)
+    +'&body='+encodeURIComponent(body);
+}
 
 /* ── Länder in Sektoren (Bounding-Boxen) ── */
 const SECTORS={
@@ -393,6 +451,10 @@ function popupHtml(l){
   if(l.web){const u=l.web.startsWith('http')?l.web:'https://'+l.web;
     h+=`<div class="pop-row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg><a href="${esc(u)}" target="_blank" rel="noopener">${esc(l.web.replace(/^https?:\/\//,''))}</a></div>`;}
   if(!l.phone&&!l.email&&!l.web)h+=`<div class="pop-row" style="color:#5F7590">Keine Kontaktdaten hinterlegt — Name + Ort googeln.</div>`;
+  h+=`<div class="pop-pot">${TIER_TXT[tier(l)]}</div>`;
+  h+=`<button class="pop-mail" onclick="window.open(gmailUrl(leads.find(x=>x.id==='${l.id}')),'_blank')">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+    Akquise-Mail in Gmail öffnen</button>`;
   return h;
 }
 
@@ -416,7 +478,9 @@ function leadHtml(l,idx){
   return `<div class="lead${l.id===activeId?' active':''}" data-id="${l.id}" style="animation-delay:${Math.min(idx*25,300)}ms">
     <div class="top-row"><span class="pot ${tier(l)}">${tier(l)}</span><span class="nm">${esc(l.name)}</span></div>
     <div class="ad">${esc(l.addr)}${l.region?' · '+esc(l.region):''}</div>
-    <div class="tags">${tags.join('')}</div>
+    <div class="tags">${tags.join('')}
+      <button class="tg ok mailquick" data-mailto="${l.id}" title="Akquise-Mail in Gmail öffnen">${SVG_MAIL}Mail verfassen</button>
+    </div>
     <button class="mark${l.contacted?' done':''}" data-mark="${l.id}">${l.contacted?'✓ erledigt':'offen'}</button>
   </div>`;
 }
@@ -438,6 +502,10 @@ function renderList(){
 $('q').addEventListener('input',e=>{filterQ=e.target.value.trim();renderList()});
 
 list.addEventListener('click',e=>{
+  const ml=e.target.closest('[data-mailto]');
+  if(ml){const l=leads.find(x=>x.id===ml.dataset.mailto);
+    if(l)window.open(gmailUrl(l),'_blank');
+    e.stopPropagation();return}
   const mk=e.target.closest('[data-mark]');
   if(mk){const id=mk.dataset.mark;const l=leads.find(x=>x.id===id);
     if(l){l.contacted=!l.contacted;save();renderList();
