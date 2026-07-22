@@ -329,6 +329,8 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
 
 let leads=JSON.parse(localStorage.getItem('wwLeads')||'[]');
 let markers={};let activeId=null;let filterQ='';
+/* Nur Leads aus Scans dieser Sitzung (oder angeklickte) erscheinen auf der Karte */
+const sessionIds=new Set();
 let scanning=false,stopFlag=false,aborter=null;
 const LIST_CAP=400;
 const CHAINS=/engel\s*&\s*v[öo]lkers|re\/?max|von\s*poll|mc\s*makler|homeday|dahler|sotheby|immoscout|planethome|falc\s*immobilien|garant\s*immo|deutsche\s*bank|sparkassen?-?immo|volksbank|raiffeisen|ubs\b|postfinance|z[üu]rcher\s*kantonalbank/i;
@@ -450,6 +452,7 @@ function toLead(el,regionName){
 }
 /* neu einfügen ODER bestehenden aktualisieren (Refresh) */
 function upsert(l){
+  sessionIds.add(l.id);
   const ex=leads.find(x=>x.id===l.id);
   if(ex){
     let changed=false;
@@ -457,7 +460,18 @@ function upsert(l){
     if(changed&&markers[ex.id]){markers[ex.id].setStyle(mkStyle(ex,ex.id===activeId))}
     return changed?'upd':'dup';
   }
-  leads.push(l);addMarker(l);return 'new';
+  leads.push(l);return 'new';
+}
+
+/* Marker mit Sitzungs- und Filterstand synchronisieren */
+function syncMarkers(){
+  const visible=new Set(fLeads().filter(l=>sessionIds.has(l.id)).map(l=>l.id));
+  for(const id in markers){
+    if(!visible.has(id)){map.removeLayer(markers[id]);delete markers[id]}
+  }
+  visible.forEach(id=>{
+    if(!markers[id]){const l=leads.find(x=>x.id===id);if(l)addMarker(l)}
+  });
 }
 
 /* ── Marker ── */
@@ -527,11 +541,13 @@ function renderList(){
     list.innerHTML=`<div class="empty">
       <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13"/><path d="M16 16l7-5M16 3v4M16 25v4M3 16h4M25 16h4"/></svg>
       ${leads.length?'Kein Treffer für deine Suche.':'Noch keine Leads.<br>Wähle „Ganze Schweiz" oder „Ganz Deutschland"<br>und starte den Scan.'}</div>`;
+    syncMarkers();
     return;
   }
   const shown=fl.slice(0,LIST_CAP);
   list.innerHTML=shown.map((l,i)=>leadHtml(l,i)).join('')+
     (fl.length>LIST_CAP?`<div class="more-hint">… und ${fl.length-LIST_CAP} weitere (nach Potenzial sortiert) — Suche nutzen.</div>`:'');
+  syncMarkers();
 }
 $('q').addEventListener('input',e=>{filterQ=e.target.value.trim();renderList()});
 $('selSvc').addEventListener('change',e=>{filterSvc=e.target.value;renderList()});
@@ -552,6 +568,7 @@ list.addEventListener('click',e=>{
 function selectLead(id,fly){
   const prev=activeId;activeId=id;
   const l=leads.find(x=>x.id===id);if(!l)return;
+  if(!sessionIds.has(id)){sessionIds.add(id);syncMarkers()}
   if(prev&&markers[prev]){const pl=leads.find(x=>x.id===prev);if(pl)markers[prev].setStyle(mkStyle(pl,false))}
   if(markers[id]){markers[id].setStyle(mkStyle(l,true));markers[id].openPopup()}
   if(fly)map.flyTo([l.lat,l.lon],Math.max(map.getZoom(),14),{duration:.8});
@@ -698,9 +715,9 @@ let toastTimer;
 function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),4000)}
 
-/* ── Init ── */
-leads.forEach(addMarker);renderList();
-if(leads.length)statusTxt.textContent=leads.length+' gespeicherte Leads geladen — sortiert nach Potenzial.';
+/* ── Init: Liste laden, Karte bleibt leer bis zum ersten Scan ── */
+renderList();
+if(leads.length)statusTxt.textContent=leads.length+' gespeicherte Leads in der Liste — die Karte füllt sich beim nächsten Scan (oder per Klick auf einen Lead).';
 </script>
 </body>
 </html>
