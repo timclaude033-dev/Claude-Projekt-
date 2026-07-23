@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AquaRadar — PROVITEC Lead-Scanner</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23071722'/><path d='M50 14C38 34 26 48 26 63a24 24 0 0 0 48 0C74 48 62 34 50 14z' fill='none' stroke='%2329C4E8' stroke-width='7' stroke-linejoin='round'/></svg>">
+<style>
+/* ════════════════════════════════════════════════
+   PROVITEC · AquaRadar
+   B2B-Lead-Scanner für Trinkwasser-Filtersysteme
+   Raum Wasserburg am Inn · OSM/Overpass · kein API-Key
+════════════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --aqua:#29C4E8;--aqua2:#0E9BC4;--deep:#0A5B7E;--navy:#083749;
+  --bg:#06131C;--panel:#0A1B27;--panel2:#0F2635;--line:#173648;--line2:#22506A;
+  --txt:#E4F2F8;--sub:#8FB0C0;--faint:#5B7A8C;
+  --gA:#3DDC97;--gB:#29C4E8;--gC:#8FB0C0;
+  --grad:linear-gradient(120deg,#29C4E8,#0A5B7E);
+  --gradup:linear-gradient(120deg,#5FD8F2,#0E9BC4);
+  --head:"Manrope",sans-serif;--text:"Inter",sans-serif;
+  --ez:cubic-bezier(.19,1,.22,1);
+}
+html,body{height:100%}
+body{font-family:var(--text);background:var(--bg);color:var(--txt);font-size:14px;overflow:hidden;
+  -webkit-font-smoothing:antialiased}
+::selection{background:var(--aqua2);color:#fff}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+.ic{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.app{display:grid;grid-template-rows:68px 1fr;height:100vh}
+.main{display:grid;grid-template-columns:340px 1fr 430px;min-height:0}
+@media(max-width:1200px){.main{grid-template-columns:310px 1fr 390px}}
+@media(max-width:980px){.main{grid-template-columns:1fr}.side{display:none}}
+
+/* ── Topbar ── */
+.top{display:flex;align-items:center;gap:18px;padding:0 20px;background:var(--panel);border-bottom:1px solid var(--line);position:relative;z-index:10}
+.logo{display:flex;align-items:center;gap:12px}
+.logo svg{width:34px;height:34px}
+.logo .t{display:flex;flex-direction:column;line-height:1}
+.logo .t b{font-family:var(--head);font-weight:800;font-size:14.5px;letter-spacing:.14em;color:#fff}
+.logo .t small{font-size:8px;font-weight:600;letter-spacing:.26em;color:var(--faint);margin-top:4px;text-transform:uppercase}
+.top .divider{width:1px;height:28px;background:var(--line)}
+.toolname{font-family:var(--head);font-weight:800;font-size:17px;
+  background:var(--gradup);-webkit-background-clip:text;background-clip:text;color:transparent}
+.top-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.stat-pill{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--sub);
+  background:var(--panel2);border:1px solid var(--line);padding:7px 14px;border-radius:999px}
+.stat-pill b{color:#fff;font-variant-numeric:tabular-nums;font-family:var(--head);font-size:14px}
+.stat-pill.hl b{color:var(--aqua)}
+
+/* ── Panels ── */
+.side{display:flex;flex-direction:column;background:var(--panel);border-right:1px solid var(--line);min-height:0}
+.side.right{border-right:0;border-left:1px solid var(--line)}
+.sect-h{display:flex;align-items:center;gap:10px;font-size:10.5px;font-weight:800;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--faint);padding:22px 24px 0}
+.sect-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.controls{padding:16px 24px 22px;border-bottom:1px solid var(--line);display:grid;gap:15px;overflow-y:auto;scrollbar-width:thin}
+.fld label{display:block;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+select,input[type=text]{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:12px;
+  color:var(--txt);font-family:var(--text);font-size:14px;padding:13px 15px;outline:0;transition:border-color .2s}
+select:focus,input[type=text]:focus{border-color:var(--aqua)}
+select option,select optgroup{background:var(--panel2)}
+.opts{display:grid;gap:10px;padding:2px 2px 0}
+.opt{display:flex;align-items:center;gap:11px;font-size:13px;color:var(--sub);user-select:none;cursor:pointer;line-height:1.4}
+.opt input{width:16px;height:16px;accent-color:var(--aqua);flex:none}
+.opt .cat-ic{width:26px;height:26px;border-radius:8px;background:var(--panel2);border:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;flex:none}
+.opt .cat-ic svg{width:14px;height:14px;stroke:var(--aqua);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.scanbtn{position:relative;width:100%;border:0;border-radius:14px;padding:17px;font-family:var(--head);
+  font-weight:800;font-size:15px;color:#04222E;background:var(--gradup);overflow:hidden;margin-top:2px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 8px 26px rgba(41,196,232,.28);
+  transition:transform .3s var(--ez),box-shadow .3s var(--ez),background .3s,color .3s}
+.scanbtn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(41,196,232,.4)}
+.scanbtn.stop{background:linear-gradient(120deg,#8A4634,#5E2E22);color:#fff}
+.scanbtn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.scanbtn .sweepline{position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.3) 50%,transparent 70%);transform:translateX(-100%)}
+.scanbtn.scanning .sweepline{animation:sweep 1.4s linear infinite}
+@keyframes sweep{to{transform:translateX(100%)}}
+
+.scanmeta{display:none;padding:0 24px 16px;border-bottom:1px solid var(--line)}
+.scanmeta.on{display:block}
+.sm-row{display:flex;justify-content:space-between;font-size:11.5px;color:var(--sub);margin-bottom:7px}
+.sm-row b{color:var(--aqua);font-variant-numeric:tabular-nums}
+.bar{height:5px;background:var(--panel2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--gradup);border-radius:99px;transition:width .5s var(--ez)}
+.status{padding:14px 24px;font-size:12.5px;color:var(--sub);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:10px;min-height:48px;line-height:1.5}
+.status .spin{width:13px;height:13px;border:2px solid var(--line2);border-top-color:var(--aqua);border-radius:50%;
+  animation:rot .8s linear infinite;display:none;flex:none}
+.status.busy .spin{display:block}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.legend-side{margin:18px 24px 22px;background:var(--panel2);border:1px solid var(--line);
+  border-radius:14px;padding:16px 18px;font-size:11.5px;color:var(--sub);display:grid;gap:8px}
+.legend-side b{color:#fff;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800}
+.lg-row{display:flex;align-items:center;gap:9px;line-height:1.4}
+.lg-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid #fff;flex:none}
+
+.search{padding:16px 24px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center}
+.list{flex:1;overflow-y:auto;min-height:0;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+.list::-webkit-scrollbar{width:8px}
+.list::-webkit-scrollbar-thumb{background:var(--line2);border-radius:8px}
+.empty{padding:48px 28px;text-align:center;color:var(--faint);font-size:13px;line-height:1.75}
+.empty svg{width:46px;height:46px;margin:0 auto 16px;stroke:var(--line2);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.lead{margin:12px 20px;padding:18px 20px;background:var(--panel2);border:1px solid var(--line);
+  border-radius:16px;cursor:pointer;position:relative;
+  transition:border-color .25s,transform .25s var(--ez),box-shadow .25s;animation:pop .4s var(--ez) both}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.lead:hover{border-color:var(--line2);transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.35)}
+.lead.active{border-color:var(--aqua);box-shadow:0 0 0 1px var(--aqua)}
+.lead .top-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;padding-right:78px}
+.lead .nm{font-family:var(--head);font-weight:700;font-size:14.5px;color:#fff;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pot{flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;
+  width:24px;height:24px;border-radius:8px;font-family:var(--head)}
+.pot.A{color:#04231A;background:var(--gA)}
+.pot.B{color:#04222E;background:var(--gB)}
+.pot.C{color:#0B1E28;background:var(--gC)}
+.lead .ad{font-size:12.5px;color:var(--sub);margin-bottom:9px;line-height:1.5;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.catline{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:500;margin-bottom:11px;color:var(--aqua)}
+.catline b{font-weight:700}
+.catline svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.big-flag{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:#F4D791;
+  background:rgba(217,169,76,.1);border:1px solid rgba(217,169,76,.35);padding:3px 9px;border-radius:7px}
+.lead .tags{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.tg{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:8px;
+  background:var(--panel);border:1px solid var(--line2);color:var(--sub)}
+.tg svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tg.ok{color:#9FDCEF;border-color:rgba(41,196,232,.35);background:rgba(41,196,232,.08)}
+.mailquick{cursor:pointer;transition:.2s;margin-left:auto}
+.mailquick:hover{color:#fff;border-color:var(--aqua);background:rgba(41,196,232,.25)}
+.lead .mark{position:absolute;top:16px;right:16px;font-size:10.5px;font-weight:700;
+  padding:5px 11px;border-radius:8px;border:1px solid var(--line2);color:var(--faint);background:var(--panel);transition:.2s}
+.lead .mark.done{color:#04231A;border-color:transparent;background:var(--gA)}
+.more-hint{padding:16px 24px 22px;text-align:center;font-size:12px;color:var(--faint)}
+.side-foot{padding:16px 24px;border-top:1px solid var(--line);display:flex;gap:12px}
+.ghostbtn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
+  background:var(--panel2);border:1px solid var(--line2);color:var(--sub);border-radius:10px;
+  padding:10px;font-size:12.5px;font-weight:600;transition:.25s}
+.ghostbtn:hover{color:#fff;border-color:var(--aqua)}
+
+/* ── Karte ── */
+.maparea{position:relative;min-height:0;overflow:hidden}
+#map{position:absolute;inset:0;background:#06131C}
+.leaflet-container{font-family:var(--text)}
+.leaflet-popup-content-wrapper{background:var(--panel);color:var(--txt);border-radius:14px;border:1px solid var(--line2);
+  box-shadow:0 20px 50px rgba(0,0,0,.55)}
+.leaflet-popup-tip{background:var(--panel);border:1px solid var(--line2)}
+.leaflet-popup-content{margin:16px 18px;font-size:13px;line-height:1.6}
+.pop-nm{font-family:var(--head);font-weight:800;font-size:15px;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.pop-ad{color:var(--sub);font-size:12px;margin-bottom:10px}
+.pop-row{display:flex;align-items:center;gap:8px;padding:5px 0;color:var(--txt);font-size:12.5px}
+.pop-row svg{width:14px;height:14px;flex:none;stroke:var(--aqua);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pop-row a{color:var(--aqua);text-decoration:underline;word-break:break-all}
+.pop-pot{font-size:11.5px;color:var(--sub);background:var(--panel2);border:1px solid var(--line2);
+  border-radius:8px;padding:8px 11px;margin:8px 0 4px;line-height:1.5}
+.pop-pot b{color:#fff}
+.pop-mail{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;
+  background:var(--gradup);color:#04222E;border:0;border-radius:10px;padding:11px;
+  font-family:var(--head);font-weight:800;font-size:13px;transition:transform .25s var(--ez),box-shadow .25s}
+.pop-mail:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(41,196,232,.4)}
+.pop-mail svg{width:15px;height:15px;stroke:#04222E;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.leaflet-popup-close-button{color:var(--faint)!important}
+
+/* Radar (aqua) */
+.radar-stage{position:absolute;inset:0;pointer-events:none;z-index:600;display:none}
+.radar-stage.on{display:block}
+.radar{position:absolute;border-radius:50%;
+  border:1.5px solid rgba(41,196,232,.4);box-shadow:0 0 70px rgba(41,196,232,.1) inset}
+.radar::before{content:"";position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle,transparent 0 32%,rgba(41,196,232,.22) 32.5% 33%,transparent 33.5% 65%,rgba(41,196,232,.22) 65.5% 66%,transparent 66.5%)}
+.radar .cross-h{position:absolute;left:0;top:50%;width:100%;height:1px;background:rgba(41,196,232,.16)}
+.radar .cross-v{position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(41,196,232,.16)}
+.radar .beam{position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg,rgba(41,196,232,.5) 0deg,rgba(41,196,232,.18) 35deg,transparent 75deg);
+  animation:spinbeam 2.6s linear infinite}
+@keyframes spinbeam{to{transform:rotate(360deg)}}
+.radar .ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(41,196,232,.45);
+  animation:ringpulse 2.4s var(--ez) infinite}
+@keyframes ringpulse{from{transform:scale(.2);opacity:.9}to{transform:scale(1);opacity:0}}
+.radar .core{position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;
+  background:var(--aqua);box-shadow:0 0 14px rgba(41,196,232,.85)}
+
+.map-hud{position:absolute;top:16px;right:16px;z-index:700;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+.hud-chip{background:rgba(10,27,39,.92);backdrop-filter:blur(8px);border:1px solid var(--line2);border-radius:12px;
+  padding:10px 16px;font-size:12px;color:var(--sub);display:flex;align-items:center;gap:10px}
+.hud-chip b{color:#fff;font-variant-numeric:tabular-nums;font-size:15px;font-family:var(--head)}
+.hud-scan{display:none;background:rgba(6,25,33,.94);border:1px solid rgba(41,196,232,.4);border-radius:12px;
+  padding:10px 16px;font-size:12px;color:#9FDCEF;align-items:center;gap:10px}
+.hud-scan.on{display:flex}
+.hud-scan .sp{width:11px;height:11px;border:2px solid rgba(41,196,232,.3);border-top-color:var(--aqua);border-radius:50%;animation:rot .7s linear infinite}
+
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,120px);z-index:900;background:var(--panel);
+  border:1px solid var(--line2);border-radius:12px;padding:13px 22px;font-size:13px;color:var(--txt);
+  box-shadow:0 20px 50px rgba(0,0,0,.55);transition:transform .5s var(--ez)}
+.toast.show{transform:translate(-50%,0)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <span class="logo">
+      <svg viewBox="0 0 100 100"><defs><linearGradient id="ld" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#5FD8F2"/><stop offset="1" stop-color="#0E9BC4"/></linearGradient></defs>
+        <path d="M50 12C38 33 25 48 25 63a25 25 0 0 0 50 0C75 48 62 33 50 12z" fill="none" stroke="url(#ld)" stroke-width="7" stroke-linejoin="round"/>
+        <path d="M38 63a12 12 0 0 0 12 12" fill="none" stroke="url(#ld)" stroke-width="5" stroke-linecap="round"/></svg>
+      <span class="t"><b>PROVITEC</b><small>Trinkwasser-Systeme</small></span>
+    </span>
+    <span class="divider"></span>
+    <span class="toolname">AquaRadar</span>
+    <div class="top-right">
+      <span class="stat-pill hl">Leads: <b id="totalCount">0</b></span>
+      <span class="stat-pill">Top-Potenzial: <b id="aCount">0</b></span>
+      <span class="stat-pill">Kontaktiert: <b id="doneCount">0</b></span>
+    </div>
+  </header>
+
+  <div class="main">
+    <!-- ═══ LINKS: SCAN ═══ -->
+    <aside class="side">
+      <div class="sect-h">Scan · Raum Wasserburg a. Inn</div>
+      <div class="controls">
+        <div class="fld">
+          <label for="selRad">Umkreis</label>
+          <select id="selRad">
+            <option value="25000">25 km um Wasserburg</option>
+            <option value="50000" selected>50 km um Wasserburg</option>
+            <option value="75000">75 km um Wasserburg</option>
+          </select>
+        </div>
+        <div class="fld"><label>Zielgruppen</label>
+          <div class="opts" id="catBox">
+            <label class="opt"><input type="checkbox" data-cat="KLINIK" checked><span class="cat-ic"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="15" rx="2"/><path d="M12 10v6M9 13h6M9 6V3h6v3"/></svg></span>Kliniken &amp; Pflegeheime</label>
+            <label class="opt"><input type="checkbox" data-cat="HOTEL" checked><span class="cat-ic"><svg viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13M9 21v-6h6v6"/></svg></span>Hotels &amp; Beherbergung</label>
+            <label class="opt"><input type="checkbox" data-cat="GASTRO" checked><span class="cat-ic"><svg viewBox="0 0 24 24"><path d="M5 3v8a2 2 0 0 0 2 2v8M9 3v8a2 2 0 0 1-2 2M15 3c-1.5 2-2 4-2 6 0 2 1 3 2 3v9"/></svg></span>Gastronomie &amp; Kantinen</label>
+            <label class="opt"><input type="checkbox" data-cat="INDUSTRIE" checked><span class="cat-ic"><svg viewBox="0 0 24 24"><path d="M3 21V10l6 4V10l6 4V4h6v17z"/></svg></span>Industrie &amp; Produktion</label>
+            <label class="opt"><input type="checkbox" data-cat="BILDUNG"><span class="cat-ic"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg></span>Schulen &amp; Kitas</label>
+            <label class="opt"><input type="checkbox" data-cat="FITNESS"><span class="cat-ic"><svg viewBox="0 0 24 24"><path d="M6 7v10M18 7v10M2 10v4M22 10v4M6 12h12"/></svg></span>Fitness &amp; Sport</label>
+            <label class="opt"><input type="checkbox" data-cat="BUERO"><span class="cat-ic"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h2M13 8h2M9 12h2M13 12h2M9 16h2M13 16h2"/></svg></span>Grosse Bürostandorte</label>
+          </div>
+        </div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" id="chkBig" checked>Nur grosse Objekte (Klinik, Industrie, Hotel oder 3+ Etagen)</label>
+          <label class="opt"><input type="checkbox" id="chkContact">Nur Leads mit Kontaktdaten übernehmen</label>
+        </div>
+        <button class="scanbtn" id="btnScan">
+          <span class="sweepline"></span>
+          <svg id="btnIco" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12L18 7"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+          <span id="btnTxt">Region scannen</span>
+        </button>
+      </div>
+      <div class="scanmeta" id="scanmeta">
+        <div class="sm-row"><span id="smLabel">—</span><b id="smPct">0%</b></div>
+        <div class="bar"><i id="smBar"></i></div>
+      </div>
+      <div class="status" id="status"><span class="spin"></span><span id="statusTxt">Bereit. Zielgruppen wählen und scannen.</span></div>
+      <div style="flex:1"></div>
+      <div class="legend-side">
+        <b>Potenzial</b>
+        <div class="lg-row"><span class="lg-dot" style="background:#3DDC97"></span>A — grosses Objekt + erreichbar</div>
+        <div class="lg-row"><span class="lg-dot" style="background:#29C4E8"></span>B — gut erreichbar</div>
+        <div class="lg-row"><span class="lg-dot" style="background:#8FB0C0"></span>C — Recherche nötig</div>
+      </div>
+    </aside>
+
+    <!-- ═══ MITTE: KARTE ═══ -->
+    <div class="maparea">
+      <div id="map"></div>
+      <div class="radar-stage" id="radarStage">
+        <div class="radar" id="radar"><div class="cross-h"></div><div class="cross-v"></div><div class="ring"></div><div class="beam"></div><div class="core"></div></div>
+      </div>
+      <div class="map-hud">
+        <div class="hud-scan" id="hudScan"><span class="sp"></span><span id="hudScanTxt">Scanne …</span></div>
+        <div class="hud-chip">Im letzten Scan: <b id="scanCount">0</b></div>
+        <div class="hud-chip" id="hudRegion">Wasserburg a. Inn</div>
+      </div>
+    </div>
+
+    <!-- ═══ RECHTS: ERGEBNISSE ═══ -->
+    <aside class="side right">
+      <div class="sect-h">Ergebnisse</div>
+      <div class="search">
+        <input type="text" id="q" placeholder="Suchen (Name, Ort) …" style="flex:1.2">
+        <select id="selCat" style="flex:1">
+          <option value="">Alle Zielgruppen</option>
+          <option value="KLINIK">Klinik/Pflege</option>
+          <option value="HOTEL">Hotel</option>
+          <option value="GASTRO">Gastro</option>
+          <option value="INDUSTRIE">Industrie</option>
+          <option value="BILDUNG">Bildung</option>
+          <option value="FITNESS">Fitness</option>
+          <option value="BUERO">Büro</option>
+        </select>
+      </div>
+      <div class="list" id="list"></div>
+      <div class="side-foot">
+        <button class="ghostbtn" id="btnCsv"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>CSV exportieren</button>
+        <button class="ghostbtn" id="btnClear"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14"/></svg>Liste leeren</button>
+      </div>
+    </aside>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* ════════════════════════════════════════════════
+   AquaRadar — B2B-Leads für PROVITEC PROaqua 4200
+   Fixgebiet: Wasserburg am Inn · OSM/Overpass
+════════════════════════════════════════════════ */
+const CENTER=L.latLng(48.0616,12.2201); // Wasserburg am Inn
+const map=L.map('map',{preferCanvas:true,zoomControl:true}).setView(CENTER,10);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · © CARTO',
+  subdomains:'abcd',maxZoom:19}).addTo(map);
+L.circle(CENTER,{radius:50000,color:'#29C4E8',weight:1,opacity:.35,fill:false,dashArray:'6 8'}).addTo(map);
+L.circleMarker(CENTER,{radius:6,color:'#fff',weight:2,fillColor:'#29C4E8',fillOpacity:1})
+  .addTo(map).bindTooltip('Wasserburg am Inn — Basis');
+
+let leads=JSON.parse(localStorage.getItem('pvLeads')||'[]');
+let markers={};let activeId=null;let filterQ='',filterCat='';
+const sessionIds=new Set();
+const LIST_CAP=400;
+const $=id=>document.getElementById(id);
+const list=$('list'),statusEl=$('status'),statusTxt=$('statusTxt');
+
+/* ── Zielgruppen: Overpass-Selektoren + Relevanz für Wasserfilter ── */
+const CATS={
+  KLINIK:{name:'Klinik/Pflege',rel:30,big:true,
+    sel:['amenity=hospital','amenity=clinic','amenity=nursing_home','social_facility=nursing_home','amenity=social_facility'],
+    why:'Hygiene ist hier Pflicht: Trinkwasserqualität betrifft Patienten und Bewohner direkt — höchster Bedarf an sicherer Filtration.'},
+  HOTEL:{name:'Hotel',rel:25,big:true,
+    sel:['tourism=hotel'],
+    why:'Gästeerlebnis und Geräteschutz: besseres Wasser für Küche, Bar und Zimmer — und weniger Kalk in Maschinen und Leitungen.'},
+  GASTRO:{name:'Gastronomie',rel:20,big:false,
+    sel:['amenity=restaurant','amenity=cafe'],
+    why:'Wasser ist Zutat Nr. 1 — Geschmack von Kaffee, Speisen und Getränken hängt direkt an der Wasserqualität. Plus Kalkschutz für Geräte.'},
+  INDUSTRIE:{name:'Industrie',rel:24,big:true,
+    sel:['man_made=works','building=industrial'],
+    why:'Viele Mitarbeitende, oft eigene Kantinen und Wasserspender — sauberes Trinkwasser als Gesundheitsbaustein und Betriebskostenthema.'},
+  BILDUNG:{name:'Bildung',rel:18,big:true,
+    sel:['amenity=school','amenity=kindergarten','amenity=college'],
+    why:'Kinder und Jugendliche trinken hier täglich Leitungswasser — Träger reagieren sensibel auf das Thema Wasserqualität.'},
+  FITNESS:{name:'Fitness',rel:15,big:false,
+    sel:['leisure=fitness_centre','leisure=sports_centre'],
+    why:'Mitglieder trinken viel — aufbereitetes Wasser ist ein sichtbares Qualitäts- und Mehrwertargument fürs Studio.'},
+  BUERO:{name:'Büro',rel:12,big:false,
+    sel:['office=company'],
+    why:'Wasserspender und Kaffeeküche laufen täglich — Mitarbeitergesundheit und Kalkschutz sind hier die Aufhänger.'}
+};
+
+/* ── Potenzial ── */
+function isBig(l){
+  if(CATS[l.cat]&&CATS[l.cat].big)return true;
+  return (parseInt(l.levels)||0)>=3;
+}
+function score(l){
+  let s=0;
+  if(l.email)s+=40;if(l.phone)s+=22;if(l.web)s+=15;
+  if(isBig(l))s+=20;
+  s+=(CATS[l.cat]?CATS[l.cat].rel:10)/3;
+  return s;
+}
+const tier=l=>{const s=score(l);return s>=75?'A':s>=35?'B':'C'};
+const TIER_COL={A:'#3DDC97',B:'#29C4E8',C:'#8FB0C0'};
+const TIER_TXT={
+  A:'<b>Potenzial A — Top-Ziel.</b> Grosses Objekt und direkt erreichbar: hoher Wasserverbrauch, Entscheider erreichbar. Sofort anschreiben.',
+  B:'<b>Potenzial B — gut erreichbar.</b> Kontaktweg vorhanden — E-Mail steht meist im Impressum der Webseite. Kurz prüfen, dann anschreiben oder anrufen.',
+  C:'<b>Potenzial C — Recherche nötig.</b> Wenig Daten hinterlegt. Lohnt sich, wenn Kategorie und Lage strategisch passen.'
+};
+
+/* ── Gmail: Akquise-Mail (PROaqua 4200) ── */
+const WEBSITE='https://provitec.de/';
+function gmailUrl(l){
+  const cat=CATS[l.cat]||{};
+  const city=(l.addr.split(',').pop()||'').trim().replace(/^\d{4,5}\s*/,'');
+  const hook={
+    KLINIK:'in einem Haus wie Ihrem trinken Patienten, Bewohner und Personal jeden Tag Leitungswasser — und verlassen sich darauf, dass es einwandfrei ist',
+    HOTEL:'Ihre Gäste beurteilen Ihr Haus auch über Dinge, die man nicht sieht — den Kaffee am Morgen, das Wasser im Glas, die Kalkränder im Bad',
+    GASTRO:'Wasser ist die Zutat Nummer eins in Ihrer Küche — im Kaffee, in der Suppe, im Glas auf dem Tisch',
+    INDUSTRIE:'Ihre Mitarbeitenden trinken täglich Leitungswasser am Standort — und Ihre Maschinen und Küchengeräte kämpfen still gegen Kalk',
+    BILDUNG:'bei Ihnen trinken jeden Tag Kinder und Jugendliche Leitungswasser — kaum ein Thema ist für Eltern und Träger sensibler',
+    FITNESS:'Ihre Mitglieder füllen ihre Flaschen bei Ihnen auf — Wasserqualität ist im Studio ein sichtbares Qualitätsmerkmal',
+    BUERO:'Wasserspender und Kaffeeküche laufen bei Ihnen den ganzen Tag — die Wasserqualität dahinter prüft selten jemand'
+  }[l.cat]||'Leitungswasser wird bei Ihnen täglich getrunken — die Qualität dahinter prüft selten jemand';
+  const su=`Trinkwasser bei ${l.name}: das übersehene Qualitätsthema`;
+  const body=
+`Guten Tag
+
+Ein Gedanke, der Sie zwei Minuten kostet: ${hook}.
+
+Leitungswasser ist in Deutschland gut kontrolliert — bis zum Hausanschluss. Was auf den letzten Metern passiert (alte Leitungen, Kalk, Keime, Rückstände von Medikamenten und Mikroplastik), ist Sache des Betreibers. Genau dort setzen wir an.
+
+PROVITEC entwickelt und baut in Deutschland das Trinkwasser-Filtersystem PROaqua 4200:
+
+• Patentiertes Multi-Barriere-Verfahren: entfernt Bakterien, Viren, Parasiten, Schwermetalle, Medikamentenrückstände und Mikroplastik — zuverlässig und messbar.
+• Die Mineralien bleiben im Wasser. Es wird nicht "totgefiltert", sondern bleibt echtes, gutes Trinkwasser.
+• Ohne Chemie, direkt an der Leitung — einmal installiert, läuft es im Hintergrund.
+• Nebeneffekt, der sich rechnet: weniger Kalk in Geräten und Leitungen, weniger Wartung, keine Flaschenlogistik.
+
+Für Häuser Ihrer Grösse machen wir zuerst eine kurze Bestandsaufnahme: Wo wird Wasser getrunken, welche Geräte hängen dran, was würde eine Umstellung konkret bringen. Das Gespräch ist kostenlos und unverbindlich — Sie bekommen eine ehrliche Einschätzung, auch wenn daraus kein Auftrag wird.
+
+Alle Details zum System: ${WEBSITE}
+
+Hätten Sie diese Woche 20 Minuten${city?' — gerne auch direkt bei Ihnen in '+city:''}?
+
+Freundliche Grüsse
+[Ihr Name]
+PROVITEC Trinkwasseraufbereitungstechnologie
+${WEBSITE}`;
+  return 'https://mail.google.com/mail/?view=cm&fs=1'
+    +(l.email?'&to='+encodeURIComponent(l.email):'')
+    +'&su='+encodeURIComponent(su)+'&body='+encodeURIComponent(body);
+}
+
+/* ── Overpass ── */
+const OVERPASS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+async function overpass(q,signal){
+  let lastErr;
+  for(const url of OVERPASS){
+    try{
+      const r=await fetch(url,{method:'POST',body:'data='+encodeURIComponent(q),signal,
+        headers:{'Content-Type':'application/x-www-form-urlencoded'}});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      return (await r.json()).elements||[];
+    }catch(e){if(e.name==='AbortError')throw e;lastErr=e}
+  }
+  throw lastErr;
+}
+function qCat(catKey,rad){
+  const parts=CATS[catKey].sel.map(s=>{
+    const[k,v]=s.split('=');
+    return `node["${k}"="${v}"](around:${rad},${CENTER.lat},${CENTER.lng});way["${k}"="${v}"](around:${rad},${CENTER.lat},${CENTER.lng});`;
+  }).join('');
+  return `[out:json][timeout:60];(${parts});out center tags;`;
+}
+
+/* ── Lead-Aufbereitung ── */
+function toLead(el,catKey){
+  const t=el.tags||{};
+  const lat=el.lat??el.center?.lat,lon=el.lon??el.center?.lon;
+  if(!lat||!t.name)return null;
+  const addr=[[t['addr:street'],t['addr:housenumber']].filter(Boolean).join(' '),
+    [t['addr:postcode'],t['addr:city']].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+  return{id:el.type+'_'+el.id,name:t.name,addr:addr||'Raum Wasserburg',
+    phone:t['contact:phone']||t.phone||'',email:t['contact:email']||t.email||'',
+    web:t['contact:website']||t.website||'',levels:t['building:levels']||'',
+    lat,lon,cat:catKey,contacted:false,ts:Date.now()};
+}
+function upsert(l){
+  sessionIds.add(l.id);
+  const ex=leads.find(x=>x.id===l.id);
+  if(ex){
+    let changed=false;
+    ['phone','email','web','addr','name','levels'].forEach(k=>{if(l[k]&&l[k]!==ex[k]){ex[k]=l[k];changed=true}});
+    if(changed&&markers[ex.id])markers[ex.id].setStyle(mkStyle(ex,ex.id===activeId));
+    return changed?'upd':'dup';
+  }
+  leads.push(l);return 'new';
+}
+function syncMarkers(){
+  const visible=new Set(fLeads().filter(l=>sessionIds.has(l.id)).map(l=>l.id));
+  for(const id in markers){if(!visible.has(id)){map.removeLayer(markers[id]);delete markers[id]}}
+  visible.forEach(id=>{if(!markers[id]){const l=leads.find(x=>x.id===id);if(l)addMarker(l)}});
+}
+
+/* ── Marker ── */
+function mkStyle(l,sel){
+  return{radius:sel?9:(tier(l)==='A'?7:5),weight:sel?2.5:1.3,color:'#fff',
+    fillColor:l.contacted?'#1FA76F':TIER_COL[tier(l)],fillOpacity:.95};
+}
+function addMarker(l){
+  if(markers[l.id])return;
+  const m=L.circleMarker([l.lat,l.lon],mkStyle(l,false)).addTo(map).bindPopup(()=>popupHtml(l));
+  m.on('click',()=>selectLead(l.id,false));
+  markers[l.id]=m;
+}
+function popupHtml(l){
+  const esc=s=>String(s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  const cat=CATS[l.cat]||{};
+  let h=`<div class="pop-nm">${esc(l.name)} <span class="pot ${tier(l)}">${tier(l)}</span></div>
+    <div class="pop-ad">${esc(l.addr)} · ${cat.name||''}${isBig(l)?' · grosses Objekt':''}</div>`;
+  if(l.phone)h+=`<div class="pop-row"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h2.3l1.4 4-2 1.3a12 12 0 0 0 5.3 5.3l1.3-2 4 1.4V19a2 2 0 0 1-2 2A16 16 0 0 1 4 5z"/></svg>${esc(l.phone)}</div>`;
+  if(l.email)h+=`<div class="pop-row"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></div>`;
+  if(l.web){const u=l.web.startsWith('http')?l.web:'https://'+l.web;
+    h+=`<div class="pop-row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg><a href="${esc(u)}" target="_blank" rel="noopener">${esc(l.web.replace(/^https?:\/\//,''))}</a></div>`;}
+  if(!l.phone&&!l.email&&!l.web)h+=`<div class="pop-row" style="color:#5B7A8C">Keine Kontaktdaten hinterlegt — Name + Ort googeln.</div>`;
+  h+=`<div class="pop-pot">${TIER_TXT[tier(l)]}</div>`;
+  if(cat.why)h+=`<div class="pop-pot" style="border-color:rgba(41,196,232,.4)"><b style="color:#29C4E8">Warum ${cat.name}?</b> ${cat.why}</div>`;
+  h+=`<button class="pop-mail" onclick="window.open(gmailUrl(leads.find(x=>x.id==='${l.id}')),'_blank')">
+    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+    Akquise-Mail in Gmail öffnen</button>`;
+  return h;
+}
+
+/* ── Liste ── */
+function fLeads(){
+  let fl=leads;
+  if(filterQ){const q=filterQ.toLowerCase();
+    fl=fl.filter(l=>(l.name+' '+l.addr).toLowerCase().includes(q))}
+  if(filterCat)fl=fl.filter(l=>l.cat===filterCat);
+  return [...fl].sort((a,b)=>score(b)-score(a)||a.name.localeCompare(b.name));
+}
+const SVG_TEL='<svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h2.3l1.4 4-2 1.3a12 12 0 0 0 5.3 5.3l1.3-2 4 1.4V19a2 2 0 0 1-2 2A16 16 0 0 1 4 5z"/></svg>';
+const SVG_MAIL='<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>';
+const SVG_WEB='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>';
+const SVG_DROP='<svg viewBox="0 0 24 24"><path d="M12 3C9 8 6 11.5 6 15a6 6 0 0 0 12 0c0-3.5-3-7-6-12z"/></svg>';
+function leadHtml(l,idx){
+  const esc=s=>String(s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  const cat=CATS[l.cat]||{};
+  const tags=[];
+  if(l.phone)tags.push('<span class="tg ok">'+SVG_TEL+'Tel</span>');
+  if(l.email)tags.push('<span class="tg ok">'+SVG_MAIL+'Mail</span>');
+  if(l.web)tags.push('<span class="tg ok">'+SVG_WEB+'Web</span>');
+  if(!tags.length)tags.push('<span class="tg">nur Name/Adresse</span>');
+  return `<div class="lead${l.id===activeId?' active':''}" data-id="${l.id}" style="animation-delay:${Math.min(idx*25,300)}ms">
+    <div class="top-row"><span class="pot ${tier(l)}">${tier(l)}</span><span class="nm">${esc(l.name)}</span></div>
+    <div class="ad">${esc(l.addr)}</div>
+    <div class="catline">${SVG_DROP}<b>${cat.name||'—'}</b>${isBig(l)?'&nbsp;<span class="big-flag">▲ grosses Objekt</span>':''}</div>
+    <div class="tags">${tags.join('')}
+      <button class="tg ok mailquick" data-mailto="${l.id}" title="Akquise-Mail in Gmail öffnen">${SVG_MAIL}Mail verfassen</button>
+    </div>
+    <button class="mark${l.contacted?' done':''}" data-mark="${l.id}">${l.contacted?'✓ erledigt':'offen'}</button>
+  </div>`;
+}
+function renderList(){
+  const fl=fLeads();
+  $('totalCount').textContent=leads.length;
+  $('doneCount').textContent=leads.filter(l=>l.contacted).length;
+  $('aCount').textContent=leads.filter(l=>tier(l)==='A').length;
+  if(!fl.length){
+    list.innerHTML=`<div class="empty">
+      <svg viewBox="0 0 32 32"><path d="M16 4c-4 6-8 10.5-8 15a8 8 0 0 0 16 0c0-4.5-4-9-8-15z"/></svg>
+      ${leads.length?'Kein Treffer für deine Auswahl.':'Noch keine Leads.<br>Zielgruppen wählen und den Raum<br>Wasserburg scannen.'}</div>`;
+    syncMarkers();return;
+  }
+  const shown=fl.slice(0,LIST_CAP);
+  list.innerHTML=shown.map((l,i)=>leadHtml(l,i)).join('')+
+    (fl.length>LIST_CAP?`<div class="more-hint">… und ${fl.length-LIST_CAP} weitere (nach Potenzial sortiert).</div>`:'');
+  syncMarkers();
+}
+$('q').addEventListener('input',e=>{filterQ=e.target.value.trim();renderList()});
+$('selCat').addEventListener('change',e=>{filterCat=e.target.value;renderList()});
+
+list.addEventListener('click',e=>{
+  const ml=e.target.closest('[data-mailto]');
+  if(ml){const l=leads.find(x=>x.id===ml.dataset.mailto);
+    if(l)window.open(gmailUrl(l),'_blank');e.stopPropagation();return}
+  const mk=e.target.closest('[data-mark]');
+  if(mk){const id=mk.dataset.mark;const l=leads.find(x=>x.id===id);
+    if(l){l.contacted=!l.contacted;save();renderList();
+      if(markers[id])markers[id].setStyle(mkStyle(l,id===activeId));}
+    e.stopPropagation();return}
+  const card=e.target.closest('.lead');
+  if(card)selectLead(card.dataset.id,true);
+});
+function selectLead(id,fly){
+  const prev=activeId;activeId=id;
+  const l=leads.find(x=>x.id===id);if(!l)return;
+  if(!sessionIds.has(id)){sessionIds.add(id);syncMarkers()}
+  if(prev&&markers[prev]){const pl=leads.find(x=>x.id===prev);if(pl)markers[prev].setStyle(mkStyle(pl,false))}
+  if(markers[id]){markers[id].setStyle(mkStyle(l,true));markers[id].openPopup()}
+  if(fly)map.flyTo([l.lat,l.lon],Math.max(map.getZoom(),14),{duration:.8});
+  renderList();
+  const el=list.querySelector(`[data-id="${id}"]`);if(el)el.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+
+/* ── Radar ── */
+function radarAt(latlng,radiusM){
+  const stage=$('radarStage'),radar=$('radar');
+  const update=()=>{
+    const c=map.latLngToContainerPoint(latlng);
+    const edge=map.latLngToContainerPoint(L.latLng(latlng.lat,latlng.lng+radiusM/(111320*Math.cos(latlng.lat*Math.PI/180))));
+    const r=Math.max(Math.abs(edge.x-c.x),110);
+    radar.style.width=radar.style.height=(r*2)+'px';
+    radar.style.left=(c.x-r)+'px';radar.style.top=(c.y-r)+'px';
+  };
+  update();stage.classList.add('on');
+  map.on('move zoom',update);
+  stage._cleanup=()=>{map.off('move zoom',update);stage.classList.remove('on')};
+}
+function radarOff(){const s=$('radarStage');if(s._cleanup)s._cleanup()}
+
+/* ── Scan ── */
+let scanning=false,stopFlag=false,aborter=null;
+function setScanUI(on){
+  scanning=on;
+  const btn=$('btnScan');
+  btn.classList.toggle('stop',on);btn.classList.toggle('scanning',on);
+  $('btnTxt').textContent=on?'Scan stoppen':'Region scannen';
+  $('btnIco').innerHTML=on?'<rect x="7" y="7" width="10" height="10" rx="2" fill="currentColor" stroke="none"/>'
+    :'<circle cx="12" cy="12" r="9"/><path d="M12 12L18 7"/><circle cx="12" cy="12" r="1" fill="currentColor"/>';
+  statusEl.classList.toggle('busy',on);
+  $('scanmeta').classList.toggle('on',on);
+  $('hudScan').classList.toggle('on',on);
+  if(!on)radarOff();
+}
+$('btnScan').addEventListener('click',()=>{
+  if(scanning){stopFlag=true;if(aborter)aborter.abort();statusTxt.textContent='Scan wird gestoppt …';return}
+  startScan();
+});
+async function startScan(){
+  const rad=+$('selRad').value;
+  const onlyBig=$('chkBig').checked,onlyContact=$('chkContact').checked;
+  const cats=[...document.querySelectorAll('#catBox input:checked')].map(c=>c.dataset.cat);
+  if(!cats.length){toast('Mindestens eine Zielgruppe wählen');return}
+  stopFlag=false;
+  let neu=0,upd=0,total=0;
+  setScanUI(true);
+  const t0=Date.now();
+  const tick=setInterval(()=>{
+    $('hudScanTxt').textContent='Scanne … '+Math.round((Date.now()-t0)/1000)+'s';
+  },500);
+  map.flyTo(CENTER,rad>50000?9:10,{duration:1});
+  setTimeout(()=>radarAt(CENTER,rad),1000);
+  $('hudRegion').textContent='Wasserburg · '+(rad/1000)+' km';
+  try{
+    for(let i=0;i<cats.length;i++){
+      if(stopFlag)break;
+      const ck=cats[i];
+      $('smLabel').textContent=CATS[ck].name+' ('+(i+1)+'/'+cats.length+')';
+      $('smPct').textContent=Math.round(i/cats.length*100)+'%';
+      $('smBar').style.width=(i/cats.length*100)+'%';
+      statusTxt.textContent='Scanne '+CATS[ck].name+' … '+neu+' Leads bisher';
+      aborter=new AbortController();
+      try{
+        const els=await overpass(qCat(ck,rad),aborter.signal);
+        for(const el of els){
+          const l=toLead(el,ck);if(!l)continue;
+          total++;
+          if(onlyBig&&!isBig(l))continue;
+          if(onlyContact&&!l.phone&&!l.email&&!l.web)continue;
+          const r=upsert(l);
+          if(r==='new')neu++;else if(r==='upd')upd++;
+        }
+        save();renderList();$('scanCount').textContent=neu;
+      }catch(e){
+        if(e.name==='AbortError')break;
+        statusTxt.textContent=CATS[ck].name+' übersprungen (Server ausgelastet) — weiter …';
+        await new Promise(r=>setTimeout(r,1500));
+      }
+    }
+    $('smPct').textContent='100%';$('smBar').style.width='100%';
+    const secs=Math.round((Date.now()-t0)/1000);
+    statusTxt.textContent=stopFlag
+      ?`Scan gestoppt nach ${secs}s — ${neu} neue Leads, nach Potenzial sortiert.`
+      :`Scan abgeschlossen (${secs}s): ${total} Objekte geprüft · ${neu} neu · ${upd} aktualisiert.`;
+    toast(stopFlag?`■ Gestoppt — ${neu} neue Leads`:`✓ ${neu} neue Leads im Raum Wasserburg`);
+  }catch(err){
+    statusTxt.textContent='Abfrage fehlgeschlagen — kurz warten und erneut starten.';
+    toast('⚠ Abfrage fehlgeschlagen — gleich nochmal versuchen');
+  }
+  clearInterval(tick);
+  setScanUI(false);
+}
+
+/* ── CSV / Clear / Save ── */
+function save(){
+  try{localStorage.setItem('pvLeads',JSON.stringify(leads))}
+  catch(e){toast('⚠ Speicher voll — als CSV exportieren und Liste leeren')}
+}
+$('btnCsv').addEventListener('click',()=>{
+  if(!leads.length)return toast('Keine Leads zum Exportieren');
+  const esc=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const rows=[['Potenzial','Zielgruppe','GrossesObjekt','Name','Adresse','Telefon','E-Mail','Webseite','Kontaktiert'].join(';')]
+    .concat(fLeads().map(l=>[tier(l),(CATS[l.cat]||{}).name,isBig(l)?'ja':'nein',l.name,l.addr,l.phone,l.email,l.web,l.contacted?'ja':'nein'].map(esc).join(';')));
+  const blob=new Blob(["﻿"+rows.join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='provitec-leads-wasserburg.csv';a.click();
+  toast('✓ CSV heruntergeladen (nach Potenzial sortiert)');
+});
+$('btnClear').addEventListener('click',()=>{
+  if(!leads.length)return;
+  if(!confirm('Wirklich alle '+leads.length+' Leads löschen?'))return;
+  leads=[];save();
+  Object.values(markers).forEach(m=>map.removeLayer(m));markers={};
+  activeId=null;renderList();$('scanCount').textContent=0;
+  toast('Liste geleert');
+});
+let toastTimer;
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),4000)}
+
+/* ── Init: Liste laden, Karte leer bis zum Scan ── */
+renderList();
+if(leads.length)statusTxt.textContent=leads.length+' gespeicherte Leads in der Liste — Karte füllt sich beim nächsten Scan.';
+</script>
+</body>
+</html>
