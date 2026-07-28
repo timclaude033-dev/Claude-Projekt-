@@ -846,20 +846,35 @@ input,select,textarea{font-family:var(--text);color:var(--txt)}
 .side{display:flex;flex-direction:column;background:var(--panel);border-right:1px solid var(--line);min-height:0}
 .side.right{border-right:0;border-left:1px solid var(--line)}
 .sect-h{display:flex;align-items:center;gap:10px;font-size:10.5px;font-weight:800;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--faint);padding:20px 22px 0}
+  text-transform:uppercase;color:var(--faint);padding:16px 22px 0}
 .sect-h::after{content:"";flex:1;height:1px;background:var(--line)}
-.controls{padding:14px 22px 20px;border-bottom:1px solid var(--line);display:grid;gap:13px;overflow-y:auto;scrollbar-width:thin}
+.controls{padding:12px 22px 16px;border-bottom:1px solid var(--line);display:grid;gap:11px;overflow-y:auto;scrollbar-width:thin}
 /* Nur die unmittelbare Feldbeschriftung — nicht die Auswahlkästchen darin,
    die sonst ihre Flex-Ausrichtung verlieren und den Text überlappen. */
 .fld>label{display:block;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:7px}
 select,input[type=text],input[type=date],input[type=number],textarea{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:11px;
-  font-size:13.5px;padding:11px 13px;outline:0;transition:border-color .2s}
+  font-size:13.5px;padding:10px 12px;outline:0;transition:border-color .2s}
 select:focus,input:focus,textarea:focus{border-color:var(--aqua)}
 select option,select optgroup{background:var(--panel2);color:var(--txt)}
 .opts{display:grid;gap:9px}
+/* Zielgruppen als kompakte Chips — 13 Gruppen passen so sauber ins Panel */
+.catgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.catchip{display:flex;align-items:center;gap:7px;font-size:11.5px;line-height:1.2;
+  padding:8px 9px;border-radius:9px;border:1px solid var(--line2);background:var(--panel2);
+  color:var(--sub);cursor:pointer;user-select:none;transition:border-color .2s,background .2s,color .2s}
+.catchip:hover{border-color:var(--aqua)}
+.catchip input{position:absolute;opacity:0;width:0;height:0}
+.catchip .cb{width:14px;height:14px;border-radius:4px;border:1.5px solid var(--line2);flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;transition:.2s}
+.catchip.on{background:rgba(41,196,232,.12);border-color:var(--aqua);color:var(--txt);font-weight:600}
+.catchip.on .cb{background:var(--aqua);border-color:var(--aqua);color:#04222E}
+.catbtns{display:flex;gap:8px;margin-top:8px}
+.catbtns button{flex:1;background:var(--panel2);border:1px solid var(--line2);color:var(--sub);
+  border-radius:9px;padding:7px;font-size:11.5px;font-weight:600;transition:.2s}
+.catbtns button:hover{color:var(--txt);border-color:var(--aqua)}
 .opt{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--sub);user-select:none;cursor:pointer;line-height:1.35}
 .opt input{width:15px;height:15px;accent-color:var(--aqua);flex:none}
-.scanbtn{position:relative;width:100%;border:0;border-radius:13px;padding:15px;font-family:var(--head);
+.scanbtn{position:relative;width:100%;border:0;border-radius:13px;padding:13px;font-family:var(--head);
   font-weight:800;font-size:14.5px;color:#04222E;background:var(--gradup);overflow:hidden;
   display:flex;align-items:center;justify-content:center;gap:9px;
   box-shadow:0 8px 24px rgba(41,196,232,.26);transition:transform .3s var(--ez),box-shadow .3s}
@@ -880,13 +895,13 @@ select option,select optgroup{background:var(--panel2);color:var(--txt)}
   background:linear-gradient(90deg,transparent,rgba(41,196,232,.55),transparent);
   width:45%;animation:indet 1.4s ease-in-out infinite}
 @keyframes indet{0%{transform:translateX(-110%)}100%{transform:translateX(240%)}}
-.status{padding:12px 22px;font-size:12px;color:var(--sub);border-bottom:1px solid var(--line);
+.status{padding:10px 22px;font-size:11.5px;color:var(--sub);border-bottom:1px solid var(--line);
   display:flex;align-items:center;gap:10px;min-height:44px;line-height:1.5}
 .status .spin{width:12px;height:12px;border:2px solid var(--line2);border-top-color:var(--aqua);border-radius:50%;
   animation:rot .8s linear infinite;display:none;flex:none}
 .status.busy .spin{display:block}
 @keyframes rot{to{transform:rotate(360deg)}}
-.legend-side{margin:16px 22px 20px;background:var(--panel2);border:1px solid var(--line);
+.legend-side{margin:12px 22px 16px;background:var(--panel2);border:1px solid var(--line);
   border-radius:13px;padding:14px 16px;font-size:11px;color:var(--sub);display:grid;gap:7px}
 .legend-side b{font-size:10px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--txt)}
 .lg-row{display:flex;align-items:center;gap:8px;line-height:1.35}
@@ -1226,24 +1241,28 @@ button:active{transform:scale(.97)}
     <div class="controls">
       <div class="fld"><label for="selRad">Umkreis</label>
         <select id="selRad"><option value="25000">25 km</option><option value="50000" selected>50 km</option><option value="75000">75 km</option></select></div>
-      <div class="fld"><label>Zielgruppen</label>
-        <div class="opts" id="catBox">
-          <label class="opt"><input type="checkbox" data-cat="KLINIK" checked>Kliniken &amp; Pflege</label>
-          <label class="opt"><input type="checkbox" data-cat="PRAXIS" checked>Arzt- &amp; Zahnarztpraxen</label>
-          <label class="opt"><input type="checkbox" data-cat="HOTEL" checked>Hotels &amp; Beherbergung</label>
-          <label class="opt"><input type="checkbox" data-cat="GASTRO" checked>Gastronomie &amp; Cafés</label>
-          <label class="opt"><input type="checkbox" data-cat="LEBENSMITTEL" checked>Bäckerei, Brauerei &amp; Lebensmittel</label>
-          <label class="opt"><input type="checkbox" data-cat="INDUSTRIE" checked>Industrie &amp; Produktion</label>
-          <label class="opt"><input type="checkbox" data-cat="BUERO" checked>Büros, Kanzleien &amp; Agenturen</label>
-          <label class="opt"><input type="checkbox" data-cat="WELLNESS">Fitness, Bäder &amp; Wellness</label>
-          <label class="opt"><input type="checkbox" data-cat="BILDUNG">Schulen, Kitas &amp; Hochschulen</label>
-          <label class="opt"><input type="checkbox" data-cat="OEFFENTLICH">Behörden &amp; öffentliche Häuser</label>
-          <label class="opt"><input type="checkbox" data-cat="AUTO">Kfz-Betriebe &amp; Waschanlagen</label>
-          <div style="display:flex;gap:8px;margin-top:4px">
-            <button type="button" id="catAll" class="ghostbtn" style="padding:7px;font-size:11.5px">Alle</button>
-            <button type="button" id="catNone" class="ghostbtn" style="padding:7px;font-size:11.5px">Keine</button>
+      <div class="fld">
+          <label>Zielgruppen <span id="catCount" style="color:var(--aqua);font-weight:800"></span></label>
+          <div class="catgrid" id="catBox">
+            <label class="catchip on"><input type="checkbox" data-cat="KLINIK" checked><span class="cb">✓</span>Kliniken &amp; Pflege</label>
+            <label class="catchip on"><input type="checkbox" data-cat="PRAXIS" checked><span class="cb">✓</span>Arzt/Zahnarzt</label>
+            <label class="catchip on"><input type="checkbox" data-cat="HOTEL" checked><span class="cb">✓</span>Hotels</label>
+            <label class="catchip on"><input type="checkbox" data-cat="GASTRO" checked><span class="cb">✓</span>Gastronomie</label>
+            <label class="catchip on"><input type="checkbox" data-cat="LEBENSMITTEL" checked><span class="cb">✓</span>Lebensmittel</label>
+            <label class="catchip on"><input type="checkbox" data-cat="INDUSTRIE" checked><span class="cb">✓</span>Industrie</label>
+            <label class="catchip on"><input type="checkbox" data-cat="BUERO" checked><span class="cb">✓</span>Büros</label>
+            <label class="catchip on"><input type="checkbox" data-cat="HANDWERK" checked><span class="cb">✓</span>Handwerk</label>
+            <label class="catchip"><input type="checkbox" data-cat="HANDEL"><span class="cb">✓</span>Handel</label>
+            <label class="catchip"><input type="checkbox" data-cat="WELLNESS"><span class="cb">✓</span>Wellness</label>
+            <label class="catchip"><input type="checkbox" data-cat="BILDUNG"><span class="cb">✓</span>Bildung</label>
+            <label class="catchip"><input type="checkbox" data-cat="OEFFENTLICH"><span class="cb">✓</span>Behörden</label>
+            <label class="catchip"><input type="checkbox" data-cat="AUTO"><span class="cb">✓</span>Kfz</label>
           </div>
-        </div></div>
+          <div class="catbtns">
+            <button type="button" id="catAll">Alle</button>
+            <button type="button" id="catNone">Keine</button>
+          </div>
+        </div>
       <div class="opts">
         <label class="opt"><input type="checkbox" id="chkBig" checked>Nur grosse Objekte</label>
         <label class="opt"><input type="checkbox" id="chkContact">Nur mit Kontaktdaten</label>
@@ -1251,12 +1270,14 @@ button:active{transform:scale(.97)}
       <button class="scanbtn" id="btnScan"><span class="sweepline"></span>
         <svg id="btnIco" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12L18 7"/></svg>
         <span id="btnTxt">Region scannen</span></button>
-      <button class="ghostbtn" id="btnDiag" style="flex:none;width:100%;margin-bottom:8px">
+      <div style="display:flex;gap:8px">
+      <button class="ghostbtn" id="btnDiag" style="font-size:11.5px;padding:9px">
         <svg class="ic" viewBox="0 0 24 24"><path d="M9 3h6M12 3v6M5 21h14a2 2 0 0 0 2-2v-6a9 9 0 0 0-18 0v6a2 2 0 0 0 2 2z"/></svg>
-        Diagnose kopieren
+        Diagnose
       </button>
-      <button class="ghostbtn" id="btnTest" style="flex:none;width:100%">
-        <svg class="ic" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/></svg>Verbindung testen</button>
+      <button class="ghostbtn" id="btnTest" style="font-size:11.5px;padding:9px">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/></svg>Verbindung</button>
+      </div>
     </div>
     <div class="scanmeta" id="scanmeta"><div class="sm-row"><span id="smLabel">—</span><b id="smPct">0%</b></div><div class="bar"><i id="smBar"></i></div></div>
     <div id="diagLine" style="display:none;padding:8px 22px 10px;font-size:10.5px;color:var(--faint);border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums"></div>
@@ -1533,58 +1554,86 @@ const CATS={
   /* rel  = Relevanz für Trinkwasseraufbereitung (fliesst in den Lead-Score)
      big  = gilt grundsätzlich als grosses Objekt
      sel  = OSM-Merkmale, nach denen gesucht wird
-     why  = Verkaufsargument, das im Kartenfenster erscheint            */
-  KLINIK:{name:'Kliniken & Pflege',rel:30,big:true,
+     kurz = Beschriftung im Bedienfeld
+     why  = Verkaufsargument, erscheint im Kartenfenster                */
+  KLINIK:{name:'Kliniken & Pflege',kurz:'Kliniken & Pflege',rel:30,big:true,
     sel:['amenity=hospital','amenity=clinic','amenity=nursing_home','amenity=social_facility',
          'social_facility=nursing_home','social_facility=assisted_living','social_facility=group_home',
-         'healthcare=hospital','healthcare=clinic','healthcare=rehabilitation','healthcare=centre'],
+         'social_facility=day_care','healthcare=hospital','healthcare=clinic','healthcare=rehabilitation',
+         'healthcare=centre','healthcare=nursing_home','amenity=hospice'],
     why:'Hygiene ist Pflicht: Patienten, Bewohner und Personal trinken hier täglich Leitungswasser. Höchster Bedarf an nachweisbar sicherer Filtration.'},
-  PRAXIS:{name:'Arzt- & Zahnarztpraxen',rel:26,big:false,
-    sel:['amenity=doctors','amenity=dentist','healthcare=dentist','healthcare=doctor',
-         'healthcare=physiotherapist','healthcare=alternative','amenity=veterinary'],
+  PRAXIS:{name:'Arzt- & Zahnarztpraxen',kurz:'Arzt/Zahnarzt',rel:26,big:false,
+    sel:['amenity=doctors','amenity=dentist','amenity=veterinary','amenity=pharmacy',
+         'healthcare=dentist','healthcare=doctor','healthcare=physiotherapist','healthcare=alternative',
+         'healthcare=psychotherapist','healthcare=laboratory','healthcare=dialysis','shop=optician',
+         'shop=hearing_aids','shop=medical_supply'],
     why:'Behandlungseinheiten führen Wasser direkt zum Patienten — Keimfreiheit ist Vorschrift und Haftungsthema. Kleine Häuser, kurze Entscheidungswege.'},
-  HOTEL:{name:'Hotels & Beherbergung',rel:27,big:true,
+  HOTEL:{name:'Hotels & Beherbergung',kurz:'Hotels',rel:27,big:true,
     sel:['tourism=hotel','tourism=guest_house','tourism=hostel','tourism=motel','tourism=apartment',
-         'tourism=chalet','tourism=camp_site','tourism=alpine_hut','amenity=hotel'],
+         'tourism=chalet','tourism=camp_site','tourism=caravan_site','tourism=alpine_hut',
+         'tourism=wilderness_hut','amenity=hotel','building=hotel'],
     why:'Gäste beurteilen das Haus über Kaffee, Wasser im Glas und Kalkränder im Bad. Dazu Geräteschutz in Küche und Bar.'},
-  GASTRO:{name:'Gastronomie & Cafés',rel:23,big:false,
+  GASTRO:{name:'Gastronomie & Cafés',kurz:'Gastronomie',rel:23,big:false,
     sel:['amenity=restaurant','amenity=cafe','amenity=bar','amenity=pub','amenity=fast_food',
-         'amenity=biergarten','amenity=ice_cream','amenity=food_court','amenity=canteen'],
+         'amenity=biergarten','amenity=ice_cream','amenity=food_court','amenity=canteen',
+         'amenity=nightclub','amenity=events_venue','amenity=conference_centre','amenity=bbq'],
     why:'Wasser ist Zutat Nummer eins — Kaffee, Suppe, Getränke. Plus Kalkschutz für Maschinen, die täglich laufen.'},
-  LEBENSMITTEL:{name:'Bäckerei, Brauerei & Lebensmittel',rel:28,big:false,
-    sel:['shop=bakery','craft=bakery','shop=butcher','craft=butcher','craft=brewery','shop=brewing_supplies',
-         'shop=coffee','shop=beverages','shop=confectionery','shop=deli','shop=cheese','shop=supermarket',
-         'craft=winery','man_made=brewery'],
+  LEBENSMITTEL:{name:'Bäckerei, Brauerei & Lebensmittel',kurz:'Lebensmittel',rel:28,big:false,
+    sel:['shop=bakery','craft=bakery','shop=butcher','craft=butcher','craft=brewery','man_made=brewery',
+         'shop=brewing_supplies','shop=coffee','shop=beverages','shop=confectionery','shop=pastry',
+         'shop=deli','shop=cheese','shop=chocolate','shop=greengrocer','shop=farm','craft=winery',
+         'craft=distillery','craft=confectionery','craft=caterer'],
     why:'Wasser ist Rohstoff, nicht Zutat: Teigführung, Brauwasser, Geschmack und Haltbarkeit hängen unmittelbar an der Qualität.'},
-  INDUSTRIE:{name:'Industrie & Produktion',rel:25,big:true,
+  INDUSTRIE:{name:'Industrie & Produktion',kurz:'Industrie',rel:25,big:true,
     sel:['man_made=works','building=industrial','landuse=industrial','industrial=factory',
-         'craft=metal_construction','craft=electronics','craft=plumber','office=industrial'],
+         'building=warehouse','building=manufacture','office=industrial','man_made=wastewater_plant',
+         'man_made=water_works','craft=metal_construction','craft=electronics','craft=sawmill'],
     why:'Viele Mitarbeitende, eigene Kantinen und Wasserspender — Gesundheitsbaustein und zugleich Betriebskostenthema durch Kalk.'},
-  BILDUNG:{name:'Schulen, Kitas & Hochschulen',rel:22,big:true,
-    sel:['amenity=school','amenity=kindergarten','amenity=college','amenity=university',
-         'amenity=childcare','amenity=music_school','amenity=language_school','amenity=driving_school',
-         'amenity=training','building=school'],
-    why:'Kinder und Jugendliche trinken hier täglich Leitungswasser — kaum ein Thema ist für Eltern und Träger sensibler.'},
-  WELLNESS:{name:'Fitness, Bäder & Wellness',rel:24,big:true,
-    sel:['leisure=fitness_centre','leisure=sports_centre','leisure=swimming_pool','leisure=water_park',
-         'leisure=sauna','leisure=spa','amenity=public_bath','shop=beauty','shop=hairdresser',
-         'shop=massage','leisure=sports_hall'],
-    why:'Hoher Verbrauch, sichtbare Kalkspuren und ein Publikum, das Wasserqualität unmittelbar wahrnimmt.'},
-  BUERO:{name:'Büros, Kanzleien & Agenturen',rel:18,big:false,
+  BUERO:{name:'Büros, Kanzleien & Agenturen',kurz:'Büros',rel:18,big:false,
     sel:['office=company','office=insurance','office=lawyer','office=accountant','office=tax_advisor',
          'office=architect','office=engineer','office=it','office=consulting','office=financial',
          'office=estate_agent','office=employment_agency','office=advertising_agency','office=coworking',
          'office=research','office=notary','office=association','office=telecommunication',
-         'office=logistics','office=educational_institution','building=office'],
+         'office=logistics','office=educational_institution','office=travel_agent','office=property_management',
+         'office=surveyor','office=newspaper','office=charity','office=ngo','office=foundation',
+         'office=energy_supplier','office=water_utility','office=security','office=moving_company',
+         'office=construction_company','office=marketing','office=publisher','building=office',
+         'building=commercial','shop=travel_agency'],
     why:'Wasserspender und Kaffeeküche laufen den ganzen Tag. Mitarbeitergesundheit und Kalkschutz sind hier die Aufhänger.'},
-  OEFFENTLICH:{name:'Behörden & öffentliche Häuser',rel:20,big:true,
+  HANDWERK:{name:'Handwerksbetriebe',kurz:'Handwerk',rel:17,big:false,
+    sel:['craft=electrician','craft=plumber','craft=carpenter','craft=painter','craft=roofer',
+         'craft=joiner','craft=locksmith','craft=gardener','craft=stonemason','craft=tiler',
+         'craft=glaziery','craft=hvac','craft=insulation','craft=scaffolder','craft=blacksmith',
+         'craft=upholsterer','craft=window_construction','shop=doityourself','shop=hardware',
+         'shop=trade','shop=building_materials','shop=garden_centre'],
+    why:'Werkstatt, Waschbecken und Kaffeeküche laufen täglich. Inhabergeführt — Entscheidungen fallen im ersten Gespräch.'},
+  HANDEL:{name:'Einzelhandel & Filialen',kurz:'Handel',rel:19,big:false,
+    sel:['shop=supermarket','shop=convenience','shop=department_store','shop=mall','shop=chemist',
+         'shop=furniture','shop=electronics','shop=clothes','shop=shoes','shop=sports','shop=toys',
+         'shop=books','shop=florist','shop=jewelry','shop=variety_store','shop=wholesale'],
+    why:'Personalräume, Kaffeeküchen und teils eigene Backstationen — laufender Bedarf und mehrere Filialen auf einmal.'},
+  WELLNESS:{name:'Fitness, Bäder & Wellness',kurz:'Wellness',rel:24,big:true,
+    sel:['leisure=fitness_centre','leisure=sports_centre','leisure=swimming_pool','leisure=water_park',
+         'leisure=sauna','leisure=spa','leisure=sports_hall','leisure=horse_riding','leisure=golf_course',
+         'amenity=public_bath','shop=beauty','shop=hairdresser','shop=massage','shop=tattoo',
+         'shop=nail_salon','shop=cosmetics'],
+    why:'Hoher Verbrauch, sichtbare Kalkspuren und ein Publikum, das Wasserqualität unmittelbar wahrnimmt.'},
+  BILDUNG:{name:'Schulen, Kitas & Hochschulen',kurz:'Bildung',rel:22,big:true,
+    sel:['amenity=school','amenity=kindergarten','amenity=college','amenity=university',
+         'amenity=childcare','amenity=music_school','amenity=language_school','amenity=driving_school',
+         'amenity=training','amenity=research_institute','building=school','building=university',
+         'building=kindergarten'],
+    why:'Kinder und Jugendliche trinken hier täglich Leitungswasser — kaum ein Thema ist für Eltern und Träger sensibler.'},
+  OEFFENTLICH:{name:'Behörden & öffentliche Häuser',kurz:'Behörden',rel:20,big:true,
     sel:['amenity=townhall','office=government','amenity=fire_station','amenity=police',
          'amenity=community_centre','amenity=library','amenity=courthouse','amenity=post_office',
-         'amenity=prison','office=diplomatic'],
+         'amenity=prison','office=diplomatic','amenity=theatre','amenity=arts_centre',
+         'amenity=exhibition_centre','tourism=museum','building=public','building=civic'],
     why:'Öffentliche Träger stehen bei Trinkwasserqualität besonders unter Beobachtung — und entscheiden über mehrere Liegenschaften gleichzeitig.'},
-  AUTO:{name:'Kfz-Betriebe & Waschanlagen',rel:16,big:false,
+  AUTO:{name:'Kfz-Betriebe & Waschanlagen',kurz:'Kfz',rel:16,big:false,
     sel:['shop=car_repair','amenity=car_wash','shop=car','shop=motorcycle','shop=tyres',
-         'craft=car_repair','shop=car_parts'],
+         'craft=car_repair','shop=car_parts','amenity=fuel','shop=truck','shop=caravan',
+         'shop=bicycle','amenity=driving_school'],
     why:'In Waschanlagen und Werkstätten kostet Kalk direkt Geld: Flecken auf dem Lack, Verschleiss an Düsen und Technik.'}
 };
 /* Grösseneinschätzung. OSM kennt keine Mitarbeiterzahlen, deshalb nähern
@@ -1780,6 +1829,8 @@ const NOMI_BEGRIFFE={
   WELLNESS:['Fitnessstudio','Schwimmbad','Sauna','Friseur','Kosmetikstudio'],
   BUERO:['Bürogebäude','Kanzlei','Steuerberater','Versicherung','Agentur','Ingenieurbüro'],
   OEFFENTLICH:['Rathaus','Gemeindeverwaltung','Feuerwehr','Bücherei','Bauhof'],
+  HANDWERK:['Elektriker','Schreinerei','Malerbetrieb','Sanitär','Dachdecker','Gärtnerei'],
+  HANDEL:['Supermarkt','Drogerie','Möbelhaus','Baumarkt','Apotheke'],
   AUTO:['Autohaus','Kfz-Werkstatt','Waschanlage','Autowerkstatt','Reifenservice']
 };
 function viewbox(rad){
@@ -2381,8 +2432,9 @@ $('mMail').addEventListener('click',()=>{const c=cur();if(!c)return;
   c.hist.push({t:now(),txt:'Akquise-Mail geöffnet'});touch(c);renderTl(c)});
 $('mMap').addEventListener('click',()=>{const c=cur();if(!c)return;
   $('overlay').classList.remove('on');switchView('Radar');
-  if(c.scanId&&leads.find(x=>x.id===c.scanId))selectLead(c.scanId,true);
-  else if(c.lat)map.flyTo([c.lat,c.lon],14,{duration:.9})});
+  const id=hydrateOne(c);
+  if(id){renderScanList();selectLead(id,true)}
+  else toast('Für diesen Lead sind keine Koordinaten hinterlegt')});
 $('mClose').addEventListener('click',()=>$('overlay').classList.remove('on'));
 $('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')$('overlay').classList.remove('on')});
 
@@ -2574,9 +2626,20 @@ function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show')
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3800)}
 window.toast=toast;
 
-/* Schnellauswahl der Zielgruppen */
-$('catAll').addEventListener('click',()=>{document.querySelectorAll('#catBox input').forEach(c=>c.checked=true)});
-$('catNone').addEventListener('click',()=>{document.querySelectorAll('#catBox input').forEach(c=>c.checked=false)});
+/* Zielgruppen-Chips: Aussehen folgt dem Zustand, Zähler zeigt die Auswahl */
+function syncChips(){
+  let n=0;
+  document.querySelectorAll('#catBox .catchip').forEach(l=>{
+    const c=l.querySelector('input');
+    l.classList.toggle('on',c.checked);
+    if(c.checked)n++;
+  });
+  $('catCount').textContent='('+n+'/13)';
+}
+document.querySelectorAll('#catBox input').forEach(c=>c.addEventListener('change',syncChips));
+$('catAll').addEventListener('click',()=>{document.querySelectorAll('#catBox input').forEach(c=>c.checked=true);syncChips()});
+$('catNone').addEventListener('click',()=>{document.querySelectorAll('#catBox input').forEach(c=>c.checked=false);syncChips()});
+syncChips();
 
 /* ══ Diagnosebericht ══
    Fasst alles zusammen, was zur Fehlersuche nötig ist, und legt es in die
@@ -2642,6 +2705,21 @@ $('btnDiag').addEventListener('click',async()=>{
 /* ═══ INIT ═══
    CRM-Leads werden als Kartenpunkte wiederhergestellt (sie sind der
    dauerhafte Arbeitsbestand). Reine Scan-Treffer starten leer. */
+/* Holt EINEN CRM-Lead bei Bedarf auf die Karte (z. B. über
+   „Auf Karte zeigen" im Lead-Fenster). */
+function hydrateOne(c){
+  if(typeof c.lat!=='number'||typeof c.lon!=='number')return null;
+  const id=c.scanId||('crm_'+c.id);
+  if(!c.scanId){c.scanId=id;store('pvCrm',crm)}
+  if(!leadIdx.has(id)){
+    const l={id,name:c.firma,addr:c.adresse||'',phone:c.tel||'',email:c.email||'',
+      web:c.web||'',levels:'',rooms:'',beds:'',building:'',
+      lat:c.lat,lon:c.lon,cat:c.cat||'BUERO',ts:c.lastAct||now(),fromCrm:true};
+    leads.push(l);leadIdx.set(id,l);
+  }
+  sessionIds.add(id);
+  return id;
+}
 function hydrateCrmLeads(){
   crm.forEach(c=>{
     if(typeof c.lat!=='number'||typeof c.lon!=='number')return;
@@ -2653,14 +2731,18 @@ function hydrateCrmLeads(){
     leads.push(l);leadIdx.set(id,l);sessionIds.add(id);
   });
 }
-const VERSION='v9 · 11 Zielgruppen';
+const VERSION='v10 · 13 Zielgruppen';
 {const v=$('verStamp');if(v)v.textContent='AquaRadar CRM · '+VERSION;}
 if(!HAS_CLUSTER||!HAS_HEAT){
   $('statusTxt').textContent='Hinweis: Zusatzfunktionen ('+[!HAS_CLUSTER?'Cluster':'',!HAS_HEAT?'Heatmap':''].filter(Boolean).join(' + ')+') sind blockiert — Scan und CRM laufen normal weiter.';
 }
-reindex();hydrateCrmLeads();renderScanList();updateBadges();
+/* Die Karte startet nach jedem Neuladen bewusst leer. Das CRM bleibt
+   vollständig erhalten und ist über den Reiter „Pipeline" erreichbar;
+   seine Leads erscheinen wieder auf der Karte, sobald ein Scan läuft
+   oder man sie in der Liste anklickt. */
+reindex();renderScanList();updateBadges();
 $('statusTxt').textContent=crm.length
-  ?crm.length+' CRM-Leads geladen und auf der Karte. Scan starten für neue Treffer.'
+  ?'Karte und Liste leer · '+crm.length+' CRM-Leads gespeichert (Reiter „Pipeline"). Scan starten.'
   :'Bereit. Zielgruppen wählen und scannen.';
 const dueNow=crm.filter(c=>(c.termin&&c.termin<=today())||c.tasks.some(t=>!t.done&&t.due&&t.due<=today()));
 if(dueNow.length)setTimeout(()=>toast('⏰ '+dueNow.length+' Erinnerung(en) fällig — Glocke oben rechts'),1200);
