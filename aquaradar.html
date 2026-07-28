@@ -477,6 +477,7 @@ button:active{transform:scale(.97)}
         <span id="btnTxt">Region scannen</span></button>
     </div>
     <div class="scanmeta" id="scanmeta"><div class="sm-row"><span id="smLabel">—</span><b id="smPct">0%</b></div><div class="bar"><i id="smBar"></i></div></div>
+    <div id="diagLine" style="display:none;padding:8px 22px 10px;font-size:10.5px;color:var(--faint);border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums"></div>
     <div class="status" id="status"><span class="spin"></span><span id="statusTxt">Bereit. Zielgruppen wählen und scannen.</span></div>
     <div style="flex:1"></div>
     <div class="legend-side">
@@ -870,15 +871,23 @@ function fetchTimeout(url,opts,ms,outerSignal){
     fetch(url,{...opts,signal:ctl.signal}).then(finish(resolve),finish(reject));
   });
 }
-/* Fragt der Reihe nach alle Spiegel; liefert Elemente oder wirft mit klarer Ursache. */
+/* Fragt der Reihe nach alle Spiegel ab — erst per POST, danach als
+   Rückfallebene per GET (manche VPNs/Firewalls blockieren POST). */
 async function overpass(q,signal,onServer){
   let lastErr=new Error('Keine Antwort');
-  for(let i=0;i<OVERPASS.length;i++){
+  const versuche=[];
+  OVERPASS.forEach(u=>versuche.push({u,get:false}));
+  OVERPASS.forEach(u=>versuche.push({u,get:true}));
+  for(let i=0;i<versuche.length;i++){
     if(signal&&signal.aborted)throw Object.assign(new Error('abbruch'),{name:'AbortError'});
-    if(onServer)onServer(i+1,OVERPASS.length);
+    const {u,get}=versuche[i];
+    if(onServer)onServer(i+1,versuche.length);
     try{
-      const r=await fetchTimeout(OVERPASS[i],{method:'POST',body:'data='+encodeURIComponent(q),
-        headers:{'Content-Type':'application/x-www-form-urlencoded'}},REQ_TIMEOUT,signal);
+      const opts=get
+        ?{method:'GET'}
+        :{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}};
+      const url=get?(u+'?data='+encodeURIComponent(q)):u;
+      const r=await fetchTimeout(url,opts,REQ_TIMEOUT,signal);
       if(r.status===429||r.status===503||r.status===504)throw new Error('BUSY');
       if(!r.ok)throw new Error('HTTP '+r.status);
       const j=await r.json();
@@ -916,10 +925,17 @@ function qCat(ck,rad){
   const around=`(around:${rad},${CENTER.lat},${CENTER.lng})`;
   const body=CATS[ck].sel.map(s=>{const[k,v]=s.split('=');
     return `node["${k}"="${v}"]["name"]${around};way["${k}"="${v}"]["name"]${around};`}).join('');
-  return `[out:json][timeout:20];(${body});out tags center;`;
+  /* WICHTIG: "out center;" liefert Koordinaten UND Tags.
+     ("out tags ..." würde die Koordinaten weglassen — Nodes wären unbrauchbar.) */
+  return `[out:json][timeout:20];(${body});out center;`;
 }
-function toLead(el,ck){const t=el.tags||{};const lat=el.lat??el.center?.lat,lon=el.lon??el.center?.lon;
-  if(!lat||!t.name)return null;
+/* Wandelt ein Overpass-Element in einen Lead. Koordinaten kommen bei Nodes
+   direkt (lat/lon), bei Ways/Relations über center. */
+function toLead(el,ck){
+  const t=el.tags||{};
+  const lat=Number.isFinite(el.lat)?el.lat:(el.center&&Number.isFinite(el.center.lat)?el.center.lat:null);
+  const lon=Number.isFinite(el.lon)?el.lon:(el.center&&Number.isFinite(el.center.lon)?el.center.lon:null);
+  if(lat===null||lon===null||!t.name)return null;
   const addr=[[t['addr:street'],t['addr:housenumber']].filter(Boolean).join(' '),[t['addr:postcode'],t['addr:city']].filter(Boolean).join(' ')].filter(Boolean).join(', ');
   return{id:el.type+'_'+el.id,name:t.name,addr:addr||'Raum Wasserburg',phone:t['contact:phone']||t.phone||'',
     email:t['contact:email']||t.email||'',web:t['contact:website']||t.website||'',levels:t['building:levels']||'',
@@ -956,7 +972,7 @@ async function startScan(){
   if(!cats.length){toast('Mindestens eine Zielgruppe wählen');return}
 
   stopFlag=false;
-  let neu=0,upd=0,roh=0,gefiltert=0,fertig=0;
+  let neu=0,upd=0,roh=0,gefiltert=0,fertig=0,empfangen=0,ohneKoord=0;
   const probleme=[];
   aborter=new AbortController();
   setScanUI(true);
@@ -995,8 +1011,10 @@ async function startScan(){
         if(err.name==='AbortError')return;
         probleme.push(CATS[ck].name+' ('+errText(err)+')');
       }else if(res&&res.els){
+        empfangen+=res.els.length;
         for(const el of res.els){
-          const l=toLead(el,ck);if(!l)continue;
+          const l=toLead(el,ck);
+          if(!l){ohneKoord++;continue}
           roh++;
           if(onlyBig&&!isBig(l)){gefiltert++;continue}
           if(onlyContact&&!l.phone&&!l.email&&!l.web){gefiltert++;continue}
@@ -1012,22 +1030,30 @@ async function startScan(){
 
     /* Abschlussmeldung — immer aussagekräftig */
     const s=Math.round((now()-t0)/1000);
-    let msg;
+    let msg,diag='';
+    const errTextOf=p=>{const m=/\(([^)]+)\)\s*$/.exec(p);return m?m[1]:'Fehler'};
     if(stopFlag){
       msg=`Gestoppt nach ${s}s — ${neu} neue Leads übernommen.`;
-    }else if(neu===0&&upd===0&&roh===0&&probleme.length===cats.length){
-      msg=`Keine Verbindung zu OpenStreetMap (${probleme[0].replace(/^.*\(|\)$/g,'')}). Internet prüfen und erneut starten.`;
+    }else if(probleme.length===cats.length){
+      msg=`Keine Verbindung zu OpenStreetMap (${errTextOf(probleme[0])}). Internet prüfen und erneut starten.`;
+    }else if(empfangen===0){
+      msg=`Fertig (${s}s): OpenStreetMap kennt hier keine Objekte dieser Art im ${rad/1000}-km-Umkreis. Radius vergrössern oder weitere Zielgruppen anhaken.`;
     }else if(neu===0&&upd===0&&roh>0){
-      msg=`${roh} Objekte gefunden, aber ${gefiltert} durch deine Filter entfernt. Tipp: Haken „Nur grosse Objekte" entfernen.`;
+      msg=`${roh} Objekte gefunden — alle durch deine Filter entfernt. Tipp: Haken „Nur grosse Objekte" entfernen.`;
     }else if(neu===0&&upd>0){
       msg=`Fertig (${s}s): keine neuen Leads, ${upd} bestehende aktualisiert.`;
-    }else if(neu===0&&roh===0){
-      msg=`Fertig (${s}s): keine Treffer im ${rad/1000}-km-Umkreis. Radius vergrössern oder mehr Zielgruppen wählen.`;
+    }else if(neu===0){
+      msg=`Fertig (${s}s): ${empfangen} Objekte empfangen, aber keine verwertbaren Leads. Bitte erneut versuchen.`;
     }else{
       msg=`Fertig in ${s}s: ${neu} neue Leads · ${upd} aktualisiert${gefiltert?' · '+gefiltert+' gefiltert':''}.`;
     }
+    /* Diagnosezeile — macht jedes künftige Problem sofort sichtbar */
+    diag=`${empfangen} empfangen → ${roh} verwertbar → ${gefiltert} gefiltert → ${neu} neu${ohneKoord?' · '+ohneKoord+' ohne Koordinaten':''}`;
     if(probleme.length&&probleme.length<cats.length)msg+=' Nicht geladen: '+probleme.join(', ')+'.';
     $('statusTxt').textContent=msg;
+    $('smLabel').title=diag;
+    $('diagLine').textContent=diag;
+    $('diagLine').style.display=diag?'block':'none';
     $('smPct').textContent='100%';$('smBar').style.width='100%';
     $('smLabel').textContent=cats.length+' von '+cats.length+' Zielgruppen · '+neu+' neue Leads';
     toast(stopFlag?`■ Gestoppt — ${neu} neue Leads`
