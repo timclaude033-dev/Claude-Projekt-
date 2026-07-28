@@ -960,6 +960,11 @@ select option,select optgroup{background:var(--panel2);color:var(--txt)}
   width:22px;height:22px;border-radius:7px;font-family:var(--head);color:#04222E}
 .pot.A{background:var(--gA)}.pot.B{background:var(--aqua)}.pot.C{background:#8FB0C0}
 .lead .ad{font-size:11.5px;color:var(--sub);margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.catline{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--aqua);margin-bottom:9px}
+.catline b{font-weight:700}
+.catdot{width:6px;height:6px;border-radius:50%;background:var(--aqua);flex:none}
+.bigflag{margin-left:auto;font-size:10px;font-weight:700;color:#F4D791;background:rgba(217,169,76,.12);
+  border:1px solid rgba(217,169,76,.35);padding:2px 8px;border-radius:6px}
 .lead .tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .tg{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:600;padding:4px 9px;border-radius:7px;
   background:var(--panel);border:1px solid var(--line2);color:var(--sub)}
@@ -1223,13 +1228,21 @@ button:active{transform:scale(.97)}
         <select id="selRad"><option value="25000">25 km</option><option value="50000" selected>50 km</option><option value="75000">75 km</option></select></div>
       <div class="fld"><label>Zielgruppen</label>
         <div class="opts" id="catBox">
-          <label class="opt"><input type="checkbox" data-cat="KLINIK" checked>Kliniken &amp; Pflegeheime</label>
+          <label class="opt"><input type="checkbox" data-cat="KLINIK" checked>Kliniken &amp; Pflege</label>
+          <label class="opt"><input type="checkbox" data-cat="PRAXIS" checked>Arzt- &amp; Zahnarztpraxen</label>
           <label class="opt"><input type="checkbox" data-cat="HOTEL" checked>Hotels &amp; Beherbergung</label>
-          <label class="opt"><input type="checkbox" data-cat="GASTRO" checked>Gastronomie &amp; Kantinen</label>
+          <label class="opt"><input type="checkbox" data-cat="GASTRO" checked>Gastronomie &amp; Cafés</label>
+          <label class="opt"><input type="checkbox" data-cat="LEBENSMITTEL" checked>Bäckerei, Brauerei &amp; Lebensmittel</label>
           <label class="opt"><input type="checkbox" data-cat="INDUSTRIE" checked>Industrie &amp; Produktion</label>
-          <label class="opt"><input type="checkbox" data-cat="BILDUNG">Schulen &amp; Kitas</label>
-          <label class="opt"><input type="checkbox" data-cat="FITNESS">Fitness &amp; Sport</label>
-          <label class="opt"><input type="checkbox" data-cat="BUERO">Grosse Bürostandorte</label>
+          <label class="opt"><input type="checkbox" data-cat="BUERO" checked>Büros, Kanzleien &amp; Agenturen</label>
+          <label class="opt"><input type="checkbox" data-cat="WELLNESS">Fitness, Bäder &amp; Wellness</label>
+          <label class="opt"><input type="checkbox" data-cat="BILDUNG">Schulen, Kitas &amp; Hochschulen</label>
+          <label class="opt"><input type="checkbox" data-cat="OEFFENTLICH">Behörden &amp; öffentliche Häuser</label>
+          <label class="opt"><input type="checkbox" data-cat="AUTO">Kfz-Betriebe &amp; Waschanlagen</label>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button type="button" id="catAll" class="ghostbtn" style="padding:7px;font-size:11.5px">Alle</button>
+            <button type="button" id="catNone" class="ghostbtn" style="padding:7px;font-size:11.5px">Keine</button>
+          </div>
         </div></div>
       <div class="opts">
         <label class="opt"><input type="checkbox" id="chkBig" checked>Nur grosse Objekte</label>
@@ -1278,9 +1291,17 @@ button:active{transform:scale(.97)}
       <input type="text" id="q" placeholder="Suchen …" style="flex:1.2">
       <select id="selCat" style="flex:1">
         <option value="">Alle Zielgruppen</option>
-        <option value="KLINIK">Klinik/Pflege</option><option value="HOTEL">Hotel</option>
-        <option value="GASTRO">Gastro</option><option value="INDUSTRIE">Industrie</option>
-        <option value="BILDUNG">Bildung</option><option value="FITNESS">Fitness</option><option value="BUERO">Büro</option>
+        <option value="KLINIK">Kliniken &amp; Pflege</option>
+        <option value="PRAXIS">Arzt-/Zahnarztpraxen</option>
+        <option value="HOTEL">Hotels</option>
+        <option value="GASTRO">Gastronomie</option>
+        <option value="LEBENSMITTEL">Lebensmittel</option>
+        <option value="INDUSTRIE">Industrie</option>
+        <option value="BUERO">Büros</option>
+        <option value="WELLNESS">Fitness &amp; Wellness</option>
+        <option value="BILDUNG">Bildung</option>
+        <option value="OEFFENTLICH">Behörden</option>
+        <option value="AUTO">Kfz</option>
       </select>
     </div>
     <div class="list" id="list"></div>
@@ -1509,15 +1530,74 @@ let gq='',crmSel=new Set();
 /* ── Kategorien (Scan) ── */
 const CENTER=L.latLng(48.0616,12.2201);
 const CATS={
-  KLINIK:{name:'Klinik/Pflege',rel:30,big:true,sel:['amenity=hospital','amenity=clinic','amenity=nursing_home','social_facility=nursing_home','amenity=social_facility']},
-  HOTEL:{name:'Hotel',rel:25,big:true,sel:['tourism=hotel']},
-  GASTRO:{name:'Gastronomie',rel:20,big:false,sel:['amenity=restaurant','amenity=cafe']},
-  INDUSTRIE:{name:'Industrie',rel:24,big:true,sel:['man_made=works','building=industrial']},
-  BILDUNG:{name:'Bildung',rel:18,big:true,sel:['amenity=school','amenity=kindergarten','amenity=college']},
-  FITNESS:{name:'Fitness',rel:15,big:false,sel:['leisure=fitness_centre','leisure=sports_centre']},
-  BUERO:{name:'Büro',rel:12,big:false,sel:['office=company']}
+  /* rel  = Relevanz für Trinkwasseraufbereitung (fliesst in den Lead-Score)
+     big  = gilt grundsätzlich als grosses Objekt
+     sel  = OSM-Merkmale, nach denen gesucht wird
+     why  = Verkaufsargument, das im Kartenfenster erscheint            */
+  KLINIK:{name:'Kliniken & Pflege',rel:30,big:true,
+    sel:['amenity=hospital','amenity=clinic','amenity=nursing_home','amenity=social_facility',
+         'social_facility=nursing_home','social_facility=assisted_living','social_facility=group_home',
+         'healthcare=hospital','healthcare=clinic','healthcare=rehabilitation','healthcare=centre'],
+    why:'Hygiene ist Pflicht: Patienten, Bewohner und Personal trinken hier täglich Leitungswasser. Höchster Bedarf an nachweisbar sicherer Filtration.'},
+  PRAXIS:{name:'Arzt- & Zahnarztpraxen',rel:26,big:false,
+    sel:['amenity=doctors','amenity=dentist','healthcare=dentist','healthcare=doctor',
+         'healthcare=physiotherapist','healthcare=alternative','amenity=veterinary'],
+    why:'Behandlungseinheiten führen Wasser direkt zum Patienten — Keimfreiheit ist Vorschrift und Haftungsthema. Kleine Häuser, kurze Entscheidungswege.'},
+  HOTEL:{name:'Hotels & Beherbergung',rel:27,big:true,
+    sel:['tourism=hotel','tourism=guest_house','tourism=hostel','tourism=motel','tourism=apartment',
+         'tourism=chalet','tourism=camp_site','tourism=alpine_hut','amenity=hotel'],
+    why:'Gäste beurteilen das Haus über Kaffee, Wasser im Glas und Kalkränder im Bad. Dazu Geräteschutz in Küche und Bar.'},
+  GASTRO:{name:'Gastronomie & Cafés',rel:23,big:false,
+    sel:['amenity=restaurant','amenity=cafe','amenity=bar','amenity=pub','amenity=fast_food',
+         'amenity=biergarten','amenity=ice_cream','amenity=food_court','amenity=canteen'],
+    why:'Wasser ist Zutat Nummer eins — Kaffee, Suppe, Getränke. Plus Kalkschutz für Maschinen, die täglich laufen.'},
+  LEBENSMITTEL:{name:'Bäckerei, Brauerei & Lebensmittel',rel:28,big:false,
+    sel:['shop=bakery','craft=bakery','shop=butcher','craft=butcher','craft=brewery','shop=brewing_supplies',
+         'shop=coffee','shop=beverages','shop=confectionery','shop=deli','shop=cheese','shop=supermarket',
+         'craft=winery','man_made=brewery'],
+    why:'Wasser ist Rohstoff, nicht Zutat: Teigführung, Brauwasser, Geschmack und Haltbarkeit hängen unmittelbar an der Qualität.'},
+  INDUSTRIE:{name:'Industrie & Produktion',rel:25,big:true,
+    sel:['man_made=works','building=industrial','landuse=industrial','industrial=factory',
+         'craft=metal_construction','craft=electronics','craft=plumber','office=industrial'],
+    why:'Viele Mitarbeitende, eigene Kantinen und Wasserspender — Gesundheitsbaustein und zugleich Betriebskostenthema durch Kalk.'},
+  BILDUNG:{name:'Schulen, Kitas & Hochschulen',rel:22,big:true,
+    sel:['amenity=school','amenity=kindergarten','amenity=college','amenity=university',
+         'amenity=childcare','amenity=music_school','amenity=language_school','amenity=driving_school',
+         'amenity=training','building=school'],
+    why:'Kinder und Jugendliche trinken hier täglich Leitungswasser — kaum ein Thema ist für Eltern und Träger sensibler.'},
+  WELLNESS:{name:'Fitness, Bäder & Wellness',rel:24,big:true,
+    sel:['leisure=fitness_centre','leisure=sports_centre','leisure=swimming_pool','leisure=water_park',
+         'leisure=sauna','leisure=spa','amenity=public_bath','shop=beauty','shop=hairdresser',
+         'shop=massage','leisure=sports_hall'],
+    why:'Hoher Verbrauch, sichtbare Kalkspuren und ein Publikum, das Wasserqualität unmittelbar wahrnimmt.'},
+  BUERO:{name:'Büros, Kanzleien & Agenturen',rel:18,big:false,
+    sel:['office=company','office=insurance','office=lawyer','office=accountant','office=tax_advisor',
+         'office=architect','office=engineer','office=it','office=consulting','office=financial',
+         'office=estate_agent','office=employment_agency','office=advertising_agency','office=coworking',
+         'office=research','office=notary','office=association','office=telecommunication',
+         'office=logistics','office=educational_institution','building=office'],
+    why:'Wasserspender und Kaffeeküche laufen den ganzen Tag. Mitarbeitergesundheit und Kalkschutz sind hier die Aufhänger.'},
+  OEFFENTLICH:{name:'Behörden & öffentliche Häuser',rel:20,big:true,
+    sel:['amenity=townhall','office=government','amenity=fire_station','amenity=police',
+         'amenity=community_centre','amenity=library','amenity=courthouse','amenity=post_office',
+         'amenity=prison','office=diplomatic'],
+    why:'Öffentliche Träger stehen bei Trinkwasserqualität besonders unter Beobachtung — und entscheiden über mehrere Liegenschaften gleichzeitig.'},
+  AUTO:{name:'Kfz-Betriebe & Waschanlagen',rel:16,big:false,
+    sel:['shop=car_repair','amenity=car_wash','shop=car','shop=motorcycle','shop=tyres',
+         'craft=car_repair','shop=car_parts'],
+    why:'In Waschanlagen und Werkstätten kostet Kalk direkt Geld: Flecken auf dem Lack, Verschleiss an Düsen und Technik.'}
 };
-function isBig(l){if(CATS[l.cat]&&CATS[l.cat].big)return true;return (parseInt(l.levels)||0)>=3}
+/* Grösseneinschätzung. OSM kennt keine Mitarbeiterzahlen, deshalb nähern
+   wir sie über belastbare Anhaltspunkte an: Kategorie, Gebäudehöhe,
+   Zimmer-/Bettenzahl und die Bauform (Gewerbe-/Industriegebäude). */
+function isBig(l){
+  if(CATS[l.cat]&&CATS[l.cat].big)return true;
+  if((parseInt(l.levels)||0)>=3)return true;
+  if((parseInt(l.rooms)||0)>=20)return true;
+  if((parseInt(l.beds)||0)>=20)return true;
+  if(/industrial|commercial|office|retail|warehouse|hospital|hotel|school/.test(l.building||''))return true;
+  return false;
+}
 function score(l){let s=0;if(l.email)s+=40;if(l.phone)s+=22;if(l.web)s+=15;if(isBig(l))s+=20;s+=(CATS[l.cat]?CATS[l.cat].rel:10)/3;return s}
 const tier=l=>{const s=score(l);return s>=75?'A':s>=35?'B':'C'};
 const TIER_COL={A:'#3DDC97',B:'#29C4E8',C:'#8FB0C0'};
@@ -1639,6 +1719,8 @@ function popupHtml(l){
   if(l.email)h+=`<div class="pop-row"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><a href="mailto:${esc(l.email)}">${esc(l.email)}</a></div>`;
   if(l.web){const u=l.web.startsWith('http')?l.web:'https://'+l.web;
     h+=`<div class="pop-row"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg><a href="${esc(u)}" target="_blank" rel="noopener">${esc(l.web.replace(/^https?:\/\//,''))}</a></div>`;}
+  /* Verkaufsargument der Zielgruppe — direkt im Kartenfenster verfügbar */
+  if(cat.why)h+=`<div class="pop-pot" style="border-color:rgba(41,196,232,.4)"><b style="color:#29C4E8">Warum ${esc(cat.name)}?</b> ${esc(cat.why)}</div>`;
   if(c){const st=STAGES.find(s=>s.id===c.stage);
     h+=`<span class="pop-stage" style="background:${st?st.col:'#888'}22;color:${st?st.col:'#888'};border:1px solid ${st?st.col:'#888'}66">● ${esc(st?st.name:'?')}</span>`;
     h+=`<div class="pop-btns"><button class="pop-cta" onclick="openLead('${c.id}')"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 16l6-12 6 12"/></svg>Im CRM öffnen</button></div>`;
@@ -1688,13 +1770,17 @@ function logNet(eintrag){netLog.push(eintrag);if(netLog.length>60)netLog.shift()
    Wird nur genutzt, wenn Overpass gar nichts liefert. Liefert Name,
    Koordinaten und über extratags auch Telefon/Web/E-Mail. */
 const NOMI_BEGRIFFE={
-  KLINIK:['Krankenhaus','Klinik','Pflegeheim','Seniorenheim'],
-  HOTEL:['Hotel','Gasthof'],
-  GASTRO:['Restaurant','Gasthaus'],
-  INDUSTRIE:['Fabrik','Werk','Produktion'],
-  BILDUNG:['Schule','Gymnasium','Kindergarten'],
-  FITNESS:['Fitnessstudio','Sportzentrum'],
-  BUERO:['Bürogebäude','Verwaltung']
+  KLINIK:['Krankenhaus','Klinik','Pflegeheim','Seniorenheim','Altenheim'],
+  PRAXIS:['Arztpraxis','Zahnarzt','Praxis','Physiotherapie','Tierarzt'],
+  HOTEL:['Hotel','Gasthof','Pension','Ferienwohnung','Campingplatz'],
+  GASTRO:['Restaurant','Gasthaus','Café','Gaststätte','Pizzeria'],
+  LEBENSMITTEL:['Bäckerei','Metzgerei','Brauerei','Konditorei','Getränkemarkt'],
+  INDUSTRIE:['Fabrik','Werk','Produktion','Maschinenbau','Industriebetrieb'],
+  BILDUNG:['Schule','Gymnasium','Kindergarten','Realschule','Berufsschule'],
+  WELLNESS:['Fitnessstudio','Schwimmbad','Sauna','Friseur','Kosmetikstudio'],
+  BUERO:['Bürogebäude','Kanzlei','Steuerberater','Versicherung','Agentur','Ingenieurbüro'],
+  OEFFENTLICH:['Rathaus','Gemeindeverwaltung','Feuerwehr','Bücherei','Bauhof'],
+  AUTO:['Autohaus','Kfz-Werkstatt','Waschanlage','Autowerkstatt','Reifenservice']
 };
 function viewbox(rad){
   const dLat=rad/111320, dLon=rad/(111320*Math.cos(CENTER.lat*Math.PI/180));
@@ -1814,9 +1900,10 @@ function toLead(el,ck){
   const addr=[[t['addr:street'],t['addr:housenumber']].filter(Boolean).join(' '),[t['addr:postcode'],t['addr:city']].filter(Boolean).join(' ')].filter(Boolean).join(', ');
   return{id:el.type+'_'+el.id,name:t.name,addr:addr||'Raum Wasserburg',phone:t['contact:phone']||t.phone||'',
     email:t['contact:email']||t.email||'',web:t['contact:website']||t.website||'',levels:t['building:levels']||'',
+    rooms:t.rooms||'',beds:t.beds||t['capacity:beds']||'',building:t.building||'',
     lat,lon,cat:ck,ts:now()}}
 function upsert(l){sessionIds.add(l.id);const ex=leadById(l.id);
-  if(ex){let ch=false;['phone','email','web','addr','name','levels'].forEach(k=>{if(l[k]&&l[k]!==ex[k]){ex[k]=l[k];ch=true}});
+  if(ex){let ch=false;['phone','email','web','addr','name','levels','rooms','beds','building'].forEach(k=>{if(l[k]&&l[k]!==ex[k]){ex[k]=l[k];ch=true}});
     if(ch)refreshMarker(ex.id);return ch?'upd':'dup'}
   leads.push(l);leadIdx.set(l.id,l);return 'new'}
 
@@ -2059,7 +2146,8 @@ function renderScanListNow(){
     if(l.web)tags.push('<span class="tg ok">'+SVG_WEB+'Web</span>');
     return `<div class="lead${l.id===activeId?' active':''}" data-id="${l.id}" style="animation-delay:${Math.min(i*22,280)}ms">
       <div class="top-row"><span class="pot ${tier(l)}">${tier(l)}</span><span class="nm">${esc(l.name)}</span></div>
-      <div class="ad">${esc(l.addr)} · ${cat.name||''}</div>
+      <div class="ad">${esc(l.addr)}</div>
+      <div class="catline"><span class="catdot"></span><b>${esc(cat.name||'—')}</b>${isBig(l)?'<span class="bigflag">grosses Objekt</span>':''}</div>
       <div class="tags">${tags.join('')}
         ${c?'<span class="tg crm">✓ Im CRM</span>':`<button class="tg ok crm-add" data-import="${l.id}">＋ Ins CRM</button>`}
       </div></div>`;
@@ -2486,6 +2574,10 @@ function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show')
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3800)}
 window.toast=toast;
 
+/* Schnellauswahl der Zielgruppen */
+$('catAll').addEventListener('click',()=>{document.querySelectorAll('#catBox input').forEach(c=>c.checked=true)});
+$('catNone').addEventListener('click',()=>{document.querySelectorAll('#catBox input').forEach(c=>c.checked=false)});
+
 /* ══ Diagnosebericht ══
    Fasst alles zusammen, was zur Fehlersuche nötig ist, und legt es in die
    Zwischenablage. So kann der Zustand aus dem echten Browser weitergegeben
@@ -2561,7 +2653,7 @@ function hydrateCrmLeads(){
     leads.push(l);leadIdx.set(id,l);sessionIds.add(id);
   });
 }
-const VERSION='v8 · Ersatzquelle + Diagnose';
+const VERSION='v9 · 11 Zielgruppen';
 {const v=$('verStamp');if(v)v.textContent='AquaRadar CRM · '+VERSION;}
 if(!HAS_CLUSTER||!HAS_HEAT){
   $('statusTxt').textContent='Hinweis: Zusatzfunktionen ('+[!HAS_CLUSTER?'Cluster':'',!HAS_HEAT?'Heatmap':''].filter(Boolean).join(' + ')+') sind blockiert — Scan und CRM laufen normal weiter.';
