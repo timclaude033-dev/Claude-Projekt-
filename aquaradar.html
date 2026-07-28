@@ -475,6 +475,8 @@ button:active{transform:scale(.97)}
       <button class="scanbtn" id="btnScan"><span class="sweepline"></span>
         <svg id="btnIco" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12L18 7"/></svg>
         <span id="btnTxt">Region scannen</span></button>
+      <button class="ghostbtn" id="btnTest" style="flex:none;width:100%">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/></svg>Verbindung testen</button>
     </div>
     <div class="scanmeta" id="scanmeta"><div class="sm-row"><span id="smLabel">—</span><b id="smPct">0%</b></div><div class="bar"><i id="smBar"></i></div></div>
     <div id="diagLine" style="display:none;padding:8px 22px 10px;font-size:10.5px;color:var(--faint);border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums"></div>
@@ -963,6 +965,44 @@ function setScanUI(on){scanning=on;const b=$('btnScan');
   $('status').classList.toggle('busy',on);$('scanmeta').classList.toggle('on',on);$('hudScan').classList.toggle('on',on);
   if(!on)radarOff()}
 $('btnScan').addEventListener('click',()=>{if(scanning){stopFlag=true;if(aborter)aborter.abort();$('statusTxt').textContent='Scan wird gestoppt …';return}startScan()});
+
+/* Verbindungstest: prüft jeden Server einzeln (POST und GET) und zeigt
+   im Klartext, woran es liegt — Netzwerk, VPN, Server oder Abfrage. */
+$('btnTest').addEventListener('click',async()=>{
+  const btn=$('btnTest');btn.disabled=true;
+  const q='[out:json][timeout:10];node["amenity"="hospital"]["name"](around:50000,'+CENTER.lat+','+CENTER.lng+');out center;';
+  const zeilen=[];
+  $('diagLine').style.display='block';
+  $('statusTxt').textContent='Teste Verbindung zu OpenStreetMap …';
+  let erfolg=false;
+  for(const u of OVERPASS){
+    for(const get of [false,true]){
+      if(erfolg)break;
+      const kurz=u.replace(/^https:\/\//,'').split('/')[0]+(get?' (GET)':' (POST)');
+      try{
+        const url=get?(u+'?data='+encodeURIComponent(q)):u;
+        const opts=get?{method:'GET'}:{method:'POST',body:'data='+encodeURIComponent(q),
+          headers:{'Content-Type':'application/x-www-form-urlencoded'}};
+        const r=await fetchTimeout(url,opts,12000,null);
+        if(!r.ok){zeilen.push(kurz+': HTTP '+r.status);continue}
+        const j=await r.json();
+        const els=j.elements||[];
+        const mitKoord=els.filter(e=>Number.isFinite(e.lat)||(e.center&&Number.isFinite(e.center.lat))).length;
+        zeilen.push('✓ '+kurz+': '+els.length+' Objekte, '+mitKoord+' mit Koordinaten');
+        $('statusTxt').textContent=els.length
+          ?'Verbindung in Ordnung — '+kurz+' liefert '+els.length+' Krankenhäuser ('+mitKoord+' mit Koordinaten). Der Scan sollte funktionieren.'
+          :'Verbindung steht, aber OpenStreetMap liefert hier keine Krankenhäuser. Radius vergrössern.';
+        erfolg=true;
+      }catch(e){zeilen.push('✗ '+kurz+': '+errText(e))}
+    }
+    if(erfolg)break;
+  }
+  if(!erfolg){
+    $('statusTxt').textContent='Kein Server erreichbar. Sehr wahrscheinlich blockiert dein VPN oder eine Firewall die Verbindung — VPN kurz ausschalten und erneut testen.';
+  }
+  $('diagLine').textContent=zeilen.join('  ·  ');
+  btn.disabled=false;
+});
 /* Alle Zielgruppen laufen PARALLEL (max. 3 gleichzeitig) — dadurch
    dauert der Scan so lange wie die langsamste Gruppe, nicht wie alle zusammen.
    Der Fortschritt zählt fertige Gruppen, nicht gestartete. */
