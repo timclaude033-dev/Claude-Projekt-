@@ -1077,7 +1077,7 @@ async function startScan(){
     }else if(probleme.length===cats.length){
       msg=`Keine Verbindung zu OpenStreetMap (${errTextOf(probleme[0])}). Internet prüfen und erneut starten.`;
     }else if(empfangen===0){
-      msg=`Fertig (${s}s): OpenStreetMap kennt hier keine Objekte dieser Art im ${rad/1000}-km-Umkreis. Radius vergrössern oder weitere Zielgruppen anhaken.`;
+      msg=`Fertig (${s}s): keine Objekte empfangen. Radius vergrössern, weitere Zielgruppen anhaken — oder unten „Verbindung testen" drücken.`;
     }else if(neu===0&&upd===0&&roh>0){
       msg=`${roh} Objekte gefunden — alle durch deine Filter entfernt. Tipp: Haken „Nur grosse Objekte" entfernen.`;
     }else if(neu===0&&upd>0){
