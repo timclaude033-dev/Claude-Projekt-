@@ -880,15 +880,20 @@ async function overpass(q,signal,onServer){
   const versuche=[];
   OVERPASS.forEach(u=>versuche.push({u,get:false}));
   OVERPASS.forEach(u=>versuche.push({u,get:true}));
+  /* Letzte Rettungsleine: blockiert ein VPN oder eine Firewall gezielt die
+     Overpass-Domains, läuft die Abfrage über einen neutralen Weiterleiter.
+     Enthält keine persönlichen Daten — nur Suchgebiet und Objektart. */
+  versuche.push({u:OVERPASS[0],get:true,relay:true});
   for(let i=0;i<versuche.length;i++){
     if(signal&&signal.aborted)throw Object.assign(new Error('abbruch'),{name:'AbortError'});
-    const {u,get}=versuche[i];
+    const {u,get,relay}=versuche[i];
     if(onServer)onServer(i+1,versuche.length);
     try{
       const opts=get
         ?{method:'GET'}
         :{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}};
-      const url=get?(u+'?data='+encodeURIComponent(q)):u;
+      let url=get?(u+'?data='+encodeURIComponent(q)):u;
+      if(relay)url='https://api.allorigins.win/raw?url='+encodeURIComponent(url);
       const r=await fetchTimeout(url,opts,REQ_TIMEOUT,signal);
       if(r.status===429||r.status===503||r.status===504)throw new Error('BUSY');
       if(!r.ok)throw new Error('HTTP '+r.status);
@@ -979,12 +984,16 @@ $('btnTest').addEventListener('click',async()=>{
   $('diagLine').style.display='block';
   $('statusTxt').textContent='Teste Verbindung zu OpenStreetMap …';
   let erfolg=false;
-  for(const u of OVERPASS){
-    for(const get of [false,true]){
+  const wege=[];
+  OVERPASS.forEach(u=>{wege.push({u,get:false});wege.push({u,get:true})});
+  wege.push({u:OVERPASS[0],get:true,relay:true});
+  for(const {u,get,relay} of wege){
+    {
       if(erfolg)break;
-      const kurz=u.replace(/^https:\/\//,'').split('/')[0]+(get?' (GET)':' (POST)');
+      const kurz=(relay?'Weiterleiter → ':'')+u.replace(/^https:\/\//,'').split('/')[0]+(get?' (GET)':' (POST)');
       try{
-        const url=get?(u+'?data='+encodeURIComponent(q)):u;
+        let url=get?(u+'?data='+encodeURIComponent(q)):u;
+        if(relay)url='https://api.allorigins.win/raw?url='+encodeURIComponent(url);
         const opts=get?{method:'GET'}:{method:'POST',body:'data='+encodeURIComponent(q),
           headers:{'Content-Type':'application/x-www-form-urlencoded'}};
         const r=await fetchTimeout(url,opts,12000,null);
