@@ -1238,6 +1238,10 @@ button:active{transform:scale(.97)}
       <button class="scanbtn" id="btnScan"><span class="sweepline"></span>
         <svg id="btnIco" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12L18 7"/></svg>
         <span id="btnTxt">Region scannen</span></button>
+      <button class="ghostbtn" id="btnDiag" style="flex:none;width:100%;margin-bottom:8px">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M9 3h6M12 3v6M5 21h14a2 2 0 0 0 2-2v-6a9 9 0 0 0-18 0v6a2 2 0 0 0 2 2z"/></svg>
+        Diagnose kopieren
+      </button>
       <button class="ghostbtn" id="btnTest" style="flex:none;width:100%">
         <svg class="ic" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/></svg>Verbindung testen</button>
     </div>
@@ -1675,6 +1679,62 @@ function fetchTimeout(url,opts,ms,outerSignal){
 }
 /* Fragt der Reihe nach alle Spiegel ab — erst per POST, danach als
    Rückfallebene per GET (manche VPNs/Firewalls blockieren POST). */
+/* Protokoll jedes Netzversuchs — Grundlage des Diagnoseberichts. */
+const netLog=[];
+function logNet(eintrag){netLog.push(eintrag);if(netLog.length>60)netLog.shift()}
+
+/* ══ Zweite, unabhängige Datenquelle ══
+   Nominatim läuft auf anderer Domain und anderer Technik als Overpass.
+   Wird nur genutzt, wenn Overpass gar nichts liefert. Liefert Name,
+   Koordinaten und über extratags auch Telefon/Web/E-Mail. */
+const NOMI_BEGRIFFE={
+  KLINIK:['Krankenhaus','Klinik','Pflegeheim','Seniorenheim'],
+  HOTEL:['Hotel','Gasthof'],
+  GASTRO:['Restaurant','Gasthaus'],
+  INDUSTRIE:['Fabrik','Werk','Produktion'],
+  BILDUNG:['Schule','Gymnasium','Kindergarten'],
+  FITNESS:['Fitnessstudio','Sportzentrum'],
+  BUERO:['Bürogebäude','Verwaltung']
+};
+function viewbox(rad){
+  const dLat=rad/111320, dLon=rad/(111320*Math.cos(CENTER.lat*Math.PI/180));
+  return [(CENTER.lng-dLon).toFixed(4),(CENTER.lat+dLat).toFixed(4),
+          (CENTER.lng+dLon).toFixed(4),(CENTER.lat-dLat).toFixed(4)].join(',');
+}
+async function nominatim(ck,rad,signal){
+  const treffer=[];
+  const vb=viewbox(rad);
+  for(const begriff of (NOMI_BEGRIFFE[ck]||[])){
+    if(signal&&signal.aborted)break;
+    const url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=40'
+      +'&extratags=1&addressdetails=1&bounded=1&viewbox='+vb
+      +'&q='+encodeURIComponent(begriff);
+    const t0=now();
+    try{
+      const r=await fetchTimeout(url,{method:'GET',headers:{'Accept':'application/json'}},REQ_TIMEOUT,signal);
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      const arr=await r.json();
+      logNet({quelle:'Nominatim',begriff,status:r.status,anzahl:arr.length,ms:now()-t0});
+      arr.forEach(o=>{
+        if(!o.name)return;
+        const e=o.extratags||{}, a=o.address||{};
+        treffer.push({
+          type:'nomi',id:o.osm_type+o.osm_id,
+          lat:parseFloat(o.lat),lon:parseFloat(o.lon),
+          tags:Object.assign({name:o.name},e,{
+            'addr:street':a.road||'','addr:housenumber':a.house_number||'',
+            'addr:postcode':a.postcode||'','addr:city':a.city||a.town||a.village||''})
+        });
+      });
+    }catch(e){
+      if(e.name==='AbortError')break;
+      logNet({quelle:'Nominatim',begriff,fehler:errText(e),ms:now()-t0});
+    }
+    await new Promise(r=>setTimeout(r,1100));   /* Nutzungsregel: max. 1 Anfrage/Sekunde */
+  }
+  return treffer;
+}
+
 async function overpass(q,signal,onServer){
   let lastErr=new Error('Keine Antwort');
   const versuche=[];
@@ -1694,14 +1754,18 @@ async function overpass(q,signal,onServer){
         :{method:'POST',body:'data='+encodeURIComponent(q),headers:{'Content-Type':'application/x-www-form-urlencoded'}};
       let url=get?(u+'?data='+encodeURIComponent(q)):u;
       if(relay)url='https://api.allorigins.win/raw?url='+encodeURIComponent(url);
+      const t0=now();
       const r=await fetchTimeout(url,opts,REQ_TIMEOUT,signal);
       if(r.status===429||r.status===503||r.status===504)throw new Error('BUSY');
       if(!r.ok)throw new Error('HTTP '+r.status);
       const j=await r.json();
-      if(j.remark&&/error/i.test(j.remark))throw new Error('QUERY');
+      if(j.remark&&/error/i.test(j.remark))throw new Error('QUERY: '+String(j.remark).slice(0,90));
+      logNet({quelle:new URL(u).hostname,weg:(relay?'Weiterleiter':(get?'GET':'POST')),
+              status:r.status,anzahl:(j.elements||[]).length,ms:now()-t0});
       return j.elements||[];
     }catch(e){
       if(e.name==='AbortError')throw e;
+      logNet({quelle:new URL(u).hostname,weg:(relay?'Weiterleiter':(get?'GET':'POST')),fehler:errText(e)});
       lastErr=e;
     }
   }
@@ -1827,6 +1891,7 @@ async function startScan(){
   stopFlag=false;
   let neu=0,upd=0,roh=0,gefiltert=0,fertig=0,empfangen=0,ohneKoord=0;
   const gefundenIds=new Set();   /* eindeutige Treffer dieses Scans */
+  let ersatzQuelle=false;
   const probleme=[];
   aborter=new AbortController();
   setScanUI(true);
@@ -1891,6 +1956,34 @@ async function startScan(){
       if(!stopFlag)$('statusTxt').textContent='Scanne … '+fertig+'/'+cats.length+' Gruppen fertig · '+gefundenIds.size+' Treffer';
     });
 
+    /* ══ Ersatzquelle ══
+       Hat Overpass gar nichts geliefert (gesperrt, überlastet, leer),
+       wird dieselbe Suche über einen völlig anderen Anbieter versucht. */
+    if(gefundenIds.size===0&&!stopFlag){
+      $('statusTxt').textContent='Overpass lieferte nichts — versuche Ersatzquelle (Nominatim) …';
+      for(const ck of cats){
+        if(stopFlag)break;
+        try{
+          const alt=await nominatim(ck,rad,aborter.signal);
+          empfangen+=alt.length;
+          for(const el of alt){
+            const l=toLead(el,ck);
+            if(!l){ohneKoord++;continue}
+            roh++;
+            if(onlyBig&&!isBig(l)){gefiltert++;continue}
+            if(onlyContact&&!l.phone&&!l.email&&!l.web){gefiltert++;continue}
+            const r=upsert(l);
+            gefundenIds.add(l.id);
+            if(r==='new')neu++;else if(r==='upd')upd++;
+          }
+          renderScanList();
+          $('scanCount').textContent=gefundenIds.size;
+          $('statusTxt').textContent='Ersatzquelle … '+gefundenIds.size+' Treffer';
+        }catch(e){if(e.name==='AbortError')break}
+      }
+      if(gefundenIds.size>0)ersatzQuelle=true;
+    }
+
     /* Abschlussmeldung — immer aussagekräftig */
     const s=Math.round((now()-t0)/1000);
     let msg,diag='';
@@ -1901,10 +1994,11 @@ async function startScan(){
     const anzeige=gefundenIds.size, bekannt=anzeige-neu;
     if(stopFlag){
       msg=`Gestoppt nach ${s}s — ${anzeige} Treffer angezeigt${neu?' (davon '+neu+' neu)':''}.`;
-    }else if(probleme.length===cats.length){
-      msg=`Keine Verbindung zu OpenStreetMap (${errTextOf(probleme[0])}). Internet prüfen und erneut starten.`;
+    }else if(anzeige===0&&probleme.length===cats.length){
+      msg=`Keine Verbindung zu den Kartendiensten (${errTextOf(probleme[0])}). Internet/VPN prüfen — Knopf „Diagnose kopieren" liefert Details.`;
     }else if(anzeige>0){
       msg=`Fertig in ${s}s: ${anzeige} Treffer angezeigt`
+        +(ersatzQuelle?' (über Ersatzquelle)':'')
         +(neu?` · ${neu} neu`:'')
         +(bekannt?` · ${bekannt} bereits bekannt`:'')
         +(gefiltert?` · ${gefiltert} durch Filter ausgeblendet`:'')+'.';
@@ -2392,6 +2486,67 @@ function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show')
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3800)}
 window.toast=toast;
 
+/* ══ Diagnosebericht ══
+   Fasst alles zusammen, was zur Fehlersuche nötig ist, und legt es in die
+   Zwischenablage. So kann der Zustand aus dem echten Browser weitergegeben
+   werden, statt zu raten. */
+function diagnoseText(){
+  const z=[];
+  z.push('AQUARADAR DIAGNOSE');
+  z.push('Version   : '+VERSION);
+  z.push('Zeitpunkt : '+new Date().toLocaleString('de-DE'));
+  z.push('Browser   : '+navigator.userAgent);
+  z.push('Online    : '+navigator.onLine);
+  z.push('Herkunft  : '+location.origin+location.pathname);
+  z.push('');
+  z.push('BIBLIOTHEKEN');
+  z.push('  Leaflet       : '+(typeof L!=='undefined'));
+  z.push('  markercluster : '+HAS_CLUSTER);
+  z.push('  heatmap       : '+HAS_HEAT);
+  z.push('');
+  z.push('EINSTELLUNGEN');
+  z.push('  Umkreis       : '+($('selRad').value/1000)+' km');
+  z.push('  Zielgruppen   : '+[...document.querySelectorAll('#catBox input:checked')].map(c=>c.dataset.cat).join(', '));
+  z.push('  Nur grosse    : '+$('chkBig').checked);
+  z.push('  Nur Kontakt   : '+$('chkContact').checked);
+  z.push('');
+  z.push('ZUSTAND');
+  z.push('  Scan-Leads    : '+leads.length);
+  z.push('  Liste sichtbar: '+document.querySelectorAll('#list .lead').length);
+  z.push('  Marker        : '+Object.keys(markers).length);
+  z.push('  CRM-Leads     : '+crm.length);
+  z.push('  Status        : '+$('statusTxt').textContent);
+  z.push('  Diagnosezeile : '+(($('diagLine')||{}).textContent||'-'));
+  z.push('');
+  z.push('NETZVERSUCHE (letzte '+netLog.length+')');
+  if(!netLog.length)z.push('  — keine Anfragen protokolliert —');
+  netLog.forEach(n=>{
+    z.push('  '+(n.quelle||'?')+' ['+(n.weg||n.begriff||'')+'] '
+      +(n.fehler?('FEHLER: '+n.fehler):('OK '+n.status+' · '+n.anzahl+' Objekte'))
+      +(n.ms!=null?(' · '+n.ms+'ms'):''));
+  });
+  z.push('');
+  z.push('JS-FEHLER');
+  z.push((window.__errs&&window.__errs.length)?window.__errs.map(e=>'  '+e).join('\n'):'  keine');
+  return z.join('\n');
+}
+$('btnDiag').addEventListener('click',async()=>{
+  const txt=diagnoseText();
+  try{
+    await navigator.clipboard.writeText(txt);
+    toast('✓ Diagnose in der Zwischenablage — bitte einfügen und schicken');
+  }catch(e){
+    const ta=document.createElement('textarea');
+    ta.value=txt;
+    Object.assign(ta.style,{position:'fixed',inset:'6% 8%',zIndex:3000,fontFamily:'monospace',
+      fontSize:'12px',padding:'16px',borderRadius:'12px',border:'2px solid var(--aqua)'});
+    document.body.appendChild(ta);ta.select();
+    toast('Text ist markiert — mit Strg+C kopieren, dann Esc');
+    ta.addEventListener('keydown',ev=>{if(ev.key==='Escape')ta.remove()});
+  }
+  console.log(txt);
+});
+
 /* ═══ INIT ═══
    CRM-Leads werden als Kartenpunkte wiederhergestellt (sie sind der
    dauerhafte Arbeitsbestand). Reine Scan-Treffer starten leer. */
@@ -2406,7 +2561,7 @@ function hydrateCrmLeads(){
     leads.push(l);leadIdx.set(id,l);sessionIds.add(id);
   });
 }
-const VERSION='v7 · zeigt alle Treffer';
+const VERSION='v8 · Ersatzquelle + Diagnose';
 {const v=$('verStamp');if(v)v.textContent='AquaRadar CRM · '+VERSION;}
 if(!HAS_CLUSTER||!HAS_HEAT){
   $('statusTxt').textContent='Hinweis: Zusatzfunktionen ('+[!HAS_CLUSTER?'Cluster':'',!HAS_HEAT?'Heatmap':''].filter(Boolean).join(' + ')+') sind blockiert — Scan und CRM laufen normal weiter.';
