@@ -1826,6 +1826,7 @@ async function startScan(){
 
   stopFlag=false;
   let neu=0,upd=0,roh=0,gefiltert=0,fertig=0,empfangen=0,ohneKoord=0;
+  const gefundenIds=new Set();   /* eindeutige Treffer dieses Scans */
   const probleme=[];
   aborter=new AbortController();
   setScanUI(true);
@@ -1840,7 +1841,7 @@ async function startScan(){
     const pct=Math.round(fertig/cats.length*100);
     $('smPct').textContent=pct+'%';
     $('smBar').style.width=pct+'%';
-    $('smLabel').textContent=fertig+' von '+cats.length+' Zielgruppen · '+neu+' neue Leads';
+    $('smLabel').textContent=fertig+' von '+cats.length+' Zielgruppen · '+gefundenIds.size+' Treffer';
   };
   setProgress();
   $('statusTxt').textContent='Verbinde mit OpenStreetMap …';
@@ -1880,36 +1881,42 @@ async function startScan(){
           if(onlyBig&&!isBig(l)){gefiltert++;continue}
           if(onlyContact&&!l.phone&&!l.email&&!l.web){gefiltert++;continue}
           const r=upsert(l);
+          gefundenIds.add(l.id);            /* alles Angezeigte zählen, nicht nur Neues */
           if(r==='new')neu++;else if(r==='upd')upd++;
         }
         renderScanList();
-        $('scanCount').textContent=neu;
+        $('scanCount').textContent=gefundenIds.size;
       }
       setProgress();
-      if(!stopFlag)$('statusTxt').textContent='Scanne … '+fertig+'/'+cats.length+' Gruppen fertig · '+neu+' Leads gefunden';
+      if(!stopFlag)$('statusTxt').textContent='Scanne … '+fertig+'/'+cats.length+' Gruppen fertig · '+gefundenIds.size+' Treffer';
     });
 
     /* Abschlussmeldung — immer aussagekräftig */
     const s=Math.round((now()-t0)/1000);
     let msg,diag='';
     const errTextOf=p=>{const m=/\(([^)]+)\)\s*$/.exec(p);return m?m[1]:'Fehler'};
+    /* Es zählt immer die GESAMTZAHL der angezeigten Treffer — nicht nur das,
+       was neu hinzukam. Sonst wirkt ein zweiter Scan wie ein Fehlschlag
+       ("keine neuen Treffer"), obwohl die Liste voller Treffer steht. */
+    const anzeige=gefundenIds.size, bekannt=anzeige-neu;
     if(stopFlag){
-      msg=`Gestoppt nach ${s}s — ${neu} neue Leads übernommen.`;
+      msg=`Gestoppt nach ${s}s — ${anzeige} Treffer angezeigt${neu?' (davon '+neu+' neu)':''}.`;
     }else if(probleme.length===cats.length){
       msg=`Keine Verbindung zu OpenStreetMap (${errTextOf(probleme[0])}). Internet prüfen und erneut starten.`;
+    }else if(anzeige>0){
+      msg=`Fertig in ${s}s: ${anzeige} Treffer angezeigt`
+        +(neu?` · ${neu} neu`:'')
+        +(bekannt?` · ${bekannt} bereits bekannt`:'')
+        +(gefiltert?` · ${gefiltert} durch Filter ausgeblendet`:'')+'.';
+    }else if(roh>0){
+      msg=`${roh} Objekte gefunden — alle durch deine Filter ausgeblendet. Tipp: Haken „Nur grosse Objekte" entfernen.`;
     }else if(empfangen===0){
       msg=`Fertig (${s}s): keine Objekte empfangen. Radius vergrössern, weitere Zielgruppen anhaken — oder unten „Verbindung testen" drücken.`;
-    }else if(neu===0&&upd===0&&roh>0){
-      msg=`${roh} Objekte gefunden — alle durch deine Filter entfernt. Tipp: Haken „Nur grosse Objekte" entfernen.`;
-    }else if(neu===0&&upd>0){
-      msg=`Fertig (${s}s): keine neuen Leads, ${upd} bestehende aktualisiert.`;
-    }else if(neu===0){
-      msg=`Fertig (${s}s): ${empfangen} Objekte empfangen, aber keine verwertbaren Leads. Bitte erneut versuchen.`;
     }else{
-      msg=`Fertig in ${s}s: ${neu} neue Leads · ${upd} aktualisiert${gefiltert?' · '+gefiltert+' gefiltert':''}.`;
+      msg=`Fertig (${s}s): ${empfangen} Objekte empfangen, aber keine verwertbaren Leads. Bitte erneut versuchen.`;
     }
     /* Diagnosezeile — macht jedes künftige Problem sofort sichtbar */
-    diag=`${empfangen} empfangen → ${roh} verwertbar → ${gefiltert} gefiltert → ${neu} neu`
+    diag=`${empfangen} empfangen → ${roh} verwertbar → ${gefiltert} gefiltert → ${gefundenIds.size} angezeigt (${neu} neu)`
       +(ohneKoord?' · '+ohneKoord+' ohne Koordinaten':'')
       +(geheilt?' · '+geheilt+'× automatisch nachgeladen':'');
     if(probleme.length&&probleme.length<cats.length)msg+=' Nicht geladen: '+probleme.join(', ')+'.';
@@ -1918,11 +1925,11 @@ async function startScan(){
     $('diagLine').textContent=diag;
     $('diagLine').style.display=diag?'block':'none';
     $('smPct').textContent='100%';$('smBar').style.width='100%';
-    $('smLabel').textContent=cats.length+' von '+cats.length+' Zielgruppen · '+neu+' neue Leads';
-    toast(stopFlag?`■ Gestoppt — ${neu} neue Leads`
-      :neu>0?`✓ ${neu} neue Leads gefunden`
+    $('smLabel').textContent=cats.length+' von '+cats.length+' Zielgruppen · '+gefundenIds.size+' Treffer';
+    toast(stopFlag?`■ Gestoppt — ${gefundenIds.size} Treffer`
+      :gefundenIds.size>0?`✓ ${gefundenIds.size} Treffer angezeigt${neu?' ('+neu+' neu)':''}`
       :probleme.length?`⚠ ${probleme.length} Gruppe(n) nicht geladen`
-      :'Keine neuen Treffer');
+      :'Keine Treffer — Filter lockern oder Radius vergrössern');
   }catch(e){
     $('statusTxt').textContent='Scan abgebrochen ('+errText(e)+'). Bitte erneut starten.';
     toast('⚠ Scan abgebrochen');
@@ -2399,7 +2406,7 @@ function hydrateCrmLeads(){
     leads.push(l);leadIdx.set(id,l);sessionIds.add(id);
   });
 }
-const VERSION='v6 · alles eingebettet';
+const VERSION='v7 · zeigt alle Treffer';
 {const v=$('verStamp');if(v)v.textContent='AquaRadar CRM · '+VERSION;}
 if(!HAS_CLUSTER||!HAS_HEAT){
   $('statusTxt').textContent='Hinweis: Zusatzfunktionen ('+[!HAS_CLUSTER?'Cluster':'',!HAS_HEAT?'Heatmap':''].filter(Boolean).join(' + ')+') sind blockiert — Scan und CRM laufen normal weiter.';
