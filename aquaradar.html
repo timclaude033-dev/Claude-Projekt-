@@ -1125,6 +1125,25 @@ select option,select optgroup{background:var(--panel2);color:var(--txt)}
 
 /* ─── KALENDER ─── */
 #viewCal{grid-template-rows:1fr}
+/* Tourenplaner */
+#viewTour{grid-template-rows:1fr}
+.tourwrap{overflow-y:auto;padding:26px;scrollbar-width:thin}
+.tour-grid{display:grid;gap:18px;max-width:1250px;margin:0 auto}
+@media(min-width:1000px){.tour-grid{grid-template-columns:.85fr 1.15fr;align-items:start}}
+.tour-info{margin-top:14px;display:grid;gap:8px}
+.tour-kpi{display:flex;justify-content:space-between;background:var(--panel2);border:1px solid var(--line);
+  border-radius:11px;padding:11px 14px;font-size:12.5px}
+.tour-kpi b{font-family:var(--head);font-weight:800;font-variant-numeric:tabular-nums}
+.tourlist{display:grid;gap:10px;max-height:calc(100vh - 230px);overflow-y:auto;scrollbar-width:thin}
+.tstop{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;
+  background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:12px 14px;
+  cursor:pointer;transition:border-color .2s,transform .2s}
+.tstop:hover{border-color:var(--aqua);transform:translateX(3px)}
+.tstop .nr{width:30px;height:30px;border-radius:9px;background:var(--gradup);color:#04222E;
+  font-family:var(--head);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.tstop .tf{font-family:var(--head);font-weight:700;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tstop .ta{font-size:11.5px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tstop .tk{font-size:11px;color:var(--faint);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 .calwrap{overflow-y:auto;padding:26px;scrollbar-width:thin}
 .cal{max-width:1100px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden}
 .cal-h{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line)}
@@ -1183,6 +1202,18 @@ select option,select optgroup{background:var(--panel2);color:var(--txt)}
 .file svg{width:14px;height:14px;stroke:var(--aqua);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .file a{color:var(--aqua);text-decoration:underline;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
 .addrow{display:flex;gap:8px}
+/* Wirtschaftlichkeitsrechnung */
+.roi-box{background:var(--panel2);border:1px solid var(--line2);border-radius:12px;padding:14px 16px;font-size:12.5px}
+.roi-hint{color:var(--faint);font-size:11.5px}
+.roi-row{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid var(--line)}
+.roi-row:last-of-type{border-bottom:0}
+.roi-row span{color:var(--sub)}
+.roi-row b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.roi-sum{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:10px;padding-top:10px;
+  border-top:2px solid var(--aqua)}
+.roi-sum span{font-weight:700;color:var(--txt)}
+.roi-sum b{font-family:var(--head);font-size:20px;font-weight:800;color:var(--gA);font-variant-numeric:tabular-nums}
+.roi-amo{margin-top:8px;font-size:11.5px;color:var(--aqua);font-weight:600}
 .addrow input{flex:1}
 .smallbtn{border:0;border-radius:10px;padding:9px 15px;font-size:12px;font-weight:700;background:var(--grad);color:#fff;transition:transform .2s}
 .smallbtn:hover{transform:translateY(-1px)}
@@ -1192,6 +1223,33 @@ select option,select optgroup{background:var(--panel2);color:var(--txt)}
 .m-f .grow{flex:1}
 
 /* Toast */
+.callpos{font-family:var(--head);font-weight:800;font-size:13px;color:var(--aqua);
+  background:var(--panel2);border:1px solid var(--line2);border-radius:99px;padding:5px 13px}
+.callcontact{display:grid;gap:8px}
+.callcontact a,.callcontact span.z{display:flex;align-items:center;gap:10px;background:var(--panel2);
+  border:1px solid var(--line);border-radius:11px;padding:11px 14px;font-size:13.5px;transition:.2s}
+.callcontact a:hover{border-color:var(--aqua)}
+.callcontact .big{font-family:var(--head);font-weight:800;font-size:16px;color:var(--aqua)}
+.script{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--aqua);
+  border-radius:0 11px 11px 0;padding:13px 15px;font-size:12.5px;line-height:1.6;color:var(--sub)}
+.script b{color:var(--txt)}
+.script p{margin-bottom:9px}
+.outcomes{display:grid;gap:9px}
+.oc{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--panel2);
+  border:1px solid var(--line2);border-radius:12px;padding:13px 16px;text-align:left;transition:.2s}
+.oc b{font-family:var(--head);font-size:13.5px;font-weight:700}
+.oc span{font-size:10.5px;color:var(--faint);white-space:nowrap}
+.oc:hover{border-color:var(--aqua);transform:translateX(3px)}
+.oc-win{border-color:rgba(61,220,151,.45);background:rgba(61,220,151,.08)}
+.oc-win b{color:var(--gA)}
+.oc-int{border-color:rgba(41,196,232,.45);background:rgba(41,196,232,.08)}
+.oc-int b{color:var(--aqua)}
+.oc-out{border-color:rgba(224,112,90,.4);background:rgba(224,112,90,.07)}
+.oc-out b{color:var(--red)}
+.callstats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.cs{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:11px;text-align:center}
+.cs b{display:block;font-family:var(--head);font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}
+.cs span{font-size:10.5px;color:var(--faint)}
 .toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,120px);z-index:1200;background:var(--panel);
   border:1px solid var(--line2);border-radius:12px;padding:13px 22px;font-size:13px;
   box-shadow:var(--sh);transition:transform .5s var(--ez)}
@@ -1224,12 +1282,17 @@ button:active{transform:scale(.97)}
     <button class="tab on" data-view="Radar"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12l6-5"/></svg>Radar</button>
     <button class="tab" data-view="Crm"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="17" y="4" width="5" height="13" rx="1.5"/></svg>Pipeline<span class="badge" id="crmCount">0</span></button>
     <button class="tab" data-view="Dash"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Dashboard</button>
+    <button class="tab" data-view="Tour"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/></svg>Touren</button>
     <button class="tab" data-view="Cal"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Kalender</button>
   </nav>
   <div class="gsearch">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
     <input id="gq" type="text" placeholder="Global suchen — Firma, Ort, Ansprechpartner, Tag …">
   </div>
+  <button class="iconbtn" id="callBtn" title="Telefon-Modus starten" style="width:auto;padding:0 15px;gap:8px;font-size:12.5px;font-weight:700;color:var(--aqua)">
+    <svg viewBox="0 0 24 24" style="stroke:var(--aqua)"><path d="M4 5a2 2 0 0 1 2-2h2.3l1.4 4-2 1.3a12 12 0 0 0 5.3 5.3l1.3-2 4 1.4V19a2 2 0 0 1-2 2A16 16 0 0 1 4 5z"/></svg>
+    Anrufen
+  </button>
   <button class="iconbtn" id="remindBtn" title="Erinnerungen"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="dot" id="remindDot"></span></button>
   <button class="iconbtn" id="themeBtn" title="Hell/Dunkel"><svg viewBox="0 0 24 24" id="themeIco"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
 </header>
@@ -1416,6 +1479,43 @@ button:active{transform:scale(.97)}
   </div></div>
 </main>
 
+<!-- ═══ VIEW: TOURENPLANER ═══ -->
+<main class="view" id="viewTour">
+  <div class="tourwrap">
+    <div class="tour-grid">
+      <div class="panelbox">
+        <h3><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/></svg>Tour planen</h3>
+        <div class="m-grid2">
+          <div class="m-fld"><label>Startpunkt</label><select id="tStart">
+            <option value="48.0616,12.2201">Wasserburg am Inn (Basis)</option>
+            <option value="47.8561,12.1289">Rosenheim</option>
+            <option value="48.2500,12.5333">Mühldorf am Inn</option>
+            <option value="48.1351,11.5820">München</option></select></div>
+          <div class="m-fld"><label>Maximale Halte</label><select id="tMax">
+            <option>4</option><option>6</option><option selected>8</option><option>10</option><option>12</option></select></div>
+          <div class="m-fld"><label>Nur Potenzial</label><select id="tTier">
+            <option value="">alle</option><option value="A" selected>nur A</option><option value="AB">A und B</option></select></div>
+          <div class="m-fld"><label>Nur Phase</label><select id="tStage"><option value="">alle Phasen</option></select></div>
+        </div>
+        <label class="opt" style="margin-top:10px"><input type="checkbox" id="tNurCrm" checked>Nur Leads aus dem CRM</label>
+        <label class="opt"><input type="checkbox" id="tOffen">Nur mit offenem Termin oder Aufgabe</label>
+        <div class="addrow" style="margin-top:14px">
+          <button class="smallbtn" id="btnTour" style="flex:1">Tour berechnen</button>
+        </div>
+        <div id="tourInfo" class="tour-info"></div>
+        <div class="addrow" style="margin-top:10px">
+          <button class="smallbtn ghost" id="btnTourNav" style="flex:1">In Google Maps öffnen</button>
+          <button class="smallbtn ghost" id="btnTourPrint">Drucken</button>
+        </div>
+      </div>
+      <div class="panelbox">
+        <h3><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Reihenfolge</h3>
+        <div id="tourList" class="tourlist"><div class="empty" style="padding:26px">Noch keine Tour berechnet.</div></div>
+      </div>
+    </div>
+  </div>
+</main>
+
 <!-- ═══ VIEW: KALENDER ═══ -->
 <main class="view" id="viewCal">
   <div class="calwrap"><div class="cal">
@@ -1462,11 +1562,30 @@ button:active{transform:scale(.97)}
         <h4>Tags</h4>
         <div class="tagrow" id="tagRow"></div>
         <div class="addrow"><input type="text" id="tagIn" placeholder="Tag hinzufügen + Enter"></div>
+        <h4>Wirtschaftlichkeit &amp; Angebot</h4>
+        <div class="m-grid2">
+          <div class="m-fld"><label>Personen im Haus</label><input type="number" id="rPers" placeholder="z. B. 40"></div>
+          <div class="m-fld"><label>Zimmer/Betten <span class="opt">(falls Hotel/Klinik)</span></label><input type="number" id="rZim" placeholder="0"></div>
+          <div class="m-fld"><label>Kaffeemaschinen &amp; Spüler</label><input type="number" id="rGer" placeholder="z. B. 3"></div>
+          <div class="m-fld"><label>Wasserhärte</label><select id="rHart">
+            <option value="1">weich (bis 8,4 °dH)</option>
+            <option value="1.6" selected>mittel (8,4–14 °dH)</option>
+            <option value="2.4">hart (über 14 °dH)</option></select></div>
+          <div class="m-fld"><label>Anlagenpreis (€)</label><input type="number" id="rPreis" placeholder="z. B. 4900"></div>
+          <div class="m-fld"><label>Kartuschen /Jahr (€)</label><input type="number" id="rKart" placeholder="z. B. 390"></div>
+        </div>
+        <div class="roi-box" id="roiBox"><div class="roi-hint">Werte eintragen — die Rechnung erscheint sofort.</div></div>
+        <div class="addrow"><button class="smallbtn" id="btnAngebot" style="flex:1">Angebot als PDF erzeugen</button></div>
         <h4>Dateien (lokal)</h4>
         <div class="filelist" id="fileList"></div>
         <div class="addrow"><input type="file" id="fileIn" style="padding:9px"><button class="smallbtn ghost" id="fileAdd">Anhängen</button></div>
       </div>
       <div class="m-sec">
+        <h4>Nachfass-Sequenz</h4>
+        <div class="addrow">
+          <select id="seqSel" style="flex:1"></select>
+          <button class="smallbtn" id="seqStart">Starten</button>
+        </div>
         <h4>Aufgaben &amp; Wiedervorlagen</h4>
         <div class="tasklist" id="taskList"></div>
         <div class="addrow"><input type="text" id="taskIn" placeholder="Neue Aufgabe …"><input type="date" id="taskDue" style="max-width:150px"><button class="smallbtn" id="taskAdd">+</button></div>
@@ -1483,6 +1602,47 @@ button:active{transform:scale(.97)}
       <span class="grow"></span>
       <button class="smallbtn danger" id="mDel">Lead löschen</button>
       <button class="smallbtn" id="mSave">Speichern</button>
+    </div>
+  </div>
+</div>
+<!-- ═══ TELEFON-MODUS ═══ -->
+<div class="overlay" id="callOverlay">
+  <div class="modal" id="callModal" style="width:min(940px,100%)">
+    <div class="m-h">
+      <span class="pot" id="cPot">B</span>
+      <div class="mfirm" id="cFirm">—</div>
+      <span class="callpos" id="cPos">1 / 1</span>
+      <button class="m-x" id="cClose">✕</button>
+    </div>
+    <div class="m-body" style="grid-template-columns:1fr 1fr">
+      <div class="m-sec">
+        <h4>Kontakt</h4>
+        <div class="callcontact" id="cKontakt"></div>
+        <h4>Gesprächsleitfaden</h4>
+        <div class="script" id="cScript"></div>
+        <h4>Notiz zum Gespräch</h4>
+        <textarea id="cNote" placeholder="Was wurde besprochen?" style="min-height:90px"></textarea>
+      </div>
+      <div class="m-sec">
+        <h4>Ergebnis festhalten</h4>
+        <div class="outcomes">
+          <button class="oc oc-win"  data-oc="termin"><b>Termin vereinbart</b><span>Taste 1</span></button>
+          <button class="oc oc-int"  data-oc="interesse"><b>Interesse, Unterlagen senden</b><span>Taste 2</span></button>
+          <button class="oc"         data-oc="wieder"><b>Später nochmal anrufen</b><span>Taste 3</span></button>
+          <button class="oc"         data-oc="nicht"><b>Nicht erreicht</b><span>Taste 4</span></button>
+          <button class="oc oc-out"  data-oc="absage"><b>Kein Interesse</b><span>Taste 5</span></button>
+        </div>
+        <h4>Wiedervorlage</h4>
+        <div class="addrow"><input type="date" id="cWv"><button class="smallbtn ghost" id="cSkip">Überspringen →</button></div>
+        <h4>Fortschritt</h4>
+        <div class="callstats" id="cStats"></div>
+      </div>
+    </div>
+    <div class="m-f">
+      <button class="smallbtn ghost" id="cPrev">← Zurück</button>
+      <button class="smallbtn" id="cOpen">Lead öffnen</button>
+      <span class="grow"></span>
+      <button class="smallbtn ghost" id="cEnd">Runde beenden</button>
     </div>
   </div>
 </div>
@@ -2365,7 +2525,7 @@ function openLead(cid){
   $('fWeb').value=c.web;$('fBranche').value=c.branche;$('fAdresse').value=c.adresse;
   $('fStage').innerHTML=STAGES.map(s=>`<option value="${s.id}"${s.id===c.stage?' selected':''}>${esc(s.name)}</option>`).join('');
   $('fPrio').value=c.prio;$('fTermin').value=c.termin;$('fWert').value=c.wert||'';
-  renderTags(c);renderTasks(c);renderNotes(c);renderTl(c);renderFiles(c);
+  renderTags(c);renderTasks(c);renderNotes(c);renderTl(c);renderFiles(c);roiLaden(c);
   $('overlay').classList.add('on');
 }
 window.openLead=openLead;
@@ -2600,6 +2760,9 @@ function switchView(v){
   if(v==='Crm')renderBoard();
   if(v==='Dash')renderDash();
   if(v==='Cal')renderCal();
+  if(v==='Tour'){
+    $('tStage').innerHTML='<option value="">alle Phasen</option>'+STAGES.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');
+  }
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.view)));
 $('gq').addEventListener('input',e=>{gq=e.target.value.trim();
@@ -2640,6 +2803,481 @@ document.querySelectorAll('#catBox input').forEach(c=>c.addEventListener('change
 $('catAll').addEventListener('click',()=>{document.querySelectorAll('#catBox input').forEach(c=>c.checked=true);syncChips()});
 $('catNone').addEventListener('click',()=>{document.querySelectorAll('#catBox input').forEach(c=>c.checked=false);syncChips()});
 syncChips();
+
+/* ══════════════════════════════════════════════════════════
+   WIRTSCHAFTLICHKEIT & ANGEBOT
+   Rechnet die jährlichen Kosten des Ist-Zustands gegen die
+   Anlage. Alle Annahmen stehen offen im Objekt ANNAHMEN und
+   werden im Angebot mitgedruckt — nichts ist versteckt.
+   ══════════════════════════════════════════════════════════ */
+const ANNAHMEN={
+  literProTagUndPerson:1.0,      /* Liter Trinkwasser je Person und Arbeitstag */
+  arbeitstage:250,
+  preisFlascheProLiter:0.55,     /* Kastenware inkl. Pfandhandling, € je Liter */
+  handlingProLiter:0.12,         /* Bestellen, Schleppen, Lagern, Leergut */
+  literProZimmerUndJahr:180,     /* Zimmer-/Bettenversorgung je Jahr */
+  entkalkungProGeraetUndJahr:210,/* Entkalkung, Service, Verschleiss je Gerät */
+  lebensdauerJahre:8             /* Nutzungsdauer der Anlage für die Betrachtung */
+};
+function roiRechnen(v){
+  const A=ANNAHMEN;
+  const pers=Math.max(0,+v.pers||0), zim=Math.max(0,+v.zim||0),
+        ger=Math.max(0,+v.ger||0),  hart=+v.hart||1.6,
+        preis=Math.max(0,+v.preis||0), kart=Math.max(0,+v.kart||0);
+  const literMitarbeiter=pers*A.literProTagUndPerson*A.arbeitstage;
+  const literZimmer=zim*A.literProZimmerUndJahr;
+  const liter=literMitarbeiter+literZimmer;
+  const kostenFlaschen=liter*A.preisFlascheProLiter;
+  const kostenHandling=liter*A.handlingProLiter;
+  const kostenKalk=ger*A.entkalkungProGeraetUndJahr*hart;
+  const istProJahr=kostenFlaschen+kostenHandling+kostenKalk;
+  const neuProJahr=kart;
+  const ersparnisProJahr=istProJahr-neuProJahr;
+  const amortisationMonate=ersparnisProJahr>0?(preis/ersparnisProJahr*12):null;
+  const ersparnis8=ersparnisProJahr*A.lebensdauerJahre-preis;
+  return{liter,kostenFlaschen,kostenHandling,kostenKalk,istProJahr,neuProJahr,
+         ersparnisProJahr,amortisationMonate,ersparnis8,preis,kart};
+}
+const eur=n=>Math.round(n).toLocaleString('de-DE')+' €';
+function roiWerte(){
+  return{pers:$('rPers').value,zim:$('rZim').value,ger:$('rGer').value,
+         hart:$('rHart').value,preis:$('rPreis').value,kart:$('rKart').value};
+}
+function roiAnzeigen(){
+  const v=roiWerte();
+  const leer=!(+v.pers||+v.zim||+v.ger);
+  if(leer){$('roiBox').innerHTML='<div class="roi-hint">Werte eintragen — die Rechnung erscheint sofort.</div>';return null}
+  const r=roiRechnen(v);
+  $('roiBox').innerHTML=
+    `<div class="roi-row"><span>Trinkwasser aus Flaschen (${Math.round(r.liter).toLocaleString('de-DE')} l/Jahr)</span><b>${eur(r.kostenFlaschen)}</b></div>`+
+    `<div class="roi-row"><span>Bestellung, Transport, Leergut</span><b>${eur(r.kostenHandling)}</b></div>`+
+    `<div class="roi-row"><span>Entkalkung &amp; Geräteverschleiss</span><b>${eur(r.kostenKalk)}</b></div>`+
+    `<div class="roi-row"><span>Bisherige Kosten pro Jahr</span><b>${eur(r.istProJahr)}</b></div>`+
+    `<div class="roi-row"><span>Mit PROaqua (Kartuschen/Jahr)</span><b>−${eur(r.neuProJahr)}</b></div>`+
+    `<div class="roi-sum"><span>Ersparnis pro Jahr</span><b>${eur(r.ersparnisProJahr)}</b></div>`+
+    (r.amortisationMonate!=null&&r.preis>0
+      ?`<div class="roi-amo">Anlage amortisiert sich nach rund ${Math.round(r.amortisationMonate)} Monaten · Vorteil über ${ANNAHMEN.lebensdauerJahre} Jahre: ${eur(r.ersparnis8)}</div>`
+      :(r.preis>0?'<div class="roi-amo" style="color:var(--warn)">Bei diesen Werten entsteht keine Ersparnis — Angaben prüfen.</div>':''));
+  return r;
+}
+['rPers','rZim','rGer','rHart','rPreis','rKart'].forEach(id=>{
+  $(id).addEventListener('input',()=>{roiAnzeigen();roiSpeichern()});
+  $(id).addEventListener('change',()=>{roiAnzeigen();roiSpeichern()});
+});
+function roiSpeichern(){const c=cur();if(!c)return;c.roi=roiWerte();touch(c)}
+function roiLaden(c){
+  const v=c.roi||{};
+  $('rPers').value=v.pers||'';$('rZim').value=v.zim||'';$('rGer').value=v.ger||'';
+  $('rHart').value=v.hart||'1.6';$('rPreis').value=v.preis||'';$('rKart').value=v.kart||'';
+  roiAnzeigen();
+}
+
+/* ══ Angebots-PDF ══
+   Erzeugt ein eigenes Druckfenster. Der Browser-Druckdialog bietet
+   „Als PDF sichern" — dadurch braucht es keine externe Bibliothek. */
+function angebotDrucken(){
+  const c=cur();if(!c)return;
+  const r=roiAnzeigen();
+  if(!r){toast('Bitte zuerst Personen, Zimmer oder Geräte eintragen');return}
+  const heute=new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});
+  const nr='A-'+new Date().getFullYear()+'-'+String(Math.abs(hashCode(c.id))%9000+1000);
+  const zeile=(t,w,stark)=>`<tr${stark?' class="stark"':''}><td>${esc(t)}</td><td class="r">${w}</td></tr>`;
+  const w=window.open('','_blank','width=900,height=1100');
+  if(!w){toast('Bitte Pop-ups für diese Seite erlauben');return}
+  w.document.write(`<!DOCTYPE html><html lang="de"><head><meta charset="utf-8">
+<title>Angebot ${esc(c.firma)}</title><style>
+@page{size:A4;margin:18mm 16mm}
+*{box-sizing:border-box}
+body{font-family:"Helvetica Neue",Arial,sans-serif;color:#12303F;font-size:11pt;line-height:1.5;margin:0}
+.kopf{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #29C4E8;padding-bottom:14px;margin-bottom:22px}
+.marke{font-size:19pt;font-weight:800;letter-spacing:.06em;color:#0A5B7E}
+.marke small{display:block;font-size:8pt;letter-spacing:.22em;color:#6B8A9B;font-weight:600;margin-top:4px}
+.meta{text-align:right;font-size:9.5pt;color:#517184}
+h1{font-size:15pt;margin:0 0 4px}
+.kunde{background:#F2F9FC;border-left:4px solid #29C4E8;padding:12px 14px;margin:18px 0 22px;font-size:10.5pt}
+table{width:100%;border-collapse:collapse;margin:10px 0 4px}
+td{padding:7px 4px;border-bottom:1px solid #E3ECF2}
+td.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.stark td{font-weight:700;border-bottom:2px solid #C7DCE7}
+.ergebnis{background:#0A5B7E;color:#fff;border-radius:8px;padding:16px 18px;margin:18px 0;display:flex;justify-content:space-between;align-items:center}
+.ergebnis .lbl{font-size:10.5pt;opacity:.85}
+.ergebnis .val{font-size:20pt;font-weight:800;font-variant-numeric:tabular-nums}
+.amo{background:#E8F7EF;border:1px solid #A8DFC4;border-radius:8px;padding:11px 14px;font-size:10.5pt;color:#12633F;margin-bottom:20px}
+h2{font-size:11.5pt;margin:20px 0 8px;color:#0A5B7E}
+ul{margin:0;padding-left:18px}li{margin-bottom:4px}
+.fuss{margin-top:26px;padding-top:12px;border-top:1px solid #DCE7EE;font-size:8.5pt;color:#7A94A5;line-height:1.5}
+.unterschrift{margin-top:34px;display:flex;gap:40px}
+.unterschrift div{flex:1;border-top:1px solid #9FB4C1;padding-top:6px;font-size:9pt;color:#6B8A9B}
+@media print{.keindruck{display:none}}
+</style></head><body>
+<div class="kopf">
+  <div><div class="marke">PROVITEC<small>Trinkwasseraufbereitung</small></div></div>
+  <div class="meta">Angebot ${nr}<br>${heute}</div>
+</div>
+<h1>Wirtschaftlichkeit einer PROaqua-Trinkwasseranlage</h1>
+<div class="kunde"><b>${esc(c.firma)}</b>${c.ansprech?'<br>z. Hd. '+esc(c.ansprech):''}${c.adresse?'<br>'+esc(c.adresse):''}</div>
+
+<h2>Ihre heutigen Kosten pro Jahr</h2>
+<table>
+${zeile('Trinkwasser aus Flaschen ('+Math.round(r.liter).toLocaleString('de-DE')+' Liter)',eur(r.kostenFlaschen))}
+${zeile('Bestellung, Transport, Lagerung, Leergut',eur(r.kostenHandling))}
+${zeile('Entkalkung und Geräteverschleiss',eur(r.kostenKalk))}
+${zeile('Summe pro Jahr',eur(r.istProJahr),true)}
+</table>
+
+<h2>Mit PROaqua</h2>
+<table>
+${zeile('Anlage, einmalig',eur(r.preis))}
+${zeile('Filterkartuschen pro Jahr',eur(r.kart))}
+</table>
+
+<div class="ergebnis"><span class="lbl">Ersparnis pro Jahr</span><span class="val">${eur(r.ersparnisProJahr)}</span></div>
+${r.amortisationMonate!=null&&r.preis>0?`<div class="amo">Die Anlage hat sich nach rund <b>${Math.round(r.amortisationMonate)} Monaten</b> bezahlt gemacht. Über ${ANNAHMEN.lebensdauerJahre} Jahre ergibt sich ein Vorteil von <b>${eur(r.ersparnis8)}</b>.</div>`:''}
+
+<h2>Was Sie bekommen</h2>
+<ul>
+  <li>Patentiertes Multi-Barriere-Verfahren: entfernt Bakterien, Viren, Parasiten, Schwermetalle, Medikamentenrückstände und Mikroplastik</li>
+  <li>Die Mineralien bleiben im Wasser erhalten</li>
+  <li>Ohne Chemie, fest an der Leitung installiert</li>
+  <li>Entwicklung und Fertigung in Deutschland</li>
+  <li>Weniger Kalk in Geräten und Leitungen, keine Flaschenlogistik</li>
+</ul>
+
+<div class="unterschrift"><div>Ort, Datum</div><div>Unterschrift Auftraggeber</div></div>
+
+<div class="fuss">
+  <b>Grundlage der Berechnung:</b> ${ANNAHMEN.literProTagUndPerson} Liter je Person und Arbeitstag bei ${ANNAHMEN.arbeitstage} Arbeitstagen,
+  ${ANNAHMEN.preisFlascheProLiter.toFixed(2).replace('.',',')} € je Liter Kastenware zuzüglich ${ANNAHMEN.handlingProLiter.toFixed(2).replace('.',',')} € Handling,
+  ${ANNAHMEN.literProZimmerUndJahr} Liter je Zimmer und Jahr, ${ANNAHMEN.entkalkungProGeraetUndJahr} € Entkalkung und Verschleiss je Gerät und Jahr
+  (mit Härtefaktor ${String($('rHart').value).replace('.',',')}).
+  Es handelt sich um eine Beispielrechnung auf Basis der von Ihnen genannten Angaben, kein verbindliches Angebot.
+  Preise verstehen sich zuzüglich Mehrwertsteuer.
+</div>
+<p class="keindruck" style="margin-top:22px;text-align:center;color:#7A94A5;font-size:9pt">
+  Im Druckdialog „Als PDF speichern" wählen.</p>
+</body></html>`);
+  w.document.close();
+  setTimeout(()=>{try{w.focus();w.print()}catch(e){}},350);
+  const c2=cur();
+  if(c2){c2.hist.push({t:now(),txt:'Angebot erzeugt ('+eur(r.ersparnisProJahr)+' Ersparnis/Jahr)'});touch(c2);renderTl(c2)}
+}
+function hashCode(str){let h=0;for(let i=0;i<str.length;i++){h=((h<<5)-h)+str.charCodeAt(i);h|=0}return h}
+$('btnAngebot').addEventListener('click',angebotDrucken);
+
+/* ══════════════════════════════════════════════════════════
+   TOURENPLANER
+   Wählt passende Leads aus, sortiert sie zu einer möglichst
+   kurzen Rundtour (Nächster-Nachbar, danach 2-opt-Verbesserung)
+   und liefert Reihenfolge, Strecke und Zeitbedarf.
+   ══════════════════════════════════════════════════════════ */
+const BESUCHSDAUER_MIN=45;      /* Zeit je Termin */
+const TEMPO_KMH=55;             /* Landstrassen-Durchschnitt */
+let tourAktuell=null;
+
+/* Luftlinie in km (Haversine) */
+function distKm(a,b){
+  const R=6371,rad=Math.PI/180;
+  const dLat=(b.lat-a.lat)*rad, dLon=(b.lon-a.lon)*rad;
+  const s=Math.sin(dLat/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(s));
+}
+/* Strassenweg ist länger als Luftlinie — realistischer Zuschlag */
+const STRASSENFAKTOR=1.28;
+function tourLaenge(pkte,start){
+  let d=0,vor=start;
+  for(const p of pkte){d+=distKm(vor,p);vor=p}
+  return d+distKm(vor,start);           /* Rückweg zur Basis */
+}
+function optimieren(pkte,start){
+  if(pkte.length<2)return pkte.slice();
+  /* Schritt 1: immer zum nächstgelegenen offenen Punkt */
+  const offen=pkte.slice(); const route=[]; let vor=start;
+  while(offen.length){
+    let bi=0,bd=Infinity;
+    offen.forEach((p,i)=>{const d=distKm(vor,p);if(d<bd){bd=d;bi=i}});
+    vor=offen[bi];route.push(vor);offen.splice(bi,1);
+  }
+  /* Schritt 2: 2-opt — Überkreuzungen auflösen */
+  let besser=true,runden=0;
+  while(besser&&runden<60){
+    besser=false;runden++;
+    for(let i=0;i<route.length-1;i++){
+      for(let j=i+1;j<route.length;j++){
+        const neu=route.slice(0,i).concat(route.slice(i,j+1).reverse(),route.slice(j+1));
+        if(tourLaenge(neu,start)<tourLaenge(route,start)-0.01){
+          route.splice(0,route.length,...neu);besser=true;
+        }
+      }
+    }
+  }
+  return route;
+}
+function tourKandidaten(){
+  const nurCrm=$('tNurCrm').checked, nurOffen=$('tOffen').checked;
+  const tf=$('tTier').value, phase=$('tStage').value;
+  const liste=[];
+  if(nurCrm){
+    crm.forEach(c=>{
+      if(typeof c.lat!=='number')return;
+      if(phase&&c.stage!==phase)return;
+      if(['won','lost'].includes(c.stage)&&!phase)return;
+      if(nurOffen&&!(c.termin||c.tasks.some(t=>!t.done)))return;
+      const t=c.bewertung||'B';
+      if(tf==='A'&&t!=='A')return;
+      if(tf==='AB'&&!['A','B'].includes(t))return;
+      liste.push({id:c.id,cid:c.id,firma:c.firma,adresse:c.adresse,lat:c.lat,lon:c.lon,
+                  tier:t,tel:c.tel,stage:c.stage});
+    });
+  }else{
+    leads.forEach(l=>{
+      const t=tier(l);
+      if(tf==='A'&&t!=='A')return;
+      if(tf==='AB'&&!['A','B'].includes(t))return;
+      const c=crmOf(l.id);
+      if(phase&&(!c||c.stage!==phase))return;
+      liste.push({id:l.id,cid:c?c.id:null,firma:l.name,adresse:l.addr,lat:l.lat,lon:l.lon,
+                  tier:t,tel:l.phone,stage:c?c.stage:null});
+    });
+  }
+  return liste;
+}
+function tourBerechnen(){
+  const [sLat,sLon]=$('tStart').value.split(',').map(Number);
+  const start={lat:sLat,lon:sLon};
+  const max=+$('tMax').value;
+  let kand=tourKandidaten();
+  if(!kand.length){
+    $('tourList').innerHTML='<div class="empty" style="padding:26px">Keine passenden Leads. Filter lockern oder zuerst Leads ins CRM übernehmen.</div>';
+    $('tourInfo').innerHTML='';tourAktuell=null;return;
+  }
+  /* Bei Überangebot: die nächstgelegenen nehmen — kürzere Wege, mehr Termine */
+  kand.sort((a,b)=>distKm(start,a)-distKm(start,b));
+  const auswahl=kand.slice(0,max);
+  const route=optimieren(auswahl,start);
+  const kmLuft=tourLaenge(route,start);
+  const km=kmLuft*STRASSENFAKTOR;
+  const fahrMin=km/TEMPO_KMH*60;
+  const gesamtMin=fahrMin+route.length*BESUCHSDAUER_MIN;
+  tourAktuell={start,route,km,fahrMin,gesamtMin};
+  $('tourInfo').innerHTML=
+    `<div class="tour-kpi"><span>Halte</span><b>${route.length}</b></div>`+
+    `<div class="tour-kpi"><span>Fahrstrecke gesamt</span><b>${Math.round(km)} km</b></div>`+
+    `<div class="tour-kpi"><span>Fahrzeit</span><b>${Math.round(fahrMin)} Min.</b></div>`+
+    `<div class="tour-kpi"><span>Tagesbedarf inkl. ${BESUCHSDAUER_MIN} Min. je Termin</span><b>${Math.floor(gesamtMin/60)} h ${Math.round(gesamtMin%60)} Min.</b></div>`+
+    (kand.length>max?`<div style="font-size:11.5px;color:var(--faint)">${kand.length-max} weitere Leads liegen ausserhalb dieser Tour.</div>`:'');
+  let vor=start;
+  $('tourList').innerHTML=route.map((p,i)=>{
+    const d=distKm(vor,p)*STRASSENFAKTOR;vor=p;
+    return `<div class="tstop" data-tid="${p.cid||''}" data-lat="${p.lat}" data-lon="${p.lon}">
+      <span class="nr">${i+1}</span>
+      <span><span class="tf">${esc(p.firma)} <span class="pot ${p.tier}" style="width:18px;height:18px;font-size:9px;display:inline-flex">${p.tier}</span></span>
+        <span class="ta">${esc(p.adresse||'')}${p.tel?' · '+esc(p.tel):''}</span></span>
+      <span class="tk">${d.toFixed(1)} km</span></div>`;
+  }).join('');
+  document.querySelectorAll('.tstop').forEach(el=>el.addEventListener('click',()=>{
+    if(el.dataset.tid)openLead(el.dataset.tid);
+    else{switchView('Radar');map.flyTo([+el.dataset.lat,+el.dataset.lon],15,{duration:.9})}
+  }));
+  toast('✓ Tour über '+route.length+' Halte · '+Math.round(km)+' km');
+}
+$('btnTour').addEventListener('click',tourBerechnen);
+$('btnTourNav').addEventListener('click',()=>{
+  if(!tourAktuell){toast('Zuerst Tour berechnen');return}
+  const {start,route}=tourAktuell;
+  const url='https://www.google.com/maps/dir/?api=1'
+    +'&origin='+start.lat+','+start.lon
+    +'&destination='+start.lat+','+start.lon
+    +'&waypoints='+route.map(p=>p.lat+','+p.lon).join('|')
+    +'&travelmode=driving';
+  window.open(url,'_blank');
+});
+$('btnTourPrint').addEventListener('click',()=>{
+  if(!tourAktuell){toast('Zuerst Tour berechnen');return}
+  const {route,km,gesamtMin}=tourAktuell;
+  const w=window.open('','_blank','width=800,height=1000');
+  if(!w){toast('Bitte Pop-ups erlauben');return}
+  let vor=tourAktuell.start;
+  const zeilen=route.map((p,i)=>{
+    const d=distKm(vor,p)*STRASSENFAKTOR;vor=p;
+    return `<tr><td class="nr">${i+1}</td><td><b>${esc(p.firma)}</b><br><span class="a">${esc(p.adresse||'')}</span></td>
+      <td>${esc(p.tel||'')}</td><td class="r">${d.toFixed(1)} km</td><td class="n"></td></tr>`;
+  }).join('');
+  w.document.write(`<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><title>Tourenplan</title><style>
+@page{size:A4;margin:16mm}
+body{font-family:Arial,sans-serif;color:#12303F;font-size:10.5pt}
+h1{font-size:15pt;margin:0 0 2px;color:#0A5B7E}
+.sub{color:#517184;font-size:9.5pt;margin-bottom:16px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:8.5pt;text-transform:uppercase;letter-spacing:.08em;color:#6B8A9B;border-bottom:2px solid #29C4E8;padding:6px 4px}
+td{padding:9px 4px;border-bottom:1px solid #E3ECF2;vertical-align:top}
+td.nr{font-weight:800;color:#0A5B7E;width:26px}
+td.r{text-align:right;white-space:nowrap}
+td.n{width:34%;border-left:1px solid #E3ECF2}
+.a{color:#6B8A9B;font-size:9pt}
+</style></head><body>
+<h1>Tourenplan</h1>
+<div class="sub">${new Date().toLocaleDateString('de-DE',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}
+ · ${route.length} Halte · ${Math.round(km)} km · rund ${Math.floor(gesamtMin/60)} h ${Math.round(gesamtMin%60)} Min.</div>
+<table><thead><tr><th>#</th><th>Firma / Adresse</th><th>Telefon</th><th>Weg</th><th>Notizen</th></tr></thead>
+<tbody>${zeilen}</tbody></table>
+</body></html>`);
+  w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(e){}},300);
+});
+
+/* ══════════════════════════════════════════════════════════
+   TELEFON-MODUS
+   Arbeitet eine Anrufliste Stück für Stück ab. Ergebnis per
+   Klick oder Zifferntaste, danach automatisch der nächste Lead.
+   Jedes Ergebnis schreibt Phase, Notiz, Aufgabe und Historie.
+   ══════════════════════════════════════════════════════════ */
+let callListe=[],callIdx=0,callStats={termin:0,interesse:0,wieder:0,nicht:0,absage:0};
+
+function callScript(c){
+  const cat=CATS[c.cat]||{};
+  const hook={
+    KLINIK:'bei Ihnen trinken Patienten, Bewohner und Personal täglich Leitungswasser',
+    PRAXIS:'Ihre Behandlungseinheiten führen Wasser direkt zum Patienten',
+    HOTEL:'Ihre Gäste beurteilen das Haus auch über Kaffee, Wasser im Glas und Kalkränder',
+    GASTRO:'Wasser ist bei Ihnen Zutat Nummer eins — im Kaffee, in der Suppe, im Glas',
+    LEBENSMITTEL:'Wasser ist bei Ihnen Rohstoff, nicht Zutat',
+    INDUSTRIE:'Ihre Mitarbeitenden trinken täglich Leitungswasser am Standort',
+    BILDUNG:'bei Ihnen trinken jeden Tag Kinder und Jugendliche Leitungswasser',
+    WELLNESS:'Ihre Gäste nehmen Wasserqualität unmittelbar wahr',
+    BUERO:'Wasserspender und Kaffeeküche laufen bei Ihnen den ganzen Tag',
+    HANDWERK:'Werkstatt und Kaffeeküche laufen bei Ihnen täglich',
+    HANDEL:'in Ihren Personalräumen läuft täglich Wasser',
+    OEFFENTLICH:'öffentliche Häuser stehen bei Trinkwasserqualität besonders unter Beobachtung',
+    AUTO:'in Waschanlage und Werkstatt kostet Kalk direkt Geld'
+  }[c.cat]||'Leitungswasser wird bei Ihnen täglich getrunken';
+  return `<p><b>Einstieg</b><br>„Guten Tag, ${esc(c.ansprech||'mein Name ist …')} — ich rufe an, weil ${hook}.
+    Haben Sie zwei Minuten?"</p>
+   <p><b>Aufhänger</b><br>„Leitungswasser ist bis zum Hausanschluss gut kontrolliert. Was auf den letzten Metern
+    passiert — alte Leitungen, Kalk, Keime, Rückstände — ist Sache des Betreibers. Genau da setzen wir an."</p>
+   <p><b>Nutzen</b><br>${esc(cat.why||'Sichere Trinkwasserqualität ohne Chemie, Mineralien bleiben erhalten.')}</p>
+   <p><b>Abschluss</b><br>„Ich schlage eine kurze Bestandsaufnahme vor — kostenlos, rund 20 Minuten.
+    Passt Ihnen Dienstag oder Donnerstag besser?"</p>
+   <p style="color:var(--faint)"><b>Bei Einwand „kein Bedarf"</b><br>„Verstehe. Darf ich fragen — womit versorgen
+    Sie Ihre Leute heute? Flaschen oder Leitung?" → Gespräch läuft weiter.</p>`;
+}
+function callRender(){
+  if(!callListe.length||callIdx>=callListe.length){callFertig();return}
+  const c=callListe[callIdx];
+  $('cFirm').textContent=c.firma;
+  $('cPot').textContent=c.bewertung||'B';$('cPot').className='pot '+(c.bewertung||'B');
+  $('cPos').textContent=(callIdx+1)+' / '+callListe.length;
+  const k=[];
+  if(c.tel)k.push(`<a href="tel:${esc(c.tel.replace(/\s/g,''))}"><span class="big">${esc(c.tel)}</span></a>`);
+  else k.push('<span class="z" style="color:var(--faint)">Keine Telefonnummer hinterlegt</span>');
+  if(c.ansprech)k.push('<span class="z">Ansprechpartner: '+esc(c.ansprech)+'</span>');
+  if(c.adresse)k.push('<span class="z">'+esc(c.adresse)+'</span>');
+  if(c.web){const u=c.web.startsWith('http')?c.web:'https://'+c.web;
+    k.push('<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(c.web.replace(/^https?:\/\//,''))+'</a>')}
+  k.push('<span class="z">'+esc((CATS[c.cat]||{}).name||c.branche||'')+'</span>');
+  $('cKontakt').innerHTML=k.join('');
+  $('cScript').innerHTML=callScript(c);
+  $('cNote').value='';
+  const d=new Date();d.setDate(d.getDate()+7);
+  $('cWv').value=d.toISOString().slice(0,10);
+  $('cStats').innerHTML=
+    `<div class="cs"><b style="color:var(--gA)">${callStats.termin}</b><span>Termine</span></div>`+
+    `<div class="cs"><b style="color:var(--aqua)">${callStats.interesse}</b><span>Interesse</span></div>`+
+    `<div class="cs"><b>${callIdx}</b><span>bearbeitet</span></div>`;
+}
+function callFertig(){
+  $('callOverlay').classList.remove('on');
+  document.removeEventListener('keydown',callTaste);
+  const ges=callStats.termin+callStats.interesse+callStats.wieder+callStats.nicht+callStats.absage;
+  if(ges)toast(`Runde beendet: ${ges} Anrufe · ${callStats.termin} Termine · ${callStats.interesse} Interesse`);
+  renderBoard();updateBadges();
+}
+function callErgebnis(art){
+  const c=callListe[callIdx];if(!c)return;
+  const notiz=$('cNote').value.trim();
+  const wv=$('cWv').value;
+  const T={
+    termin:{stage:'termin',txt:'Telefonat: Termin vereinbart',prio:'hoch',setTermin:true},
+    interesse:{stage:'mail',txt:'Telefonat: Interesse, Unterlagen zugesagt',prio:'hoch',aufgabe:'Unterlagen senden'},
+    wieder:{stage:'follow',txt:'Telefonat: später erneut anrufen',aufgabe:'Erneut anrufen'},
+    nicht:{stage:'tel',txt:'Telefonat: nicht erreicht',aufgabe:'Erneut anrufen'},
+    absage:{stage:'lost',txt:'Telefonat: kein Interesse'}
+  }[art];
+  if(!T)return;
+  c.stage=T.stage;
+  if(T.prio)c.prio=T.prio;
+  if(T.setTermin&&wv)c.termin=wv;
+  if(T.aufgabe&&wv)c.tasks.push({id:'t'+now()+Math.random().toString(36).slice(2,5),txt:T.aufgabe,due:wv,done:false});
+  if(notiz)c.notizen.push({t:now(),txt:notiz});
+  c.hist.push({t:now(),txt:T.txt+(notiz?' — '+notiz:'')});
+  c.lastAct=now();
+  store('pvCrm',crm);
+  callStats[art]++;
+  if(c.scanId)refreshMarker(c.scanId);      /* Markerfarbe folgt der neuen Phase */
+  callIdx++;callRender();
+}
+function callTaste(e){
+  if(!$('callOverlay').classList.contains('on'))return;
+  if(e.target&&/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  const m={'1':'termin','2':'interesse','3':'wieder','4':'nicht','5':'absage'};
+  if(m[e.key]){e.preventDefault();callErgebnis(m[e.key])}
+  if(e.key==='Escape')callFertig();
+  if(e.key==='ArrowRight'){callIdx++;callRender()}
+  if(e.key==='ArrowLeft'&&callIdx>0){callIdx--;callRender()}
+}
+function callStart(){
+  /* Anrufliste: offene CRM-Leads mit Telefonnummer, beste zuerst */
+  callListe=crm.filter(c=>c.tel&&!['won','lost'].includes(c.stage))
+               .sort((a,b)=>leadScore(b)-leadScore(a));
+  if(!callListe.length){toast('Keine offenen CRM-Leads mit Telefonnummer');return}
+  callIdx=0;callStats={termin:0,interesse:0,wieder:0,nicht:0,absage:0};
+  $('callOverlay').classList.add('on');
+  document.addEventListener('keydown',callTaste);
+  callRender();
+  toast('Telefon-Modus: Ergebnis mit Ziffern 1–5, weiter mit Pfeiltasten');
+}
+document.querySelectorAll('[data-oc]').forEach(b=>b.addEventListener('click',()=>callErgebnis(b.dataset.oc)));
+$('cSkip').addEventListener('click',()=>{callIdx++;callRender()});
+$('cPrev').addEventListener('click',()=>{if(callIdx>0){callIdx--;callRender()}});
+$('cEnd').addEventListener('click',callFertig);
+$('cClose').addEventListener('click',callFertig);
+$('cOpen').addEventListener('click',()=>{const c=callListe[callIdx];if(c){callFertig();openLead(c.id)}});
+
+/* ══════════════════════════════════════════════════════════
+   NACHFASS-SEQUENZEN
+   Legt eine feste Kette von Aufgaben an, damit kein Lead
+   liegen bleibt. Termine werden ab heute gerechnet.
+   ══════════════════════════════════════════════════════════ */
+const SEQUENZEN={
+  standard:{name:'Standard (4 Schritte)',schritte:[
+    {tag:0,txt:'Akquise-Mail senden'},{tag:3,txt:'Nachfass-Anruf'},
+    {tag:10,txt:'Zweite Mail mit Wirtschaftlichkeitsrechnung'},{tag:21,txt:'Letzter Anruf vor Wiedervorlage'}]},
+  klinik:{name:'Klinik & Pflege (5 Schritte)',schritte:[
+    {tag:0,txt:'Mail an Haus- bzw. Verwaltungsleitung'},{tag:2,txt:'Anruf: Zuständigkeit klären'},
+    {tag:7,txt:'Unterlagen zur Trinkwasserhygiene senden'},{tag:14,txt:'Termin für Bestandsaufnahme anbieten'},
+    {tag:28,txt:'Nachfassen: Entscheidungsstand'}]},
+  hotel:{name:'Hotel & Gastro (4 Schritte)',schritte:[
+    {tag:0,txt:'Mail an Inhaber bzw. Direktion'},{tag:2,txt:'Anruf ausserhalb der Stosszeit'},
+    {tag:9,txt:'Wirtschaftlichkeitsrechnung senden'},{tag:20,txt:'Termin vor Ort anbieten'}]},
+  nachTermin:{name:'Nach dem Termin (3 Schritte)',schritte:[
+    {tag:0,txt:'Angebot als PDF senden'},{tag:4,txt:'Anruf: Rückfragen zum Angebot'},
+    {tag:12,txt:'Entscheidung nachfassen'}]}
+};
+function sequenzStarten(cid,key){
+  const c=crm.find(x=>x.id===cid);const S=SEQUENZEN[key];
+  if(!c||!S)return;
+  S.schritte.forEach(sch=>{
+    const d=new Date();d.setDate(d.getDate()+sch.tag);
+    c.tasks.push({id:'t'+now()+Math.random().toString(36).slice(2,6),
+      txt:sch.txt,due:d.toISOString().slice(0,10),done:false});
+  });
+  if(!c.termin){const d=new Date();d.setDate(d.getDate()+S.schritte[1].tag);c.termin=d.toISOString().slice(0,10)}
+  c.hist.push({t:now(),txt:'Sequenz gestartet: '+S.name});
+  touch(c);renderTasks(c);renderTl(c);renderBoard();updateBadges();
+  toast('✓ '+S.schritte.length+' Aufgaben angelegt — '+S.name);
+}
+/* Bedienelemente erst hier verdrahten — SEQUENZEN ist ab jetzt bekannt */
+$('callBtn').addEventListener('click',callStart);
+$('seqSel').innerHTML=Object.keys(SEQUENZEN).map(k=>`<option value="${k}">${esc(SEQUENZEN[k].name)}</option>`).join('');
+$('seqStart').addEventListener('click',()=>{const c=cur();if(c)sequenzStarten(c.id,$('seqSel').value)});
 
 /* ══ Diagnosebericht ══
    Fasst alles zusammen, was zur Fehlersuche nötig ist, und legt es in die
@@ -2731,7 +3369,7 @@ function hydrateCrmLeads(){
     leads.push(l);leadIdx.set(id,l);sessionIds.add(id);
   });
 }
-const VERSION='v10 · 13 Zielgruppen';
+const VERSION='v11 · Umsatz-Werkzeuge';
 {const v=$('verStamp');if(v)v.textContent='AquaRadar CRM · '+VERSION;}
 if(!HAS_CLUSTER||!HAS_HEAT){
   $('statusTxt').textContent='Hinweis: Zusatzfunktionen ('+[!HAS_CLUSTER?'Cluster':'',!HAS_HEAT?'Heatmap':''].filter(Boolean).join(' + ')+') sind blockiert — Scan und CRM laufen normal weiter.';
