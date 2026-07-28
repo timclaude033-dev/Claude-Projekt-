@@ -923,13 +923,17 @@ async function runPool(tasks,limit,onEach){
   };
   await Promise.all(Array.from({length:Math.min(limit,tasks.length)},worker));
 }
-function qCat(ck,rad){
+function qCat(ck,rad,ausdruecklich){
   const around=`(around:${rad},${CENTER.lat},${CENTER.lng})`;
   const body=CATS[ck].sel.map(s=>{const[k,v]=s.split('=');
     return `node["${k}"="${v}"]["name"]${around};way["${k}"="${v}"]["name"]${around};`}).join('');
-  /* WICHTIG: "out center;" liefert Koordinaten UND Tags.
-     ("out tags ..." würde die Koordinaten weglassen — Nodes wären unbrauchbar.) */
-  return `[out:json][timeout:20];(${body});out center;`;
+  /* WICHTIG (belegt im OSM-Wiki, Overpass QL):
+       body   = Tags UND Koordinaten (Standard-Verbosität)
+       tags   = nur ids und Tags, KEINE Koordinaten
+       center = Mittelpunkt, aber nur für Ways/Relations
+     Deshalb "out center;" (= body + center) und niemals "out tags ...". */
+  const ausgabe=ausdruecklich?'out body center;':'out center;';
+  return `[out:json][timeout:20];(${body});${ausgabe}`;
 }
 /* Wandelt ein Overpass-Element in einen Lead. Koordinaten kommen bei Nodes
    direkt (lat/lon), bei Ways/Relations über center. */
@@ -1035,11 +1039,19 @@ async function startScan(){
     $('hudScanTxt').textContent='Scanne … '+Math.round((now()-t0)/1000)+'s';
   },400);
 
-  /* Eine Aufgabe pro Zielgruppe */
+  /* Eine Aufgabe pro Zielgruppe.
+     Selbstheilung: Kommen Objekte OHNE Koordinaten zurück (etwa weil ein
+     Server die Ausgabeform anders auslegt), wird die Zielgruppe automatisch
+     mit ausdrücklichem "out body center;" erneut geholt. */
+  let geheilt=0;
+  const hatKoord=e=>Number.isFinite(e.lat)||(e.center&&Number.isFinite(e.center.lat));
   const tasks=cats.map(ck=>async()=>{
-    const els=await overpass(qCat(ck,rad),aborter.signal,(srv,total)=>{
-      if(srv>1)$('statusTxt').textContent=CATS[ck].name+': Server '+srv+'/'+total+' wird versucht …';
-    });
+    const melde=(srv,total)=>{if(srv>1)$('statusTxt').textContent=CATS[ck].name+': Server '+srv+'/'+total+' wird versucht …'};
+    let els=await overpass(qCat(ck,rad),aborter.signal,melde);
+    if(els.length&&!els.some(hatKoord)){
+      geheilt++;
+      els=await overpass(qCat(ck,rad,true),aborter.signal,melde);
+    }
     return{ck,els};
   });
 
@@ -1088,7 +1100,9 @@ async function startScan(){
       msg=`Fertig in ${s}s: ${neu} neue Leads · ${upd} aktualisiert${gefiltert?' · '+gefiltert+' gefiltert':''}.`;
     }
     /* Diagnosezeile — macht jedes künftige Problem sofort sichtbar */
-    diag=`${empfangen} empfangen → ${roh} verwertbar → ${gefiltert} gefiltert → ${neu} neu${ohneKoord?' · '+ohneKoord+' ohne Koordinaten':''}`;
+    diag=`${empfangen} empfangen → ${roh} verwertbar → ${gefiltert} gefiltert → ${neu} neu`
+      +(ohneKoord?' · '+ohneKoord+' ohne Koordinaten':'')
+      +(geheilt?' · '+geheilt+'× automatisch nachgeladen':'');
     if(probleme.length&&probleme.length<cats.length)msg+=' Nicht geladen: '+probleme.join(', ')+'.';
     $('statusTxt').textContent=msg;
     $('smLabel').title=diag;
