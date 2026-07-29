@@ -1,0 +1,1638 @@
+{
+  "name": "Autohaus Lead-System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "autohaus-anfrage",
+        "responseMode": "onReceived",
+        "options": {
+          "responseData": "{\"ok\":true,\"nachricht\":\"Danke, Ihre Anfrage ist eingegangen.\"}"
+        }
+      },
+      "id": "a41ee5bd-b801-51c3-8d5b-f06891574550",
+      "name": "Website-Formular",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -620,
+        -240
+      ],
+      "webhookId": "7c26b592-95c9-4eb7-a0d9-c6fe66c009b5"
+    },
+    {
+      "parameters": {
+        "format": "simple",
+        "options": {}
+      },
+      "id": "720f7733-b836-5453-9347-a25c519203f6",
+      "name": "Postfach (IMAP)",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2,
+      "position": [
+        -620,
+        -60
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "autohaus-termin",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a12fd9cc-55ae-5c71-9689-8c38df783857",
+      "name": "Termin-Klick",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -620,
+        120
+      ],
+      "webhookId": "df5915b1-7fc6-4744-8c35-d84c801dcd1e"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "triggerAtHour": 7,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "de3b0258-902b-5f27-b66a-7f90967ab46f",
+      "name": "Täglich 07:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -620,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Vereinheitlicht alles, was hereinkommt, auf EIN Format.\n   Egal ob Website-Formular, Portal-Mail, Terminklick oder Tageslauf. */\nconst raus = [];\n\nfor (const item of $input.all()) {\n  const j = item.json || {};\n  let e;\n\n  const istWebhook = (j.query !== undefined) || (j.body !== undefined) || (j.headers !== undefined);\n  const istMail    = (j.textPlain !== undefined) || (j.textHtml !== undefined) || (j.from !== undefined);\n\n  if (istWebhook) {\n    const q = j.query || {};\n    const b = j.body  || {};\n\n    if (q.lead || q.t) {\n      /* Der Interessent hat auf einen Terminvorschlag geklickt. */\n      e = { quelle: 'termin', leadId: String(q.lead || ''), slot: String(q.t || '') };\n    } else {\n      /* Anfrage über das Website-Formular. */\n      const txt = b.nachricht || b.message || b.text || b.anfrage || '';\n      e = {\n        quelle:  'anfrage',\n        kanal:   'Website-Formular',\n        name:    String(b.name || b.Name || '').trim(),\n        email:   String(b.email || b.Email || b.mail || b['e-mail'] || '').trim(),\n        telefon: String(b.telefon || b.phone || b.tel || '').trim(),\n        betreff: String(b.betreff || b.subject || 'Anfrage über die Website').trim(),\n        text:    String(txt).trim()\n      };\n    }\n  } else if (istMail) {\n    /* Anfrage per E-Mail (Portal-Weiterleitung, direkte Mail). */\n    const von = String(j.from || '');\n    const tref = von.match(/<([^>]+)>/);\n    const klartext = j.textPlain || j.text ||\n                     String(j.textHtml || '').replace(/<style[\\s\\S]*?<\\/style>/gi, ' ')\n                                             .replace(/<[^>]+>/g, ' ');\n    e = {\n      quelle:  'anfrage',\n      kanal:   'E-Mail / Portal',\n      name:    String(von.split('<')[0] || '').replace(/[\"']/g, '').trim(),\n      email:   String(tref ? tref[1] : von).trim(),\n      telefon: '',\n      betreff: String(j.subject || 'Anfrage per E-Mail').trim(),\n      text:    String(klartext).replace(/\\s+\\n/g, '\\n').replace(/[ \\t]{2,}/g, ' ').trim()\n    };\n  } else {\n    /* Zeitplan: der tägliche Lauf. */\n    e = { quelle: 'tageslauf' };\n  }\n\n  e.empfangen = new Date().toISOString();\n  raus.push({ json: e });\n}\n\nreturn raus;"
+      },
+      "id": "7ccb16d4-1167-5ab6-9b04-796f8a868759",
+      "name": "Quelle erkennen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -380,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* ═══════════════════════════════════════════════════════════\n   HIER UND NUR HIER WIRD PRO AUTOHAUS ANGEPASST.\n   Alle anderen Nodes lesen ihre Werte aus diesem Block.\n   ═══════════════════════════════════════════════════════════ */\nconst CFG = {\n\n  /* ---- Autohaus ------------------------------------------ */\n  autohaus:       'Autohaus Muster GmbH',\n  ort:            'Musterstadt',\n  telefon:        '0123 456789',\n  webseite:       'https://www.autohaus-muster.de',\n  absenderName:   'Autohaus Muster GmbH',\n  absenderEmail:  'info@autohaus-muster.de',\n\n  /* ---- Google Sheet (ID aus der Tabellen-URL) ------------- */\n  sheetId:        'HIER_DIE_GOOGLE_SHEET_ID_EINTRAGEN',\n  blattLeads:     'Leads',\n  blattFahrzeuge: 'Fahrzeuge',\n\n  /* ---- Kalender ------------------------------------------ */\n  kalenderId:     'primary',\n\n  /* ---- Verkäufer (wird der Reihe nach zugeteilt) ---------- */\n  verkaeufer: [\n    { name: 'Max Mustermann',  email: 'max@autohaus-muster.de',  marken: ['BMW', 'MINI'] },\n    { name: 'Anna Beispiel',   email: 'anna@autohaus-muster.de', marken: ['VW', 'Audi', 'Skoda'] }\n  ],\n  verkaufsleitung: 'leitung@autohaus-muster.de',\n\n  /* ---- Basis-Adresse dieser n8n-Instanz ------------------- */\n  /* Ohne Schrägstrich am Ende. Der Termin-Link hängt daran.  */\n  webhookBasis:   'https://DEINE-N8N-ADRESSE/webhook',\n  pfadTermin:     'autohaus-termin',\n\n  /* ---- Probefahrt-Zeiten --------------------------------- */\n  terminZeiten:   ['10:00', '14:00', '16:30'],\n  terminDauerMin: 45,\n  vorlaufTage:    1,      /* frühester Termin: morgen */\n\n  /* ---- Nachfassen ---------------------------------------- */\n  nachfassTage:   [2, 5, 10],\n  archivNachTagen: 45,\n  erinnerungStundenVorher: 24,\n\n  /* ---- KI ------------------------------------------------- */\n  modell:         'claude-opus-5',\n  tonfall:        'freundlich, sachlich, ohne Werbefloskeln, Sie-Form',\n\n  /* ---- Tagesbericht -------------------------------------- */\n  berichtSenden:  true\n};\n\nreturn $input.all().map(i => ({ json: { ...i.json, cfg: CFG } }));"
+      },
+      "id": "5946a208-241a-5750-a08f-7ee2d594d975",
+      "name": "EINSTELLUNGEN",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1eeb3f8d-71fe-4364-bec5-cffd46c24e52",
+                    "leftValue": "={{ $json.quelle }}",
+                    "rightValue": "anfrage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Neue Anfrage"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7d9b4a5a-09bc-4c87-a693-ff6fd9a5eb21",
+                    "leftValue": "={{ $json.quelle }}",
+                    "rightValue": "termin",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Termin bestätigen"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "932473d4-837a-4f82-a9c1-a106c513efc0",
+                    "leftValue": "={{ $json.quelle }}",
+                    "rightValue": "tageslauf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Täglicher Lauf"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a12b8707-31a8-5ca2-a55f-e127ac689075",
+      "name": "Weiche: Was ist zu tun?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        60,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "9f0fae4f-98c7-5692-bf72-6bea0a0e9e71",
+      "name": "Leads laden",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        300,
+        -300
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Ist das eine Antwort eines Interessenten, den wir schon kennen?\n   Dann muss die Nachfass-Kette sofort stoppen. */\nconst a      = $('EINSTELLUNGEN').first().json;\nconst zeilen = $input.all().map(i => i.json).filter(r => r && r.Email);\n\nconst email   = String(a.email || '').toLowerCase().trim();\nconst treffer = email ? zeilen.filter(r => String(r.Email).toLowerCase().trim() === email) : [];\n\nconst offeneStati = ['neu', 'kontaktiert', 'nachgefasst', 'termin'];\nconst offen = treffer.filter(r => offeneStati.includes(String(r.Status || '').toLowerCase()));\n\n/* Der jüngste offene Vorgang gewinnt. */\noffen.sort((x, y) => String(y.Eingang || '').localeCompare(String(x.Eingang || '')));\n\nreturn [{\n  json: {\n    ...a,\n    istAntwort:     offen.length > 0,\n    bekannterLead:  offen[0] || null,\n    frueherAnfragen: treffer.length\n  }\n}];"
+      },
+      "id": "9fcbbc22-12e4-585f-b8e6-44c351413f15",
+      "name": "Antwort oder neue Anfrage?",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cd9516fc-9072-4cc8-b19d-a6e3fc4eaf54",
+              "leftValue": "={{ $json.istAntwort }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "4c89d5bf-2d2d-5b3b-b052-904899978c62",
+      "name": "Ist es eine Antwort?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        740,
+        -300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Der Kunde hat geantwortet: Kette stoppen, Verkäufer sofort informieren. */\nconst d   = $json;\nconst cfg = d.cfg;\nconst l   = d.bekannterLead || {};\nconst jetzt = new Date().toISOString();\n\nconst verkEmail = l.VerkaeuferEmail || (cfg.verkaeufer[0] && cfg.verkaeufer[0].email) || cfg.verkaufsleitung;\n\nconst html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6\">\n  <p style=\"margin:0 0 14px\"><b>${d.name || d.email} hat geantwortet.</b> Die Nachfass-Kette wurde gestoppt.</p>\n  <table cellpadding=\"6\" style=\"border-collapse:collapse;font-size:14px\">\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td><b>${l.Fahrzeug || 'unbekannt'}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Kaufabsicht</td><td>${l.Kaufabsicht || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">E-Mail</td><td>${d.email}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Telefon</td><td>${l.Telefon || d.telefon || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Erste Anfrage</td><td>${(l.Eingang || '').substring(0, 10) || '—'}</td></tr>\n  </table>\n  <p style=\"margin:16px 0 6px;color:#5b6b80\">Neue Nachricht:</p>\n  <div style=\"background:#f5f7fa;border-left:3px solid #2f6da8;padding:12px 14px;white-space:pre-wrap\">${String(d.text || '').substring(0, 2000)}</div>\n  <p style=\"margin:18px 0 0;color:#5b6b80;font-size:13px\">Bitte persönlich übernehmen — das System fasst hier nicht weiter nach.</p>\n</div>`;\n\nreturn [{\n  json: {\n    /* Spalten für die Tabelle */\n    LeadID:         l.LeadID || '',\n    Status:         'geantwortet',\n    Sequenz:        'gestoppt',\n    LetzterKontakt: jetzt,\n    NaechsterSchritt: 'Persönlich melden',\n    Notiz:          String(d.text || '').substring(0, 500),\n    /* Felder für die Mail */\n    mailAn:      verkEmail,\n    mailBetreff: `Kunde hat geantwortet: ${d.name || d.email}`,\n    mailHtml:    html,\n    cfg:         cfg\n  }\n}];"
+      },
+      "id": "29e9d25c-53c5-59b8-a300-09a66bccf6ae",
+      "name": "Antwort aufbereiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        -420
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "LeadID"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "2e04e213-8556-5e43-8497-03726807448f",
+      "name": "CRM: Sequenz stoppen",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1180,
+        -420
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $('EINSTELLUNGEN').first().json.cfg.absenderName }} <{{ $('EINSTELLUNGEN').first().json.cfg.absenderEmail }}>",
+        "toEmail": "={{ $('Antwort aufbereiten').first().json.mailAn }}",
+        "subject": "={{ $('Antwort aufbereiten').first().json.mailBetreff }}",
+        "emailFormat": "html",
+        "html": "={{ $('Antwort aufbereiten').first().json.mailHtml }}",
+        "options": {}
+      },
+      "id": "788143d2-c3ca-512e-968e-eea24437aa33",
+      "name": "Verkäufer: Kunde hat geantwortet",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1400,
+        -420
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattFahrzeuge }}",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "f5086dc2-f2f1-5c9b-a46b-1503d9e550c4",
+      "name": "Fahrzeuge laden",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        960,
+        -200
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Baut die vollständige Anfrage an die Claude-API.\n   Alles wird hier zusammengesetzt, damit der HTTP-Node nur noch sendet. */\nconst d   = $('Antwort oder neue Anfrage?').first().json;\nconst cfg = d.cfg;\n\n/* --- Fahrzeugbestand aus der Tabelle (nur verfügbare) ---- */\nconst bestand = $input.all()\n  .map(i => i.json)\n  .filter(r => r && r.FahrzeugID && String(r.Status || 'verfuegbar').toLowerCase() !== 'verkauft')\n  .slice(0, 120)\n  .map(r => ({\n    id:        String(r.FahrzeugID),\n    fahrzeug:  [r.Marke, r.Modell, r.Variante].filter(Boolean).join(' '),\n    ez:        r.Erstzulassung || '',\n    km:        r.Kilometer || '',\n    kraftstoff: r.Kraftstoff || '',\n    getriebe:  r.Getriebe || '',\n    leistung:  r.Leistung || '',\n    preis:     r.Preis || '',\n    farbe:     r.Farbe || ''\n  }));\n\n/* --- Drei konkrete Probefahrt-Termine vorschlagen -------- */\nfunction werktagPlus(startTage) {\n  const d0 = new Date();\n  d0.setHours(0, 0, 0, 0);\n  let n = 0, tage = 0;\n  while (n < startTage) {\n    tage++;\n    d0.setDate(d0.getDate() + 1);\n    const w = d0.getDay();\n    if (w !== 0 && w !== 6) n++;\n  }\n  return d0;\n}\nconst slots = [];\nfor (let k = 0; k < cfg.terminZeiten.length; k++) {\n  const tag = werktagPlus(cfg.vorlaufTage + k);\n  const [hh, mm] = String(cfg.terminZeiten[k]).split(':');\n  tag.setHours(parseInt(hh, 10), parseInt(mm || '0', 10), 0, 0);\n  const iso = tag.getFullYear() + '-' +\n              String(tag.getMonth() + 1).padStart(2, '0') + '-' +\n              String(tag.getDate()).padStart(2, '0') + 'T' +\n              String(tag.getHours()).padStart(2, '0') + ':' +\n              String(tag.getMinutes()).padStart(2, '0');\n  const wochentage = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];\n  slots.push({\n    iso: iso,\n    text: wochentage[tag.getDay()] + ', ' + String(tag.getDate()).padStart(2,'0') + '.' +\n          String(tag.getMonth()+1).padStart(2,'0') + '. um ' + cfg.terminZeiten[k] + ' Uhr'\n  });\n}\n\n/* --- Der Auftrag an die KI -------------------------------- */\nconst system = [\n  'Du bist die Anfragen-Annahme von ' + cfg.autohaus + ' in ' + cfg.ort + '.',\n  'Du liest eine eingehende Kundenanfrage und tust zwei Dinge:',\n  '1. Du erkennst, worum es geht: gewünschtes Fahrzeug, Kaufabsicht, mögliche Inzahlungnahme, Dringlichkeit.',\n  '2. Du schreibst die Antwort an den Interessenten.',\n  '',\n  'Regeln für die Antwort:',\n  '- Sprache: Deutsch, Sie-Form. Tonfall: ' + cfg.tonfall + '.',\n  '- Nimm direkten Bezug auf das genannte Fahrzeug und auf die gestellten Fragen.',\n  '- Erfinde niemals Ausstattung, Preise, Kilometerstände oder Zusagen. Nutze nur den Bestand unten.',\n  '- Ist das Fahrzeug nicht im Bestand, sage das offen und nenne hoechstens zwei passende Alternativen daraus.',\n  '- Wird eine Inzahlungnahme erwaehnt: bestaetige, dass eine Bewertung moeglich ist, ohne eine Summe zu nennen.',\n  '- Schliesse mit dem Angebot einer Probefahrt. Die konkreten Termine haengt das System an, nenne selbst keine.',\n  '- Keine Anrede-Floskeln wie \"vielen Dank fuer Ihr Interesse an unserem Hause\". Komm zur Sache.',\n  '- Laenge: 90 bis 160 Woerter. Absaetze mit Leerzeile trennen. Keine Grussformel und keine Signatur, die haengt das System an.',\n  '',\n  'Bewertung (Feld score, 0 bis 100): hohe Kaufabsicht, konkretes Fahrzeug, kurzer Zeitrahmen und Inzahlungnahme erhoehen den Wert.'\n].join('\\n');\n\nconst nutzer = [\n  '# Eingegangene Anfrage',\n  'Kanal: '   + d.kanal,\n  'Name: '    + (d.name || 'nicht angegeben'),\n  'E-Mail: '  + d.email,\n  'Telefon: ' + (d.telefon || 'nicht angegeben'),\n  'Betreff: ' + d.betreff,\n  '',\n  'Nachricht:',\n  String(d.text || '').substring(0, 6000),\n  '',\n  '# Verfuegbarer Fahrzeugbestand',\n  bestand.length ? JSON.stringify(bestand) : '(Bestandsliste ist leer)',\n  '',\n  '# Frueherer Kontakt',\n  d.frueherAnfragen > 0 ? ('Dieser Interessent hat bereits ' + d.frueherAnfragen + ' Mal angefragt.')\n                        : 'Keine frueheren Anfragen bekannt.'\n].join('\\n');\n\nconst schema = {\n  type: 'object',\n  properties: {\n    kunde_name:            { type: 'string', description: 'Name des Interessenten, leer wenn unbekannt' },\n    fahrzeug_wunsch:       { type: 'string', description: 'Gewuenschtes Fahrzeug in Worten' },\n    fahrzeug_id:           { type: 'string', description: 'Passende FahrzeugID aus dem Bestand, sonst leer' },\n    kaufabsicht:           { type: 'string', enum: ['hoch', 'mittel', 'niedrig', 'unklar'] },\n    inzahlungnahme:        { type: 'boolean' },\n    inzahlung_fahrzeug:    { type: 'string', description: 'Das angebotene Fahrzeug, sonst leer' },\n    dringlichkeit:         { type: 'string', enum: ['sofort', 'wochen', 'monate', 'unklar'] },\n    probefahrt_gewuenscht: { type: 'boolean' },\n    finanzierung_thema:    { type: 'boolean' },\n    score:                 { type: 'integer', description: 'Potenzial von 0 bis 100' },\n    zusammenfassung:       { type: 'string', description: 'Ein Satz fuer den Verkaeufer' },\n    antwort_betreff:       { type: 'string' },\n    antwort_text:          { type: 'string', description: 'Reiner Text, Absaetze durch Leerzeile getrennt' }\n  },\n  required: ['kunde_name','fahrzeug_wunsch','fahrzeug_id','kaufabsicht','inzahlungnahme',\n             'inzahlung_fahrzeug','dringlichkeit','probefahrt_gewuenscht','finanzierung_thema',\n             'score','zusammenfassung','antwort_betreff','antwort_text'],\n  additionalProperties: false\n};\n\nconst apiBody = {\n  model: cfg.modell,\n  max_tokens: 2000,\n  thinking: { type: 'disabled' },\n  output_config: { effort: 'low', format: { type: 'json_schema', schema: schema } },\n  system: system,\n  messages: [{ role: 'user', content: nutzer }]\n};\n\nreturn [{ json: { ...d, bestand: bestand, slots: slots, apiBody: apiBody } }];"
+      },
+      "id": "986b9b02-2cd3-5fc0-8142-ec3ed78869f6",
+      "name": "KI-Auftrag bauen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1180,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.apiBody) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "5ced25aa-601b-51e9-88b3-47f3c9c7be28",
+      "name": "KI: Anfrage verstehen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1400,
+        -200
+      ],
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Liest die KI-Antwort, faellt bei Problemen sauber zurueck\n   und baut daraus CRM-Zeile, Kundenmail und Verkaeufermail. */\nconst vor   = $('KI-Auftrag bauen').first().json;\nconst cfg   = vor.cfg;\nconst roh   = $json;\n\n/* --- Antwort der API auslesen ---------------------------- */\nlet a = {};\nlet kiOk = false;\ntry {\n  const block = (roh.content || []).find(b => b && b.type === 'text');\n  if (block && block.text) { a = JSON.parse(block.text); kiOk = true; }\n} catch (e) { kiOk = false; }\n\n/* --- Rueckfallebene, falls die KI nicht erreichbar war ---- */\nif (!kiOk) {\n  a = {\n    kunde_name: vor.name, fahrzeug_wunsch: '', fahrzeug_id: '',\n    kaufabsicht: 'unklar', inzahlungnahme: false, inzahlung_fahrzeug: '',\n    dringlichkeit: 'unklar', probefahrt_gewuenscht: false, finanzierung_thema: false,\n    score: 40,\n    zusammenfassung: 'Automatische Auswertung war nicht moeglich, bitte manuell pruefen.',\n    antwort_betreff: 'Ihre Anfrage bei ' + cfg.autohaus,\n    antwort_text: 'vielen Dank fuer Ihre Nachricht. Wir haben Ihre Anfrage erhalten und melden uns '\n                + 'schnellstmoeglich persoenlich bei Ihnen.'\n  };\n}\n\n/* --- Verkaeufer zuordnen: erst nach Marke, sonst reihum --- */\nconst wunsch = String(a.fahrzeug_wunsch || '').toLowerCase();\nlet verk = cfg.verkaeufer.find(v => (v.marken || []).some(m => wunsch.includes(String(m).toLowerCase())));\nif (!verk) {\n  const idx = Math.abs(String(vor.email || '').split('').reduce((s, c) => s + c.charCodeAt(0), 0)) % cfg.verkaeufer.length;\n  verk = cfg.verkaeufer[idx];\n}\n\n/* --- Lead-Nummer ----------------------------------------- */\nconst jetzt   = new Date();\nconst leadId  = 'L-' + jetzt.getFullYear() + String(jetzt.getMonth()+1).padStart(2,'0') +\n                String(jetzt.getDate()).padStart(2,'0') + '-' +\n                Math.random().toString(36).substring(2, 7).toUpperCase();\n\n/* --- Terminlinks ----------------------------------------- */\nconst basis = cfg.webhookBasis.replace(/\\/+$/, '') + '/' + cfg.pfadTermin;\nconst linkListe = vor.slots.map(s =>\n  `<tr><td style=\"padding:5px 0\">\n     <a href=\"${basis}?lead=${encodeURIComponent(leadId)}&t=${encodeURIComponent(s.iso)}\"\n        style=\"display:inline-block;padding:10px 18px;background:#2f6da8;color:#ffffff;\n               text-decoration:none;border-radius:8px;font-size:14px\">${s.text}</a>\n   </td></tr>`).join('');\n\n/* --- Kundenmail ------------------------------------------ */\nconst absaetze = String(a.antwort_text || '').split(/\\n\\s*\\n/)\n  .map(p => `<p style=\"margin:0 0 14px\">${p.replace(/\\n/g, '<br>')}</p>`).join('');\n\nconst anrede = a.kunde_name && a.kunde_name.trim()\n  ? 'Guten Tag ' + a.kunde_name.trim() + ','\n  : 'Guten Tag,';\n\nconst kundenHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">${anrede}</p>\n  ${absaetze}\n  <p style=\"margin:22px 0 10px\"><b>Probefahrt — waehlen Sie einfach einen Termin:</b></p>\n  <table cellpadding=\"0\" cellspacing=\"0\">${linkListe}</table>\n  <p style=\"margin:16px 0 0;font-size:13px;color:#5b6b80\">\n    Passt keiner der Termine? Antworten Sie einfach auf diese E-Mail.\n  </p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">\n    ${cfg.autohaus} · ${cfg.ort}<br>\n    Telefon ${cfg.telefon} · <a href=\"${cfg.webseite}\" style=\"color:#2f6da8\">${cfg.webseite}</a><br>\n    Ihr Ansprechpartner: ${verk.name}\n  </p>\n</div>`;\n\n/* --- Verkaeufermail -------------------------------------- */\nconst ampel = a.score >= 70 ? '#2e8b6b' : (a.score >= 40 ? '#b5883e' : '#8a94a0');\nconst verkHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6;max-width:620px\">\n  <p style=\"margin:0 0 6px;font-size:13px;color:#5b6b80\">Neue Anfrage · ${vor.kanal}</p>\n  <p style=\"margin:0 0 16px;font-size:19px\"><b>${a.fahrzeug_wunsch || 'Fahrzeug unklar'}</b>\n     <span style=\"background:${ampel};color:#fff;border-radius:20px;padding:3px 11px;font-size:13px;margin-left:8px\">\n       Potenzial ${a.score}</span></p>\n  <p style=\"margin:0 0 16px\">${a.zusammenfassung}</p>\n  <table cellpadding=\"6\" style=\"border-collapse:collapse;font-size:14px\">\n    <tr><td style=\"color:#5b6b80\">Name</td><td><b>${a.kunde_name || vor.name || '—'}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">E-Mail</td><td><a href=\"mailto:${vor.email}\" style=\"color:#2f6da8\">${vor.email}</a></td></tr>\n    <tr><td style=\"color:#5b6b80\">Telefon</td><td>${vor.telefon || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Kaufabsicht</td><td>${a.kaufabsicht}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Zeitrahmen</td><td>${a.dringlichkeit}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Inzahlungnahme</td><td>${a.inzahlungnahme ? (a.inzahlung_fahrzeug || 'ja') : 'nein'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Finanzierung Thema</td><td>${a.finanzierung_thema ? 'ja' : 'nein'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug im Bestand</td><td>${a.fahrzeug_id || 'nicht zugeordnet'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Lead-Nummer</td><td>${leadId}</td></tr>\n  </table>\n  <p style=\"margin:18px 0 6px;color:#5b6b80\">Originalnachricht:</p>\n  <div style=\"background:#f5f7fa;border-left:3px solid #2f6da8;padding:12px 14px;white-space:pre-wrap;font-size:14px\">${String(vor.text || '').substring(0, 2000)}</div>\n  <p style=\"margin:18px 0 0;font-size:13px;color:#5b6b80\">\n    Der Interessent hat bereits eine Antwort mit drei Terminvorschlaegen erhalten.\n    ${kiOk ? '' : '<b>Hinweis: die automatische Auswertung ist ausgefallen — bitte selbst lesen.</b>'}\n  </p>\n</div>`;\n\n/* --- Eine Zeile fuer die Tabelle ------------------------- */\nconst zeile = {\n  LeadID:             leadId,\n  Eingang:            jetzt.toISOString(),\n  Quelle:             vor.kanal,\n  Name:               a.kunde_name || vor.name || '',\n  Email:              vor.email,\n  Telefon:            vor.telefon || '',\n  Nachricht:          String(vor.text || '').substring(0, 900),\n  Fahrzeug:           a.fahrzeug_wunsch || '',\n  FahrzeugID:         a.fahrzeug_id || '',\n  Kaufabsicht:        a.kaufabsicht,\n  Inzahlungnahme:     a.inzahlungnahme ? 'ja' : 'nein',\n  InzahlungFahrzeug:  a.inzahlung_fahrzeug || '',\n  Dringlichkeit:      a.dringlichkeit,\n  Score:              a.score,\n  Verkaeufer:         verk.name,\n  VerkaeuferEmail:    verk.email,\n  Status:             'kontaktiert',\n  Sequenz:            'laeuft',\n  LetzterKontakt:     jetzt.toISOString(),\n  NaechsterSchritt:   'Nachfassen an Tag ' + cfg.nachfassTage[0],\n  Termin:             '',\n  TerminBestaetigt:   'nein',\n  Notiz:              a.zusammenfassung\n};\n\nreturn [{\n  json: {\n    ...zeile,\n    cfg:              cfg,\n    kiOk:             kiOk,\n    kundeAn:          vor.email,\n    kundeBetreff:     a.antwort_betreff || ('Ihre Anfrage bei ' + cfg.autohaus),\n    kundeHtml:        kundenHtml,\n    verkAn:           verk.email,\n    verkBetreff:      '[' + a.score + '] Neue Anfrage: ' + (a.fahrzeug_wunsch || 'Fahrzeug unklar') + ' — ' + (a.kunde_name || vor.email),\n    verkHtml:         verkHtml\n  }\n}];"
+      },
+      "id": "e0fdfde9-2766-55e0-bc17-1178fd5f4647",
+      "name": "KI-Antwort auswerten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1620,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "22d81a7a-a367-5070-8c40-6b3a8a04b3f5",
+      "name": "Lead ins CRM",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1840,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $('EINSTELLUNGEN').first().json.cfg.absenderName }} <{{ $('EINSTELLUNGEN').first().json.cfg.absenderEmail }}>",
+        "toEmail": "={{ $('KI-Antwort auswerten').first().json.kundeAn }}",
+        "subject": "={{ $('KI-Antwort auswerten').first().json.kundeBetreff }}",
+        "emailFormat": "html",
+        "html": "={{ $('KI-Antwort auswerten').first().json.kundeHtml }}",
+        "options": {}
+      },
+      "id": "a5d682a6-b489-538d-a446-c0c543938880",
+      "name": "Antwort an Interessent",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2060,
+        -200
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $('EINSTELLUNGEN').first().json.cfg.absenderName }} <{{ $('EINSTELLUNGEN').first().json.cfg.absenderEmail }}>",
+        "toEmail": "={{ $('KI-Antwort auswerten').first().json.verkAn }}",
+        "subject": "={{ $('KI-Antwort auswerten').first().json.verkBetreff }}",
+        "emailFormat": "html",
+        "html": "={{ $('KI-Antwort auswerten').first().json.verkHtml }}",
+        "options": {}
+      },
+      "id": "ba090930-da2c-5c4e-bebd-077365e75a9c",
+      "name": "Verkäufer benachrichtigen",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2280,
+        -200
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "672a3a0a-c6fb-599d-833a-e4d2bd099ee5",
+      "name": "Leads laden (Termin)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        300,
+        120
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Der Interessent hat einen Terminvorschlag angeklickt. */\nconst d   = $('EINSTELLUNGEN').first().json;\nconst cfg = d.cfg;\n\nconst zeilen = $input.all().map(i => i.json).filter(r => r && r.LeadID);\nconst lead   = zeilen.find(r => String(r.LeadID) === String(d.leadId)) || {};\n\n/* Zeitpunkt aus dem Link */\nconst start = new Date(d.slot);\nconst gueltig = !isNaN(start.getTime()) && start.getTime() > Date.now() - 60 * 60 * 1000;\nconst ende  = new Date(start.getTime() + cfg.terminDauerMin * 60 * 1000);\n\nconst wt = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];\nconst lesbar = gueltig\n  ? wt[start.getDay()] + ', ' + String(start.getDate()).padStart(2,'0') + '.' +\n    String(start.getMonth()+1).padStart(2,'0') + '.' + start.getFullYear() + ' um ' +\n    String(start.getHours()).padStart(2,'0') + ':' + String(start.getMinutes()).padStart(2,'0') + ' Uhr'\n  : '';\n\nconst name  = lead.Name || 'Interessent';\nconst fzg   = lead.Fahrzeug || 'Fahrzeug nach Absprache';\nconst verkE = lead.VerkaeuferEmail || (cfg.verkaeufer[0] && cfg.verkaeufer[0].email) || cfg.verkaufsleitung;\nconst verkN = lead.Verkaeufer || '';\n\nconst kundeHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">Guten Tag ${name},</p>\n  <p style=\"margin:0 0 14px\">Ihre Probefahrt ist eingetragen:</p>\n  <table cellpadding=\"8\" style=\"border-collapse:collapse;background:#f5f7fa;border-radius:10px;font-size:15px\">\n    <tr><td style=\"color:#5b6b80\">Termin</td><td><b>${lesbar}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td><b>${fzg}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Ort</td><td>${cfg.autohaus}, ${cfg.ort}</td></tr>\n    ${verkN ? `<tr><td style=\"color:#5b6b80\">Ansprechpartner</td><td>${verkN}</td></tr>` : ''}\n  </table>\n  <p style=\"margin:18px 0 14px\">Bitte bringen Sie Ihren Führerschein mit. Sollte etwas dazwischenkommen,\n     antworten Sie einfach auf diese E-Mail oder rufen Sie uns unter ${cfg.telefon} an.</p>\n  <p style=\"margin:0\">Wir freuen uns auf Sie.</p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">${cfg.autohaus} · ${cfg.ort} · Telefon ${cfg.telefon}</p>\n</div>`;\n\nconst verkHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6\">\n  <p style=\"margin:0 0 14px\"><b>Probefahrt gebucht.</b></p>\n  <table cellpadding=\"6\" style=\"border-collapse:collapse;font-size:14px\">\n    <tr><td style=\"color:#5b6b80\">Termin</td><td><b>${lesbar}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Kunde</td><td>${name}</td></tr>\n    <tr><td style=\"color:#5b6b80\">E-Mail</td><td>${lead.Email || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Telefon</td><td>${lead.Telefon || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td>${fzg}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Lead</td><td>${d.leadId}</td></tr>\n  </table>\n  <p style=\"margin:16px 0 0;font-size:13px;color:#5b6b80\">Der Kunde erhält 24 Stunden vorher automatisch eine Erinnerung.</p>\n</div>`;\n\nconst seite = gueltig ? `<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>Termin bestätigt</title></head>\n<body style=\"margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fa;color:#1a2430\">\n<div style=\"max-width:520px;margin:60px auto;background:#fff;border-radius:16px;padding:40px 34px;text-align:center\">\n  <div style=\"width:56px;height:56px;border-radius:50%;background:#2e8b6b;margin:0 auto 22px;line-height:56px;color:#fff;font-size:28px\">&#10003;</div>\n  <h1 style=\"margin:0 0 12px;font-size:24px\">Termin bestätigt</h1>\n  <p style=\"margin:0 0 6px;font-size:17px\"><b>${lesbar}</b></p>\n  <p style=\"margin:0 0 20px;color:#5b6b80\">${fzg}</p>\n  <p style=\"margin:0;color:#5b6b80;font-size:14px\">Sie erhalten gleich eine Bestätigung per E-Mail.<br>${cfg.autohaus} · ${cfg.telefon}</p>\n</div></body></html>`\n: `<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><title>Termin</title></head>\n<body style=\"margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fa;color:#1a2430\">\n<div style=\"max-width:520px;margin:60px auto;background:#fff;border-radius:16px;padding:40px 34px;text-align:center\">\n  <h1 style=\"margin:0 0 12px;font-size:22px\">Dieser Termin ist nicht mehr gültig</h1>\n  <p style=\"margin:0;color:#5b6b80\">Bitte rufen Sie uns kurz an: ${cfg.telefon}</p>\n</div></body></html>`;\n\nreturn [{\n  json: {\n    gueltig:      gueltig,\n    LeadID:       d.leadId,\n    Termin:       gueltig ? start.toISOString() : '',\n    TerminBestaetigt: gueltig ? 'ja' : 'nein',\n    Status:       gueltig ? 'termin' : (lead.Status || 'kontaktiert'),\n    Sequenz:      gueltig ? 'gestoppt' : (lead.Sequenz || 'laeuft'),\n    NaechsterSchritt: gueltig ? 'Probefahrt durchführen' : (lead.NaechsterSchritt || ''),\n    LetzterKontakt: new Date().toISOString(),\n    kalStart:     gueltig ? start.toISOString() : new Date().toISOString(),\n    kalEnde:      gueltig ? ende.toISOString()  : new Date(Date.now() + 60000).toISOString(),\n    kalTitel:     'Probefahrt: ' + fzg + ' — ' + name,\n    kalText:      ['Kunde: ' + name, 'E-Mail: ' + (lead.Email || ''), 'Telefon: ' + (lead.Telefon || ''),\n                   'Fahrzeug: ' + fzg, 'Lead: ' + d.leadId].join('\\n'),\n    kundeAn:      lead.Email || '',\n    kundeBetreff: 'Ihre Probefahrt am ' + lesbar,\n    kundeHtml:    kundeHtml,\n    verkAn:       verkE,\n    verkBetreff:  'Probefahrt gebucht: ' + name + ' — ' + lesbar,\n    verkHtml:     verkHtml,\n    seite:        seite,\n    cfg:          cfg\n  }\n}];"
+      },
+      "id": "b6c03f54-2a5a-55c9-ad8f-51b0824e847d",
+      "name": "Termin vorbereiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1862f0ae-2f48-495a-a648-18b951eceed5",
+              "leftValue": "={{ $json.gueltig }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "833dcf37-3c41-5854-b753-52a51470a16b",
+      "name": "Termin gültig?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        740,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.kalenderId }}",
+          "mode": "id"
+        },
+        "start": "={{ $json.kalStart }}",
+        "end": "={{ $json.kalEnde }}",
+        "additionalFields": {
+          "summary": "={{ $json.kalTitel }}",
+          "description": "={{ $json.kalText }}"
+        }
+      },
+      "id": "adc84068-f9c8-51c1-95e2-7079d0d6bc2f",
+      "name": "Kalendereintrag",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        960,
+        40
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "LeadID"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "12befca6-b8b8-584f-bfdb-20111e6f1268",
+      "name": "CRM: Termin eintragen",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1180,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $('EINSTELLUNGEN').first().json.cfg.absenderName }} <{{ $('EINSTELLUNGEN').first().json.cfg.absenderEmail }}>",
+        "toEmail": "={{ $('Termin vorbereiten').first().json.kundeAn }}",
+        "subject": "={{ $('Termin vorbereiten').first().json.kundeBetreff }}",
+        "emailFormat": "html",
+        "html": "={{ $('Termin vorbereiten').first().json.kundeHtml }}",
+        "options": {}
+      },
+      "id": "2e7dc642-182a-5069-87f3-9aba5a34a024",
+      "name": "Bestätigung an Kunden",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1400,
+        40
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $('EINSTELLUNGEN').first().json.cfg.absenderName }} <{{ $('EINSTELLUNGEN').first().json.cfg.absenderEmail }}>",
+        "toEmail": "={{ $('Termin vorbereiten').first().json.verkAn }}",
+        "subject": "={{ $('Termin vorbereiten').first().json.verkBetreff }}",
+        "emailFormat": "html",
+        "html": "={{ $('Termin vorbereiten').first().json.verkHtml }}",
+        "options": {}
+      },
+      "id": "6206ab6c-9f81-5df5-99e8-16f38479e7f1",
+      "name": "Info an Verkäufer",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1620,
+        40
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $('Termin vorbereiten').first().json.seite }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "content-type",
+                "value": "text/html; charset=utf-8"
+              }
+            ]
+          }
+        }
+      },
+      "id": "ecba6ffb-60ba-52ba-a065-b51d83fedf88",
+      "name": "Danke-Seite anzeigen",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1840,
+        120
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "ec456bbc-0121-54c7-b7e5-4d395290aecb",
+      "name": "Alle Leads laden",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        300,
+        420
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Der tägliche Lauf: was steht heute an? */\nconst cfg = $('EINSTELLUNGEN').first().json.cfg;\nconst jetzt = new Date();\nconst tag = 24 * 60 * 60 * 1000;\n\nconst alle = $input.all().map(i => i.json).filter(r => r && r.LeadID && r.Email);\nconst aufgaben = [];\n\nfor (const l of alle) {\n  const status  = String(l.Status || '').toLowerCase();\n  const sequenz = String(l.Sequenz || '').toLowerCase();\n\n  /* --- 1. Erinnerung an eine bevorstehende Probefahrt ----- */\n  if (l.Termin && String(l.TerminBestaetigt).toLowerCase() === 'ja') {\n    const t = new Date(l.Termin);\n    if (!isNaN(t.getTime())) {\n      const stundenBis = (t.getTime() - jetzt.getTime()) / 3600000;\n      const schon = String(l.NaechsterSchritt || '').includes('Erinnert');\n      if (stundenBis > 0 && stundenBis <= cfg.erinnerungStundenVorher && !schon) {\n        aufgaben.push({ json: { typ: 'erinnerung', lead: l, cfg: cfg } });\n      }\n    }\n    continue;   /* Wer einen Termin hat, wird nicht nachgefasst. */\n  }\n\n  /* --- 2. Kette gestoppt oder abgeschlossen? -------------- */\n  if (sequenz === 'gestoppt' || ['geantwortet','verkauft','verloren','archiviert'].includes(status)) {\n    /* --- 3. Archivieren nach langer Stille --------------- */\n    const letzte = new Date(l.LetzterKontakt || l.Eingang || 0);\n    const alterTage = (jetzt.getTime() - letzte.getTime()) / tag;\n    if (status !== 'archiviert' && alterTage > cfg.archivNachTagen) {\n      aufgaben.push({ json: { typ: 'archiv', lead: l, cfg: cfg } });\n    }\n    continue;\n  }\n\n  /* --- 4. Nachfassen an Tag 2, 5 und 10 ------------------ */\n  const eingang = new Date(l.Eingang || 0);\n  if (isNaN(eingang.getTime())) continue;\n  const alter = Math.floor((jetzt.getTime() - eingang.getTime()) / tag);\n\n  const bereits = (String(l.NaechsterSchritt || '').match(/Nachgefasst an Tag (\\d+)/g) || [])\n                    .map(s => parseInt(s.replace(/\\D/g, ''), 10));\n  const hoechsteStufe = bereits.length ? Math.max(...bereits) : 0;\n\n  const faellig = cfg.nachfassTage.filter(t => alter >= t && t > hoechsteStufe);\n  if (faellig.length) {\n    aufgaben.push({ json: { typ: 'nachfass', stufe: Math.max(...faellig), alter: alter, lead: l, cfg: cfg } });\n    continue;\n  }\n\n  /* --- 5. Nach der letzten Stufe: archivieren ------------ */\n  const letzterTag = cfg.nachfassTage[cfg.nachfassTage.length - 1];\n  if (hoechsteStufe >= letzterTag && alter > cfg.archivNachTagen) {\n    aufgaben.push({ json: { typ: 'archiv', lead: l, cfg: cfg } });\n  }\n}\n\n/* --- 6. Tagesbericht an die Verkaufsleitung -------------- */\nif (cfg.berichtSenden) {\n  aufgaben.push({ json: { typ: 'bericht', alle: alle, aufgaben: aufgaben.length, cfg: cfg } });\n}\n\nreturn aufgaben;"
+      },
+      "id": "1609591c-02e0-5aa6-a3b8-dcf776b4b753",
+      "name": "Was ist heute fällig?",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "80403abc-519f-478f-8c1a-579c25cedac4",
+                    "leftValue": "={{ $json.typ }}",
+                    "rightValue": "nachfass",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Nachfassen"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "06268ed5-0479-4c51-8084-bc4d677f7526",
+                    "leftValue": "={{ $json.typ }}",
+                    "rightValue": "erinnerung",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Erinnerung"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ff031bf2-9326-4308-8802-6650c99868cc",
+                    "leftValue": "={{ $json.typ }}",
+                    "rightValue": "archiv",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Archivieren"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "10f38b42-927d-4197-b23d-cb58ee94e28f",
+                    "leftValue": "={{ $json.typ }}",
+                    "rightValue": "bericht",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Tagesbericht"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0b49d79f-48fd-524f-9814-5d8121b3f29d",
+      "name": "Weiche: Aufgabe",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        740,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Baut den KI-Auftrag für die Nachfass-Mail. */\nconst raus = [];\n\nfor (const item of $input.all()) {\n  const d   = item.json;\n  const cfg = d.cfg;\n  const l   = d.lead;\n\n  const stufe = d.stufe;\n  const ziel = stufe <= 2\n    ? 'Freundlich nachhaken, ob die Antwort angekommen ist und ob Fragen offen sind. Sehr kurz.'\n    : (stufe <= 5\n        ? 'Einen konkreten Mehrwert bieten: Probefahrt erneut anbieten oder auf Inzahlungnahme eingehen.'\n        : 'Letzte Nachricht der Reihe. Ein passendes Alternativfahrzeug anbieten und hoeflich abschliessen, ohne Druck.');\n\n  const system = [\n    'Du schreibst im Namen von ' + cfg.autohaus + ' in ' + cfg.ort + ' eine kurze Nachfass-E-Mail.',\n    'Sprache: Deutsch, Sie-Form. Tonfall: ' + cfg.tonfall + '.',\n    'Aufgabe fuer diese Stufe: ' + ziel,\n    'Regeln:',\n    '- Hoechstens 70 Woerter. Kein Betreff-Wiederholen, keine Floskeln, kein Druck.',\n    '- Beziehe dich konkret auf das angefragte Fahrzeug.',\n    '- Erfinde keine Preise, Ausstattungen oder Zusagen.',\n    '- Keine Anrede und keine Grussformel, das haengt das System an.',\n    '- Nur Fliesstext, Absaetze durch Leerzeile getrennt.'\n  ].join('\\n');\n\n  const nutzer = [\n    'Fahrzeug: '        + (l.Fahrzeug || 'unbekannt'),\n    'Kaufabsicht: '     + (l.Kaufabsicht || 'unklar'),\n    'Zeitrahmen: '      + (l.Dringlichkeit || 'unklar'),\n    'Inzahlungnahme: '  + (l.Inzahlungnahme || 'nein') + ' ' + (l.InzahlungFahrzeug || ''),\n    'Erste Anfrage vor '+ d.alter + ' Tagen.',\n    '',\n    'Damalige Nachricht des Interessenten:',\n    String(l.Nachricht || '').substring(0, 1500)\n  ].join('\\n');\n\n  const schema = {\n    type: 'object',\n    properties: {\n      betreff: { type: 'string' },\n      text:    { type: 'string' }\n    },\n    required: ['betreff', 'text'],\n    additionalProperties: false\n  };\n\n  raus.push({ json: {\n    ...d,\n    apiBody: {\n      model: cfg.modell,\n      max_tokens: 900,\n      thinking: { type: 'disabled' },\n      output_config: { effort: 'low', format: { type: 'json_schema', schema: schema } },\n      system: system,\n      messages: [{ role: 'user', content: nutzer }]\n    }\n  }});\n}\n\nreturn raus;"
+      },
+      "id": "6444fe0a-05ed-589c-ab72-0d07fe9b9f7e",
+      "name": "Nachfass-Auftrag bauen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            },
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.apiBody) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "0f6da502-c613-5950-9763-74d457348ebb",
+      "name": "KI: Nachfasstext",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1180,
+        300
+      ],
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000
+    },
+    {
+      "parameters": {
+        "jsCode": "/* KI-Antwort in eine fertige Mail und eine CRM-Zeile verwandeln. */\nconst raus = [];\nconst eingang = $input.all();\n\nfor (let k = 0; k < eingang.length; k++) {\n  const roh = eingang[k].json;\n  const vor = $('Nachfass-Auftrag bauen').all()[k].json;\n  const cfg = vor.cfg;\n  const l   = vor.lead;\n\n  let a = null;\n  try {\n    const b = (roh.content || []).find(x => x && x.type === 'text');\n    if (b && b.text) a = JSON.parse(b.text);\n  } catch (e) { a = null; }\n\n  if (!a) {\n    a = {\n      betreff: 'Kurze Rueckfrage zu ' + (l.Fahrzeug || 'Ihrer Anfrage'),\n      text: 'ich wollte kurz nachfragen, ob meine letzte Nachricht bei Ihnen angekommen ist '\n          + 'und ob noch Fragen offen sind. Melden Sie sich gerne jederzeit.'\n    };\n  }\n\n  const absaetze = String(a.text || '').split(/\\n\\s*\\n/)\n    .map(p => `<p style=\"margin:0 0 14px\">${p.replace(/\\n/g, '<br>')}</p>`).join('');\n\n  const html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">Guten Tag ${l.Name || ''},</p>\n  ${absaetze}\n  <p style=\"margin:18px 0 0\">Mit freundlichen Grüßen<br>${l.Verkaeufer || cfg.autohaus}</p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">\n    ${cfg.autohaus} · ${cfg.ort} · Telefon ${cfg.telefon}<br>\n    Wenn Sie keine weiteren Nachrichten zu dieser Anfrage wünschen, antworten Sie kurz mit „kein Interesse“.\n  </p>\n</div>`;\n\n  const bisher = String(l.NaechsterSchritt || '');\n  raus.push({ json: {\n    LeadID:           l.LeadID,\n    Status:           'nachgefasst',\n    Sequenz:          'laeuft',\n    LetzterKontakt:   new Date().toISOString(),\n    NaechsterSchritt: (bisher ? bisher + ' | ' : '') + 'Nachgefasst an Tag ' + vor.stufe,\n    mailAn:           l.Email,\n    mailBetreff:      a.betreff,\n    mailHtml:         html,\n    cfg:              cfg\n  }});\n}\n\nreturn raus;"
+      },
+      "id": "24e84b4b-f115-5204-9e54-c5e0cce56728",
+      "name": "Nachfass aufbereiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "LeadID"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "bd1438ae-3109-5469-bea8-69af0de7fd5a",
+      "name": "CRM: Nachfass vermerken",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1620,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $('EINSTELLUNGEN').first().json.cfg.absenderName }} <{{ $('EINSTELLUNGEN').first().json.cfg.absenderEmail }}>",
+        "toEmail": "={{ $('Nachfass aufbereiten').all()[$itemIndex].json.mailAn }}",
+        "subject": "={{ $('Nachfass aufbereiten').all()[$itemIndex].json.mailBetreff }}",
+        "emailFormat": "html",
+        "html": "={{ $('Nachfass aufbereiten').all()[$itemIndex].json.mailHtml }}",
+        "options": {}
+      },
+      "id": "c06c5e3e-884a-5537-b0d1-b3a54be45934",
+      "name": "Nachfass senden",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1840,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Erinnerung 24 Stunden vor der Probefahrt. */\nconst raus = [];\n\nfor (const item of $input.all()) {\n  const cfg = item.json.cfg;\n  const l   = item.json.lead;\n  const t   = new Date(l.Termin);\n  const wt  = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];\n  const lesbar = wt[t.getDay()] + ', ' + String(t.getDate()).padStart(2,'0') + '.' +\n                 String(t.getMonth()+1).padStart(2,'0') + '. um ' +\n                 String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0') + ' Uhr';\n\n  const html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">Guten Tag ${l.Name || ''},</p>\n  <p style=\"margin:0 0 14px\">eine kurze Erinnerung an Ihre Probefahrt:</p>\n  <table cellpadding=\"8\" style=\"border-collapse:collapse;background:#f5f7fa;border-radius:10px;font-size:15px\">\n    <tr><td style=\"color:#5b6b80\">Termin</td><td><b>${lesbar}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td><b>${l.Fahrzeug || ''}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Ort</td><td>${cfg.autohaus}, ${cfg.ort}</td></tr>\n  </table>\n  <p style=\"margin:18px 0 14px\">Bitte denken Sie an Ihren Führerschein. Falls Sie den Termin nicht wahrnehmen können,\n     genügt ein kurzer Anruf unter ${cfg.telefon}.</p>\n  <p style=\"margin:0\">Bis morgen.</p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">${cfg.autohaus} · ${cfg.ort} · Telefon ${cfg.telefon}</p>\n</div>`;\n\n  raus.push({ json: {\n    LeadID:           l.LeadID,\n    Status:           'termin',\n    Sequenz:          'gestoppt',\n    LetzterKontakt:   new Date().toISOString(),\n    NaechsterSchritt: 'Erinnert am ' + new Date().toISOString().substring(0, 10),\n    mailAn:           l.Email,\n    mailBetreff:      'Erinnerung: Ihre Probefahrt am ' + lesbar,\n    mailHtml:         html,\n    cfg:              cfg\n  }});\n}\n\nreturn raus;"
+      },
+      "id": "e9862224-55de-5292-9b4f-4493ffdc87bd",
+      "name": "Erinnerung aufbereiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "LeadID"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "dc7fcc14-7418-5386-b4d5-21830d74babb",
+      "name": "CRM: Erinnerung vermerken",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1180,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $('EINSTELLUNGEN').first().json.cfg.absenderName }} <{{ $('EINSTELLUNGEN').first().json.cfg.absenderEmail }}>",
+        "toEmail": "={{ $('Erinnerung aufbereiten').all()[$itemIndex].json.mailAn }}",
+        "subject": "={{ $('Erinnerung aufbereiten').all()[$itemIndex].json.mailBetreff }}",
+        "emailFormat": "html",
+        "html": "={{ $('Erinnerung aufbereiten').all()[$itemIndex].json.mailHtml }}",
+        "options": {}
+      },
+      "id": "f1789225-16a9-50a6-b82e-7e6532dda7da",
+      "name": "Erinnerung senden",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1400,
+        460
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Alte, kalte Vorgänge sauber schließen. */\nreturn $input.all().map(item => {\n  const l = item.json.lead;\n  return { json: {\n    LeadID:           l.LeadID,\n    Status:           'archiviert',\n    Sequenz:          'gestoppt',\n    LetzterKontakt:   l.LetzterKontakt || l.Eingang || '',\n    NaechsterSchritt: 'Archiviert am ' + new Date().toISOString().substring(0, 10)\n  }};\n});"
+      },
+      "id": "08672f6e-bc5c-53ff-9796-58ed1ea86420",
+      "name": "Archiv-Zeile bauen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "LeadID"
+          ],
+          "schema": []
+        },
+        "options": {}
+      },
+      "id": "acefd620-1bde-544f-8074-082d36a38a7e",
+      "name": "CRM: Archivieren",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1180,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Tagesbericht an die Verkaufsleitung. */\nconst d   = $input.first().json;\nconst cfg = d.cfg;\nconst alle = d.alle || [];\nconst tag = 24 * 60 * 60 * 1000;\nconst jetzt = Date.now();\n\nconst seit = (r, t) => {\n  const x = new Date(r.Eingang || 0).getTime();\n  return !isNaN(x) && (jetzt - x) < t * tag;\n};\n\nconst neu24     = alle.filter(r => seit(r, 1));\nconst neu7      = alle.filter(r => seit(r, 7));\nconst offen     = alle.filter(r => ['neu','kontaktiert','nachgefasst'].includes(String(r.Status||'').toLowerCase()));\nconst termine   = alle.filter(r => String(r.TerminBestaetigt||'').toLowerCase() === 'ja' &&\n                                   new Date(r.Termin || 0).getTime() > jetzt);\nconst antworten = alle.filter(r => String(r.Status||'').toLowerCase() === 'geantwortet');\n\nconst heiss = offen.filter(r => Number(r.Score || 0) >= 70)\n                   .sort((a, b) => Number(b.Score||0) - Number(a.Score||0))\n                   .slice(0, 8);\n\nconst zeilen = heiss.map(r => `\n  <tr>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\"><b>${r.Score}</b></td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\">${r.Name || r.Email}</td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\">${r.Fahrzeug || '—'}</td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\">${r.Verkaeufer || '—'}</td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef;color:#5b6b80\">${String(r.Eingang||'').substring(0,10)}</td>\n  </tr>`).join('') || '<tr><td colspan=\"5\" style=\"padding:10px;color:#5b6b80\">Aktuell keine Leads über 70 Punkten.</td></tr>';\n\nconst kachel = (wert, text) => `\n  <td style=\"padding:14px 16px;background:#f5f7fa;border-radius:10px;text-align:center;width:20%\">\n    <div style=\"font-size:26px;font-weight:700;color:#142b47\">${wert}</div>\n    <div style=\"font-size:12px;color:#5b6b80;letter-spacing:.04em;text-transform:uppercase;margin-top:4px\">${text}</div>\n  </td>`;\n\nconst html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6;max-width:700px\">\n  <p style=\"margin:0 0 4px;font-size:13px;color:#5b6b80\">${cfg.autohaus} · Tagesbericht</p>\n  <h2 style=\"margin:0 0 20px;font-size:21px;color:#142b47\">Stand vom ${new Date().toLocaleDateString('de-DE')}</h2>\n  <table cellspacing=\"8\" style=\"border-collapse:separate;width:100%\">\n    <tr>\n      ${kachel(neu24.length, 'Neu 24 h')}\n      ${kachel(neu7.length, 'Neu 7 Tage')}\n      ${kachel(offen.length, 'Offen')}\n      ${kachel(termine.length, 'Termine')}\n      ${kachel(antworten.length, 'Antworten')}\n    </tr>\n  </table>\n  <p style=\"margin:26px 0 10px\"><b>Die heißesten offenen Leads</b></p>\n  <table cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;width:100%;font-size:14px\">\n    <tr style=\"background:#142b47;color:#fff\">\n      <th style=\"padding:8px 10px;text-align:left\">Score</th>\n      <th style=\"padding:8px 10px;text-align:left\">Interessent</th>\n      <th style=\"padding:8px 10px;text-align:left\">Fahrzeug</th>\n      <th style=\"padding:8px 10px;text-align:left\">Verkäufer</th>\n      <th style=\"padding:8px 10px;text-align:left\">Eingang</th>\n    </tr>\n    ${zeilen}\n  </table>\n  <p style=\"margin:24px 0 0;font-size:13px;color:#5b6b80\">\n    Heute automatisch bearbeitet: ${d.aufgaben} Vorgänge (Nachfassen, Erinnerungen, Archivierung).\n  </p>\n</div>`;\n\nreturn [{ json: {\n  mailAn:      cfg.verkaufsleitung,\n  mailBetreff: 'Tagesbericht ' + cfg.autohaus + ' — ' + neu24.length + ' neue Anfragen',\n  mailHtml:    html,\n  cfg:         cfg\n}}];"
+      },
+      "id": "57043863-f02f-5a1f-a724-99f6556cb807",
+      "name": "Tagesbericht bauen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        740
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $('EINSTELLUNGEN').first().json.cfg.absenderName }} <{{ $('EINSTELLUNGEN').first().json.cfg.absenderEmail }}>",
+        "toEmail": "={{ $json.mailAn }}",
+        "subject": "={{ $json.mailBetreff }}",
+        "emailFormat": "html",
+        "html": "={{ $json.mailHtml }}",
+        "options": {}
+      },
+      "id": "5c0df815-bedf-5bb2-9f28-4c8dd04e03da",
+      "name": "Tagesbericht senden",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        1180,
+        740
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## 1 · Vor dem ersten Start\n\n**Nur der Node `EINSTELLUNGEN` wird pro Autohaus angepasst.**\nAlles andere bleibt unverändert — das ist der ganze Trick.\n\n**Zugänge einrichten (4 Stück):**\n1. *Header Auth* für Claude — Name `x-api-key`, Wert = API-Schlüssel\n2. *Google Sheets OAuth2*\n3. *Google Calendar OAuth2*\n4. *SMTP* für den Mailversand\n5. *IMAP* für das Postfach (nur wenn Portal-Mails gelesen werden)\n\n**Google-Tabelle anlegen** mit zwei Blättern, `Leads` und `Fahrzeuge`.\nDie Spaltennamen stehen im Notizzettel rechts.",
+        "height": 400,
+        "width": 460,
+        "color": 4
+      },
+      "id": "bf7264fb-866a-5793-a4eb-bf66f6d2c581",
+      "name": "Notiz 43",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -620,
+        -620
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 2 · Spalten der Google-Tabelle\n\n**Blatt `Leads`** (genau diese Reihenfolge, erste Zeile):\n`LeadID`, `Eingang`, `Quelle`, `Name`, `Email`, `Telefon`,\n`Nachricht`, `Fahrzeug`, `FahrzeugID`, `Kaufabsicht`,\n`Inzahlungnahme`, `InzahlungFahrzeug`, `Dringlichkeit`,\n`Score`, `Verkaeufer`, `VerkaeuferEmail`, `Status`,\n`Sequenz`, `LetzterKontakt`, `NaechsterSchritt`,\n`Termin`, `TerminBestaetigt`, `Notiz`\n\n**Blatt `Fahrzeuge`**:\n`FahrzeugID`, `Marke`, `Modell`, `Variante`, `Erstzulassung`,\n`Kilometer`, `Kraftstoff`, `Getriebe`, `Leistung`, `Preis`,\n`Farbe`, `Ausstattung`, `Status`, `Standort`\n\n`Status` beim Fahrzeug: leer oder `verfuegbar` = wird angeboten,\n`verkauft` = wird ignoriert.",
+        "height": 400,
+        "width": 460,
+        "color": 4
+      },
+      "id": "c73d1360-fcda-595d-adf1-11568ad8fdda",
+      "name": "Notiz 44",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        -620
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 3 · Weg einer Anfrage\n\nFormular oder Postfach → Erkennung durch die KI →\nAntwort an den Interessenten in Sekunden →\nEintrag ins CRM → Verkäufer bekommt Bescheid.\n\nDie Antwort enthält **drei anklickbare Probefahrt-Termine**.\nEin Klick trägt den Termin in den Kalender ein, bestätigt\ndem Kunden und stoppt die Nachfass-Kette.",
+        "height": 260,
+        "width": 420,
+        "color": 5
+      },
+      "id": "7641bb20-a07d-5671-a8b3-a25d5472a27e",
+      "name": "Notiz 45",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        380,
+        -620
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 4 · Antwort erkannt = Kette stoppt\n\nSchreibt ein bekannter Interessent zurück, wird **sofort**\ngestoppt und der Verkäufer informiert. Es geht keine\nautomatische Nachfass-Mail mehr raus.\n\nDas ist der wichtigste Teil des Systems: nichts ist\npeinlicher als ein Roboter, der weiter nachfasst,\nwährend der Kunde längst geantwortet hat.",
+        "height": 260,
+        "width": 420,
+        "color": 3
+      },
+      "id": "8563598e-4f37-5ab8-a664-816280530356",
+      "name": "Notiz 46",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        820,
+        -620
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 5 · Täglicher Lauf, 07:00 Uhr\n\n**Nachfassen** an Tag 2, 5 und 10 — jede Mail wird von der KI\nauf den konkreten Fall geschrieben, keine Textbausteine.\n\n**Erinnerung** 24 Stunden vor jeder Probefahrt.\n\n**Archivieren** nach 45 Tagen Stille.\n\n**Tagesbericht** an die Verkaufsleitung: neue Anfragen,\noffene Vorgänge, Termine und die heißesten Leads.",
+        "height": 300,
+        "width": 440,
+        "color": 6
+      },
+      "id": "a7daa55c-ee53-575b-899f-9d2c0fa365be",
+      "name": "Notiz 47",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        300,
+        900
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 6 · Wenn etwas ausfällt\n\nDie KI-Nodes versuchen es **drei Mal**. Bleibt die API stumm,\ngeht trotzdem eine saubere Empfangsbestätigung raus und der\nVerkäufer bekommt einen deutlichen Hinweis, selbst zu lesen.\nEs geht nie eine Anfrage verloren.\n\nMail- und Kalender-Nodes brechen den Ablauf nicht ab.",
+        "height": 240,
+        "width": 440,
+        "color": 3
+      },
+      "id": "eec026e3-7842-5623-8095-aafbff673e6a",
+      "name": "Notiz 48",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        800,
+        900
+      ]
+    }
+  ],
+  "connections": {
+    "Website-Formular": {
+      "main": [
+        [
+          {
+            "node": "Quelle erkennen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postfach (IMAP)": {
+      "main": [
+        [
+          {
+            "node": "Quelle erkennen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Termin-Klick": {
+      "main": [
+        [
+          {
+            "node": "Quelle erkennen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Täglich 07:00": {
+      "main": [
+        [
+          {
+            "node": "Quelle erkennen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quelle erkennen": {
+      "main": [
+        [
+          {
+            "node": "EINSTELLUNGEN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EINSTELLUNGEN": {
+      "main": [
+        [
+          {
+            "node": "Weiche: Was ist zu tun?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weiche: Was ist zu tun?": {
+      "main": [
+        [
+          {
+            "node": "Leads laden",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Leads laden (Termin)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Alle Leads laden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leads laden": {
+      "main": [
+        [
+          {
+            "node": "Antwort oder neue Anfrage?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Antwort oder neue Anfrage?": {
+      "main": [
+        [
+          {
+            "node": "Ist es eine Antwort?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ist es eine Antwort?": {
+      "main": [
+        [
+          {
+            "node": "Antwort aufbereiten",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fahrzeuge laden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Antwort aufbereiten": {
+      "main": [
+        [
+          {
+            "node": "CRM: Sequenz stoppen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM: Sequenz stoppen": {
+      "main": [
+        [
+          {
+            "node": "Verkäufer: Kunde hat geantwortet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fahrzeuge laden": {
+      "main": [
+        [
+          {
+            "node": "KI-Auftrag bauen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KI-Auftrag bauen": {
+      "main": [
+        [
+          {
+            "node": "KI: Anfrage verstehen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KI: Anfrage verstehen": {
+      "main": [
+        [
+          {
+            "node": "KI-Antwort auswerten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KI-Antwort auswerten": {
+      "main": [
+        [
+          {
+            "node": "Lead ins CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead ins CRM": {
+      "main": [
+        [
+          {
+            "node": "Antwort an Interessent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Antwort an Interessent": {
+      "main": [
+        [
+          {
+            "node": "Verkäufer benachrichtigen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leads laden (Termin)": {
+      "main": [
+        [
+          {
+            "node": "Termin vorbereiten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Termin vorbereiten": {
+      "main": [
+        [
+          {
+            "node": "Termin gültig?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Termin gültig?": {
+      "main": [
+        [
+          {
+            "node": "Kalendereintrag",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Danke-Seite anzeigen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kalendereintrag": {
+      "main": [
+        [
+          {
+            "node": "CRM: Termin eintragen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM: Termin eintragen": {
+      "main": [
+        [
+          {
+            "node": "Bestätigung an Kunden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bestätigung an Kunden": {
+      "main": [
+        [
+          {
+            "node": "Info an Verkäufer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Info an Verkäufer": {
+      "main": [
+        [
+          {
+            "node": "Danke-Seite anzeigen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alle Leads laden": {
+      "main": [
+        [
+          {
+            "node": "Was ist heute fällig?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Was ist heute fällig?": {
+      "main": [
+        [
+          {
+            "node": "Weiche: Aufgabe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weiche: Aufgabe": {
+      "main": [
+        [
+          {
+            "node": "Nachfass-Auftrag bauen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Erinnerung aufbereiten",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Archiv-Zeile bauen",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tagesbericht bauen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nachfass-Auftrag bauen": {
+      "main": [
+        [
+          {
+            "node": "KI: Nachfasstext",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KI: Nachfasstext": {
+      "main": [
+        [
+          {
+            "node": "Nachfass aufbereiten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nachfass aufbereiten": {
+      "main": [
+        [
+          {
+            "node": "CRM: Nachfass vermerken",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM: Nachfass vermerken": {
+      "main": [
+        [
+          {
+            "node": "Nachfass senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Erinnerung aufbereiten": {
+      "main": [
+        [
+          {
+            "node": "CRM: Erinnerung vermerken",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CRM: Erinnerung vermerken": {
+      "main": [
+        [
+          {
+            "node": "Erinnerung senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archiv-Zeile bauen": {
+      "main": [
+        [
+          {
+            "node": "CRM: Archivieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tagesbericht bauen": {
+      "main": [
+        [
+          {
+            "node": "Tagesbericht senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true,
+    "timezone": "Europe/Berlin",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "walter-workflows-autohaus-lead-system"
+  },
+  "tags": []
+}
