@@ -1125,25 +1125,77 @@ select option,select optgroup{background:var(--panel2);color:var(--txt)}
 
 /* ─── KALENDER ─── */
 #viewCal{grid-template-rows:1fr}
-/* Tourenplaner */
-#viewTour{grid-template-rows:1fr}
-.tourwrap{overflow-y:auto;padding:26px;scrollbar-width:thin}
-.tour-grid{display:grid;gap:18px;max-width:1250px;margin:0 auto}
-@media(min-width:1000px){.tour-grid{grid-template-columns:.85fr 1.15fr;align-items:start}}
-.tour-info{margin-top:14px;display:grid;gap:8px}
-.tour-kpi{display:flex;justify-content:space-between;background:var(--panel2);border:1px solid var(--line);
-  border-radius:11px;padding:11px 14px;font-size:12.5px}
-.tour-kpi b{font-family:var(--head);font-weight:800;font-variant-numeric:tabular-nums}
-.tourlist{display:grid;gap:10px;max-height:calc(100vh - 230px);overflow-y:auto;scrollbar-width:thin}
-.tstop{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;
-  background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:12px 14px;
-  cursor:pointer;transition:border-color .2s,transform .2s}
-.tstop:hover{border-color:var(--aqua);transform:translateX(3px)}
-.tstop .nr{width:30px;height:30px;border-radius:9px;background:var(--gradup);color:#04222E;
-  font-family:var(--head);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
-.tstop .tf{font-family:var(--head);font-weight:700;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tstop .ta{font-size:11.5px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tstop .tk{font-size:11px;color:var(--faint);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+/* ══ Tagesplaner ══ */
+#viewTag{grid-template-rows:1fr}
+.tagwrap{overflow-y:auto;padding:22px 26px 30px;scrollbar-width:thin}
+.tag-head{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;
+  max-width:1400px;margin:0 auto 18px}
+.tag-nav{display:flex;align-items:center;gap:10px}
+.tag-datum{min-width:210px}
+.tag-datum b{display:block;font-family:var(--head);font-size:19px;font-weight:800;letter-spacing:-.02em}
+.tag-datum span{font-size:12px;color:var(--sub)}
+.tag-opts{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.tag-zeit{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--sub);
+  background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:6px 12px}
+.tag-zeit input{width:auto;background:transparent;border:0;padding:0;font-size:13px;font-weight:700;color:var(--txt)}
+.tag-opts select{width:auto;min-width:160px;padding:10px 12px;font-size:12.5px}
+.tag-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;max-width:1400px;margin:0 auto 14px}
+.tag-kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 17px;
+  transition:transform .3s var(--ez),box-shadow .3s}
+.tag-kpi:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.tag-kpi .l{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+.tag-kpi .v{font-family:var(--head);font-size:24px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.tag-kpi .s{font-size:11px;color:var(--sub);margin-top:2px}
+.tag-fort{display:flex;align-items:center;gap:14px;max-width:1400px;margin:0 auto 18px}
+.tf-bar{flex:1;height:8px;background:var(--panel2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.tf-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--aqua),var(--gA));
+  border-radius:99px;transition:width .6s var(--ez)}
+.tag-fort span{font-size:12px;color:var(--sub);white-space:nowrap;font-weight:600}
+.tag-grid{display:grid;gap:18px;max-width:1400px;margin:0 auto}
+@media(min-width:1050px){.tag-grid{grid-template-columns:1.35fr .65fr;align-items:start}}
+.tag-side{display:grid;gap:18px}
+.tag-actions{display:grid;gap:9px}
+/* Zeitstrahl */
+.tagplan{position:relative;display:grid;gap:0;max-height:calc(100vh - 340px);overflow-y:auto;scrollbar-width:thin;padding-left:2px}
+.tblock{display:grid;grid-template-columns:62px 26px 1fr auto;gap:12px;align-items:start;
+  padding:11px 0;position:relative}
+.tblock .zeit{font-size:12px;font-weight:700;color:var(--sub);font-variant-numeric:tabular-nums;padding-top:3px}
+.tblock .spur{position:relative;display:flex;justify-content:center}
+.tblock .spur::before{content:"";position:absolute;top:0;bottom:-22px;width:2px;background:var(--line)}
+.tblock:last-child .spur::before{display:none}
+.tblock .pkt{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:11px;position:relative;z-index:1;background:var(--panel2);border:2px solid var(--line2)}
+.tblock .inh{min-width:0}
+.tblock .ti{font-family:var(--head);font-weight:700;font-size:13.5px;overflow:hidden;text-overflow:ellipsis}
+.tblock .ts{font-size:11.5px;color:var(--sub);margin-top:2px;line-height:1.4}
+.tblock .dauer{font-size:11px;color:var(--faint);white-space:nowrap;font-variant-numeric:tabular-nums;padding-top:3px}
+.tblock.klick{cursor:pointer;border-radius:11px;transition:background .2s}
+.tblock.klick:hover{background:var(--panel2)}
+.tblock.termin .pkt{background:var(--gradup);border-color:transparent;color:#04222E}
+.tblock.fahrt .pkt{background:var(--panel);border-color:var(--line2);color:var(--faint)}
+.tblock.fahrt .ti{font-weight:500;color:var(--sub);font-family:var(--text);font-size:12.5px}
+.tblock.anruf .pkt{background:rgba(41,196,232,.2);border-color:var(--aqua);color:var(--aqua)}
+.tblock.aufgabe .pkt{background:rgba(232,178,76,.18);border-color:var(--warn);color:var(--warn)}
+.tblock.pause .pkt{background:var(--panel);border-color:var(--line2)}
+.tblock.pause .ti{font-weight:500;color:var(--sub);font-family:var(--text);font-size:12.5px}
+.tblock.fertig .ti{text-decoration:line-through;color:var(--faint)}
+.tblock.fertig .pkt{background:var(--gA);border-color:transparent;color:#04231A}
+.tblock .hak{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line2);background:var(--panel2);
+  font-size:11px;color:transparent;flex:none;transition:.2s;margin-top:2px}
+.tblock.fertig .hak{background:var(--gA);border-color:transparent;color:#04231A}
+.jetzt{display:grid;grid-template-columns:62px 1fr;gap:12px;align-items:center;margin:4px 0}
+.jetzt .jl{font-size:11px;font-weight:800;color:var(--red);font-variant-numeric:tabular-nums}
+.jetzt .jline{height:2px;background:var(--red);border-radius:2px;position:relative}
+.jetzt .jline::after{content:"";position:absolute;left:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--red)}
+/* Offene Punkte */
+.tagoffen{display:grid;gap:8px;max-height:300px;overflow-y:auto;scrollbar-width:thin}
+.toff{display:flex;align-items:flex-start;gap:10px;background:var(--panel2);border:1px solid var(--line);
+  border-radius:11px;padding:10px 13px;font-size:12.5px;cursor:pointer;transition:border-color .2s,transform .2s}
+.toff:hover{border-color:var(--aqua);transform:translateX(3px)}
+.toff input{width:16px;height:16px;accent-color:var(--gA);flex:none;margin-top:1px}
+.toff .tt{flex:1;min-width:0}
+.toff .tf2{font-size:10.5px;color:var(--faint)}
+.toff.over .tt{color:var(--red)}
 .calwrap{overflow-y:auto;padding:26px;scrollbar-width:thin}
 .cal{max-width:1100px;margin:0 auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden}
 .cal-h{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line)}
@@ -1282,7 +1334,7 @@ button:active{transform:scale(.97)}
     <button class="tab on" data-view="Radar"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12l6-5"/></svg>Radar</button>
     <button class="tab" data-view="Crm"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="10" rx="1.5"/><rect x="17" y="4" width="5" height="13" rx="1.5"/></svg>Pipeline<span class="badge" id="crmCount">0</span></button>
     <button class="tab" data-view="Dash"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Dashboard</button>
-    <button class="tab" data-view="Tour"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/></svg>Touren</button>
+    <button class="tab" data-view="Tag"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Tagesplan<span class="badge" id="tagBadge">0</span></button>
     <button class="tab" data-view="Cal"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Kalender</button>
   </nav>
   <div class="gsearch">
@@ -1479,38 +1531,59 @@ button:active{transform:scale(.97)}
   </div></div>
 </main>
 
-<!-- ═══ VIEW: TOURENPLANER ═══ -->
-<main class="view" id="viewTour">
-  <div class="tourwrap">
-    <div class="tour-grid">
-      <div class="panelbox">
-        <h3><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/></svg>Tour planen</h3>
-        <div class="m-grid2">
-          <div class="m-fld"><label>Startpunkt</label><select id="tStart">
-            <option value="48.0616,12.2201">Wasserburg am Inn (Basis)</option>
-            <option value="47.8561,12.1289">Rosenheim</option>
-            <option value="48.2500,12.5333">Mühldorf am Inn</option>
-            <option value="48.1351,11.5820">München</option></select></div>
-          <div class="m-fld"><label>Maximale Halte</label><select id="tMax">
-            <option>4</option><option>6</option><option selected>8</option><option>10</option><option>12</option></select></div>
-          <div class="m-fld"><label>Nur Potenzial</label><select id="tTier">
-            <option value="">alle</option><option value="A" selected>nur A</option><option value="AB">A und B</option></select></div>
-          <div class="m-fld"><label>Nur Phase</label><select id="tStage"><option value="">alle Phasen</option></select></div>
-        </div>
-        <label class="opt" style="margin-top:10px"><input type="checkbox" id="tNurCrm" checked>Nur Leads aus dem CRM</label>
-        <label class="opt"><input type="checkbox" id="tOffen">Nur mit offenem Termin oder Aufgabe</label>
-        <div class="addrow" style="margin-top:14px">
-          <button class="smallbtn" id="btnTour" style="flex:1">Tour berechnen</button>
-        </div>
-        <div id="tourInfo" class="tour-info"></div>
-        <div class="addrow" style="margin-top:10px">
-          <button class="smallbtn ghost" id="btnTourNav" style="flex:1">In Google Maps öffnen</button>
-          <button class="smallbtn ghost" id="btnTourPrint">Drucken</button>
-        </div>
+<!-- ═══ VIEW: TAGESPLANER ═══ -->
+<main class="view" id="viewTag">
+  <div class="tagwrap">
+
+    <!-- Kopfzeile -->
+    <div class="tag-head">
+      <div class="tag-nav">
+        <button class="iconbtn" id="tagPrev"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+        <div class="tag-datum"><b id="tagTitel">—</b><span id="tagSub">—</span></div>
+        <button class="iconbtn" id="tagNext"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+        <button class="iconbtn" id="tagHeute" style="width:auto;padding:0 14px;font-size:12px;font-weight:700">Heute</button>
       </div>
+      <div class="tag-opts">
+        <label class="tag-zeit">Start <input type="time" id="tagVon" value="08:00"></label>
+        <label class="tag-zeit">Ende <input type="time" id="tagBis" value="17:00"></label>
+        <select id="tagStart">
+          <option value="48.0616,12.2201">ab Wasserburg</option>
+          <option value="47.8561,12.1289">ab Rosenheim</option>
+          <option value="48.2500,12.5333">ab Mühldorf</option>
+          <option value="48.1351,11.5820">ab München</option>
+        </select>
+        <button class="smallbtn" id="tagPlanen">Tag planen</button>
+      </div>
+    </div>
+
+    <!-- Kennzahlen -->
+    <div class="tag-kpis" id="tagKpis"></div>
+
+    <!-- Fortschritt -->
+    <div class="tag-fort"><div class="tf-bar"><i id="tagFortBar"></i></div><span id="tagFortTxt">—</span></div>
+
+    <div class="tag-grid">
+      <!-- Zeitstrahl -->
       <div class="panelbox">
-        <h3><svg viewBox="0 0 24 24"><path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>Reihenfolge</h3>
-        <div id="tourList" class="tourlist"><div class="empty" style="padding:26px">Noch keine Tour berechnet.</div></div>
+        <h3><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>Ablauf</h3>
+        <div id="tagPlan" class="tagplan"><div class="empty" style="padding:30px">Noch kein Tag geplant — oben auf „Tag planen" drücken.</div></div>
+      </div>
+
+      <!-- Seitenspalte -->
+      <div class="tag-side">
+        <div class="panelbox">
+          <h3><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Offene Punkte</h3>
+          <div id="tagOffen" class="tagoffen"></div>
+        </div>
+        <div class="panelbox">
+          <h3><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h2.3l1.4 4-2 1.3a12 12 0 0 0 5.3 5.3l1.3-2 4 1.4V19a2 2 0 0 1-2 2A16 16 0 0 1 4 5z"/></svg>Aktionen</h3>
+          <div class="tag-actions">
+            <button class="smallbtn" id="tagAnrufe">Anrufliste starten</button>
+            <button class="smallbtn ghost" id="tagNav">Route in Google Maps</button>
+            <button class="smallbtn ghost" id="tagDruck">Tagesplan drucken</button>
+            <button class="smallbtn ghost" id="tagMorgen">Unerledigtes auf morgen</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1557,6 +1630,7 @@ button:active{transform:scale(.97)}
           <div class="m-fld"><label>Status / Phase</label><select id="fStage"></select></div>
           <div class="m-fld"><label>Priorität</label><select id="fPrio"><option value="hoch">Hoch</option><option value="mittel" selected>Mittel</option><option value="niedrig">Niedrig</option></select></div>
           <div class="m-fld"><label>Nächster Termin</label><input type="date" id="fTermin"></div>
+          <div class="m-fld"><label>Uhrzeit <span class="opt">(optional)</span></label><input type="time" id="fTerminZeit"></div>
           <div class="m-fld"><label>Wert (€, bei Abschluss)</label><input type="number" id="fWert" placeholder="0"></div>
         </div>
         <h4>Tags</h4>
@@ -2524,7 +2598,7 @@ function openLead(cid){
   $('fFirma').value=c.firma;$('fAnsprech').value=c.ansprech;$('fTel').value=c.tel;$('fEmail').value=c.email;
   $('fWeb').value=c.web;$('fBranche').value=c.branche;$('fAdresse').value=c.adresse;
   $('fStage').innerHTML=STAGES.map(s=>`<option value="${s.id}"${s.id===c.stage?' selected':''}>${esc(s.name)}</option>`).join('');
-  $('fPrio').value=c.prio;$('fTermin').value=c.termin;$('fWert').value=c.wert||'';
+  $('fPrio').value=c.prio;$('fTermin').value=c.termin;$('fTerminZeit').value=c.terminZeit||'';$('fWert').value=c.wert||'';
   renderTags(c);renderTasks(c);renderNotes(c);renderTl(c);renderFiles(c);roiLaden(c);
   $('overlay').classList.add('on');
 }
@@ -2578,7 +2652,7 @@ $('mSave').addEventListener('click',()=>{
   const oldStage=c.stage;
   c.firma=$('fFirma').value;c.ansprech=$('fAnsprech').value;c.tel=$('fTel').value;c.email=$('fEmail').value;
   c.web=$('fWeb').value;c.branche=$('fBranche').value;c.adresse=$('fAdresse').value;
-  c.stage=$('fStage').value;c.prio=$('fPrio').value;c.termin=$('fTermin').value;c.wert=+$('fWert').value||0;
+  c.stage=$('fStage').value;c.prio=$('fPrio').value;c.termin=$('fTermin').value;c.terminZeit=$('fTerminZeit').value;c.wert=+$('fWert').value||0;
   if(oldStage!==c.stage){const st=STAGES.find(s=>s.id===c.stage);c.hist.push({t:now(),txt:'Phase → '+(st?st.name:'')})}
   touch(c);renderBoard();renderScanList();refreshMarker(c.scanId);updateBadges();
   $('overlay').classList.remove('on');toast('✓ Gespeichert')});
@@ -2760,9 +2834,12 @@ function switchView(v){
   if(v==='Crm')renderBoard();
   if(v==='Dash')renderDash();
   if(v==='Cal')renderCal();
-  if(v==='Tour'){
-    $('tStage').innerHTML='<option value="">alle Phasen</option>'+STAGES.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');
-  }
+  if(v==='Tag'){
+    if(!tagPlanDaten)tagBauen();
+    tagRendern();
+    clearInterval(tagUhrTimer);
+    tagUhrTimer=setInterval(()=>{if($('viewTag').classList.contains('on')&&istHeute())tagRendern()},60000);
+  }else clearInterval(tagUhrTimer);
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchView(t.dataset.view)));
 $('gq').addEventListener('input',e=>{gq=e.target.value.trim();
@@ -2965,161 +3042,310 @@ function hashCode(str){let h=0;for(let i=0;i<str.length;i++){h=((h<<5)-h)+str.ch
 $('btnAngebot').addEventListener('click',angebotDrucken);
 
 /* ══════════════════════════════════════════════════════════
-   TOURENPLANER
-   Wählt passende Leads aus, sortiert sie zu einer möglichst
-   kurzen Rundtour (Nächster-Nachbar, danach 2-opt-Verbesserung)
-   und liefert Reihenfolge, Strecke und Zeitbedarf.
+   TAGESPLANER
+   Baut aus Terminen, Aufgaben und Anrufen einen vollständigen
+   Arbeitstag mit Uhrzeiten: feste Termine zuerst, dazwischen
+   Fahrten (aus den Koordinaten gerechnet), in den Lücken
+   Telefon- und Aufgabenblöcke, dazu Mittagspause.
+   Die Reihenfolge der Termine wird streckenoptimiert
+   (Nächster-Nachbar, danach 2-opt gegen Überkreuzungen).
    ══════════════════════════════════════════════════════════ */
-const BESUCHSDAUER_MIN=45;      /* Zeit je Termin */
-const TEMPO_KMH=55;             /* Landstrassen-Durchschnitt */
-let tourAktuell=null;
+const BESUCHSDAUER_MIN=45;    /* Regeldauer je Termin */
+const TEMPO_KMH=55;           /* Landstrassen-Durchschnitt */
+const STRASSENFAKTOR=1.28;    /* Strassenweg gegenüber Luftlinie */
+const PAUSE_AB=12*60, PAUSE_MIN=45;
+let tagDatum=new Date().toISOString().slice(0,10);
+let tagPlanDaten=null;
+let tagUhrTimer=null;
 
 /* Luftlinie in km (Haversine) */
 function distKm(a,b){
   const R=6371,rad=Math.PI/180;
   const dLat=(b.lat-a.lat)*rad, dLon=(b.lon-a.lon)*rad;
-  const s=Math.sin(dLat/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dLon/2)**2;
-  return 2*R*Math.asin(Math.sqrt(s));
+  const x=Math.sin(dLat/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin(dLon/2)**2;
+  return 2*R*Math.asin(Math.sqrt(x));
 }
-/* Strassenweg ist länger als Luftlinie — realistischer Zuschlag */
-const STRASSENFAKTOR=1.28;
-function tourLaenge(pkte,start){
+function wegLaenge(pkte,start){
   let d=0,vor=start;
   for(const p of pkte){d+=distKm(vor,p);vor=p}
-  return d+distKm(vor,start);           /* Rückweg zur Basis */
+  return d+distKm(vor,start);
 }
 function optimieren(pkte,start){
   if(pkte.length<2)return pkte.slice();
-  /* Schritt 1: immer zum nächstgelegenen offenen Punkt */
-  const offen=pkte.slice(); const route=[]; let vor=start;
+  const offen=pkte.slice(), route=[]; let vor=start;
   while(offen.length){
     let bi=0,bd=Infinity;
     offen.forEach((p,i)=>{const d=distKm(vor,p);if(d<bd){bd=d;bi=i}});
     vor=offen[bi];route.push(vor);offen.splice(bi,1);
   }
-  /* Schritt 2: 2-opt — Überkreuzungen auflösen */
   let besser=true,runden=0;
   while(besser&&runden<60){
     besser=false;runden++;
-    for(let i=0;i<route.length-1;i++){
-      for(let j=i+1;j<route.length;j++){
-        const neu=route.slice(0,i).concat(route.slice(i,j+1).reverse(),route.slice(j+1));
-        if(tourLaenge(neu,start)<tourLaenge(route,start)-0.01){
-          route.splice(0,route.length,...neu);besser=true;
-        }
-      }
+    for(let i=0;i<route.length-1;i++)for(let j=i+1;j<route.length;j++){
+      const n=route.slice(0,i).concat(route.slice(i,j+1).reverse(),route.slice(j+1));
+      if(wegLaenge(n,start)<wegLaenge(route,start)-0.01){route.splice(0,route.length,...n);besser=true}
     }
   }
   return route;
 }
-function tourKandidaten(){
-  const nurCrm=$('tNurCrm').checked, nurOffen=$('tOffen').checked;
-  const tf=$('tTier').value, phase=$('tStage').value;
-  const liste=[];
-  if(nurCrm){
-    crm.forEach(c=>{
-      if(typeof c.lat!=='number')return;
-      if(phase&&c.stage!==phase)return;
-      if(['won','lost'].includes(c.stage)&&!phase)return;
-      if(nurOffen&&!(c.termin||c.tasks.some(t=>!t.done)))return;
-      const t=c.bewertung||'B';
-      if(tf==='A'&&t!=='A')return;
-      if(tf==='AB'&&!['A','B'].includes(t))return;
-      liste.push({id:c.id,cid:c.id,firma:c.firma,adresse:c.adresse,lat:c.lat,lon:c.lon,
-                  tier:t,tel:c.tel,stage:c.stage});
-    });
-  }else{
-    leads.forEach(l=>{
-      const t=tier(l);
-      if(tf==='A'&&t!=='A')return;
-      if(tf==='AB'&&!['A','B'].includes(t))return;
-      const c=crmOf(l.id);
-      if(phase&&(!c||c.stage!==phase))return;
-      liste.push({id:l.id,cid:c?c.id:null,firma:l.name,adresse:l.addr,lat:l.lat,lon:l.lon,
-                  tier:t,tel:l.phone,stage:c?c.stage:null});
-    });
-  }
-  return liste;
+const minZuUhr=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(Math.round(m%60)).padStart(2,'0');
+const uhrZuMin=t=>{const[h,m]=String(t||'08:00').split(':').map(Number);return h*60+m};
+const istHeute=()=>tagDatum===new Date().toISOString().slice(0,10);
+
+/* ── Erledigt-Zustand je Tag dauerhaft merken ── */
+function tagErledigt(){return load('pvTagDone',{})[tagDatum]||[]}
+function tagErledigtSetzen(key,an){
+  const all=load('pvTagDone',{});
+  const l=new Set(all[tagDatum]||[]);
+  an?l.add(key):l.delete(key);
+  all[tagDatum]=[...l];store('pvTagDone',all);
 }
-function tourBerechnen(){
-  const [sLat,sLon]=$('tStart').value.split(',').map(Number);
-  const start={lat:sLat,lon:sLon};
-  const max=+$('tMax').value;
-  let kand=tourKandidaten();
-  if(!kand.length){
-    $('tourList').innerHTML='<div class="empty" style="padding:26px">Keine passenden Leads. Filter lockern oder zuerst Leads ins CRM übernehmen.</div>';
-    $('tourInfo').innerHTML='';tourAktuell=null;return;
+
+/* ── Den Tag zusammenstellen ── */
+function tagBauen(){
+  const von=uhrZuMin($('tagVon').value), bis=uhrZuMin($('tagBis').value);
+  const [sLat,sLon]=$('tagStart').value.split(',').map(Number);
+  const basis={lat:sLat,lon:sLon,firma:'Start'};
+  const erledigt=new Set(tagErledigt());
+
+  /* Termine des Tages */
+  const termine=crm.filter(c=>c.termin===tagDatum&&typeof c.lat==='number')
+                   .map(c=>({cid:c.id,firma:c.firma,adresse:c.adresse,tel:c.tel,
+                             lat:c.lat,lon:c.lon,zeit:c.terminZeit||'',
+                             wert:+c.wert||0,stage:c.stage,tier:c.bewertung||'B'}));
+  /* Termine ohne Uhrzeit streckenoptimiert einsortieren */
+  const fix=termine.filter(t=>t.zeit).sort((a,b)=>uhrZuMin(a.zeit)-uhrZuMin(b.zeit));
+  const frei=optimieren(termine.filter(t=>!t.zeit),basis);
+  const reihenfolge=fix.concat(frei);
+
+  /* Aufgaben und Anrufe des Tages */
+  const aufgaben=[];
+  crm.forEach(c=>c.tasks.filter(t=>!t.done&&t.due&&t.due<=tagDatum)
+    .forEach(t=>aufgaben.push({key:'task_'+t.id,txt:t.txt,firma:c.firma,cid:c.id,
+                               ueberfaellig:t.due<tagDatum})));
+  const anrufe=crm.filter(c=>c.tel&&!['won','lost'].includes(c.stage))
+                  .sort((a,b)=>leadScore(b)-leadScore(a));
+
+  /* Zeitstrahl aufbauen */
+  const bloecke=[];
+  let jetzt=von, ort=basis, km=0, pauseGesetzt=false;
+  const pauseWennFaellig=()=>{
+    if(!pauseGesetzt&&jetzt>=PAUSE_AB){
+      bloecke.push({typ:'pause',von:jetzt,bis:jetzt+PAUSE_MIN,titel:'Mittagspause',sub:''});
+      jetzt+=PAUSE_MIN;pauseGesetzt=true;
+    }
+  };
+
+  reihenfolge.forEach((t,i)=>{
+    /* Fahrt zum Termin */
+    const dist=distKm(ort,t)*STRASSENFAKTOR;
+    const fahrt=Math.max(5,Math.round(dist/TEMPO_KMH*60));
+    if(dist>0.3){
+      bloecke.push({typ:'fahrt',von:jetzt,bis:jetzt+fahrt,
+        titel:'Fahrt nach '+(t.adresse?t.adresse.split(',').pop().trim():t.firma),
+        sub:dist.toFixed(1)+' km',km:dist});
+      jetzt+=fahrt;km+=dist;
+    }
+    pauseWennFaellig();
+    /* Feste Uhrzeit hat Vorrang — davor entstehende Lücke wird gefüllt */
+    if(t.zeit&&uhrZuMin(t.zeit)>jetzt){
+      const luecke=uhrZuMin(t.zeit)-jetzt;
+      if(luecke>=20&&anrufe.length){
+        const n=Math.min(anrufe.length,Math.floor(luecke/8));
+        bloecke.push({typ:'anruf',von:jetzt,bis:jetzt+luecke,key:'anrufblock_'+i,
+          titel:'Telefonblock · '+n+' Anrufe',sub:anrufe.slice(0,n).map(c=>c.firma).join(', ')});
+      }
+      jetzt=uhrZuMin(t.zeit);
+    }
+    bloecke.push({typ:'termin',von:jetzt,bis:jetzt+BESUCHSDAUER_MIN,key:'termin_'+t.cid,
+      titel:t.firma,sub:(t.adresse||'')+(t.tel?' · '+t.tel:''),cid:t.cid,wert:t.wert,tier:t.tier});
+    jetzt+=BESUCHSDAUER_MIN;ort=t;
+  });
+
+  /* Rückfahrt */
+  if(reihenfolge.length){
+    const zurueck=distKm(ort,basis)*STRASSENFAKTOR;
+    if(zurueck>0.3){
+      const f=Math.max(5,Math.round(zurueck/TEMPO_KMH*60));
+      bloecke.push({typ:'fahrt',von:jetzt,bis:jetzt+f,titel:'Rückfahrt zur Basis',
+        sub:zurueck.toFixed(1)+' km',km:zurueck});
+      jetzt+=f;km+=zurueck;
+    }
   }
-  /* Bei Überangebot: die nächstgelegenen nehmen — kürzere Wege, mehr Termine */
-  kand.sort((a,b)=>distKm(start,a)-distKm(start,b));
-  const auswahl=kand.slice(0,max);
-  const route=optimieren(auswahl,start);
-  const kmLuft=tourLaenge(route,start);
-  const km=kmLuft*STRASSENFAKTOR;
-  const fahrMin=km/TEMPO_KMH*60;
-  const gesamtMin=fahrMin+route.length*BESUCHSDAUER_MIN;
-  tourAktuell={start,route,km,fahrMin,gesamtMin};
-  $('tourInfo').innerHTML=
-    `<div class="tour-kpi"><span>Halte</span><b>${route.length}</b></div>`+
-    `<div class="tour-kpi"><span>Fahrstrecke gesamt</span><b>${Math.round(km)} km</b></div>`+
-    `<div class="tour-kpi"><span>Fahrzeit</span><b>${Math.round(fahrMin)} Min.</b></div>`+
-    `<div class="tour-kpi"><span>Tagesbedarf inkl. ${BESUCHSDAUER_MIN} Min. je Termin</span><b>${Math.floor(gesamtMin/60)} h ${Math.round(gesamtMin%60)} Min.</b></div>`+
-    (kand.length>max?`<div style="font-size:11.5px;color:var(--faint)">${kand.length-max} weitere Leads liegen ausserhalb dieser Tour.</div>`:'');
-  let vor=start;
-  $('tourList').innerHTML=route.map((p,i)=>{
-    const d=distKm(vor,p)*STRASSENFAKTOR;vor=p;
-    return `<div class="tstop" data-tid="${p.cid||''}" data-lat="${p.lat}" data-lon="${p.lon}">
-      <span class="nr">${i+1}</span>
-      <span><span class="tf">${esc(p.firma)} <span class="pot ${p.tier}" style="width:18px;height:18px;font-size:9px;display:inline-flex">${p.tier}</span></span>
-        <span class="ta">${esc(p.adresse||'')}${p.tel?' · '+esc(p.tel):''}</span></span>
-      <span class="tk">${d.toFixed(1)} km</span></div>`;
-  }).join('');
-  document.querySelectorAll('.tstop').forEach(el=>el.addEventListener('click',()=>{
-    if(el.dataset.tid)openLead(el.dataset.tid);
-    else{switchView('Radar');map.flyTo([+el.dataset.lat,+el.dataset.lon],15,{duration:.9})}
+  pauseWennFaellig();
+
+  /* Restzeit: erst Aufgaben, dann Telefon */
+  const rest=bis-jetzt;
+  if(rest>=20&&aufgaben.length){
+    const dauer=Math.min(rest,Math.max(30,aufgaben.length*12));
+    bloecke.push({typ:'aufgabe',von:jetzt,bis:jetzt+dauer,key:'aufgabenblock',
+      titel:'Aufgaben abarbeiten · '+aufgaben.length+' offen',
+      sub:aufgaben.slice(0,3).map(a=>a.txt).join(' · ')+(aufgaben.length>3?' …':'')});
+    jetzt+=dauer;
+  }
+  if(bis-jetzt>=20&&anrufe.length){
+    bloecke.push({typ:'anruf',von:jetzt,bis:bis,key:'anrufblock_ende',
+      titel:'Telefonblock · bis '+minZuUhr(bis),
+      sub:'Nächste: '+anrufe.slice(0,3).map(c=>c.firma).join(', ')});
+  }
+
+  bloecke.forEach(b=>{if(b.key&&erledigt.has(b.key))b.fertig=true});
+  tagPlanDaten={bloecke,termine:reihenfolge,aufgaben,anrufe,km,basis,
+                wert:reihenfolge.reduce((s,t)=>s+t.wert,0),von,bis};
+  return tagPlanDaten;
+}
+
+/* ── Darstellung ── */
+function tagRendern(){
+  const d=new Date(tagDatum+'T12:00');
+  $('tagTitel').textContent=d.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+  $('tagSub').textContent=istHeute()?'Heute':d.toLocaleDateString('de-DE',{year:'numeric'});
+  const P=tagPlanDaten;
+  if(!P){
+    $('tagKpis').innerHTML='';$('tagFortTxt').textContent='—';$('tagFortBar').style.width='0%';
+    $('tagPlan').innerHTML='<div class="empty" style="padding:30px">Noch kein Tag geplant — oben auf „Tag planen" drücken.</div>';
+    tagOffenRendern();return;
+  }
+  const K=[
+    ['Termine',P.termine.length,P.termine.length?minZuUhr(P.von)+'–'+minZuUhr(P.bis):'keine'],
+    ['Anrufe möglich',P.anrufe.length,'offene Leads mit Nummer'],
+    ['Aufgaben',P.aufgaben.length,P.aufgaben.filter(a=>a.ueberfaellig).length+' überfällig'],
+    ['Fahrstrecke',Math.round(P.km)+' km',Math.round(P.km/TEMPO_KMH*60)+' Min. unterwegs'],
+    ['Pipeline im Tag',P.wert?eur(P.wert):'—','Wert der Termine']
+  ];
+  $('tagKpis').innerHTML=K.map(k=>`<div class="tag-kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+
+  const abhakbar=P.bloecke.filter(b=>b.key);
+  const fertig=abhakbar.filter(b=>b.fertig).length;
+  const pct=abhakbar.length?Math.round(fertig/abhakbar.length*100):0;
+  $('tagFortBar').style.width=pct+'%';
+  $('tagFortTxt').textContent=fertig+' von '+abhakbar.length+' erledigt · '+pct+'%';
+
+  const jetztMin=new Date().getHours()*60+new Date().getMinutes();
+  const ICON={termin:'◆',fahrt:'→',anruf:'☎',aufgabe:'✓',pause:'☕'};
+  let html='',linieGesetzt=false;
+  P.bloecke.forEach(b=>{
+    if(istHeute()&&!linieGesetzt&&b.von>jetztMin){
+      html+=`<div class="jetzt"><span class="jl">${minZuUhr(jetztMin)}</span><span class="jline"></span></div>`;
+      linieGesetzt=true;
+    }
+    const klick=b.cid?' klick':'';
+    html+=`<div class="tblock ${b.typ}${b.fertig?' fertig':''}${klick}" data-cid="${b.cid||''}" data-key="${b.key||''}">
+      <span class="zeit">${minZuUhr(b.von)}</span>
+      <span class="spur"><span class="pkt">${ICON[b.typ]||'•'}</span></span>
+      <span class="inh"><span class="ti">${esc(b.titel)}${b.tier?' <span class="pot '+b.tier+'" style="width:17px;height:17px;font-size:9px;display:inline-flex;vertical-align:middle">'+b.tier+'</span>':''}</span>
+        ${b.sub?'<span class="ts">'+esc(b.sub)+'</span>':''}</span>
+      ${b.key?`<button class="hak" data-hak="${b.key}">✓</button>`:`<span class="dauer">${b.bis-b.von} Min.</span>`}
+    </div>`;
+  });
+  if(istHeute()&&!linieGesetzt&&P.bloecke.length)
+    html+=`<div class="jetzt"><span class="jl">${minZuUhr(jetztMin)}</span><span class="jline"></span></div>`;
+  $('tagPlan').innerHTML=html||'<div class="empty" style="padding:30px">Für diesen Tag gibt es nichts zu planen.</div>';
+
+  document.querySelectorAll('#tagPlan [data-hak]').forEach(el=>el.addEventListener('click',ev=>{
+    ev.stopPropagation();
+    const key=el.dataset.hak, blk=P.bloecke.find(x=>x.key===key);
+    blk.fertig=!blk.fertig;tagErledigtSetzen(key,blk.fertig);tagRendern();
   }));
-  toast('✓ Tour über '+route.length+' Halte · '+Math.round(km)+' km');
+  document.querySelectorAll('#tagPlan .tblock.klick').forEach(el=>el.addEventListener('click',()=>{
+    if(el.dataset.cid)openLead(el.dataset.cid);
+  }));
+  tagOffenRendern();
 }
-$('btnTour').addEventListener('click',tourBerechnen);
-$('btnTourNav').addEventListener('click',()=>{
-  if(!tourAktuell){toast('Zuerst Tour berechnen');return}
-  const {start,route}=tourAktuell;
-  const url='https://www.google.com/maps/dir/?api=1'
-    +'&origin='+start.lat+','+start.lon
-    +'&destination='+start.lat+','+start.lon
-    +'&waypoints='+route.map(p=>p.lat+','+p.lon).join('|')
-    +'&travelmode=driving';
+function tagOffenRendern(){
+  const P=tagPlanDaten;
+  const liste=P?P.aufgaben:[];
+  if(!liste.length){$('tagOffen').innerHTML='<div style="font-size:12px;color:var(--faint);padding:6px">Keine offenen Aufgaben für diesen Tag.</div>';return}
+  $('tagOffen').innerHTML=liste.map(a=>
+    `<label class="toff${a.ueberfaellig?' over':''}"><input type="checkbox" data-task="${a.key}" data-cid="${a.cid}">
+      <span class="tt">${esc(a.txt)}<div class="tf2">${esc(a.firma)}${a.ueberfaellig?' · überfällig':''}</div></span></label>`).join('');
+  document.querySelectorAll('#tagOffen [data-task]').forEach(el=>el.addEventListener('change',()=>{
+    const tid=el.dataset.task.replace(/^task_/,'');
+    const c=crm.find(x=>x.id===el.dataset.cid);
+    const t=c&&c.tasks.find(x=>x.id===tid);
+    if(t){t.done=el.checked;c.hist.push({t:now(),txt:(t.done?'Aufgabe erledigt: ':'Aufgabe offen: ')+t.txt});touch(c)}
+    tagBauen();tagRendern();updateBadges();
+  }));
+}
+function tagBadgeSetzen(){
+  const heute=new Date().toISOString().slice(0,10);
+  const n=crm.filter(c=>c.termin===heute).length
+    +crm.reduce((s,c)=>s+c.tasks.filter(t=>!t.done&&t.due&&t.due<=heute).length,0);
+  $('tagBadge').textContent=n;
+}
+/* Bedienung */
+function tagWechseln(tage){
+  const d=new Date(tagDatum+'T12:00');d.setDate(d.getDate()+tage);
+  tagDatum=d.toISOString().slice(0,10);tagBauen();tagRendern();
+}
+$('tagPrev').addEventListener('click',()=>tagWechseln(-1));
+$('tagNext').addEventListener('click',()=>tagWechseln(1));
+$('tagHeute').addEventListener('click',()=>{tagDatum=new Date().toISOString().slice(0,10);tagBauen();tagRendern()});
+$('tagPlanen').addEventListener('click',()=>{
+  tagBauen();tagRendern();
+  const P=tagPlanDaten;
+  toast(P.termine.length?`✓ Tag geplant · ${P.termine.length} Termine · ${Math.round(P.km)} km`
+                        :'Keine Termine an diesem Tag — Telefon- und Aufgabenblöcke geplant');
+});
+['tagVon','tagBis','tagStart'].forEach(id=>$(id).addEventListener('change',()=>{if(tagPlanDaten){tagBauen();tagRendern()}}));
+$('tagAnrufe').addEventListener('click',callStart);
+$('tagNav').addEventListener('click',()=>{
+  const P=tagPlanDaten;
+  if(!P||!P.termine.length){toast('Keine Termine für die Route');return}
+  const url='https://www.google.com/maps/dir/?api=1&origin='+P.basis.lat+','+P.basis.lon
+    +'&destination='+P.basis.lat+','+P.basis.lon
+    +'&waypoints='+P.termine.map(t=>t.lat+','+t.lon).join('|')+'&travelmode=driving';
   window.open(url,'_blank');
 });
-$('btnTourPrint').addEventListener('click',()=>{
-  if(!tourAktuell){toast('Zuerst Tour berechnen');return}
-  const {route,km,gesamtMin}=tourAktuell;
-  const w=window.open('','_blank','width=800,height=1000');
+$('tagMorgen').addEventListener('click',()=>{
+  const P=tagPlanDaten;
+  if(!P||!P.aufgaben.length){toast('Nichts zu verschieben');return}
+  const m=new Date(tagDatum+'T12:00');m.setDate(m.getDate()+1);
+  const md=m.toISOString().slice(0,10);
+  let n=0;
+  P.aufgaben.forEach(a=>{
+    const c=crm.find(x=>x.id===a.cid);
+    const t=c&&c.tasks.find(x=>'task_'+x.id===a.key);
+    if(t){t.due=md;n++;c.hist.push({t:now(),txt:'Aufgabe auf '+fmtD(md)+' verschoben: '+t.txt});touch(c)}
+  });
+  tagBauen();tagRendern();updateBadges();tagBadgeSetzen();
+  toast('✓ '+n+' Aufgaben auf morgen verschoben');
+});
+$('tagDruck').addEventListener('click',()=>{
+  const P=tagPlanDaten;
+  if(!P){toast('Zuerst Tag planen');return}
+  const w=window.open('','_blank','width=820,height=1050');
   if(!w){toast('Bitte Pop-ups erlauben');return}
-  let vor=tourAktuell.start;
-  const zeilen=route.map((p,i)=>{
-    const d=distKm(vor,p)*STRASSENFAKTOR;vor=p;
-    return `<tr><td class="nr">${i+1}</td><td><b>${esc(p.firma)}</b><br><span class="a">${esc(p.adresse||'')}</span></td>
-      <td>${esc(p.tel||'')}</td><td class="r">${d.toFixed(1)} km</td><td class="n"></td></tr>`;
-  }).join('');
-  w.document.write(`<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><title>Tourenplan</title><style>
+  const d=new Date(tagDatum+'T12:00');
+  const zeilen=P.bloecke.map(b=>{
+    const stark=b.typ==='termin';
+    return `<tr class="${b.typ}"><td class="z">${minZuUhr(b.von)}</td>
+      <td>${stark?'<b>':''}${esc(b.titel)}${stark?'</b>':''}${b.sub?'<br><span class="s">'+esc(b.sub)+'</span>':''}</td>
+      <td class="n"></td></tr>`}).join('');
+  w.document.write(`<!DOCTYPE html><html lang="de"><head><meta charset="utf-8"><title>Tagesplan</title><style>
 @page{size:A4;margin:16mm}
 body{font-family:Arial,sans-serif;color:#12303F;font-size:10.5pt}
-h1{font-size:15pt;margin:0 0 2px;color:#0A5B7E}
-.sub{color:#517184;font-size:9.5pt;margin-bottom:16px}
+h1{font-size:16pt;margin:0 0 2px;color:#0A5B7E}
+.sub{color:#517184;font-size:9.5pt;margin-bottom:14px}
+.kpi{display:flex;gap:22px;border-top:2px solid #29C4E8;border-bottom:1px solid #DCE7EE;padding:9px 0;margin-bottom:14px;font-size:9.5pt}
+.kpi b{display:block;font-size:13pt;color:#0A5B7E}
 table{width:100%;border-collapse:collapse}
-th{text-align:left;font-size:8.5pt;text-transform:uppercase;letter-spacing:.08em;color:#6B8A9B;border-bottom:2px solid #29C4E8;padding:6px 4px}
-td{padding:9px 4px;border-bottom:1px solid #E3ECF2;vertical-align:top}
-td.nr{font-weight:800;color:#0A5B7E;width:26px}
-td.r{text-align:right;white-space:nowrap}
-td.n{width:34%;border-left:1px solid #E3ECF2}
-.a{color:#6B8A9B;font-size:9pt}
+td{padding:8px 5px;border-bottom:1px solid #E8EFF4;vertical-align:top}
+td.z{width:52px;font-weight:700;color:#0A5B7E;white-space:nowrap}
+td.n{width:32%;border-left:1px solid #E8EFF4}
+tr.termin td{background:#F2F9FC}
+tr.pause td,tr.fahrt td{color:#7A94A5;font-size:9.5pt}
+.s{color:#7A94A5;font-size:9pt}
 </style></head><body>
-<h1>Tourenplan</h1>
-<div class="sub">${new Date().toLocaleDateString('de-DE',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}
- · ${route.length} Halte · ${Math.round(km)} km · rund ${Math.floor(gesamtMin/60)} h ${Math.round(gesamtMin%60)} Min.</div>
-<table><thead><tr><th>#</th><th>Firma / Adresse</th><th>Telefon</th><th>Weg</th><th>Notizen</th></tr></thead>
-<tbody>${zeilen}</tbody></table>
+<h1>Tagesplan</h1>
+<div class="sub">${d.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
+<div class="kpi">
+  <div><b>${P.termine.length}</b>Termine</div>
+  <div><b>${Math.round(P.km)} km</b>Fahrstrecke</div>
+  <div><b>${P.aufgaben.length}</b>Aufgaben</div>
+  <div><b>${P.anrufe.length}</b>Anrufe möglich</div>
+</div>
+<table><tbody>${zeilen}</tbody></table>
 </body></html>`);
   w.document.close();setTimeout(()=>{try{w.focus();w.print()}catch(e){}},300);
 });
@@ -3204,7 +3430,7 @@ function callErgebnis(art){
   if(!T)return;
   c.stage=T.stage;
   if(T.prio)c.prio=T.prio;
-  if(T.setTermin&&wv)c.termin=wv;
+  if(T.setTermin&&wv){c.termin=wv;if(!c.terminZeit)c.terminZeit='10:00'}
   if(T.aufgabe&&wv)c.tasks.push({id:'t'+now()+Math.random().toString(36).slice(2,5),txt:T.aufgabe,due:wv,done:false});
   if(notiz)c.notizen.push({t:now(),txt:notiz});
   c.hist.push({t:now(),txt:T.txt+(notiz?' — '+notiz:'')});
@@ -3369,7 +3595,7 @@ function hydrateCrmLeads(){
     leads.push(l);leadIdx.set(id,l);sessionIds.add(id);
   });
 }
-const VERSION='v11 · Umsatz-Werkzeuge';
+const VERSION='v12 · Tagesplaner';
 {const v=$('verStamp');if(v)v.textContent='AquaRadar CRM · '+VERSION;}
 if(!HAS_CLUSTER||!HAS_HEAT){
   $('statusTxt').textContent='Hinweis: Zusatzfunktionen ('+[!HAS_CLUSTER?'Cluster':'',!HAS_HEAT?'Heatmap':''].filter(Boolean).join(' + ')+') sind blockiert — Scan und CRM laufen normal weiter.';
@@ -3378,7 +3604,7 @@ if(!HAS_CLUSTER||!HAS_HEAT){
    vollständig erhalten und ist über den Reiter „Pipeline" erreichbar;
    seine Leads erscheinen wieder auf der Karte, sobald ein Scan läuft
    oder man sie in der Liste anklickt. */
-reindex();renderScanList();updateBadges();
+reindex();renderScanList();updateBadges();tagBadgeSetzen();
 $('statusTxt').textContent=crm.length
   ?'Karte und Liste leer · '+crm.length+' CRM-Leads gespeichert (Reiter „Pipeline"). Scan starten.'
   :'Bereit. Zielgruppen wählen und scannen.';
