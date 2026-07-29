@@ -1,0 +1,3 @@
+FahrzeugID,Marke,Modell,Variante,Erstzulassung,Kilometer,Kraftstoff,Getriebe,Leistung,Preis,Farbe,Ausstattung,Status,Standort
+F-101,BMW,320d,Touring M Sport,2021-04,48000,Diesel,Automatik,190 PS,29900,Alpinweiss,"Navi, LED, AHK, Sitzheizung",verfuegbar,Hauptbetrieb
+F-102,VW,Golf 8,Life,2022-01,22000,Benzin,Schaltung,130 PS,23900,Grau,"ACC, Klima, PDC",verfuegbar,Filiale Nord
