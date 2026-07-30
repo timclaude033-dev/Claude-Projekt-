@@ -10,28 +10,28 @@
           "responseData": "{\"ok\":true,\"nachricht\":\"Danke, Ihre Anfrage ist eingegangen.\"}"
         }
       },
-      "id": "a41ee5bd-b801-51c3-8d5b-f06891574550",
+      "id": "2efc0b7d-f5c2-5928-88a5-f2573267e552",
       "name": "Website-Formular",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -620,
-        -240
+        -660,
+        -280
       ],
-      "webhookId": "7c26b592-95c9-4eb7-a0d9-c6fe66c009b5"
+      "webhookId": "8b4ed74b-938b-41e4-ba50-a8b95b29d365"
     },
     {
       "parameters": {
         "format": "simple",
         "options": {}
       },
-      "id": "720f7733-b836-5453-9347-a25c519203f6",
+      "id": "85239ced-f89c-570a-96bb-9c4b074520ed",
       "name": "Postfach (IMAP)",
       "type": "n8n-nodes-base.emailReadImap",
       "typeVersion": 2,
       "position": [
-        -620,
-        -60
+        -660,
+        -120
       ]
     },
     {
@@ -41,15 +41,34 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "a12fd9cc-55ae-5c71-9689-8c38df783857",
+      "id": "61a6e2c9-7679-5c12-8fee-8501bc7aace1",
       "name": "Termin-Klick",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -620,
-        120
+        -660,
+        40
       ],
-      "webhookId": "df5915b1-7fc6-4744-8c35-d84c801dcd1e"
+      "webhookId": "1dcbe715-a004-407d-b3bf-629365d22f2f"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "autohaus-api",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "a7bfb3aa-3916-54c4-be84-e2fb28f7bdd1",
+      "name": "Dashboard-API",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -660,
+        200
+      ],
+      "webhookId": "a22c8067-cf73-4246-806c-cae2085bc2c3"
     },
     {
       "parameters": {
@@ -63,38 +82,38 @@
           ]
         }
       },
-      "id": "de3b0258-902b-5f27-b66a-7f90967ab46f",
+      "id": "7cadce89-1c2d-5b84-a39e-31a14e6ae4ff",
       "name": "Täglich 07:00",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -620,
-        300
+        -660,
+        360
       ]
     },
     {
       "parameters": {
-        "jsCode": "/* Vereinheitlicht alles, was hereinkommt, auf EIN Format.\n   Egal ob Website-Formular, Portal-Mail, Terminklick oder Tageslauf. */\nconst raus = [];\n\nfor (const item of $input.all()) {\n  const j = item.json || {};\n  let e;\n\n  const istWebhook = (j.query !== undefined) || (j.body !== undefined) || (j.headers !== undefined);\n  const istMail    = (j.textPlain !== undefined) || (j.textHtml !== undefined) || (j.from !== undefined);\n\n  if (istWebhook) {\n    const q = j.query || {};\n    const b = j.body  || {};\n\n    if (q.lead || q.t) {\n      /* Der Interessent hat auf einen Terminvorschlag geklickt. */\n      e = { quelle: 'termin', leadId: String(q.lead || ''), slot: String(q.t || '') };\n    } else {\n      /* Anfrage über das Website-Formular. */\n      const txt = b.nachricht || b.message || b.text || b.anfrage || '';\n      e = {\n        quelle:  'anfrage',\n        kanal:   'Website-Formular',\n        name:    String(b.name || b.Name || '').trim(),\n        email:   String(b.email || b.Email || b.mail || b['e-mail'] || '').trim(),\n        telefon: String(b.telefon || b.phone || b.tel || '').trim(),\n        betreff: String(b.betreff || b.subject || 'Anfrage über die Website').trim(),\n        text:    String(txt).trim()\n      };\n    }\n  } else if (istMail) {\n    /* Anfrage per E-Mail (Portal-Weiterleitung, direkte Mail). */\n    const von = String(j.from || '');\n    const tref = von.match(/<([^>]+)>/);\n    const klartext = j.textPlain || j.text ||\n                     String(j.textHtml || '').replace(/<style[\\s\\S]*?<\\/style>/gi, ' ')\n                                             .replace(/<[^>]+>/g, ' ');\n    e = {\n      quelle:  'anfrage',\n      kanal:   'E-Mail / Portal',\n      name:    String(von.split('<')[0] || '').replace(/[\"']/g, '').trim(),\n      email:   String(tref ? tref[1] : von).trim(),\n      telefon: '',\n      betreff: String(j.subject || 'Anfrage per E-Mail').trim(),\n      text:    String(klartext).replace(/\\s+\\n/g, '\\n').replace(/[ \\t]{2,}/g, ' ').trim()\n    };\n  } else {\n    /* Zeitplan: der tägliche Lauf. */\n    e = { quelle: 'tageslauf' };\n  }\n\n  e.empfangen = new Date().toISOString();\n  raus.push({ json: e });\n}\n\nreturn raus;"
+        "jsCode": "/* Vereinheitlicht alles, was hereinkommt, auf EIN Format. */\nconst raus = [];\n\nfor (const item of $input.all()) {\n  const j = item.json || {};\n  let e;\n\n  const istWebhook = (j.query !== undefined) || (j.body !== undefined) || (j.headers !== undefined);\n  const istMail    = (j.textPlain !== undefined) || (j.textHtml !== undefined) || (j.from !== undefined);\n\n  if (istWebhook) {\n    const q = j.query || {};\n    const b = j.body  || {};\n\n    if (b.aktion) {\n      /* Das Dashboard fragt Daten ab oder speichert etwas. */\n      e = { quelle: 'api', aktion: String(b.aktion), token: String(b.token || ''), daten: b.daten || {} };\n    } else if (q.lead || q.t) {\n      /* Der Interessent hat auf einen Terminvorschlag geklickt. */\n      e = { quelle: 'termin', leadId: String(q.lead || ''), slot: String(q.t || '') };\n    } else {\n      /* Anfrage über das Website-Formular. */\n      const txt = b.nachricht || b.message || b.text || b.anfrage || '';\n      e = {\n        quelle:  'anfrage',\n        kanal:   'Website-Formular',\n        name:    String(b.name || b.Name || '').trim(),\n        email:   String(b.email || b.Email || b.mail || b['e-mail'] || '').trim().toLowerCase(),\n        telefon: String(b.telefon || b.phone || b.tel || '').trim(),\n        betreff: String(b.betreff || b.subject || 'Anfrage über die Website').trim(),\n        text:    String(txt).trim()\n      };\n    }\n  } else if (istMail) {\n    /* Anfrage per E-Mail (Portal-Weiterleitung, direkte Mail). */\n    const von = String(j.from || '');\n    const tref = von.match(/<([^>]+)>/);\n    const klartext = j.textPlain || j.text ||\n                     String(j.textHtml || '').replace(/<style[\\s\\S]*?<\\/style>/gi, ' ')\n                                             .replace(/<[^>]+>/g, ' ');\n    e = {\n      quelle:  'anfrage',\n      kanal:   'E-Mail / Portal',\n      name:    String(von.split('<')[0] || '').replace(/[\"']/g, '').trim(),\n      email:   String(tref ? tref[1] : von).trim().toLowerCase(),\n      telefon: '',\n      betreff: String(j.subject || 'Anfrage per E-Mail').trim(),\n      text:    String(klartext).replace(/\\s+\\n/g, '\\n').replace(/[ \\t]{2,}/g, ' ').trim()\n    };\n  } else {\n    /* Zeitplan: der tägliche Lauf. */\n    e = { quelle: 'tageslauf' };\n  }\n\n  e.empfangen = new Date().toISOString();\n  raus.push({ json: e });\n}\n\nreturn raus;"
       },
-      "id": "7ccb16d4-1167-5ab6-9b04-796f8a868759",
+      "id": "9bd585aa-830f-5135-a1bc-613eed772ebc",
       "name": "Quelle erkennen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -380,
+        -420,
         20
       ]
     },
     {
       "parameters": {
-        "jsCode": "/* ═══════════════════════════════════════════════════════════\n   HIER UND NUR HIER WIRD PRO AUTOHAUS ANGEPASST.\n   Alle anderen Nodes lesen ihre Werte aus diesem Block.\n   ═══════════════════════════════════════════════════════════ */\nconst CFG = {\n\n  /* ---- Autohaus ------------------------------------------ */\n  autohaus:       'Autohaus Muster GmbH',\n  ort:            'Musterstadt',\n  telefon:        '0123 456789',\n  webseite:       'https://www.autohaus-muster.de',\n  absenderName:   'Autohaus Muster GmbH',\n  absenderEmail:  'info@autohaus-muster.de',\n\n  /* ---- Google Sheet (ID aus der Tabellen-URL) ------------- */\n  sheetId:        'HIER_DIE_GOOGLE_SHEET_ID_EINTRAGEN',\n  blattLeads:     'Leads',\n  blattFahrzeuge: 'Fahrzeuge',\n\n  /* ---- Kalender ------------------------------------------ */\n  kalenderId:     'primary',\n\n  /* ---- Verkäufer (wird der Reihe nach zugeteilt) ---------- */\n  verkaeufer: [\n    { name: 'Max Mustermann',  email: 'max@autohaus-muster.de',  marken: ['BMW', 'MINI'] },\n    { name: 'Anna Beispiel',   email: 'anna@autohaus-muster.de', marken: ['VW', 'Audi', 'Skoda'] }\n  ],\n  verkaufsleitung: 'leitung@autohaus-muster.de',\n\n  /* ---- Basis-Adresse dieser n8n-Instanz ------------------- */\n  /* Ohne Schrägstrich am Ende. Der Termin-Link hängt daran.  */\n  webhookBasis:   'https://DEINE-N8N-ADRESSE/webhook',\n  pfadTermin:     'autohaus-termin',\n\n  /* ---- Probefahrt-Zeiten --------------------------------- */\n  terminZeiten:   ['10:00', '14:00', '16:30'],\n  terminDauerMin: 45,\n  vorlaufTage:    1,      /* frühester Termin: morgen */\n\n  /* ---- Nachfassen ---------------------------------------- */\n  nachfassTage:   [2, 5, 10],\n  archivNachTagen: 45,\n  erinnerungStundenVorher: 24,\n\n  /* ---- KI ------------------------------------------------- */\n  modell:         'claude-opus-5',\n  tonfall:        'freundlich, sachlich, ohne Werbefloskeln, Sie-Form',\n\n  /* ---- Tagesbericht -------------------------------------- */\n  berichtSenden:  true\n};\n\nreturn $input.all().map(i => ({ json: { ...i.json, cfg: CFG } }));"
+        "jsCode": "/* ═══════════════════════════════════════════════════════════\n   HIER UND NUR HIER WIRD PRO AUTOHAUS ANGEPASST.\n   Alle anderen Nodes lesen ihre Werte aus diesem Block.\n   ═══════════════════════════════════════════════════════════ */\nconst CFG = {\n\n  /* ---- Autohaus ------------------------------------------ */\n  autohaus:       'Autohaus Muster GmbH',\n  ort:            'Musterstadt',\n  telefon:        '0123 456789',\n  webseite:       'https://www.autohaus-muster.de',\n  absenderName:   'Autohaus Muster GmbH',\n  absenderEmail:  'info@autohaus-muster.de',\n\n  /* ---- Kalender ------------------------------------------ */\n  kalenderId:     'primary',\n\n  /* ---- Verkäufer (nach Marke, sonst gleichmäßig verteilt) - */\n  verkaeufer: [\n    { name: 'Max Mustermann',  email: 'max@autohaus-muster.de',  marken: ['BMW', 'MINI'] },\n    { name: 'Anna Beispiel',   email: 'anna@autohaus-muster.de', marken: ['VW', 'Audi', 'Skoda'] }\n  ],\n  verkaufsleitung: 'leitung@autohaus-muster.de',\n\n  /* ---- Basis-Adresse dieser n8n-Instanz ------------------- */\n  /* Ohne Schrägstrich am Ende. Der Termin-Link hängt daran.  */\n  webhookBasis:   'https://DEINE-N8N-ADRESSE/webhook',\n  pfadTermin:     'autohaus-termin',\n\n  /* ---- Zugang für das Dashboard --------------------------- */\n  /* Frei wählbar, aber lang. Muss im Dashboard identisch sein. */\n  dashboardToken: 'BITTE-EIGENEN-LANGEN-SCHLUESSEL-EINTRAGEN',\n\n  /* ---- Probefahrt-Zeiten --------------------------------- */\n  terminZeiten:   ['10:00', '14:00', '16:30'],\n  terminDauerMin: 45,\n  vorlaufTage:    1,      /* frühester Termin: morgen */\n\n  /* ---- Nachfassen ---------------------------------------- */\n  nachfassTage:   [2, 5, 10],\n  archivNachTagen: 45,\n  erinnerungStundenVorher: 24,\n\n  /* ---- KI ------------------------------------------------- */\n  modell:         'claude-opus-5',\n  tonfall:        'freundlich, sachlich, ohne Werbefloskeln, Sie-Form',\n\n  /* ---- Tagesbericht -------------------------------------- */\n  berichtSenden:  true\n};\n\nreturn $input.all().map(i => ({ json: { ...i.json, cfg: CFG } }));"
       },
-      "id": "5946a208-241a-5750-a08f-7ee2d594d975",
+      "id": "38b433b8-dc66-5c68-b265-caf0840ba250",
       "name": "EINSTELLUNGEN",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -160,
+        -200,
         20
       ]
     },
@@ -112,7 +131,7 @@
                 },
                 "conditions": [
                   {
-                    "id": "1eeb3f8d-71fe-4364-bec5-cffd46c24e52",
+                    "id": "cd3cce79-bd60-477d-b932-73dd5daa98b7",
                     "leftValue": "={{ $json.quelle }}",
                     "rightValue": "anfrage",
                     "operator": {
@@ -136,7 +155,7 @@
                 },
                 "conditions": [
                   {
-                    "id": "7d9b4a5a-09bc-4c87-a693-ff6fd9a5eb21",
+                    "id": "0da0b388-9af2-44ad-8be2-99d06190b48c",
                     "leftValue": "={{ $json.quelle }}",
                     "rightValue": "termin",
                     "operator": {
@@ -160,7 +179,7 @@
                 },
                 "conditions": [
                   {
-                    "id": "932473d4-837a-4f82-a9c1-a106c513efc0",
+                    "id": "af92de3c-eb33-4767-b626-35eb62d44dd8",
                     "leftValue": "={{ $json.quelle }}",
                     "rightValue": "tageslauf",
                     "operator": {
@@ -173,56 +192,74 @@
               },
               "renameOutput": true,
               "outputKey": "Täglicher Lauf"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "701a441d-17b6-4cd5-ae00-0373d50d4688",
+                    "leftValue": "={{ $json.quelle }}",
+                    "rightValue": "api",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Dashboard"
             }
           ]
         },
         "options": {}
       },
-      "id": "a12b8707-31a8-5ca2-a55f-e127ac689075",
+      "id": "9818e9cb-107d-52c5-9617-ab1d29554a4c",
       "name": "Weiche: Was ist zu tun?",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        60,
+        20,
         20
       ]
     },
     {
       "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
-          "mode": "name"
-        },
-        "options": {}
+        "operation": "executeQuery",
+        "query": "select * from leads where lower(email) = lower($1) and sequenz = 'laeuft' and status in ('neu','kontaktiert','nachgefasst','termin') order by eingang desc limit 1",
+        "options": {
+          "queryReplacement": "={{ [$json.email] }}"
+        }
       },
-      "id": "9f0fae4f-98c7-5692-bf72-6bea0a0e9e71",
-      "name": "Leads laden",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "id": "125d4918-8531-55c3-bcbd-f7fe5816a057",
+      "name": "Lead suchen",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        300,
-        -300
+        260,
+        -340
       ],
       "alwaysOutputData": true,
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "/* Ist das eine Antwort eines Interessenten, den wir schon kennen?\n   Dann muss die Nachfass-Kette sofort stoppen. */\nconst a      = $('EINSTELLUNGEN').first().json;\nconst zeilen = $input.all().map(i => i.json).filter(r => r && r.Email);\n\nconst email   = String(a.email || '').toLowerCase().trim();\nconst treffer = email ? zeilen.filter(r => String(r.Email).toLowerCase().trim() === email) : [];\n\nconst offeneStati = ['neu', 'kontaktiert', 'nachgefasst', 'termin'];\nconst offen = treffer.filter(r => offeneStati.includes(String(r.Status || '').toLowerCase()));\n\n/* Der jüngste offene Vorgang gewinnt. */\noffen.sort((x, y) => String(y.Eingang || '').localeCompare(String(x.Eingang || '')));\n\nreturn [{\n  json: {\n    ...a,\n    istAntwort:     offen.length > 0,\n    bekannterLead:  offen[0] || null,\n    frueherAnfragen: treffer.length\n  }\n}];"
+        "jsCode": "/* Die Datenbank hat nach der E-Mail-Adresse gesucht.\n   Kam ein offener Vorgang zurueck, ist das eine Kundenantwort. */\nconst a = $('EINSTELLUNGEN').first().json;\nconst treffer = $input.all().map(i => i.json).filter(r => r && r.lead_id);\n\nreturn [{\n  json: {\n    ...a,\n    istAntwort:    treffer.length > 0,\n    bekannterLead: treffer[0] || null\n  }\n}];"
       },
-      "id": "9fcbbc22-12e4-585f-b8e6-44c351413f15",
+      "id": "87ef25af-ea6a-53cf-ba30-2277ee780b25",
       "name": "Antwort oder neue Anfrage?",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        520,
-        -300
+        480,
+        -340
       ]
     },
     {
@@ -236,7 +273,7 @@
           },
           "conditions": [
             {
-              "id": "cd9516fc-9072-4cc8-b19d-a6e3fc4eaf54",
+              "id": "916c3729-7341-4dfd-a087-5246f5e6fa1a",
               "leftValue": "={{ $json.istAntwort }}",
               "rightValue": "",
               "operator": {
@@ -249,58 +286,43 @@
         },
         "options": {}
       },
-      "id": "4c89d5bf-2d2d-5b3b-b052-904899978c62",
+      "id": "d93a26d0-2feb-5e52-855f-bd70368d5ea7",
       "name": "Ist es eine Antwort?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        740,
-        -300
+        700,
+        -340
       ]
     },
     {
       "parameters": {
-        "jsCode": "/* Der Kunde hat geantwortet: Kette stoppen, Verkäufer sofort informieren. */\nconst d   = $json;\nconst cfg = d.cfg;\nconst l   = d.bekannterLead || {};\nconst jetzt = new Date().toISOString();\n\nconst verkEmail = l.VerkaeuferEmail || (cfg.verkaeufer[0] && cfg.verkaeufer[0].email) || cfg.verkaufsleitung;\n\nconst html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6\">\n  <p style=\"margin:0 0 14px\"><b>${d.name || d.email} hat geantwortet.</b> Die Nachfass-Kette wurde gestoppt.</p>\n  <table cellpadding=\"6\" style=\"border-collapse:collapse;font-size:14px\">\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td><b>${l.Fahrzeug || 'unbekannt'}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Kaufabsicht</td><td>${l.Kaufabsicht || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">E-Mail</td><td>${d.email}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Telefon</td><td>${l.Telefon || d.telefon || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Erste Anfrage</td><td>${(l.Eingang || '').substring(0, 10) || '—'}</td></tr>\n  </table>\n  <p style=\"margin:16px 0 6px;color:#5b6b80\">Neue Nachricht:</p>\n  <div style=\"background:#f5f7fa;border-left:3px solid #2f6da8;padding:12px 14px;white-space:pre-wrap\">${String(d.text || '').substring(0, 2000)}</div>\n  <p style=\"margin:18px 0 0;color:#5b6b80;font-size:13px\">Bitte persönlich übernehmen — das System fasst hier nicht weiter nach.</p>\n</div>`;\n\nreturn [{\n  json: {\n    /* Spalten für die Tabelle */\n    LeadID:         l.LeadID || '',\n    Status:         'geantwortet',\n    Sequenz:        'gestoppt',\n    LetzterKontakt: jetzt,\n    NaechsterSchritt: 'Persönlich melden',\n    Notiz:          String(d.text || '').substring(0, 500),\n    /* Felder für die Mail */\n    mailAn:      verkEmail,\n    mailBetreff: `Kunde hat geantwortet: ${d.name || d.email}`,\n    mailHtml:    html,\n    cfg:         cfg\n  }\n}];"
+        "jsCode": "/* Der Kunde hat geantwortet: Kette stoppen, Verkäufer sofort informieren. */\nconst d   = $json;\nconst cfg = d.cfg;\nconst l   = d.bekannterLead || {};\n\nconst verkEmail = l.verkaeufer_email || (cfg.verkaeufer[0] && cfg.verkaeufer[0].email) || cfg.verkaufsleitung;\nconst auszug = String(d.text || '').substring(0, 2000);\n\nconst html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6\">\n  <p style=\"margin:0 0 14px\"><b>${d.name || d.email} hat geantwortet.</b> Die Nachfass-Kette wurde gestoppt.</p>\n  <table cellpadding=\"6\" style=\"border-collapse:collapse;font-size:14px\">\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td><b>${l.fahrzeug || 'unbekannt'}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Kaufabsicht</td><td>${l.kaufabsicht || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Potenzial</td><td>${l.score != null ? l.score : '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">E-Mail</td><td>${d.email}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Telefon</td><td>${l.telefon || d.telefon || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Erste Anfrage</td><td>${String(l.eingang || '').substring(0, 10) || '—'}</td></tr>\n  </table>\n  <p style=\"margin:16px 0 6px;color:#5b6b80\">Neue Nachricht:</p>\n  <div style=\"background:#f5f7fa;border-left:3px solid #2f6da8;padding:12px 14px;white-space:pre-wrap\">${auszug}</div>\n  <p style=\"margin:18px 0 0;color:#5b6b80;font-size:13px\">Bitte persönlich übernehmen — das System fasst hier nicht weiter nach.</p>\n</div>`;\n\nreturn [{\n  json: {\n    sqlWerte:    [l.lead_id || '', auszug],\n    mailAn:      verkEmail,\n    mailBetreff: `Kunde hat geantwortet: ${d.name || d.email}`,\n    mailHtml:    html\n  }\n}];"
       },
-      "id": "29e9d25c-53c5-59b8-a300-09a66bccf6ae",
+      "id": "e0b88ad9-100a-58bb-858a-5118b01391e4",
       "name": "Antwort aufbereiten",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
-        -420
+        920,
+        -460
       ]
     },
     {
       "parameters": {
-        "operation": "update",
-        "documentId": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
-          "mode": "name"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [
-            "LeadID"
-          ],
-          "schema": []
-        },
-        "options": {}
+        "operation": "executeQuery",
+        "query": "with u as ( update leads set status = 'geantwortet', sequenz = 'gestoppt', letzter_kontakt = now(), naechster_schritt = 'Persoenlich melden' where lead_id = $1 returning lead_id ) insert into verlauf (lead_id, art, text) select lead_id, 'kundenantwort', $2 from u returning lead_id",
+        "options": {
+          "queryReplacement": "={{ $json.sqlWerte }}"
+        }
       },
-      "id": "2e04e213-8556-5e43-8497-03726807448f",
+      "id": "06ddae6c-28e6-581c-83be-083df47c81f4",
       "name": "CRM: Sequenz stoppen",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        1180,
-        -420
+        1140,
+        -460
       ]
     },
     {
@@ -312,52 +334,44 @@
         "html": "={{ $('Antwort aufbereiten').first().json.mailHtml }}",
         "options": {}
       },
-      "id": "788143d2-c3ca-512e-968e-eea24437aa33",
+      "id": "2c01c89b-ab91-5f76-81eb-ecce79e2fa60",
       "name": "Verkäufer: Kunde hat geantwortet",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        1400,
-        -420
+        1360,
+        -460
       ],
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattFahrzeuge }}",
-          "mode": "name"
-        },
+        "operation": "executeQuery",
+        "query": "select * from fahrzeuge where status <> 'verkauft' order by marke, modell limit 200",
         "options": {}
       },
-      "id": "f5086dc2-f2f1-5c9b-a46b-1503d9e550c4",
+      "id": "eb85063f-9880-521c-8538-5ca985c20ee0",
       "name": "Fahrzeuge laden",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        960,
-        -200
+        920,
+        -240
       ],
       "alwaysOutputData": true,
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "/* Baut die vollständige Anfrage an die Claude-API.\n   Alles wird hier zusammengesetzt, damit der HTTP-Node nur noch sendet. */\nconst d   = $('Antwort oder neue Anfrage?').first().json;\nconst cfg = d.cfg;\n\n/* --- Fahrzeugbestand aus der Tabelle (nur verfügbare) ---- */\nconst bestand = $input.all()\n  .map(i => i.json)\n  .filter(r => r && r.FahrzeugID && String(r.Status || 'verfuegbar').toLowerCase() !== 'verkauft')\n  .slice(0, 120)\n  .map(r => ({\n    id:        String(r.FahrzeugID),\n    fahrzeug:  [r.Marke, r.Modell, r.Variante].filter(Boolean).join(' '),\n    ez:        r.Erstzulassung || '',\n    km:        r.Kilometer || '',\n    kraftstoff: r.Kraftstoff || '',\n    getriebe:  r.Getriebe || '',\n    leistung:  r.Leistung || '',\n    preis:     r.Preis || '',\n    farbe:     r.Farbe || ''\n  }));\n\n/* --- Drei konkrete Probefahrt-Termine vorschlagen -------- */\nfunction werktagPlus(startTage) {\n  const d0 = new Date();\n  d0.setHours(0, 0, 0, 0);\n  let n = 0, tage = 0;\n  while (n < startTage) {\n    tage++;\n    d0.setDate(d0.getDate() + 1);\n    const w = d0.getDay();\n    if (w !== 0 && w !== 6) n++;\n  }\n  return d0;\n}\nconst slots = [];\nfor (let k = 0; k < cfg.terminZeiten.length; k++) {\n  const tag = werktagPlus(cfg.vorlaufTage + k);\n  const [hh, mm] = String(cfg.terminZeiten[k]).split(':');\n  tag.setHours(parseInt(hh, 10), parseInt(mm || '0', 10), 0, 0);\n  const iso = tag.getFullYear() + '-' +\n              String(tag.getMonth() + 1).padStart(2, '0') + '-' +\n              String(tag.getDate()).padStart(2, '0') + 'T' +\n              String(tag.getHours()).padStart(2, '0') + ':' +\n              String(tag.getMinutes()).padStart(2, '0');\n  const wochentage = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];\n  slots.push({\n    iso: iso,\n    text: wochentage[tag.getDay()] + ', ' + String(tag.getDate()).padStart(2,'0') + '.' +\n          String(tag.getMonth()+1).padStart(2,'0') + '. um ' + cfg.terminZeiten[k] + ' Uhr'\n  });\n}\n\n/* --- Der Auftrag an die KI -------------------------------- */\nconst system = [\n  'Du bist die Anfragen-Annahme von ' + cfg.autohaus + ' in ' + cfg.ort + '.',\n  'Du liest eine eingehende Kundenanfrage und tust zwei Dinge:',\n  '1. Du erkennst, worum es geht: gewünschtes Fahrzeug, Kaufabsicht, mögliche Inzahlungnahme, Dringlichkeit.',\n  '2. Du schreibst die Antwort an den Interessenten.',\n  '',\n  'Regeln für die Antwort:',\n  '- Sprache: Deutsch, Sie-Form. Tonfall: ' + cfg.tonfall + '.',\n  '- Nimm direkten Bezug auf das genannte Fahrzeug und auf die gestellten Fragen.',\n  '- Erfinde niemals Ausstattung, Preise, Kilometerstände oder Zusagen. Nutze nur den Bestand unten.',\n  '- Ist das Fahrzeug nicht im Bestand, sage das offen und nenne hoechstens zwei passende Alternativen daraus.',\n  '- Wird eine Inzahlungnahme erwaehnt: bestaetige, dass eine Bewertung moeglich ist, ohne eine Summe zu nennen.',\n  '- Schliesse mit dem Angebot einer Probefahrt. Die konkreten Termine haengt das System an, nenne selbst keine.',\n  '- Keine Anrede-Floskeln wie \"vielen Dank fuer Ihr Interesse an unserem Hause\". Komm zur Sache.',\n  '- Laenge: 90 bis 160 Woerter. Absaetze mit Leerzeile trennen. Keine Grussformel und keine Signatur, die haengt das System an.',\n  '',\n  'Bewertung (Feld score, 0 bis 100): hohe Kaufabsicht, konkretes Fahrzeug, kurzer Zeitrahmen und Inzahlungnahme erhoehen den Wert.'\n].join('\\n');\n\nconst nutzer = [\n  '# Eingegangene Anfrage',\n  'Kanal: '   + d.kanal,\n  'Name: '    + (d.name || 'nicht angegeben'),\n  'E-Mail: '  + d.email,\n  'Telefon: ' + (d.telefon || 'nicht angegeben'),\n  'Betreff: ' + d.betreff,\n  '',\n  'Nachricht:',\n  String(d.text || '').substring(0, 6000),\n  '',\n  '# Verfuegbarer Fahrzeugbestand',\n  bestand.length ? JSON.stringify(bestand) : '(Bestandsliste ist leer)',\n  '',\n  '# Frueherer Kontakt',\n  d.frueherAnfragen > 0 ? ('Dieser Interessent hat bereits ' + d.frueherAnfragen + ' Mal angefragt.')\n                        : 'Keine frueheren Anfragen bekannt.'\n].join('\\n');\n\nconst schema = {\n  type: 'object',\n  properties: {\n    kunde_name:            { type: 'string', description: 'Name des Interessenten, leer wenn unbekannt' },\n    fahrzeug_wunsch:       { type: 'string', description: 'Gewuenschtes Fahrzeug in Worten' },\n    fahrzeug_id:           { type: 'string', description: 'Passende FahrzeugID aus dem Bestand, sonst leer' },\n    kaufabsicht:           { type: 'string', enum: ['hoch', 'mittel', 'niedrig', 'unklar'] },\n    inzahlungnahme:        { type: 'boolean' },\n    inzahlung_fahrzeug:    { type: 'string', description: 'Das angebotene Fahrzeug, sonst leer' },\n    dringlichkeit:         { type: 'string', enum: ['sofort', 'wochen', 'monate', 'unklar'] },\n    probefahrt_gewuenscht: { type: 'boolean' },\n    finanzierung_thema:    { type: 'boolean' },\n    score:                 { type: 'integer', description: 'Potenzial von 0 bis 100' },\n    zusammenfassung:       { type: 'string', description: 'Ein Satz fuer den Verkaeufer' },\n    antwort_betreff:       { type: 'string' },\n    antwort_text:          { type: 'string', description: 'Reiner Text, Absaetze durch Leerzeile getrennt' }\n  },\n  required: ['kunde_name','fahrzeug_wunsch','fahrzeug_id','kaufabsicht','inzahlungnahme',\n             'inzahlung_fahrzeug','dringlichkeit','probefahrt_gewuenscht','finanzierung_thema',\n             'score','zusammenfassung','antwort_betreff','antwort_text'],\n  additionalProperties: false\n};\n\nconst apiBody = {\n  model: cfg.modell,\n  max_tokens: 2000,\n  thinking: { type: 'disabled' },\n  output_config: { effort: 'low', format: { type: 'json_schema', schema: schema } },\n  system: system,\n  messages: [{ role: 'user', content: nutzer }]\n};\n\nreturn [{ json: { ...d, bestand: bestand, slots: slots, apiBody: apiBody } }];"
+        "jsCode": "/* Baut die vollständige Anfrage an die Claude-API.\n   Alles wird hier zusammengesetzt, damit der HTTP-Node nur noch sendet. */\nconst d   = $('Antwort oder neue Anfrage?').first().json;\nconst cfg = d.cfg;\n\n/* --- Fahrzeugbestand aus der Datenbank ------------------- */\nconst bestand = $input.all()\n  .map(i => i.json)\n  .filter(r => r && r.fahrzeug_id)\n  .slice(0, 120)\n  .map(r => ({\n    id:         String(r.fahrzeug_id),\n    fahrzeug:   [r.marke, r.modell, r.variante].filter(Boolean).join(' '),\n    ez:         r.erstzulassung || '',\n    km:         r.kilometer || '',\n    kraftstoff: r.kraftstoff || '',\n    getriebe:   r.getriebe || '',\n    leistung:   r.leistung || '',\n    preis:      r.preis || '',\n    farbe:      r.farbe || '',\n    status:     r.status || 'verfuegbar'\n  }));\n\n/* --- Drei konkrete Probefahrt-Termine vorschlagen -------- */\nfunction werktagPlus(startTage) {\n  const d0 = new Date();\n  d0.setHours(0, 0, 0, 0);\n  let n = 0;\n  while (n < startTage) {\n    d0.setDate(d0.getDate() + 1);\n    const w = d0.getDay();\n    if (w !== 0 && w !== 6) n++;\n  }\n  return d0;\n}\nconst wochentage = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];\nconst slots = [];\nfor (let k = 0; k < cfg.terminZeiten.length; k++) {\n  const tag = werktagPlus(cfg.vorlaufTage + k);\n  const [hh, mm] = String(cfg.terminZeiten[k]).split(':');\n  tag.setHours(parseInt(hh, 10), parseInt(mm || '0', 10), 0, 0);\n  const iso = tag.getFullYear() + '-' +\n              String(tag.getMonth() + 1).padStart(2, '0') + '-' +\n              String(tag.getDate()).padStart(2, '0') + 'T' +\n              String(tag.getHours()).padStart(2, '0') + ':' +\n              String(tag.getMinutes()).padStart(2, '0');\n  slots.push({\n    iso: iso,\n    text: wochentage[tag.getDay()] + ', ' + String(tag.getDate()).padStart(2,'0') + '.' +\n          String(tag.getMonth()+1).padStart(2,'0') + '. um ' + cfg.terminZeiten[k] + ' Uhr'\n  });\n}\n\n/* --- Der Auftrag an die KI -------------------------------- */\nconst system = [\n  'Du bist die Anfragen-Annahme von ' + cfg.autohaus + ' in ' + cfg.ort + '.',\n  'Du liest eine eingehende Kundenanfrage und tust zwei Dinge:',\n  '1. Du erkennst, worum es geht: gewuenschtes Fahrzeug, Kaufabsicht, moegliche Inzahlungnahme, Dringlichkeit.',\n  '2. Du schreibst die Antwort an den Interessenten.',\n  '',\n  'Regeln fuer die Antwort:',\n  '- Sprache: Deutsch, Sie-Form. Tonfall: ' + cfg.tonfall + '.',\n  '- Nimm direkten Bezug auf das genannte Fahrzeug und auf die gestellten Fragen.',\n  '- Erfinde niemals Ausstattung, Preise, Kilometerstaende oder Zusagen. Nutze nur den Bestand unten.',\n  '- Ist das Fahrzeug nicht im Bestand, sage das offen und nenne hoechstens zwei passende Alternativen daraus.',\n  '- Ist ein Fahrzeug als reserviert gefuehrt, weise darauf hin.',\n  '- Wird eine Inzahlungnahme erwaehnt: bestaetige, dass eine Bewertung moeglich ist, ohne eine Summe zu nennen.',\n  '- Schliesse mit dem Angebot einer Probefahrt. Die konkreten Termine haengt das System an, nenne selbst keine.',\n  '- Keine Floskeln wie \"vielen Dank fuer Ihr Interesse an unserem Hause\". Komm zur Sache.',\n  '- Laenge: 90 bis 160 Woerter. Absaetze mit Leerzeile trennen. Keine Anrede, keine Grussformel, keine Signatur.',\n  '',\n  'Bewertung (Feld score, 0 bis 100): hohe Kaufabsicht, konkretes Fahrzeug, kurzer Zeitrahmen',\n  'und eine Inzahlungnahme erhoehen den Wert.'\n].join('\\n');\n\nconst nutzer = [\n  '# Eingegangene Anfrage',\n  'Kanal: '   + d.kanal,\n  'Name: '    + (d.name || 'nicht angegeben'),\n  'E-Mail: '  + d.email,\n  'Telefon: ' + (d.telefon || 'nicht angegeben'),\n  'Betreff: ' + d.betreff,\n  '',\n  'Nachricht:',\n  String(d.text || '').substring(0, 6000),\n  '',\n  '# Verfuegbarer Fahrzeugbestand',\n  bestand.length ? JSON.stringify(bestand) : '(Bestandsliste ist leer)'\n].join('\\n');\n\nconst schema = {\n  type: 'object',\n  properties: {\n    kunde_name:            { type: 'string', description: 'Name des Interessenten, leer wenn unbekannt' },\n    fahrzeug_wunsch:       { type: 'string', description: 'Gewuenschtes Fahrzeug in Worten' },\n    fahrzeug_id:           { type: 'string', description: 'Passende id aus dem Bestand, sonst leer' },\n    kaufabsicht:           { type: 'string', enum: ['hoch', 'mittel', 'niedrig', 'unklar'] },\n    inzahlungnahme:        { type: 'boolean' },\n    inzahlung_fahrzeug:    { type: 'string', description: 'Das angebotene Fahrzeug, sonst leer' },\n    dringlichkeit:         { type: 'string', enum: ['sofort', 'wochen', 'monate', 'unklar'] },\n    probefahrt_gewuenscht: { type: 'boolean' },\n    finanzierung_thema:    { type: 'boolean' },\n    score:                 { type: 'integer', description: 'Potenzial von 0 bis 100' },\n    zusammenfassung:       { type: 'string', description: 'Ein Satz fuer den Verkaeufer' },\n    antwort_betreff:       { type: 'string' },\n    antwort_text:          { type: 'string', description: 'Reiner Text, Absaetze durch Leerzeile getrennt' }\n  },\n  required: ['kunde_name','fahrzeug_wunsch','fahrzeug_id','kaufabsicht','inzahlungnahme',\n             'inzahlung_fahrzeug','dringlichkeit','probefahrt_gewuenscht','finanzierung_thema',\n             'score','zusammenfassung','antwort_betreff','antwort_text'],\n  additionalProperties: false\n};\n\nconst apiBody = {\n  model: cfg.modell,\n  max_tokens: 2000,\n  thinking: { type: 'disabled' },\n  output_config: { effort: 'low', format: { type: 'json_schema', schema: schema } },\n  system: system,\n  messages: [{ role: 'user', content: nutzer }]\n};\n\nreturn [{ json: { ...d, bestand: bestand, slots: slots, apiBody: apiBody } }];"
       },
-      "id": "986b9b02-2cd3-5fc0-8142-ec3ed78869f6",
+      "id": "055b6886-4b29-58a5-9b0f-cbd1b8e0d65c",
       "name": "KI-Auftrag bauen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1180,
-        -200
+        1140,
+        -240
       ]
     },
     {
@@ -386,13 +400,13 @@
           "timeout": 120000
         }
       },
-      "id": "5ced25aa-601b-51e9-88b3-47f3c9c7be28",
+      "id": "20d7b377-fcb8-50b2-95c4-75b6ea1a0d5d",
       "name": "KI: Anfrage verstehen",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1400,
-        -200
+        1360,
+        -240
       ],
       "onError": "continueRegularOutput",
       "retryOnFail": true,
@@ -401,45 +415,32 @@
     },
     {
       "parameters": {
-        "jsCode": "/* Liest die KI-Antwort, faellt bei Problemen sauber zurueck\n   und baut daraus CRM-Zeile, Kundenmail und Verkaeufermail. */\nconst vor   = $('KI-Auftrag bauen').first().json;\nconst cfg   = vor.cfg;\nconst roh   = $json;\n\n/* --- Antwort der API auslesen ---------------------------- */\nlet a = {};\nlet kiOk = false;\ntry {\n  const block = (roh.content || []).find(b => b && b.type === 'text');\n  if (block && block.text) { a = JSON.parse(block.text); kiOk = true; }\n} catch (e) { kiOk = false; }\n\n/* --- Rueckfallebene, falls die KI nicht erreichbar war ---- */\nif (!kiOk) {\n  a = {\n    kunde_name: vor.name, fahrzeug_wunsch: '', fahrzeug_id: '',\n    kaufabsicht: 'unklar', inzahlungnahme: false, inzahlung_fahrzeug: '',\n    dringlichkeit: 'unklar', probefahrt_gewuenscht: false, finanzierung_thema: false,\n    score: 40,\n    zusammenfassung: 'Automatische Auswertung war nicht moeglich, bitte manuell pruefen.',\n    antwort_betreff: 'Ihre Anfrage bei ' + cfg.autohaus,\n    antwort_text: 'vielen Dank fuer Ihre Nachricht. Wir haben Ihre Anfrage erhalten und melden uns '\n                + 'schnellstmoeglich persoenlich bei Ihnen.'\n  };\n}\n\n/* --- Verkaeufer zuordnen: erst nach Marke, sonst reihum --- */\nconst wunsch = String(a.fahrzeug_wunsch || '').toLowerCase();\nlet verk = cfg.verkaeufer.find(v => (v.marken || []).some(m => wunsch.includes(String(m).toLowerCase())));\nif (!verk) {\n  const idx = Math.abs(String(vor.email || '').split('').reduce((s, c) => s + c.charCodeAt(0), 0)) % cfg.verkaeufer.length;\n  verk = cfg.verkaeufer[idx];\n}\n\n/* --- Lead-Nummer ----------------------------------------- */\nconst jetzt   = new Date();\nconst leadId  = 'L-' + jetzt.getFullYear() + String(jetzt.getMonth()+1).padStart(2,'0') +\n                String(jetzt.getDate()).padStart(2,'0') + '-' +\n                Math.random().toString(36).substring(2, 7).toUpperCase();\n\n/* --- Terminlinks ----------------------------------------- */\nconst basis = cfg.webhookBasis.replace(/\\/+$/, '') + '/' + cfg.pfadTermin;\nconst linkListe = vor.slots.map(s =>\n  `<tr><td style=\"padding:5px 0\">\n     <a href=\"${basis}?lead=${encodeURIComponent(leadId)}&t=${encodeURIComponent(s.iso)}\"\n        style=\"display:inline-block;padding:10px 18px;background:#2f6da8;color:#ffffff;\n               text-decoration:none;border-radius:8px;font-size:14px\">${s.text}</a>\n   </td></tr>`).join('');\n\n/* --- Kundenmail ------------------------------------------ */\nconst absaetze = String(a.antwort_text || '').split(/\\n\\s*\\n/)\n  .map(p => `<p style=\"margin:0 0 14px\">${p.replace(/\\n/g, '<br>')}</p>`).join('');\n\nconst anrede = a.kunde_name && a.kunde_name.trim()\n  ? 'Guten Tag ' + a.kunde_name.trim() + ','\n  : 'Guten Tag,';\n\nconst kundenHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">${anrede}</p>\n  ${absaetze}\n  <p style=\"margin:22px 0 10px\"><b>Probefahrt — waehlen Sie einfach einen Termin:</b></p>\n  <table cellpadding=\"0\" cellspacing=\"0\">${linkListe}</table>\n  <p style=\"margin:16px 0 0;font-size:13px;color:#5b6b80\">\n    Passt keiner der Termine? Antworten Sie einfach auf diese E-Mail.\n  </p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">\n    ${cfg.autohaus} · ${cfg.ort}<br>\n    Telefon ${cfg.telefon} · <a href=\"${cfg.webseite}\" style=\"color:#2f6da8\">${cfg.webseite}</a><br>\n    Ihr Ansprechpartner: ${verk.name}\n  </p>\n</div>`;\n\n/* --- Verkaeufermail -------------------------------------- */\nconst ampel = a.score >= 70 ? '#2e8b6b' : (a.score >= 40 ? '#b5883e' : '#8a94a0');\nconst verkHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6;max-width:620px\">\n  <p style=\"margin:0 0 6px;font-size:13px;color:#5b6b80\">Neue Anfrage · ${vor.kanal}</p>\n  <p style=\"margin:0 0 16px;font-size:19px\"><b>${a.fahrzeug_wunsch || 'Fahrzeug unklar'}</b>\n     <span style=\"background:${ampel};color:#fff;border-radius:20px;padding:3px 11px;font-size:13px;margin-left:8px\">\n       Potenzial ${a.score}</span></p>\n  <p style=\"margin:0 0 16px\">${a.zusammenfassung}</p>\n  <table cellpadding=\"6\" style=\"border-collapse:collapse;font-size:14px\">\n    <tr><td style=\"color:#5b6b80\">Name</td><td><b>${a.kunde_name || vor.name || '—'}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">E-Mail</td><td><a href=\"mailto:${vor.email}\" style=\"color:#2f6da8\">${vor.email}</a></td></tr>\n    <tr><td style=\"color:#5b6b80\">Telefon</td><td>${vor.telefon || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Kaufabsicht</td><td>${a.kaufabsicht}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Zeitrahmen</td><td>${a.dringlichkeit}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Inzahlungnahme</td><td>${a.inzahlungnahme ? (a.inzahlung_fahrzeug || 'ja') : 'nein'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Finanzierung Thema</td><td>${a.finanzierung_thema ? 'ja' : 'nein'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug im Bestand</td><td>${a.fahrzeug_id || 'nicht zugeordnet'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Lead-Nummer</td><td>${leadId}</td></tr>\n  </table>\n  <p style=\"margin:18px 0 6px;color:#5b6b80\">Originalnachricht:</p>\n  <div style=\"background:#f5f7fa;border-left:3px solid #2f6da8;padding:12px 14px;white-space:pre-wrap;font-size:14px\">${String(vor.text || '').substring(0, 2000)}</div>\n  <p style=\"margin:18px 0 0;font-size:13px;color:#5b6b80\">\n    Der Interessent hat bereits eine Antwort mit drei Terminvorschlaegen erhalten.\n    ${kiOk ? '' : '<b>Hinweis: die automatische Auswertung ist ausgefallen — bitte selbst lesen.</b>'}\n  </p>\n</div>`;\n\n/* --- Eine Zeile fuer die Tabelle ------------------------- */\nconst zeile = {\n  LeadID:             leadId,\n  Eingang:            jetzt.toISOString(),\n  Quelle:             vor.kanal,\n  Name:               a.kunde_name || vor.name || '',\n  Email:              vor.email,\n  Telefon:            vor.telefon || '',\n  Nachricht:          String(vor.text || '').substring(0, 900),\n  Fahrzeug:           a.fahrzeug_wunsch || '',\n  FahrzeugID:         a.fahrzeug_id || '',\n  Kaufabsicht:        a.kaufabsicht,\n  Inzahlungnahme:     a.inzahlungnahme ? 'ja' : 'nein',\n  InzahlungFahrzeug:  a.inzahlung_fahrzeug || '',\n  Dringlichkeit:      a.dringlichkeit,\n  Score:              a.score,\n  Verkaeufer:         verk.name,\n  VerkaeuferEmail:    verk.email,\n  Status:             'kontaktiert',\n  Sequenz:            'laeuft',\n  LetzterKontakt:     jetzt.toISOString(),\n  NaechsterSchritt:   'Nachfassen an Tag ' + cfg.nachfassTage[0],\n  Termin:             '',\n  TerminBestaetigt:   'nein',\n  Notiz:              a.zusammenfassung\n};\n\nreturn [{\n  json: {\n    ...zeile,\n    cfg:              cfg,\n    kiOk:             kiOk,\n    kundeAn:          vor.email,\n    kundeBetreff:     a.antwort_betreff || ('Ihre Anfrage bei ' + cfg.autohaus),\n    kundeHtml:        kundenHtml,\n    verkAn:           verk.email,\n    verkBetreff:      '[' + a.score + '] Neue Anfrage: ' + (a.fahrzeug_wunsch || 'Fahrzeug unklar') + ' — ' + (a.kunde_name || vor.email),\n    verkHtml:         verkHtml\n  }\n}];"
+        "jsCode": "/* Liest die KI-Antwort, faellt bei Problemen sauber zurueck und baut\n   daraus die Datenbankzeile, die Kundenmail und die Verkaeufermail. */\nconst vor = $('KI-Auftrag bauen').first().json;\nconst cfg = vor.cfg;\nconst roh = $json;\n\n/* --- Antwort der API auslesen ---------------------------- */\nlet a = {};\nlet kiOk = false;\ntry {\n  const block = (roh.content || []).find(b => b && b.type === 'text');\n  if (block && block.text) { a = JSON.parse(block.text); kiOk = true; }\n} catch (e) { kiOk = false; }\n\n/* --- Rueckfallebene, falls die KI nicht erreichbar war ---- */\nif (!kiOk) {\n  a = {\n    kunde_name: vor.name, fahrzeug_wunsch: '', fahrzeug_id: '',\n    kaufabsicht: 'unklar', inzahlungnahme: false, inzahlung_fahrzeug: '',\n    dringlichkeit: 'unklar', probefahrt_gewuenscht: false, finanzierung_thema: false,\n    score: 40,\n    zusammenfassung: 'Automatische Auswertung war nicht moeglich, bitte manuell pruefen.',\n    antwort_betreff: 'Ihre Anfrage bei ' + cfg.autohaus,\n    antwort_text: 'vielen Dank fuer Ihre Nachricht. Wir haben Ihre Anfrage erhalten und melden uns '\n                + 'schnellstmoeglich persoenlich bei Ihnen.'\n  };\n}\n\n/* --- Verkaeufer zuordnen: erst nach Marke, sonst gleichmaessig --- */\nconst wunsch = String(a.fahrzeug_wunsch || '').toLowerCase();\nlet verk = cfg.verkaeufer.find(v => (v.marken || []).some(m => wunsch.includes(String(m).toLowerCase())));\nif (!verk) {\n  const summe = String(vor.email || '').split('').reduce((s, c) => s + c.charCodeAt(0), 0);\n  verk = cfg.verkaeufer[Math.abs(summe) % cfg.verkaeufer.length];\n}\n\n/* --- Lead-Nummer ----------------------------------------- */\nconst jetzt  = new Date();\nconst leadId = 'L-' + jetzt.getFullYear() + String(jetzt.getMonth()+1).padStart(2,'0') +\n               String(jetzt.getDate()).padStart(2,'0') + '-' +\n               Math.random().toString(36).substring(2, 7).toUpperCase();\n\n/* --- Fahrzeug-Zuordnung nur, wenn sie im Bestand existiert - */\nconst fzgId = (vor.bestand || []).some(f => f.id === a.fahrzeug_id) ? a.fahrzeug_id : null;\n\n/* --- Terminlinks ----------------------------------------- */\nconst basis = String(cfg.webhookBasis).replace(/\\/+$/, '') + '/' + cfg.pfadTermin;\nconst linkListe = (vor.slots || []).map(s =>\n  `<tr><td style=\"padding:5px 0\">\n     <a href=\"${basis}?lead=${encodeURIComponent(leadId)}&t=${encodeURIComponent(s.iso)}\"\n        style=\"display:inline-block;padding:10px 18px;background:#2f6da8;color:#ffffff;\n               text-decoration:none;border-radius:8px;font-size:14px\">${s.text}</a>\n   </td></tr>`).join('');\n\n/* --- Kundenmail ------------------------------------------ */\nconst absaetze = String(a.antwort_text || '').split(/\\n\\s*\\n/)\n  .map(p => `<p style=\"margin:0 0 14px\">${p.replace(/\\n/g, '<br>')}</p>`).join('');\n\nconst anrede = a.kunde_name && a.kunde_name.trim()\n  ? 'Guten Tag ' + a.kunde_name.trim() + ','\n  : 'Guten Tag,';\n\nconst kundenHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">${anrede}</p>\n  ${absaetze}\n  <p style=\"margin:22px 0 10px\"><b>Probefahrt — wählen Sie einfach einen Termin:</b></p>\n  <table cellpadding=\"0\" cellspacing=\"0\">${linkListe}</table>\n  <p style=\"margin:16px 0 0;font-size:13px;color:#5b6b80\">\n    Passt keiner der Termine? Antworten Sie einfach auf diese E-Mail.\n  </p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">\n    ${cfg.autohaus} · ${cfg.ort}<br>\n    Telefon ${cfg.telefon} · <a href=\"${cfg.webseite}\" style=\"color:#2f6da8\">${cfg.webseite}</a><br>\n    Ihr Ansprechpartner: ${verk.name}\n  </p>\n</div>`;\n\n/* --- Verkaeufermail -------------------------------------- */\nconst ampel = a.score >= 70 ? '#2e8b6b' : (a.score >= 40 ? '#b5883e' : '#8a94a0');\nconst verkHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6;max-width:620px\">\n  <p style=\"margin:0 0 6px;font-size:13px;color:#5b6b80\">Neue Anfrage · ${vor.kanal}</p>\n  <p style=\"margin:0 0 16px;font-size:19px\"><b>${a.fahrzeug_wunsch || 'Fahrzeug unklar'}</b>\n     <span style=\"background:${ampel};color:#fff;border-radius:20px;padding:3px 11px;font-size:13px;margin-left:8px\">\n       Potenzial ${a.score}</span></p>\n  <p style=\"margin:0 0 16px\">${a.zusammenfassung}</p>\n  <table cellpadding=\"6\" style=\"border-collapse:collapse;font-size:14px\">\n    <tr><td style=\"color:#5b6b80\">Name</td><td><b>${a.kunde_name || vor.name || '—'}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">E-Mail</td><td><a href=\"mailto:${vor.email}\" style=\"color:#2f6da8\">${vor.email}</a></td></tr>\n    <tr><td style=\"color:#5b6b80\">Telefon</td><td>${vor.telefon || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Kaufabsicht</td><td>${a.kaufabsicht}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Zeitrahmen</td><td>${a.dringlichkeit}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Inzahlungnahme</td><td>${a.inzahlungnahme ? (a.inzahlung_fahrzeug || 'ja') : 'nein'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Finanzierung Thema</td><td>${a.finanzierung_thema ? 'ja' : 'nein'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug im Bestand</td><td>${fzgId || 'nicht zugeordnet'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Lead-Nummer</td><td>${leadId}</td></tr>\n  </table>\n  <p style=\"margin:18px 0 6px;color:#5b6b80\">Originalnachricht:</p>\n  <div style=\"background:#f5f7fa;border-left:3px solid #2f6da8;padding:12px 14px;white-space:pre-wrap;font-size:14px\">${String(vor.text || '').substring(0, 2000)}</div>\n  <p style=\"margin:18px 0 0;font-size:13px;color:#5b6b80\">\n    Der Interessent hat bereits eine Antwort mit drei Terminvorschlägen erhalten.\n    ${kiOk ? '' : '<b>Hinweis: die automatische Auswertung ist ausgefallen — bitte selbst lesen.</b>'}\n  </p>\n</div>`;\n\n/* --- Werte fuer die Datenbank, Reihenfolge = $1 bis $28 --- */\nconst sqlWerte = [\n  leadId,                                        /*  1 lead_id            */\n  jetzt.toISOString(),                           /*  2 eingang            */\n  vor.kanal,                                     /*  3 quelle             */\n  a.kunde_name || vor.name || '',                /*  4 name               */\n  vor.email,                                     /*  5 email              */\n  vor.telefon || '',                             /*  6 telefon            */\n  String(vor.text || '').substring(0, 4000),     /*  7 nachricht          */\n  a.fahrzeug_wunsch || '',                       /*  8 fahrzeug           */\n  fzgId,                                         /*  9 fahrzeug_id        */\n  a.kaufabsicht,                                 /* 10 kaufabsicht        */\n  !!a.inzahlungnahme,                            /* 11 inzahlungnahme     */\n  a.inzahlung_fahrzeug || '',                    /* 12 inzahlung_fahrzeug */\n  a.dringlichkeit,                               /* 13 dringlichkeit      */\n  !!a.finanzierung_thema,                        /* 14 finanzierung       */\n  Number(a.score) || 0,                          /* 15 score              */\n  a.zusammenfassung || '',                       /* 16 zusammenfassung    */\n  verk.name,                                     /* 17 verkaeufer         */\n  verk.email,                                    /* 18 verkaeufer_email   */\n  'kontaktiert',                                 /* 19 status             */\n  'laeuft',                                      /* 20 sequenz            */\n  0,                                             /* 21 nachfass_stufe     */\n  jetzt.toISOString(),                           /* 22 letzter_kontakt    */\n  'Nachfassen an Tag ' + cfg.nachfassTage[0],    /* 23 naechster_schritt  */\n  a.zusammenfassung || '',                       /* 24 notiz              */\n  'Anfrage empfangen · ' + vor.kanal +\n    (kiOk ? '' : ' · KI-Auswertung ausgefallen')  /* 25 Verlaufstext       */\n];\n\nreturn [{\n  json: {\n    sqlWerte:     sqlWerte,\n    leadId:       leadId,\n    score:        Number(a.score) || 0,\n    kiOk:         kiOk,\n    kundeAn:      vor.email,\n    kundeBetreff: a.antwort_betreff || ('Ihre Anfrage bei ' + cfg.autohaus),\n    kundeHtml:    kundenHtml,\n    verkAn:       verk.email,\n    verkBetreff:  '[' + (Number(a.score) || 0) + '] Neue Anfrage: ' +\n                  (a.fahrzeug_wunsch || 'Fahrzeug unklar') + ' — ' + (a.kunde_name || vor.email),\n    verkHtml:     verkHtml\n  }\n}];"
       },
-      "id": "e0fdfde9-2766-55e0-bc17-1178fd5f4647",
+      "id": "2937faba-53d8-50da-a5ce-6201d42fbf4d",
       "name": "KI-Antwort auswerten",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1620,
-        -200
+        1580,
+        -240
       ]
     },
     {
       "parameters": {
-        "operation": "append",
-        "documentId": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
-          "mode": "name"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [],
-          "schema": []
-        },
-        "options": {}
+        "operation": "executeQuery",
+        "query": "with neu as ( insert into leads (lead_id, eingang, quelle, name, email, telefon, nachricht, fahrzeug, fahrzeug_id, kaufabsicht, inzahlungnahme, inzahlung_fahrzeug, dringlichkeit, finanzierung, score, zusammenfassung, verkaeufer, verkaeufer_email, status, sequenz, nachfass_stufe, letzter_kontakt, naechster_schritt, notiz) values ($1, $2::timestamptz, $3, $4, $5, $6, $7, $8, $9, $10, $11::boolean, $12, $13, $14::boolean, $15::int, $16, $17, $18, $19, $20, $21::int, $22::timestamptz, $23, $24) on conflict (lead_id) do nothing returning lead_id ) insert into verlauf (lead_id, art, text) select lead_id, 'anfrage', $25 from neu returning lead_id",
+        "options": {
+          "queryReplacement": "={{ $json.sqlWerte }}"
+        }
       },
-      "id": "22d81a7a-a367-5070-8c40-6b3a8a04b3f5",
-      "name": "Lead ins CRM",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "id": "f781f543-3e32-521d-9399-b92b6556173b",
+      "name": "Lead speichern",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        1840,
-        -200
+        1800,
+        -240
       ]
     },
     {
@@ -451,13 +452,13 @@
         "html": "={{ $('KI-Antwort auswerten').first().json.kundeHtml }}",
         "options": {}
       },
-      "id": "a5d682a6-b489-538d-a446-c0c543938880",
+      "id": "0ab3ac59-55c5-58bc-b199-eed66cfaa845",
       "name": "Antwort an Interessent",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        2060,
-        -200
+        2020,
+        -240
       ],
       "onError": "continueRegularOutput"
     },
@@ -470,52 +471,46 @@
         "html": "={{ $('KI-Antwort auswerten').first().json.verkHtml }}",
         "options": {}
       },
-      "id": "ba090930-da2c-5c4e-bebd-077365e75a9c",
+      "id": "87eb1c9b-55f1-5fe3-ab5f-a725339555b8",
       "name": "Verkäufer benachrichtigen",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        2280,
-        -200
+        2240,
+        -240
       ],
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
-          "mode": "name"
-        },
-        "options": {}
+        "operation": "executeQuery",
+        "query": "select * from leads where lead_id = $1 limit 1",
+        "options": {
+          "queryReplacement": "={{ [$json.leadId] }}"
+        }
       },
-      "id": "672a3a0a-c6fb-599d-833a-e4d2bd099ee5",
-      "name": "Leads laden (Termin)",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "id": "31cb5e98-d8a6-53aa-8aa0-6dec4ed47553",
+      "name": "Lead laden (Termin)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        300,
-        120
+        260,
+        -60
       ],
       "alwaysOutputData": true,
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "/* Der Interessent hat einen Terminvorschlag angeklickt. */\nconst d   = $('EINSTELLUNGEN').first().json;\nconst cfg = d.cfg;\n\nconst zeilen = $input.all().map(i => i.json).filter(r => r && r.LeadID);\nconst lead   = zeilen.find(r => String(r.LeadID) === String(d.leadId)) || {};\n\n/* Zeitpunkt aus dem Link */\nconst start = new Date(d.slot);\nconst gueltig = !isNaN(start.getTime()) && start.getTime() > Date.now() - 60 * 60 * 1000;\nconst ende  = new Date(start.getTime() + cfg.terminDauerMin * 60 * 1000);\n\nconst wt = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];\nconst lesbar = gueltig\n  ? wt[start.getDay()] + ', ' + String(start.getDate()).padStart(2,'0') + '.' +\n    String(start.getMonth()+1).padStart(2,'0') + '.' + start.getFullYear() + ' um ' +\n    String(start.getHours()).padStart(2,'0') + ':' + String(start.getMinutes()).padStart(2,'0') + ' Uhr'\n  : '';\n\nconst name  = lead.Name || 'Interessent';\nconst fzg   = lead.Fahrzeug || 'Fahrzeug nach Absprache';\nconst verkE = lead.VerkaeuferEmail || (cfg.verkaeufer[0] && cfg.verkaeufer[0].email) || cfg.verkaufsleitung;\nconst verkN = lead.Verkaeufer || '';\n\nconst kundeHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">Guten Tag ${name},</p>\n  <p style=\"margin:0 0 14px\">Ihre Probefahrt ist eingetragen:</p>\n  <table cellpadding=\"8\" style=\"border-collapse:collapse;background:#f5f7fa;border-radius:10px;font-size:15px\">\n    <tr><td style=\"color:#5b6b80\">Termin</td><td><b>${lesbar}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td><b>${fzg}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Ort</td><td>${cfg.autohaus}, ${cfg.ort}</td></tr>\n    ${verkN ? `<tr><td style=\"color:#5b6b80\">Ansprechpartner</td><td>${verkN}</td></tr>` : ''}\n  </table>\n  <p style=\"margin:18px 0 14px\">Bitte bringen Sie Ihren Führerschein mit. Sollte etwas dazwischenkommen,\n     antworten Sie einfach auf diese E-Mail oder rufen Sie uns unter ${cfg.telefon} an.</p>\n  <p style=\"margin:0\">Wir freuen uns auf Sie.</p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">${cfg.autohaus} · ${cfg.ort} · Telefon ${cfg.telefon}</p>\n</div>`;\n\nconst verkHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6\">\n  <p style=\"margin:0 0 14px\"><b>Probefahrt gebucht.</b></p>\n  <table cellpadding=\"6\" style=\"border-collapse:collapse;font-size:14px\">\n    <tr><td style=\"color:#5b6b80\">Termin</td><td><b>${lesbar}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Kunde</td><td>${name}</td></tr>\n    <tr><td style=\"color:#5b6b80\">E-Mail</td><td>${lead.Email || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Telefon</td><td>${lead.Telefon || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td>${fzg}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Lead</td><td>${d.leadId}</td></tr>\n  </table>\n  <p style=\"margin:16px 0 0;font-size:13px;color:#5b6b80\">Der Kunde erhält 24 Stunden vorher automatisch eine Erinnerung.</p>\n</div>`;\n\nconst seite = gueltig ? `<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>Termin bestätigt</title></head>\n<body style=\"margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fa;color:#1a2430\">\n<div style=\"max-width:520px;margin:60px auto;background:#fff;border-radius:16px;padding:40px 34px;text-align:center\">\n  <div style=\"width:56px;height:56px;border-radius:50%;background:#2e8b6b;margin:0 auto 22px;line-height:56px;color:#fff;font-size:28px\">&#10003;</div>\n  <h1 style=\"margin:0 0 12px;font-size:24px\">Termin bestätigt</h1>\n  <p style=\"margin:0 0 6px;font-size:17px\"><b>${lesbar}</b></p>\n  <p style=\"margin:0 0 20px;color:#5b6b80\">${fzg}</p>\n  <p style=\"margin:0;color:#5b6b80;font-size:14px\">Sie erhalten gleich eine Bestätigung per E-Mail.<br>${cfg.autohaus} · ${cfg.telefon}</p>\n</div></body></html>`\n: `<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><title>Termin</title></head>\n<body style=\"margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fa;color:#1a2430\">\n<div style=\"max-width:520px;margin:60px auto;background:#fff;border-radius:16px;padding:40px 34px;text-align:center\">\n  <h1 style=\"margin:0 0 12px;font-size:22px\">Dieser Termin ist nicht mehr gültig</h1>\n  <p style=\"margin:0;color:#5b6b80\">Bitte rufen Sie uns kurz an: ${cfg.telefon}</p>\n</div></body></html>`;\n\nreturn [{\n  json: {\n    gueltig:      gueltig,\n    LeadID:       d.leadId,\n    Termin:       gueltig ? start.toISOString() : '',\n    TerminBestaetigt: gueltig ? 'ja' : 'nein',\n    Status:       gueltig ? 'termin' : (lead.Status || 'kontaktiert'),\n    Sequenz:      gueltig ? 'gestoppt' : (lead.Sequenz || 'laeuft'),\n    NaechsterSchritt: gueltig ? 'Probefahrt durchführen' : (lead.NaechsterSchritt || ''),\n    LetzterKontakt: new Date().toISOString(),\n    kalStart:     gueltig ? start.toISOString() : new Date().toISOString(),\n    kalEnde:      gueltig ? ende.toISOString()  : new Date(Date.now() + 60000).toISOString(),\n    kalTitel:     'Probefahrt: ' + fzg + ' — ' + name,\n    kalText:      ['Kunde: ' + name, 'E-Mail: ' + (lead.Email || ''), 'Telefon: ' + (lead.Telefon || ''),\n                   'Fahrzeug: ' + fzg, 'Lead: ' + d.leadId].join('\\n'),\n    kundeAn:      lead.Email || '',\n    kundeBetreff: 'Ihre Probefahrt am ' + lesbar,\n    kundeHtml:    kundeHtml,\n    verkAn:       verkE,\n    verkBetreff:  'Probefahrt gebucht: ' + name + ' — ' + lesbar,\n    verkHtml:     verkHtml,\n    seite:        seite,\n    cfg:          cfg\n  }\n}];"
+        "jsCode": "/* Der Interessent hat einen Terminvorschlag angeklickt. */\nconst d   = $('EINSTELLUNGEN').first().json;\nconst cfg = d.cfg;\n\nconst lead = ($input.all().map(i => i.json).filter(r => r && r.lead_id))[0] || {};\n\nconst start = new Date(d.slot);\nconst gueltig = !!lead.lead_id && !isNaN(start.getTime()) &&\n                start.getTime() > Date.now() - 60 * 60 * 1000;\nconst ende  = new Date(start.getTime() + cfg.terminDauerMin * 60 * 1000);\n\nconst wt = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];\nconst lesbar = gueltig\n  ? wt[start.getDay()] + ', ' + String(start.getDate()).padStart(2,'0') + '.' +\n    String(start.getMonth()+1).padStart(2,'0') + '.' + start.getFullYear() + ' um ' +\n    String(start.getHours()).padStart(2,'0') + ':' + String(start.getMinutes()).padStart(2,'0') + ' Uhr'\n  : '';\n\nconst name  = lead.name || 'Interessent';\nconst fzg   = lead.fahrzeug || 'Fahrzeug nach Absprache';\nconst verkE = lead.verkaeufer_email || (cfg.verkaeufer[0] && cfg.verkaeufer[0].email) || cfg.verkaufsleitung;\nconst verkN = lead.verkaeufer || '';\n\nconst kundeHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">Guten Tag ${name},</p>\n  <p style=\"margin:0 0 14px\">Ihre Probefahrt ist eingetragen:</p>\n  <table cellpadding=\"8\" style=\"border-collapse:collapse;background:#f5f7fa;border-radius:10px;font-size:15px\">\n    <tr><td style=\"color:#5b6b80\">Termin</td><td><b>${lesbar}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td><b>${fzg}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Ort</td><td>${cfg.autohaus}, ${cfg.ort}</td></tr>\n    ${verkN ? `<tr><td style=\"color:#5b6b80\">Ansprechpartner</td><td>${verkN}</td></tr>` : ''}\n  </table>\n  <p style=\"margin:18px 0 14px\">Bitte bringen Sie Ihren Führerschein mit. Sollte etwas dazwischenkommen,\n     antworten Sie einfach auf diese E-Mail oder rufen Sie uns unter ${cfg.telefon} an.</p>\n  <p style=\"margin:0\">Wir freuen uns auf Sie.</p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">${cfg.autohaus} · ${cfg.ort} · Telefon ${cfg.telefon}</p>\n</div>`;\n\nconst verkHtml = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6\">\n  <p style=\"margin:0 0 14px\"><b>Probefahrt gebucht.</b></p>\n  <table cellpadding=\"6\" style=\"border-collapse:collapse;font-size:14px\">\n    <tr><td style=\"color:#5b6b80\">Termin</td><td><b>${lesbar}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Kunde</td><td>${name}</td></tr>\n    <tr><td style=\"color:#5b6b80\">E-Mail</td><td>${lead.email || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Telefon</td><td>${lead.telefon || '—'}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td>${fzg}</td></tr>\n    <tr><td style=\"color:#5b6b80\">Lead</td><td>${d.leadId}</td></tr>\n  </table>\n  <p style=\"margin:16px 0 0;font-size:13px;color:#5b6b80\">Der Kunde erhält 24 Stunden vorher automatisch eine Erinnerung.</p>\n</div>`;\n\nconst seite = gueltig ? `<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<title>Termin bestätigt</title></head>\n<body style=\"margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fa;color:#1a2430\">\n<div style=\"max-width:520px;margin:60px auto;background:#fff;border-radius:16px;padding:40px 34px;text-align:center\">\n  <div style=\"width:56px;height:56px;border-radius:50%;background:#2e8b6b;margin:0 auto 22px;line-height:56px;color:#fff;font-size:28px\">&#10003;</div>\n  <h1 style=\"margin:0 0 12px;font-size:24px\">Termin bestätigt</h1>\n  <p style=\"margin:0 0 6px;font-size:17px\"><b>${lesbar}</b></p>\n  <p style=\"margin:0 0 20px;color:#5b6b80\">${fzg}</p>\n  <p style=\"margin:0;color:#5b6b80;font-size:14px\">Sie erhalten gleich eine Bestätigung per E-Mail.<br>${cfg.autohaus} · ${cfg.telefon}</p>\n</div></body></html>`\n: `<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><title>Termin</title></head>\n<body style=\"margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fa;color:#1a2430\">\n<div style=\"max-width:520px;margin:60px auto;background:#fff;border-radius:16px;padding:40px 34px;text-align:center\">\n  <h1 style=\"margin:0 0 12px;font-size:22px\">Dieser Termin ist nicht mehr gültig</h1>\n  <p style=\"margin:0;color:#5b6b80\">Bitte rufen Sie uns kurz an: ${cfg.telefon}</p>\n</div></body></html>`;\n\nreturn [{\n  json: {\n    gueltig:      gueltig,\n    sqlWerte:     [d.leadId, gueltig ? start.toISOString() : null,\n                   'Probefahrt gebucht: ' + lesbar + ' · ' + fzg],\n    kalStart:     gueltig ? start.toISOString() : new Date().toISOString(),\n    kalEnde:      gueltig ? ende.toISOString()  : new Date(Date.now() + 60000).toISOString(),\n    kalTitel:     'Probefahrt: ' + fzg + ' — ' + name,\n    kalText:      ['Kunde: ' + name, 'E-Mail: ' + (lead.email || ''), 'Telefon: ' + (lead.telefon || ''),\n                   'Fahrzeug: ' + fzg, 'Lead: ' + d.leadId].join('\\n'),\n    kundeAn:      lead.email || '',\n    kundeBetreff: 'Ihre Probefahrt am ' + lesbar,\n    kundeHtml:    kundeHtml,\n    verkAn:       verkE,\n    verkBetreff:  'Probefahrt gebucht: ' + name + ' — ' + lesbar,\n    verkHtml:     verkHtml,\n    seite:        seite\n  }\n}];"
       },
-      "id": "b6c03f54-2a5a-55c9-ad8f-51b0824e847d",
+      "id": "e087576e-1eed-59d0-8c50-f0c4fa66d054",
       "name": "Termin vorbereiten",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        520,
-        120
+        480,
+        -60
       ]
     },
     {
@@ -529,7 +524,7 @@
           },
           "conditions": [
             {
-              "id": "1862f0ae-2f48-495a-a648-18b951eceed5",
+              "id": "45e94bc0-4817-4580-9965-aa4e0ea9bd11",
               "leftValue": "={{ $json.gueltig }}",
               "rightValue": "",
               "operator": {
@@ -542,13 +537,13 @@
         },
         "options": {}
       },
-      "id": "833dcf37-3c41-5854-b753-52a51470a16b",
+      "id": "54df4424-b2ea-5936-b29d-d6ab204ff2c9",
       "name": "Termin gültig?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        740,
-        120
+        700,
+        -60
       ]
     },
     {
@@ -565,46 +560,31 @@
           "description": "={{ $json.kalText }}"
         }
       },
-      "id": "adc84068-f9c8-51c1-95e2-7079d0d6bc2f",
+      "id": "3b9fa848-6f57-5a86-9605-e0f80aba753d",
       "name": "Kalendereintrag",
       "type": "n8n-nodes-base.googleCalendar",
       "typeVersion": 1.3,
       "position": [
-        960,
-        40
+        920,
+        -140
       ],
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "operation": "update",
-        "documentId": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
-          "mode": "name"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [
-            "LeadID"
-          ],
-          "schema": []
-        },
-        "options": {}
+        "operation": "executeQuery",
+        "query": "with u as ( update leads set termin = $2::timestamptz, termin_bestaetigt = true, status = 'termin', sequenz = 'gestoppt', letzter_kontakt = now(), naechster_schritt = 'Probefahrt durchfuehren' where lead_id = $1 returning lead_id ) insert into verlauf (lead_id, art, text) select lead_id, 'termin', $3 from u returning lead_id",
+        "options": {
+          "queryReplacement": "={{ $json.sqlWerte }}"
+        }
       },
-      "id": "12befca6-b8b8-584f-bfdb-20111e6f1268",
+      "id": "ece96f4a-7f77-52a3-a5b6-73d76e679e5c",
       "name": "CRM: Termin eintragen",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        1180,
-        40
+        1140,
+        -140
       ]
     },
     {
@@ -616,13 +596,13 @@
         "html": "={{ $('Termin vorbereiten').first().json.kundeHtml }}",
         "options": {}
       },
-      "id": "2e7dc642-182a-5069-87f3-9aba5a34a024",
+      "id": "5aa79440-6685-5da8-b66e-e05db5e3a4be",
       "name": "Bestätigung an Kunden",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        1400,
-        40
+        1360,
+        -140
       ],
       "onError": "continueRegularOutput"
     },
@@ -635,13 +615,13 @@
         "html": "={{ $('Termin vorbereiten').first().json.verkHtml }}",
         "options": {}
       },
-      "id": "6206ab6c-9f81-5df5-99e8-16f38479e7f1",
+      "id": "e0da73b0-7f26-5fc5-abde-13ab503c00ee",
       "name": "Info an Verkäufer",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        1620,
-        40
+        1580,
+        -140
       ],
       "onError": "continueRegularOutput"
     },
@@ -660,52 +640,44 @@
           }
         }
       },
-      "id": "ecba6ffb-60ba-52ba-a065-b51d83fedf88",
+      "id": "a9de316c-197c-5ccc-afa1-9a889b884ba8",
       "name": "Danke-Seite anzeigen",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        1840,
-        120
+        1800,
+        -60
       ],
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "documentId": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
-          "mode": "name"
-        },
+        "operation": "executeQuery",
+        "query": "select * from leads where status <> 'archiviert' order by eingang desc limit 2000",
         "options": {}
       },
-      "id": "ec456bbc-0121-54c7-b7e5-4d395290aecb",
-      "name": "Alle Leads laden",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "id": "f7523d90-fee4-504a-84ad-1154a7a069c1",
+      "name": "Offene Leads laden",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        300,
-        420
+        260,
+        260
       ],
       "alwaysOutputData": true,
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "/* Der tägliche Lauf: was steht heute an? */\nconst cfg = $('EINSTELLUNGEN').first().json.cfg;\nconst jetzt = new Date();\nconst tag = 24 * 60 * 60 * 1000;\n\nconst alle = $input.all().map(i => i.json).filter(r => r && r.LeadID && r.Email);\nconst aufgaben = [];\n\nfor (const l of alle) {\n  const status  = String(l.Status || '').toLowerCase();\n  const sequenz = String(l.Sequenz || '').toLowerCase();\n\n  /* --- 1. Erinnerung an eine bevorstehende Probefahrt ----- */\n  if (l.Termin && String(l.TerminBestaetigt).toLowerCase() === 'ja') {\n    const t = new Date(l.Termin);\n    if (!isNaN(t.getTime())) {\n      const stundenBis = (t.getTime() - jetzt.getTime()) / 3600000;\n      const schon = String(l.NaechsterSchritt || '').includes('Erinnert');\n      if (stundenBis > 0 && stundenBis <= cfg.erinnerungStundenVorher && !schon) {\n        aufgaben.push({ json: { typ: 'erinnerung', lead: l, cfg: cfg } });\n      }\n    }\n    continue;   /* Wer einen Termin hat, wird nicht nachgefasst. */\n  }\n\n  /* --- 2. Kette gestoppt oder abgeschlossen? -------------- */\n  if (sequenz === 'gestoppt' || ['geantwortet','verkauft','verloren','archiviert'].includes(status)) {\n    /* --- 3. Archivieren nach langer Stille --------------- */\n    const letzte = new Date(l.LetzterKontakt || l.Eingang || 0);\n    const alterTage = (jetzt.getTime() - letzte.getTime()) / tag;\n    if (status !== 'archiviert' && alterTage > cfg.archivNachTagen) {\n      aufgaben.push({ json: { typ: 'archiv', lead: l, cfg: cfg } });\n    }\n    continue;\n  }\n\n  /* --- 4. Nachfassen an Tag 2, 5 und 10 ------------------ */\n  const eingang = new Date(l.Eingang || 0);\n  if (isNaN(eingang.getTime())) continue;\n  const alter = Math.floor((jetzt.getTime() - eingang.getTime()) / tag);\n\n  const bereits = (String(l.NaechsterSchritt || '').match(/Nachgefasst an Tag (\\d+)/g) || [])\n                    .map(s => parseInt(s.replace(/\\D/g, ''), 10));\n  const hoechsteStufe = bereits.length ? Math.max(...bereits) : 0;\n\n  const faellig = cfg.nachfassTage.filter(t => alter >= t && t > hoechsteStufe);\n  if (faellig.length) {\n    aufgaben.push({ json: { typ: 'nachfass', stufe: Math.max(...faellig), alter: alter, lead: l, cfg: cfg } });\n    continue;\n  }\n\n  /* --- 5. Nach der letzten Stufe: archivieren ------------ */\n  const letzterTag = cfg.nachfassTage[cfg.nachfassTage.length - 1];\n  if (hoechsteStufe >= letzterTag && alter > cfg.archivNachTagen) {\n    aufgaben.push({ json: { typ: 'archiv', lead: l, cfg: cfg } });\n  }\n}\n\n/* --- 6. Tagesbericht an die Verkaufsleitung -------------- */\nif (cfg.berichtSenden) {\n  aufgaben.push({ json: { typ: 'bericht', alle: alle, aufgaben: aufgaben.length, cfg: cfg } });\n}\n\nreturn aufgaben;"
+        "jsCode": "/* Der tägliche Lauf: was steht heute an? */\nconst cfg   = $('EINSTELLUNGEN').first().json.cfg;\nconst jetzt = new Date();\nconst tag   = 24 * 60 * 60 * 1000;\nconst heute = jetzt.toISOString().substring(0, 10);\n\nconst alle = $input.all().map(i => i.json).filter(r => r && r.lead_id && r.email);\nconst aufgaben = [];\n\nfor (const l of alle) {\n  const status  = String(l.status  || '').toLowerCase();\n  const sequenz = String(l.sequenz || '').toLowerCase();\n\n  /* --- 1. Erinnerung an eine bevorstehende Probefahrt ----- */\n  if (l.termin && l.termin_bestaetigt) {\n    const t = new Date(l.termin);\n    if (!isNaN(t.getTime())) {\n      const stundenBis = (t.getTime() - jetzt.getTime()) / 3600000;\n      const schonErinnert = String(l.erinnert_am || '').substring(0, 10) === heute;\n      if (stundenBis > 0 && stundenBis <= cfg.erinnerungStundenVorher && !schonErinnert) {\n        aufgaben.push({ json: { typ: 'erinnerung', lead: l, cfg: cfg } });\n      }\n    }\n    continue;   /* Wer einen Termin hat, wird nicht nachgefasst. */\n  }\n\n  /* --- 2. Kette gestoppt oder Vorgang abgeschlossen? ------ */\n  if (sequenz === 'gestoppt' ||\n      ['geantwortet','gewonnen','verloren','archiviert'].includes(status)) {\n    const letzte = new Date(l.letzter_kontakt || l.eingang || 0);\n    const alterTage = (jetzt.getTime() - letzte.getTime()) / tag;\n    if (status !== 'archiviert' && alterTage > cfg.archivNachTagen) {\n      aufgaben.push({ json: { typ: 'archiv', lead: l, cfg: cfg } });\n    }\n    continue;\n  }\n\n  /* --- 3. Nachfassen an Tag 2, 5 und 10 ------------------- */\n  const eingang = new Date(l.eingang || 0);\n  if (isNaN(eingang.getTime())) continue;\n  const alter  = Math.floor((jetzt.getTime() - eingang.getTime()) / tag);\n  const stufe  = Number(l.nachfass_stufe) || 0;\n\n  const faellig = cfg.nachfassTage.filter(t => alter >= t && t > stufe);\n  if (faellig.length) {\n    aufgaben.push({ json: {\n      typ: 'nachfass', stufe: Math.max(...faellig), alter: alter, lead: l, cfg: cfg\n    }});\n    continue;\n  }\n\n  /* --- 4. Nach der letzten Stufe: archivieren ------------- */\n  const letzterTag = cfg.nachfassTage[cfg.nachfassTage.length - 1];\n  if (stufe >= letzterTag && alter > cfg.archivNachTagen) {\n    aufgaben.push({ json: { typ: 'archiv', lead: l, cfg: cfg } });\n  }\n}\n\n/* --- 5. Tagesbericht an die Verkaufsleitung -------------- */\nif (cfg.berichtSenden) {\n  aufgaben.push({ json: { typ: 'bericht', alle: alle, aufgaben: aufgaben.length, cfg: cfg } });\n}\n\nreturn aufgaben;"
       },
-      "id": "1609591c-02e0-5aa6-a3b8-dcf776b4b753",
+      "id": "9322e21e-f9cf-5e20-8b85-4b060b5b0891",
       "name": "Was ist heute fällig?",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        520,
-        420
+        480,
+        260
       ]
     },
     {
@@ -722,7 +694,7 @@
                 },
                 "conditions": [
                   {
-                    "id": "80403abc-519f-478f-8c1a-579c25cedac4",
+                    "id": "232dc0f5-542f-431d-b146-22418942efd8",
                     "leftValue": "={{ $json.typ }}",
                     "rightValue": "nachfass",
                     "operator": {
@@ -746,7 +718,7 @@
                 },
                 "conditions": [
                   {
-                    "id": "06268ed5-0479-4c51-8084-bc4d677f7526",
+                    "id": "48c12a19-481d-4a42-adfa-28c3af9d62e3",
                     "leftValue": "={{ $json.typ }}",
                     "rightValue": "erinnerung",
                     "operator": {
@@ -770,7 +742,7 @@
                 },
                 "conditions": [
                   {
-                    "id": "ff031bf2-9326-4308-8802-6650c99868cc",
+                    "id": "db71e7d3-9775-42ab-b2c0-716a3ca7dc2e",
                     "leftValue": "={{ $json.typ }}",
                     "rightValue": "archiv",
                     "operator": {
@@ -794,7 +766,7 @@
                 },
                 "conditions": [
                   {
-                    "id": "10f38b42-927d-4197-b23d-cb58ee94e28f",
+                    "id": "281f1662-71c7-4ad3-abaf-274a7652027d",
                     "leftValue": "={{ $json.typ }}",
                     "rightValue": "bericht",
                     "operator": {
@@ -812,26 +784,26 @@
         },
         "options": {}
       },
-      "id": "0b49d79f-48fd-524f-9814-5d8121b3f29d",
+      "id": "769545d9-19e5-5717-8009-3f3b76d5b487",
       "name": "Weiche: Aufgabe",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        740,
-        420
+        700,
+        260
       ]
     },
     {
       "parameters": {
-        "jsCode": "/* Baut den KI-Auftrag für die Nachfass-Mail. */\nconst raus = [];\n\nfor (const item of $input.all()) {\n  const d   = item.json;\n  const cfg = d.cfg;\n  const l   = d.lead;\n\n  const stufe = d.stufe;\n  const ziel = stufe <= 2\n    ? 'Freundlich nachhaken, ob die Antwort angekommen ist und ob Fragen offen sind. Sehr kurz.'\n    : (stufe <= 5\n        ? 'Einen konkreten Mehrwert bieten: Probefahrt erneut anbieten oder auf Inzahlungnahme eingehen.'\n        : 'Letzte Nachricht der Reihe. Ein passendes Alternativfahrzeug anbieten und hoeflich abschliessen, ohne Druck.');\n\n  const system = [\n    'Du schreibst im Namen von ' + cfg.autohaus + ' in ' + cfg.ort + ' eine kurze Nachfass-E-Mail.',\n    'Sprache: Deutsch, Sie-Form. Tonfall: ' + cfg.tonfall + '.',\n    'Aufgabe fuer diese Stufe: ' + ziel,\n    'Regeln:',\n    '- Hoechstens 70 Woerter. Kein Betreff-Wiederholen, keine Floskeln, kein Druck.',\n    '- Beziehe dich konkret auf das angefragte Fahrzeug.',\n    '- Erfinde keine Preise, Ausstattungen oder Zusagen.',\n    '- Keine Anrede und keine Grussformel, das haengt das System an.',\n    '- Nur Fliesstext, Absaetze durch Leerzeile getrennt.'\n  ].join('\\n');\n\n  const nutzer = [\n    'Fahrzeug: '        + (l.Fahrzeug || 'unbekannt'),\n    'Kaufabsicht: '     + (l.Kaufabsicht || 'unklar'),\n    'Zeitrahmen: '      + (l.Dringlichkeit || 'unklar'),\n    'Inzahlungnahme: '  + (l.Inzahlungnahme || 'nein') + ' ' + (l.InzahlungFahrzeug || ''),\n    'Erste Anfrage vor '+ d.alter + ' Tagen.',\n    '',\n    'Damalige Nachricht des Interessenten:',\n    String(l.Nachricht || '').substring(0, 1500)\n  ].join('\\n');\n\n  const schema = {\n    type: 'object',\n    properties: {\n      betreff: { type: 'string' },\n      text:    { type: 'string' }\n    },\n    required: ['betreff', 'text'],\n    additionalProperties: false\n  };\n\n  raus.push({ json: {\n    ...d,\n    apiBody: {\n      model: cfg.modell,\n      max_tokens: 900,\n      thinking: { type: 'disabled' },\n      output_config: { effort: 'low', format: { type: 'json_schema', schema: schema } },\n      system: system,\n      messages: [{ role: 'user', content: nutzer }]\n    }\n  }});\n}\n\nreturn raus;"
+        "jsCode": "/* Baut den KI-Auftrag für die Nachfass-Mail. */\nconst raus = [];\n\nfor (const item of $input.all()) {\n  const d   = item.json;\n  const cfg = d.cfg;\n  const l   = d.lead;\n  const stufe = d.stufe;\n\n  const ziel = stufe <= 2\n    ? 'Freundlich nachhaken, ob die Antwort angekommen ist und ob Fragen offen sind. Sehr kurz.'\n    : (stufe <= 5\n        ? 'Einen konkreten Mehrwert bieten: Probefahrt erneut anbieten oder auf die Inzahlungnahme eingehen.'\n        : 'Letzte Nachricht der Reihe. Ein passendes Alternativfahrzeug anbieten und hoeflich abschliessen, ohne Druck.');\n\n  const system = [\n    'Du schreibst im Namen von ' + cfg.autohaus + ' in ' + cfg.ort + ' eine kurze Nachfass-E-Mail.',\n    'Sprache: Deutsch, Sie-Form. Tonfall: ' + cfg.tonfall + '.',\n    'Aufgabe fuer diese Stufe: ' + ziel,\n    'Regeln:',\n    '- Hoechstens 70 Woerter. Keine Floskeln, kein Druck.',\n    '- Beziehe dich konkret auf das angefragte Fahrzeug.',\n    '- Erfinde keine Preise, Ausstattungen oder Zusagen.',\n    '- Keine Anrede und keine Grussformel, das haengt das System an.',\n    '- Nur Fliesstext, Absaetze durch Leerzeile getrennt.'\n  ].join('\\n');\n\n  const nutzer = [\n    'Fahrzeug: '        + (l.fahrzeug || 'unbekannt'),\n    'Kaufabsicht: '     + (l.kaufabsicht || 'unklar'),\n    'Zeitrahmen: '      + (l.dringlichkeit || 'unklar'),\n    'Inzahlungnahme: '  + (l.inzahlungnahme ? ('ja, ' + (l.inzahlung_fahrzeug || 'Fahrzeug unbenannt')) : 'nein'),\n    'Erste Anfrage vor '+ d.alter + ' Tagen.',\n    '',\n    'Damalige Nachricht des Interessenten:',\n    String(l.nachricht || '').substring(0, 1500)\n  ].join('\\n');\n\n  const schema = {\n    type: 'object',\n    properties: { betreff: { type: 'string' }, text: { type: 'string' } },\n    required: ['betreff', 'text'],\n    additionalProperties: false\n  };\n\n  raus.push({ json: {\n    ...d,\n    apiBody: {\n      model: cfg.modell,\n      max_tokens: 900,\n      thinking: { type: 'disabled' },\n      output_config: { effort: 'low', format: { type: 'json_schema', schema: schema } },\n      system: system,\n      messages: [{ role: 'user', content: nutzer }]\n    }\n  }});\n}\n\nreturn raus;"
       },
-      "id": "6444fe0a-05ed-589c-ab72-0d07fe9b9f7e",
+      "id": "ecfaf9be-79e6-5b3e-8975-967447878d50",
       "name": "Nachfass-Auftrag bauen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
-        300
+        920,
+        140
       ]
     },
     {
@@ -860,13 +832,13 @@
           "timeout": 120000
         }
       },
-      "id": "0f6da502-c613-5950-9763-74d457348ebb",
+      "id": "0396cbf3-0cfb-538c-ac1b-11df7bc0a223",
       "name": "KI: Nachfasstext",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1180,
-        300
+        1140,
+        140
       ],
       "onError": "continueRegularOutput",
       "retryOnFail": true,
@@ -875,47 +847,32 @@
     },
     {
       "parameters": {
-        "jsCode": "/* KI-Antwort in eine fertige Mail und eine CRM-Zeile verwandeln. */\nconst raus = [];\nconst eingang = $input.all();\n\nfor (let k = 0; k < eingang.length; k++) {\n  const roh = eingang[k].json;\n  const vor = $('Nachfass-Auftrag bauen').all()[k].json;\n  const cfg = vor.cfg;\n  const l   = vor.lead;\n\n  let a = null;\n  try {\n    const b = (roh.content || []).find(x => x && x.type === 'text');\n    if (b && b.text) a = JSON.parse(b.text);\n  } catch (e) { a = null; }\n\n  if (!a) {\n    a = {\n      betreff: 'Kurze Rueckfrage zu ' + (l.Fahrzeug || 'Ihrer Anfrage'),\n      text: 'ich wollte kurz nachfragen, ob meine letzte Nachricht bei Ihnen angekommen ist '\n          + 'und ob noch Fragen offen sind. Melden Sie sich gerne jederzeit.'\n    };\n  }\n\n  const absaetze = String(a.text || '').split(/\\n\\s*\\n/)\n    .map(p => `<p style=\"margin:0 0 14px\">${p.replace(/\\n/g, '<br>')}</p>`).join('');\n\n  const html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">Guten Tag ${l.Name || ''},</p>\n  ${absaetze}\n  <p style=\"margin:18px 0 0\">Mit freundlichen Grüßen<br>${l.Verkaeufer || cfg.autohaus}</p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">\n    ${cfg.autohaus} · ${cfg.ort} · Telefon ${cfg.telefon}<br>\n    Wenn Sie keine weiteren Nachrichten zu dieser Anfrage wünschen, antworten Sie kurz mit „kein Interesse“.\n  </p>\n</div>`;\n\n  const bisher = String(l.NaechsterSchritt || '');\n  raus.push({ json: {\n    LeadID:           l.LeadID,\n    Status:           'nachgefasst',\n    Sequenz:          'laeuft',\n    LetzterKontakt:   new Date().toISOString(),\n    NaechsterSchritt: (bisher ? bisher + ' | ' : '') + 'Nachgefasst an Tag ' + vor.stufe,\n    mailAn:           l.Email,\n    mailBetreff:      a.betreff,\n    mailHtml:         html,\n    cfg:              cfg\n  }});\n}\n\nreturn raus;"
+        "jsCode": "/* KI-Antwort in eine fertige Mail und eine Datenbankzeile verwandeln. */\nconst raus = [];\nconst eingang = $input.all();\nconst vorher  = $('Nachfass-Auftrag bauen').all();\n\nfor (let k = 0; k < eingang.length; k++) {\n  const roh = eingang[k].json;\n  const vor = (vorher[k] || vorher[0]).json;\n  const cfg = vor.cfg;\n  const l   = vor.lead;\n\n  let a = null;\n  try {\n    const b = (roh.content || []).find(x => x && x.type === 'text');\n    if (b && b.text) a = JSON.parse(b.text);\n  } catch (e) { a = null; }\n\n  if (!a) {\n    a = {\n      betreff: 'Kurze Rueckfrage zu ' + (l.fahrzeug || 'Ihrer Anfrage'),\n      text: 'ich wollte kurz nachfragen, ob meine letzte Nachricht bei Ihnen angekommen ist '\n          + 'und ob noch Fragen offen sind. Melden Sie sich gerne jederzeit.'\n    };\n  }\n\n  const absaetze = String(a.text || '').split(/\\n\\s*\\n/)\n    .map(p => `<p style=\"margin:0 0 14px\">${p.replace(/\\n/g, '<br>')}</p>`).join('');\n\n  const html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">Guten Tag ${l.name || ''},</p>\n  ${absaetze}\n  <p style=\"margin:18px 0 0\">Mit freundlichen Grüßen<br>${l.verkaeufer || cfg.autohaus}</p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">\n    ${cfg.autohaus} · ${cfg.ort} · Telefon ${cfg.telefon}<br>\n    Wenn Sie keine weiteren Nachrichten zu dieser Anfrage wünschen, antworten Sie kurz mit „kein Interesse“.\n  </p>\n</div>`;\n\n  raus.push({ json: {\n    sqlWerte: [ l.lead_id, vor.stufe,\n                'Nachgefasst an Tag ' + vor.stufe,\n                'Stufe ' + vor.stufe + ': ' + a.betreff ],\n    mailAn:      l.email,\n    mailBetreff: a.betreff,\n    mailHtml:    html\n  }});\n}\n\nreturn raus;"
       },
-      "id": "24e84b4b-f115-5204-9e54-c5e0cce56728",
+      "id": "5c30472b-64e1-532a-8412-62ec56d731c4",
       "name": "Nachfass aufbereiten",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1400,
-        300
+        1360,
+        140
       ]
     },
     {
       "parameters": {
-        "operation": "update",
-        "documentId": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
-          "mode": "name"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [
-            "LeadID"
-          ],
-          "schema": []
-        },
-        "options": {}
+        "operation": "executeQuery",
+        "query": "with u as ( update leads set status = 'nachgefasst', nachfass_stufe = $2::int, letzter_kontakt = now(), naechster_schritt = $3 where lead_id = $1 returning lead_id ) insert into verlauf (lead_id, art, text) select lead_id, 'nachfass', $4 from u returning lead_id",
+        "options": {
+          "queryReplacement": "={{ $json.sqlWerte }}"
+        }
       },
-      "id": "bd1438ae-3109-5469-bea8-69af0de7fd5a",
+      "id": "48baccf8-01f4-5c95-b35e-add829a005fa",
       "name": "CRM: Nachfass vermerken",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        1620,
-        300
+        1580,
+        140
       ]
     },
     {
@@ -927,59 +884,44 @@
         "html": "={{ $('Nachfass aufbereiten').all()[$itemIndex].json.mailHtml }}",
         "options": {}
       },
-      "id": "c06c5e3e-884a-5537-b0d1-b3a54be45934",
+      "id": "3289068f-c26d-5d06-bf7d-df45e9856695",
       "name": "Nachfass senden",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        1840,
-        300
+        1800,
+        140
       ],
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "/* Erinnerung 24 Stunden vor der Probefahrt. */\nconst raus = [];\n\nfor (const item of $input.all()) {\n  const cfg = item.json.cfg;\n  const l   = item.json.lead;\n  const t   = new Date(l.Termin);\n  const wt  = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];\n  const lesbar = wt[t.getDay()] + ', ' + String(t.getDate()).padStart(2,'0') + '.' +\n                 String(t.getMonth()+1).padStart(2,'0') + '. um ' +\n                 String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0') + ' Uhr';\n\n  const html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">Guten Tag ${l.Name || ''},</p>\n  <p style=\"margin:0 0 14px\">eine kurze Erinnerung an Ihre Probefahrt:</p>\n  <table cellpadding=\"8\" style=\"border-collapse:collapse;background:#f5f7fa;border-radius:10px;font-size:15px\">\n    <tr><td style=\"color:#5b6b80\">Termin</td><td><b>${lesbar}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td><b>${l.Fahrzeug || ''}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Ort</td><td>${cfg.autohaus}, ${cfg.ort}</td></tr>\n  </table>\n  <p style=\"margin:18px 0 14px\">Bitte denken Sie an Ihren Führerschein. Falls Sie den Termin nicht wahrnehmen können,\n     genügt ein kurzer Anruf unter ${cfg.telefon}.</p>\n  <p style=\"margin:0\">Bis morgen.</p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">${cfg.autohaus} · ${cfg.ort} · Telefon ${cfg.telefon}</p>\n</div>`;\n\n  raus.push({ json: {\n    LeadID:           l.LeadID,\n    Status:           'termin',\n    Sequenz:          'gestoppt',\n    LetzterKontakt:   new Date().toISOString(),\n    NaechsterSchritt: 'Erinnert am ' + new Date().toISOString().substring(0, 10),\n    mailAn:           l.Email,\n    mailBetreff:      'Erinnerung: Ihre Probefahrt am ' + lesbar,\n    mailHtml:         html,\n    cfg:              cfg\n  }});\n}\n\nreturn raus;"
+        "jsCode": "/* Erinnerung 24 Stunden vor der Probefahrt. */\nconst raus = [];\n\nfor (const item of $input.all()) {\n  const cfg = item.json.cfg;\n  const l   = item.json.lead;\n  const t   = new Date(l.termin);\n  const wt  = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];\n  const lesbar = wt[t.getDay()] + ', ' + String(t.getDate()).padStart(2,'0') + '.' +\n                 String(t.getMonth()+1).padStart(2,'0') + '. um ' +\n                 String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0') + ' Uhr';\n\n  const html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.65;max-width:620px\">\n  <p style=\"margin:0 0 14px\">Guten Tag ${l.name || ''},</p>\n  <p style=\"margin:0 0 14px\">eine kurze Erinnerung an Ihre Probefahrt:</p>\n  <table cellpadding=\"8\" style=\"border-collapse:collapse;background:#f5f7fa;border-radius:10px;font-size:15px\">\n    <tr><td style=\"color:#5b6b80\">Termin</td><td><b>${lesbar}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Fahrzeug</td><td><b>${l.fahrzeug || ''}</b></td></tr>\n    <tr><td style=\"color:#5b6b80\">Ort</td><td>${cfg.autohaus}, ${cfg.ort}</td></tr>\n  </table>\n  <p style=\"margin:18px 0 14px\">Bitte denken Sie an Ihren Führerschein. Falls Sie den Termin nicht wahrnehmen können,\n     genügt ein kurzer Anruf unter ${cfg.telefon}.</p>\n  <p style=\"margin:0\">Bis morgen.</p>\n  <hr style=\"border:none;border-top:1px solid #e3e8ef;margin:26px 0 14px\">\n  <p style=\"margin:0;font-size:13px;color:#5b6b80\">${cfg.autohaus} · ${cfg.ort} · Telefon ${cfg.telefon}</p>\n</div>`;\n\n  raus.push({ json: {\n    sqlWerte:    [ l.lead_id, 'Erinnerung an Probefahrt ' + lesbar ],\n    mailAn:      l.email,\n    mailBetreff: 'Erinnerung: Ihre Probefahrt am ' + lesbar,\n    mailHtml:    html\n  }});\n}\n\nreturn raus;"
       },
-      "id": "e9862224-55de-5292-9b4f-4493ffdc87bd",
+      "id": "bcc96fc3-adba-5a7e-a5de-a27864ed75e9",
       "name": "Erinnerung aufbereiten",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
-        460
+        920,
+        300
       ]
     },
     {
       "parameters": {
-        "operation": "update",
-        "documentId": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
-          "mode": "name"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [
-            "LeadID"
-          ],
-          "schema": []
-        },
-        "options": {}
+        "operation": "executeQuery",
+        "query": "with u as ( update leads set erinnert_am = current_date, letzter_kontakt = now() where lead_id = $1 returning lead_id ) insert into verlauf (lead_id, art, text) select lead_id, 'erinnerung', $2 from u returning lead_id",
+        "options": {
+          "queryReplacement": "={{ $json.sqlWerte }}"
+        }
       },
-      "id": "dc7fcc14-7418-5386-b4d5-21830d74babb",
+      "id": "0a2bad78-b030-55ae-9bab-0aa0ce23bd35",
       "name": "CRM: Erinnerung vermerken",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        1180,
-        460
+        1140,
+        300
       ]
     },
     {
@@ -991,72 +933,57 @@
         "html": "={{ $('Erinnerung aufbereiten').all()[$itemIndex].json.mailHtml }}",
         "options": {}
       },
-      "id": "f1789225-16a9-50a6-b82e-7e6532dda7da",
+      "id": "05e07a6b-8401-55b2-81cf-8d50f7c03e7c",
       "name": "Erinnerung senden",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        1400,
-        460
+        1360,
+        300
       ],
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "jsCode": "/* Alte, kalte Vorgänge sauber schließen. */\nreturn $input.all().map(item => {\n  const l = item.json.lead;\n  return { json: {\n    LeadID:           l.LeadID,\n    Status:           'archiviert',\n    Sequenz:          'gestoppt',\n    LetzterKontakt:   l.LetzterKontakt || l.Eingang || '',\n    NaechsterSchritt: 'Archiviert am ' + new Date().toISOString().substring(0, 10)\n  }};\n});"
+        "jsCode": "/* Alte, kalte Vorgänge sauber schließen. */\nreturn $input.all().map(item => ({ json: { sqlWerte: [ item.json.lead.lead_id ] } }));"
       },
-      "id": "08672f6e-bc5c-53ff-9796-58ed1ea86420",
+      "id": "57db153b-fe8c-5f9e-9e66-99034008bd9a",
       "name": "Archiv-Zeile bauen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
-        600
+        920,
+        440
       ]
     },
     {
       "parameters": {
-        "operation": "update",
-        "documentId": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.sheetId }}",
-          "mode": "id"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "={{ $('EINSTELLUNGEN').first().json.cfg.blattLeads }}",
-          "mode": "name"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {},
-          "matchingColumns": [
-            "LeadID"
-          ],
-          "schema": []
-        },
-        "options": {}
+        "operation": "executeQuery",
+        "query": "with u as ( update leads set status = 'archiviert', sequenz = 'gestoppt', naechster_schritt = 'Archiviert am ' || to_char(now(), 'DD.MM.YYYY') where lead_id = $1 returning lead_id ) insert into verlauf (lead_id, art, text) select lead_id, 'archiv', 'Automatisch archiviert' from u returning lead_id",
+        "options": {
+          "queryReplacement": "={{ $json.sqlWerte }}"
+        }
       },
-      "id": "acefd620-1bde-544f-8074-082d36a38a7e",
+      "id": "4f7de040-2710-57cb-bae2-6dbd62305328",
       "name": "CRM: Archivieren",
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.5,
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
       "position": [
-        1180,
-        600
+        1140,
+        440
       ]
     },
     {
       "parameters": {
-        "jsCode": "/* Tagesbericht an die Verkaufsleitung. */\nconst d   = $input.first().json;\nconst cfg = d.cfg;\nconst alle = d.alle || [];\nconst tag = 24 * 60 * 60 * 1000;\nconst jetzt = Date.now();\n\nconst seit = (r, t) => {\n  const x = new Date(r.Eingang || 0).getTime();\n  return !isNaN(x) && (jetzt - x) < t * tag;\n};\n\nconst neu24     = alle.filter(r => seit(r, 1));\nconst neu7      = alle.filter(r => seit(r, 7));\nconst offen     = alle.filter(r => ['neu','kontaktiert','nachgefasst'].includes(String(r.Status||'').toLowerCase()));\nconst termine   = alle.filter(r => String(r.TerminBestaetigt||'').toLowerCase() === 'ja' &&\n                                   new Date(r.Termin || 0).getTime() > jetzt);\nconst antworten = alle.filter(r => String(r.Status||'').toLowerCase() === 'geantwortet');\n\nconst heiss = offen.filter(r => Number(r.Score || 0) >= 70)\n                   .sort((a, b) => Number(b.Score||0) - Number(a.Score||0))\n                   .slice(0, 8);\n\nconst zeilen = heiss.map(r => `\n  <tr>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\"><b>${r.Score}</b></td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\">${r.Name || r.Email}</td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\">${r.Fahrzeug || '—'}</td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\">${r.Verkaeufer || '—'}</td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef;color:#5b6b80\">${String(r.Eingang||'').substring(0,10)}</td>\n  </tr>`).join('') || '<tr><td colspan=\"5\" style=\"padding:10px;color:#5b6b80\">Aktuell keine Leads über 70 Punkten.</td></tr>';\n\nconst kachel = (wert, text) => `\n  <td style=\"padding:14px 16px;background:#f5f7fa;border-radius:10px;text-align:center;width:20%\">\n    <div style=\"font-size:26px;font-weight:700;color:#142b47\">${wert}</div>\n    <div style=\"font-size:12px;color:#5b6b80;letter-spacing:.04em;text-transform:uppercase;margin-top:4px\">${text}</div>\n  </td>`;\n\nconst html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6;max-width:700px\">\n  <p style=\"margin:0 0 4px;font-size:13px;color:#5b6b80\">${cfg.autohaus} · Tagesbericht</p>\n  <h2 style=\"margin:0 0 20px;font-size:21px;color:#142b47\">Stand vom ${new Date().toLocaleDateString('de-DE')}</h2>\n  <table cellspacing=\"8\" style=\"border-collapse:separate;width:100%\">\n    <tr>\n      ${kachel(neu24.length, 'Neu 24 h')}\n      ${kachel(neu7.length, 'Neu 7 Tage')}\n      ${kachel(offen.length, 'Offen')}\n      ${kachel(termine.length, 'Termine')}\n      ${kachel(antworten.length, 'Antworten')}\n    </tr>\n  </table>\n  <p style=\"margin:26px 0 10px\"><b>Die heißesten offenen Leads</b></p>\n  <table cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;width:100%;font-size:14px\">\n    <tr style=\"background:#142b47;color:#fff\">\n      <th style=\"padding:8px 10px;text-align:left\">Score</th>\n      <th style=\"padding:8px 10px;text-align:left\">Interessent</th>\n      <th style=\"padding:8px 10px;text-align:left\">Fahrzeug</th>\n      <th style=\"padding:8px 10px;text-align:left\">Verkäufer</th>\n      <th style=\"padding:8px 10px;text-align:left\">Eingang</th>\n    </tr>\n    ${zeilen}\n  </table>\n  <p style=\"margin:24px 0 0;font-size:13px;color:#5b6b80\">\n    Heute automatisch bearbeitet: ${d.aufgaben} Vorgänge (Nachfassen, Erinnerungen, Archivierung).\n  </p>\n</div>`;\n\nreturn [{ json: {\n  mailAn:      cfg.verkaufsleitung,\n  mailBetreff: 'Tagesbericht ' + cfg.autohaus + ' — ' + neu24.length + ' neue Anfragen',\n  mailHtml:    html,\n  cfg:         cfg\n}}];"
+        "jsCode": "/* Tagesbericht an die Verkaufsleitung. */\nconst d    = $input.first().json;\nconst cfg  = d.cfg;\nconst alle = d.alle || [];\nconst tag  = 24 * 60 * 60 * 1000;\nconst jetzt = Date.now();\n\nconst seit = (r, t) => {\n  const x = new Date(r.eingang || 0).getTime();\n  return !isNaN(x) && (jetzt - x) < t * tag;\n};\n\nconst neu24     = alle.filter(r => seit(r, 1));\nconst neu7      = alle.filter(r => seit(r, 7));\nconst offen     = alle.filter(r => ['neu','kontaktiert','nachgefasst'].includes(String(r.status||'').toLowerCase()));\nconst termine   = alle.filter(r => r.termin_bestaetigt && new Date(r.termin || 0).getTime() > jetzt);\nconst antworten = alle.filter(r => String(r.status||'').toLowerCase() === 'geantwortet');\n\nconst heiss = offen.filter(r => Number(r.score || 0) >= 70)\n                   .sort((a, b) => Number(b.score||0) - Number(a.score||0))\n                   .slice(0, 8);\n\nconst zeilen = heiss.map(r => `\n  <tr>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\"><b>${r.score}</b></td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\">${r.name || r.email}</td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\">${r.fahrzeug || '—'}</td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef\">${r.verkaeufer || '—'}</td>\n    <td style=\"padding:7px 10px;border-bottom:1px solid #e3e8ef;color:#5b6b80\">${String(r.eingang||'').substring(0,10)}</td>\n  </tr>`).join('') || '<tr><td colspan=\"5\" style=\"padding:10px;color:#5b6b80\">Aktuell keine Leads über 70 Punkten.</td></tr>';\n\nconst kachel = (wert, text) => `\n  <td style=\"padding:14px 16px;background:#f5f7fa;border-radius:10px;text-align:center;width:20%\">\n    <div style=\"font-size:26px;font-weight:700;color:#142b47\">${wert}</div>\n    <div style=\"font-size:12px;color:#5b6b80;letter-spacing:.04em;text-transform:uppercase;margin-top:4px\">${text}</div>\n  </td>`;\n\nconst html = `\n<div style=\"font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#1a2430;line-height:1.6;max-width:700px\">\n  <p style=\"margin:0 0 4px;font-size:13px;color:#5b6b80\">${cfg.autohaus} · Tagesbericht</p>\n  <h2 style=\"margin:0 0 20px;font-size:21px;color:#142b47\">Stand vom ${new Date().toLocaleDateString('de-DE')}</h2>\n  <table cellspacing=\"8\" style=\"border-collapse:separate;width:100%\">\n    <tr>\n      ${kachel(neu24.length, 'Neu 24 h')}\n      ${kachel(neu7.length, 'Neu 7 Tage')}\n      ${kachel(offen.length, 'Offen')}\n      ${kachel(termine.length, 'Termine')}\n      ${kachel(antworten.length, 'Antworten')}\n    </tr>\n  </table>\n  <p style=\"margin:26px 0 10px\"><b>Die heißesten offenen Leads</b></p>\n  <table cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;width:100%;font-size:14px\">\n    <tr style=\"background:#142b47;color:#fff\">\n      <th style=\"padding:8px 10px;text-align:left\">Score</th>\n      <th style=\"padding:8px 10px;text-align:left\">Interessent</th>\n      <th style=\"padding:8px 10px;text-align:left\">Fahrzeug</th>\n      <th style=\"padding:8px 10px;text-align:left\">Verkäufer</th>\n      <th style=\"padding:8px 10px;text-align:left\">Eingang</th>\n    </tr>\n    ${zeilen}\n  </table>\n  <p style=\"margin:24px 0 0;font-size:13px;color:#5b6b80\">\n    Heute automatisch bearbeitet: ${d.aufgaben} Vorgänge (Nachfassen, Erinnerungen, Archivierung).\n  </p>\n</div>`;\n\nreturn [{ json: {\n  mailAn:      cfg.verkaufsleitung,\n  mailBetreff: 'Tagesbericht ' + cfg.autohaus + ' — ' + neu24.length + ' neue Anfragen',\n  mailHtml:    html\n}}];"
       },
-      "id": "57043863-f02f-5a1f-a724-99f6556cb807",
+      "id": "15a3b4a8-96c1-5fc3-aec7-54474cc8cbb9",
       "name": "Tagesbericht bauen",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        960,
-        740
+        920,
+        580
       ]
     },
     {
@@ -1068,110 +995,204 @@
         "html": "={{ $json.mailHtml }}",
         "options": {}
       },
-      "id": "5c0df815-bedf-5bb2-9f28-4c8dd04e03da",
+      "id": "b7a1a4ab-65f2-5e18-91f8-091c9c9b47e9",
       "name": "Tagesbericht senden",
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        1180,
-        740
+        1140,
+        580
       ],
       "onError": "continueRegularOutput"
     },
     {
       "parameters": {
-        "content": "## 1 · Vor dem ersten Start\n\n**Nur der Node `EINSTELLUNGEN` wird pro Autohaus angepasst.**\nAlles andere bleibt unverändert — das ist der ganze Trick.\n\n**Zugänge einrichten (4 Stück):**\n1. *Header Auth* für Claude — Name `x-api-key`, Wert = API-Schlüssel\n2. *Google Sheets OAuth2*\n3. *Google Calendar OAuth2*\n4. *SMTP* für den Mailversand\n5. *IMAP* für das Postfach (nur wenn Portal-Mails gelesen werden)\n\n**Google-Tabelle anlegen** mit zwei Blättern, `Leads` und `Fahrzeuge`.\nDie Spaltennamen stehen im Notizzettel rechts.",
+        "jsCode": "/* Das Dashboard fragt an. Schluessel pruefen und die passende\n   Abfrage bauen. Der Abfragetext kommt IMMER von hier, nie vom\n   Aufrufer — Werte werden ausschliesslich als Parameter uebergeben. */\nconst d   = $json;\nconst cfg = d.cfg;\n\nif (!cfg.dashboardToken || d.token !== cfg.dashboardToken) {\n  return [{ json: { erlaubt: false, fehler: 'Zugriff verweigert', query: 'select 1 where false', sqlWerte: [] } }];\n}\n\nconst dat = d.daten || {};\nconst A = {\n\n  kennzahlen: {\n    query: 'select * from kennzahlen',\n    werte: []\n  },\n\n  leads: {\n    query: `select lead_id, eingang, quelle, name, email, telefon, nachricht, fahrzeug,\n                   fahrzeug_id, kaufabsicht, inzahlungnahme, inzahlung_fahrzeug, dringlichkeit,\n                   finanzierung, score, zusammenfassung, verkaeufer, verkaeufer_email, status,\n                   sequenz, nachfass_stufe, letzter_kontakt, naechster_schritt, termin,\n                   termin_bestaetigt, notiz\n            from leads\n            where ($1 = '' or status = $1)\n            order by (status in ('neu','kontaktiert','nachgefasst')) desc, score desc, eingang desc\n            limit 500`,\n    werte: [ String(dat.status || '') ]\n  },\n\n  verlauf: {\n    query: 'select zeitpunkt, art, text from verlauf where lead_id = $1 order by zeitpunkt desc limit 100',\n    werte: [ String(dat.lead_id || '') ]\n  },\n\n  lead_speichern: {\n    query: `update leads set\n              status            = coalesce(nullif($2,''), status),\n              verkaeufer        = coalesce(nullif($3,''), verkaeufer),\n              verkaeufer_email  = coalesce(nullif($4,''), verkaeufer_email),\n              notiz             = coalesce(nullif($5,''), notiz),\n              sequenz           = coalesce(nullif($6,''), sequenz)\n            where lead_id = $1\n            returning lead_id, status, sequenz`,\n    werte: [ String(dat.lead_id || ''), String(dat.status || ''), String(dat.verkaeufer || ''),\n             String(dat.verkaeufer_email || ''), String(dat.notiz || ''), String(dat.sequenz || '') ]\n  },\n\n  notiz_anlegen: {\n    query: `insert into verlauf (lead_id, art, text) values ($1, 'notiz', $2)\n            returning id, zeitpunkt`,\n    werte: [ String(dat.lead_id || ''), String(dat.text || '') ]\n  },\n\n  fahrzeuge: {\n    query: `select fahrzeug_id, marke, modell, variante, erstzulassung, kilometer, kraftstoff,\n                   getriebe, leistung, preis, farbe, ausstattung, status, standort\n            from fahrzeuge order by status, marke, modell limit 1000`,\n    werte: []\n  },\n\n  fahrzeug_speichern: {\n    query: `insert into fahrzeuge (fahrzeug_id, marke, modell, variante, erstzulassung, kilometer,\n              kraftstoff, getriebe, leistung, preis, farbe, ausstattung, status, standort)\n            values ($1,$2,$3,$4,$5,nullif($6,'')::int,$7,$8,$9,nullif($10,'')::numeric,$11,$12,$13,$14)\n            on conflict (fahrzeug_id) do update set\n              marke=excluded.marke, modell=excluded.modell, variante=excluded.variante,\n              erstzulassung=excluded.erstzulassung, kilometer=excluded.kilometer,\n              kraftstoff=excluded.kraftstoff, getriebe=excluded.getriebe,\n              leistung=excluded.leistung, preis=excluded.preis, farbe=excluded.farbe,\n              ausstattung=excluded.ausstattung, status=excluded.status, standort=excluded.standort\n            returning fahrzeug_id`,\n    werte: [ String(dat.fahrzeug_id || ''), String(dat.marke || ''), String(dat.modell || ''),\n             String(dat.variante || ''), String(dat.erstzulassung || ''), String(dat.kilometer ?? ''),\n             String(dat.kraftstoff || ''), String(dat.getriebe || ''), String(dat.leistung || ''),\n             String(dat.preis ?? ''), String(dat.farbe || ''), String(dat.ausstattung || ''),\n             String(dat.status || 'verfuegbar'), String(dat.standort || '') ]\n  },\n\n  fahrzeug_loeschen: {\n    query: 'delete from fahrzeuge where fahrzeug_id = $1 returning fahrzeug_id',\n    werte: [ String(dat.fahrzeug_id || '') ]\n  }\n};\n\nconst gewaehlt = A[d.aktion];\nif (!gewaehlt) {\n  return [{ json: { erlaubt: false, fehler: 'Unbekannte Aktion: ' + d.aktion,\n                    query: 'select 1 where false', sqlWerte: [] } }];\n}\n\nreturn [{ json: { erlaubt: true, aktion: d.aktion, query: gewaehlt.query, sqlWerte: gewaehlt.werte } }];"
+      },
+      "id": "1a2bdfc4-78eb-55b7-9a1c-9cc824ef0268",
+      "name": "API: Anfrage prüfen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{ $json.query }}",
+        "options": {
+          "queryReplacement": "={{ $json.sqlWerte }}"
+        }
+      },
+      "id": "c36fb1c9-19ce-5fd0-80c0-521b9a39b5ee",
+      "name": "API: Datenbank",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        480,
+        620
+      ],
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "/* Ergebnis der Datenbank in eine saubere Antwort verpacken. */\nconst pruef = $('API: Anfrage prüfen').first().json;\n\nif (!pruef.erlaubt) {\n  return [{ json: { ok: false, fehler: pruef.fehler || 'Zugriff verweigert', daten: [] } }];\n}\n\nconst zeilen = $input.all().map(i => i.json).filter(r => r && Object.keys(r).length);\n\nreturn [{ json: {\n  ok:     true,\n  aktion: pruef.aktion,\n  anzahl: zeilen.length,\n  daten:  zeilen\n}}];"
+      },
+      "id": "85e55c43-1077-5a54-90aa-09c95c2c018b",
+      "name": "API: Antwort bauen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        700,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "content-type",
+                "value": "application/json; charset=utf-8"
+              },
+              {
+                "name": "access-control-allow-origin",
+                "value": "*"
+              },
+              {
+                "name": "access-control-allow-headers",
+                "value": "content-type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "3cf9fb65-c45c-5366-898a-03fb6db42a31",
+      "name": "API: Antwort senden",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        920,
+        620
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## 1 · Vor dem ersten Start\n\n**Nur der Node `EINSTELLUNGEN` wird pro Autohaus angepasst.**\nAlles andere bleibt unverändert — das ist der ganze Trick.\n\n**Datenbank anlegen:** `autohaus-datenbank.sql` einmal ausführen\n(Supabase → SQL Editor → einfügen → Run). Legt Tabellen,\nVerlauf, Kennzahlen-Ansicht und Beispielfahrzeuge an.\n\n**Vier Zugänge in n8n:**\n1. *Postgres* → die Datenbank\n2. *Header Auth* für Claude — Name `x-api-key`\n3. *Google Calendar OAuth2*\n4. *SMTP* für den Mailversand\n5. *IMAP* — nur wenn Portal-Mails gelesen werden",
         "height": 400,
-        "width": 460,
+        "width": 470,
         "color": 4
       },
-      "id": "bf7264fb-866a-5793-a4eb-bf66f6d2c581",
-      "name": "Notiz 43",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -620,
-        -620
-      ]
-    },
-    {
-      "parameters": {
-        "content": "## 2 · Spalten der Google-Tabelle\n\n**Blatt `Leads`** (genau diese Reihenfolge, erste Zeile):\n`LeadID`, `Eingang`, `Quelle`, `Name`, `Email`, `Telefon`,\n`Nachricht`, `Fahrzeug`, `FahrzeugID`, `Kaufabsicht`,\n`Inzahlungnahme`, `InzahlungFahrzeug`, `Dringlichkeit`,\n`Score`, `Verkaeufer`, `VerkaeuferEmail`, `Status`,\n`Sequenz`, `LetzterKontakt`, `NaechsterSchritt`,\n`Termin`, `TerminBestaetigt`, `Notiz`\n\n**Blatt `Fahrzeuge`**:\n`FahrzeugID`, `Marke`, `Modell`, `Variante`, `Erstzulassung`,\n`Kilometer`, `Kraftstoff`, `Getriebe`, `Leistung`, `Preis`,\n`Farbe`, `Ausstattung`, `Status`, `Standort`\n\n`Status` beim Fahrzeug: leer oder `verfuegbar` = wird angeboten,\n`verkauft` = wird ignoriert.",
-        "height": 400,
-        "width": 460,
-        "color": 4
-      },
-      "id": "c73d1360-fcda-595d-adf1-11568ad8fdda",
-      "name": "Notiz 44",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        -120,
-        -620
-      ]
-    },
-    {
-      "parameters": {
-        "content": "## 3 · Weg einer Anfrage\n\nFormular oder Postfach → Erkennung durch die KI →\nAntwort an den Interessenten in Sekunden →\nEintrag ins CRM → Verkäufer bekommt Bescheid.\n\nDie Antwort enthält **drei anklickbare Probefahrt-Termine**.\nEin Klick trägt den Termin in den Kalender ein, bestätigt\ndem Kunden und stoppt die Nachfass-Kette.",
-        "height": 260,
-        "width": 420,
-        "color": 5
-      },
-      "id": "7641bb20-a07d-5671-a8b3-a25d5472a27e",
-      "name": "Notiz 45",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        380,
-        -620
-      ]
-    },
-    {
-      "parameters": {
-        "content": "## 4 · Antwort erkannt = Kette stoppt\n\nSchreibt ein bekannter Interessent zurück, wird **sofort**\ngestoppt und der Verkäufer informiert. Es geht keine\nautomatische Nachfass-Mail mehr raus.\n\nDas ist der wichtigste Teil des Systems: nichts ist\npeinlicher als ein Roboter, der weiter nachfasst,\nwährend der Kunde längst geantwortet hat.",
-        "height": 260,
-        "width": 420,
-        "color": 3
-      },
-      "id": "8563598e-4f37-5ab8-a664-816280530356",
-      "name": "Notiz 46",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        820,
-        -620
-      ]
-    },
-    {
-      "parameters": {
-        "content": "## 5 · Täglicher Lauf, 07:00 Uhr\n\n**Nachfassen** an Tag 2, 5 und 10 — jede Mail wird von der KI\nauf den konkreten Fall geschrieben, keine Textbausteine.\n\n**Erinnerung** 24 Stunden vor jeder Probefahrt.\n\n**Archivieren** nach 45 Tagen Stille.\n\n**Tagesbericht** an die Verkaufsleitung: neue Anfragen,\noffene Vorgänge, Termine und die heißesten Leads.",
-        "height": 300,
-        "width": 440,
-        "color": 6
-      },
-      "id": "a7daa55c-ee53-575b-899f-9d2c0fa365be",
-      "name": "Notiz 47",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [
-        300,
-        900
-      ]
-    },
-    {
-      "parameters": {
-        "content": "## 6 · Wenn etwas ausfällt\n\nDie KI-Nodes versuchen es **drei Mal**. Bleibt die API stumm,\ngeht trotzdem eine saubere Empfangsbestätigung raus und der\nVerkäufer bekommt einen deutlichen Hinweis, selbst zu lesen.\nEs geht nie eine Anfrage verloren.\n\nMail- und Kalender-Nodes brechen den Ablauf nicht ab.",
-        "height": 240,
-        "width": 440,
-        "color": 3
-      },
-      "id": "eec026e3-7842-5623-8095-aafbff673e6a",
+      "id": "9c15d808-c4c5-5058-9a35-5eef7c79487a",
       "name": "Notiz 48",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        800,
-        900
+        -660,
+        -680
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 2 · Keine Tabellen mehr\n\nAlles liegt in einer echten Datenbank:\n\n**`leads`** — jede Anfrage mit Erkennung, Score, Verkäufer,\nStatus und Nachfass-Stufe als Zahl\n**`fahrzeuge`** — der Bestand, den die KI anbieten darf\n**`verlauf`** — jeder einzelne Schritt protokolliert\n**`kennzahlen`** — fertige Auswertung für das Dashboard\n\nDer Händler sieht das alles im **Dashboard**\n(`autohaus-dashboard.html`) — nicht in n8n, nicht in einer\nTabelle. Er braucht keinen Zugang zu deinem n8n.",
+        "height": 400,
+        "width": 470,
+        "color": 4
+      },
+      "id": "6ad28651-3f98-5995-861f-84ffceaf1042",
+      "name": "Notiz 49",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        -680
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 3 · Weg einer Anfrage\n\nFormular oder Postfach → **Datenbank fragt: kennen wir die\nAdresse mit offenem Vorgang?**\n\n**Ja** → Kundenantwort. Kette stoppen, Verkäufer übernimmt.\n**Nein** → Bestand laden, KI erkennt und antwortet in einem\nAufruf, Lead anlegen, Kunde und Verkäufer bekommen Mail.\n\nDie Antwort enthält drei anklickbare Probefahrt-Termine.",
+        "height": 270,
+        "width": 440,
+        "color": 5
+      },
+      "id": "2de3e504-9743-5706-a973-af2ac77d8b69",
+      "name": "Notiz 50",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        360,
+        -680
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 4 · Die Nachfass-Stufe ist eine Zahl\n\n`nachfass_stufe` steht als **0, 2, 5 oder 10** in der\nDatenbank. Vorher musste dafür ein Textfeld durchsucht\nwerden — jetzt ist es eine simple Zahl.\n\nErgebnis: der tägliche Lauf kann beliebig oft starten,\nes geht garantiert nie eine Mail doppelt raus.",
+        "height": 250,
+        "width": 440,
+        "color": 3
+      },
+      "id": "e2b0998c-0875-5d62-8f3f-09f65b8f8810",
+      "name": "Notiz 51",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        850,
+        -680
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 5 · Täglicher Lauf, 07:00 Uhr\n\n**Nachfassen** an Tag 2, 5 und 10 — Text je Fall neu geschrieben\n**Erinnerung** 24 Stunden vor jeder Probefahrt\n**Archivieren** nach 45 Tagen Stille\n**Tagesbericht** an die Verkaufsleitung\n\nWer geantwortet hat oder einen Termin hat, wird nie\nnachgefasst.",
+        "height": 260,
+        "width": 450,
+        "color": 6
+      },
+      "id": "05d07f37-6c5d-5792-9f0f-074e5b906785",
+      "name": "Notiz 52",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 6 · Dashboard-API\n\nDas Dashboard spricht **nur mit diesem Webhook**, nie direkt\nmit der Datenbank. Die Zugangsdaten der Datenbank verlassen\nn8n nie.\n\nGeschützt über `dashboardToken` aus den EINSTELLUNGEN — der\nmuss im Dashboard identisch eingetragen sein.\n\nJede Abfrage wird hier im Code gebaut, Werte gehen\nausschliesslich als Parameter rein. Kein SQL vom Aufrufer.",
+        "height": 280,
+        "width": 450,
+        "color": 3
+      },
+      "id": "6916799b-b1af-5774-ae04-972e519db622",
+      "name": "Notiz 53",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        740,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 7 · Wenn etwas ausfällt\n\nDie KI-Nodes versuchen es **drei Mal**. Bleibt die API stumm,\ngeht trotzdem eine saubere Empfangsbestätigung raus und der\nVerkäufer bekommt den Hinweis, selbst zu lesen.\nEs geht nie eine Anfrage verloren.\n\nMail- und Kalender-Nodes brechen den Ablauf nicht ab.",
+        "height": 240,
+        "width": 450,
+        "color": 3
+      },
+      "id": "d1421f67-f826-5da7-8bb2-c4b99d9b6744",
+      "name": "Notiz 54",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        780
       ]
     }
   ],
@@ -1199,6 +1220,17 @@
       ]
     },
     "Termin-Klick": {
+      "main": [
+        [
+          {
+            "node": "Quelle erkennen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dashboard-API": {
       "main": [
         [
           {
@@ -1246,28 +1278,35 @@
       "main": [
         [
           {
-            "node": "Leads laden",
+            "node": "Lead suchen",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Leads laden (Termin)",
+            "node": "Lead laden (Termin)",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Alle Leads laden",
+            "node": "Offene Leads laden",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "API: Anfrage prüfen",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Leads laden": {
+    "Lead suchen": {
       "main": [
         [
           {
@@ -1366,14 +1405,14 @@
       "main": [
         [
           {
-            "node": "Lead ins CRM",
+            "node": "Lead speichern",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Lead ins CRM": {
+    "Lead speichern": {
       "main": [
         [
           {
@@ -1395,7 +1434,7 @@
         ]
       ]
     },
-    "Leads laden (Termin)": {
+    "Lead laden (Termin)": {
       "main": [
         [
           {
@@ -1479,7 +1518,7 @@
         ]
       ]
     },
-    "Alle Leads laden": {
+    "Offene Leads laden": {
       "main": [
         [
           {
@@ -1615,6 +1654,39 @@
         [
           {
             "node": "Tagesbericht senden",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API: Anfrage prüfen": {
+      "main": [
+        [
+          {
+            "node": "API: Datenbank",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API: Datenbank": {
+      "main": [
+        [
+          {
+            "node": "API: Antwort bauen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API: Antwort bauen": {
+      "main": [
+        [
+          {
+            "node": "API: Antwort senden",
             "type": "main",
             "index": 0
           }
