@@ -3,87 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Impressum — Walter Workflows</title>
+<title>Impressum — Walter Setting</title>
 <meta name="robots" content="noindex,follow">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23FFFFFF'/><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%232F6DA8'/><stop offset='1' stop-color='%23142B47'/></linearGradient></defs><path d='M18 24L34 78L50 42L66 78L82 24' fill='none' stroke='url(%23g)' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<link rel="icon" href="walter-setting-icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,600..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 <style>
-/* === MARKENFARBEN HIER EINTRAGEN === */
+/* === MARKENFARBEN === */
 :root{
-  --bg:#FFFFFF; --bg-alt:#F5F7FA; --border:#E3E8EF;
-  --text:#142B47; --text-muted:#5B6B80; --accent:#2F6DA8; --accent-hover:#255A8D;
-  --accent-soft:#EAF2FA; --deep:#0E2038; --deep-text:#A8BDD6;
-  --head:'Archivo',system-ui,sans-serif; --body:'IBM Plex Sans',system-ui,sans-serif;
-  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --ink:#16233B; --ink-soft:#21395A; --w-grad-1:#35577D; --w-grad-2:#152234;
+  --text:#1C2A3F; --text-muted:#6E7F95; --bg:#FFFFFF; --bg-alt:#F5F7FA; --border:#E2E7EE;
+  --head:'Montserrat',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+  --ez:cubic-bezier(.22,1,.36,1);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{font-family:var(--body);background:var(--bg);color:var(--text);line-height:1.68;font-size:17px;-webkit-font-smoothing:antialiased}
-svg{display:block}
-a{color:var(--accent);text-decoration:none}
-a:hover{color:var(--accent-hover)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+svg,img{display:block;max-width:100%}
+a{color:var(--w-grad-1);text-decoration:none}
+a:hover{color:var(--ink)}
+:focus-visible{outline:2px solid var(--ink-soft);outline-offset:3px;border-radius:4px}
 .wrap{max-width:760px;margin:0 auto;padding:0 24px}
-.bar{border-bottom:1px solid var(--border);background:rgba(255,255,255,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:sticky;top:0;z-index:10}
-.bar .wrap{display:flex;align-items:center;height:76px}
+.bar{border-bottom:1px solid var(--border);background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:sticky;top:0;z-index:10}
+.bar .wrap{display:flex;align-items:center;height:80px}
 .logo{display:flex;align-items:center;gap:13px}
-.logo .w{width:38px;height:38px;flex:none}
-.logo .t{display:flex;flex-direction:column;line-height:1}
-.logo .t b{font-family:var(--head);font-stretch:112%;font-weight:800;font-size:14.5px;letter-spacing:.07em;color:var(--text)}
-.logo .t small{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--text-muted);margin-top:6px;text-transform:uppercase}
+.logo .mark{width:36px;height:36px;flex:none}
+.logo .wort{display:flex;flex-direction:column;line-height:1.05}
+.logo .wort b{font-family:var(--head);font-weight:700;font-size:14px;letter-spacing:.1em;color:var(--ink-soft)}
+.logo .wort small{font-size:8.5px;font-weight:600;letter-spacing:.19em;color:var(--text-muted);margin-top:5px;text-transform:uppercase}
 main{padding:80px 0 104px}
-.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:18px}
-h1{font-family:var(--head);font-stretch:112%;font-weight:800;font-size:clamp(2rem,5vw,2.8rem);line-height:1.08;letter-spacing:-.02em}
-.lead{color:var(--text-muted);margin-top:16px;margin-bottom:44px;font-size:18px}
-h2{font-family:var(--head);font-stretch:112%;font-weight:700;font-size:1.2rem;margin:40px 0 12px;letter-spacing:-.01em}
+.label{display:block;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
+h1{font-family:var(--head);font-weight:700;font-size:clamp(2rem,5vw,2.6rem);line-height:1.14;letter-spacing:-.02em;color:var(--ink)}
+.lead{color:var(--text-muted);margin-top:14px;margin-bottom:44px;font-size:18px}
+h2{font-family:var(--head);font-weight:600;font-size:1.2rem;margin:40px 0 12px;letter-spacing:-.01em;color:var(--ink)}
 p{margin-bottom:12px;color:var(--text-muted)}
 p strong,p b{color:var(--text);font-weight:600}
-.ph{background:var(--accent-soft);border:1px solid var(--border);border-radius:14px;padding:16px 18px;color:var(--text-muted);font-size:15.5px;margin-bottom:14px}
-.ph b{color:var(--text)}
+ul{margin:0 0 12px 22px;color:var(--text-muted)}
+li{margin-bottom:7px}
+.hinweis{background:var(--bg-alt);border:1px solid var(--border);border-radius:14px;padding:16px 18px;color:var(--text-muted);font-size:15.5px;margin-bottom:14px}
+.hinweis b{color:var(--ink)}
 .box{background:var(--bg-alt);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:12px}
 .box p{margin:0;color:var(--text)}
-.back{display:inline-flex;align-items:center;gap:9px;margin-top:56px;padding:13px 22px;border:1px solid var(--border);
-  border-radius:10px;font-weight:600;color:var(--text);transition:border-color .15s cubic-bezier(.22,1,.36,1),color .15s cubic-bezier(.22,1,.36,1),background .15s cubic-bezier(.22,1,.36,1)}
-.back:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-footer{background:var(--deep);color:var(--deep-text);padding:32px 0;font-family:var(--mono);font-size:12px;letter-spacing:.06em}
-footer a{color:var(--deep-text)}
+.zurueck{display:inline-flex;align-items:center;gap:9px;margin-top:56px;padding:14px 24px;border:1px solid var(--border);
+  border-radius:10px;font-weight:600;color:var(--ink);transition:border-color .15s var(--ez),background .15s var(--ez)}
+.zurueck:hover{border-color:var(--ink);background:var(--bg-alt);color:var(--ink)}
+.zurueck svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+footer{background:var(--ink);color:rgba(255,255,255,.55);padding:32px 0;font-size:13.5px}
+footer a{color:rgba(255,255,255,.55)}
 footer a:hover{color:#FFFFFF}
-.fbot{display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:space-between}
+.funten{display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:space-between}
+.funten span{overflow-wrap:anywhere}
 @media(max-width:600px){main{padding:56px 0 72px}}
 </style>
 </head>
 <body>
 <div class="bar"><div class="wrap">
-  <a class="logo" href="index.html" aria-label="Walter Workflows — Startseite">
-    <svg class="w" viewBox="0 0 100 100" role="img" aria-label="Walter Workflows">
-      <defs><linearGradient id="wg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2F6DA8"/><stop offset="1" stop-color="#142B47"/></linearGradient></defs>
-      <path d="M14 22L33 80L50 42L67 80L86 22" fill="none" stroke="url(#wg)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span class="t"><b>WALTER WORKFLOWS</b><small>Automatisierung für Autohäuser</small></span>
+  <a class="logo" href="index.html" aria-label="Walter Setting — Startseite">
+    <img class="mark" src="walter-setting-icon.svg" alt="" width="36" height="36" aria-hidden="true">
+    <span class="wort"><b>WALTER SETTING</b><small>Qualifizierte Termine für Makler</small></span>
   </a>
 </div></div>
-
-<main>
-<div class="wrap">
-  <span class="eyebrow">Rechtliches</span>
+<main><div class="wrap">
+  <span class="label">Rechtliches</span>
   <h1>Impressum</h1>
   <p class="lead">Angaben gemäss § 5 Digitale-Dienste-Gesetz (DDG).</p>
-
   <!-- muss noch ergänzt werden -->
-  <div class="ph"><b>Hinweis:</b> Die eckigen Klammern sind Platzhalter. Bitte vor dem Livegang mit den echten Angaben füllen und rechtlich prüfen lassen.</div>
+  <div class="hinweis"><b>Hinweis:</b> Die eckigen Klammern sind Platzhalter. Bitte vor dem Livegang mit den echten Angaben füllen und rechtlich prüfen lassen.</div>
 
   <h2>Diensteanbieter</h2>
-  <div class="box"><p>Tim Walter<br>Walter Workflows<br>[Strasse und Hausnummer]<br>[PLZ und Ort]<br>[Land]</p></div>
+  <div class="box"><p>Tim Walter<br>Walter Setting<br>[Strasse und Hausnummer]<br>[PLZ und Ort]<br>[Land]</p></div>
 
   <h2>Kontakt</h2>
-  <p>E-Mail: <a href="mailto:kontakt@walter-workflows.de">kontakt@walter-workflows.de</a><br>Telefon: [Telefonnummer]</p>
+  <p>E-Mail: <a href="mailto:kontakt@walter-setting.de">kontakt@walter-setting.de</a><br>Telefon: [Telefonnummer]</p>
 
   <h2>Umsatzsteuer-Identifikationsnummer</h2>
   <p>[USt-IdNr. gemäss § 27 a UStG, falls vorhanden]</p>
 
   <h2>Verantwortlich für den Inhalt</h2>
   <p>Tim Walter, Anschrift wie oben.</p>
+
+  <h2>Art der Leistung</h2>
+  <p>Walter Setting erbringt Terminierungsleistungen für Immobilienmakler: telefonische Qualifizierung von Interessenten, die der Auftraggeber bereitstellt, sowie die Vereinbarung von Terminen. Es werden keine Maklerleistungen im Sinne des § 34c GewO erbracht und keine Immobilien vermittelt.</p>
 
   <h2>Haftung für Inhalte</h2>
   <p>Die Inhalte dieser Seiten wurden mit grösster Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden. Als Diensteanbieter bin ich für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich.</p>
@@ -94,19 +94,14 @@ footer a:hover{color:#FFFFFF}
   <h2>Urheberrecht</h2>
   <p>Die auf dieser Website veröffentlichten Inhalte unterliegen dem deutschen Urheberrecht. Jede Verwertung ausserhalb der gesetzlich zugelassenen Fälle bedarf der vorherigen schriftlichen Zustimmung.</p>
 
-  <h2>Genannte Marken</h2>
-  <p>mobile.de, AutoScout24, Instagram, Facebook und WhatsApp sind Marken der jeweiligen Rechteinhaber. Sie werden hier ausschliesslich zur Beschreibung der angebotenen Leistungen genannt. Eine geschäftliche Verbindung besteht nicht.</p>
-
-  <a class="back" href="index.html">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+  <a class="zurueck" href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
     Zurück zur Startseite</a>
-</div>
-</main>
-
-<footer><div class="wrap fbot">
-  <span>© <span id="yr">2026</span> Walter Workflows · Tim Walter</span>
+</div></main>
+<footer><div class="wrap funten">
+  <span>© <span id="jahr">2026</span> Walter Setting · Tim Walter</span>
   <span><a href="datenschutz.html">Datenschutz</a></span>
 </div></footer>
-<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+<script>document.getElementById('jahr').textContent=new Date().getFullYear();</script>
 </body>
 </html>
