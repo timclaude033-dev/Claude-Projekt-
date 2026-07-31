@@ -3,58 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Walter Workflows — Automatisierung für Autohäuser</title>
-<meta name="description" content="Fertige KI-Automatisierungen für Autohäuser: Anfragen in Sekunden beantworten, Interessenten nachfassen, Inserate texten, Werkstatttermine annehmen. Einmalig eingerichtet, keine monatlichen Kosten.">
-<meta name="theme-color" content="#142B47">
-<meta property="og:title" content="Walter Workflows — Automatisierung für Autohäuser">
-<meta property="og:description" content="Keine Anfrage bleibt liegen. Keine Probefahrt geht verloren.">
+<title>Walter Setting — Qualifizierte Termine für Makler</title>
+<meta name="description" content="Wir rufen Ihre Interessenten an, qualifizieren sie am Telefon und legen Ihnen nur die ernsthaften Verkäufer als feste Termine in den Kalender. Die ersten fünf Termine sind kostenlos.">
+<meta name="theme-color" content="#16233B">
+<meta property="og:title" content="Walter Setting — Qualifizierte Termine für Makler">
+<meta property="og:description" content="Aus Ihren Anfragen werden Termine im Kalender. Sie zahlen nur für echte Termine.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23FFFFFF'/><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%232F6DA8'/><stop offset='1' stop-color='%23142B47'/></linearGradient></defs><path d='M18 24L34 78L50 42L66 78L82 24' fill='none' stroke='url(%23g)' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<link rel="icon" href="walter-setting-icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112,500..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════════════
-   WALTER WORKFLOWS — Automatisierung für Autohäuser
+   WALTER SETTING — Qualifizierte Termine für Makler
    Eine Datei. Kein Build. Kein Framework.
-   Gestaltungsidee: „Instrumententafel" — präzise, technisch, ruhig.
    ═══════════════════════════════════════════════════════════════ */
 
-/* === MARKENFARBEN HIER EINTRAGEN ===============================
-   Alle Farben der Seite laufen ausschliesslich über diese Variablen.
-   Zum Umfärben genügt es, hier die Hex-Werte zu ersetzen.
-   Die Werte stammen aus dem Verlauf des W-Logos.
-   ============================================================== */
+/* === MARKENFARBEN === */
 :root{
-  --bg:            #FFFFFF;  /* Haupt-Hintergrund */
-  --bg-alt:        #F5F7FA;  /* Hintergrund für abwechselnde Abschnitte */
-  --surface:       #FFFFFF;  /* Karten/Panels */
-  --surface-raised:#FBFCFD;  /* hervorgehobene Panels */
-  --border:        #E3E8EF;  /* Linien und Rahmen */
-  --text:          #142B47;  /* Haupttext */
-  --text-muted:    #5B6B80;  /* Nebentext */
-  --accent:        #2F6DA8;  /* Hauptakzent, Buttons, Signal-Element */
-  --accent-hover:  #255A8D;  /* Akzent im Hover */
-  --accent-soft:   #EAF2FA;  /* zarte Akzentfläche/Glow */
-  --success:       #2E8B6B;  /* Bestätigungen, „Termin" */
-
-  /* Abgeleitete Werte für die dunkle Cockpit-Fläche */
-  --deep:          #0E2038;  /* Cockpit-Hintergrund */
-  --deep-2:        #16304F;  /* Cockpit-Verlauf */
-  --deep-line:     #24405F;  /* Linien im Cockpit */
-  --deep-text:     #A8BDD6;  /* Nebentext im Cockpit */
+  --ink:        #16233B;  /* Dunkelblau, Haupttext, Buttons */
+  --ink-soft:   #21395A;  /* etwas helleres Blau */
+  --w-grad-1:   #35577D;  /* Farbverlauf hell */
+  --w-grad-2:   #152234;  /* Farbverlauf dunkel */
+  --text:       #1C2A3F;  /* Fließtext */
+  --text-muted: #6E7F95;  /* Nebentext, Untertitel */
+  --bg:         #FFFFFF;  /* Hintergrund */
+  --bg-alt:     #F5F7FA;  /* abwechselnder Abschnitts-Hintergrund */
+  --border:     #E2E7EE;  /* feine Linien */
 }
 
 /* ── Grundwerte ────────────────────────────────────────────── */
 :root{
-  --head:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
-  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  --head:'Montserrat',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
   --ez:cubic-bezier(.22,1,.36,1);
-  --r-card:14px; --r-btn:10px; --r-field:10px;
-  --wrap:1200px;
-  --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s5:48px; --s6:64px; --s7:96px; --s8:128px;
-  --sec:112px;
+  --r-karte:14px; --r-knopf:10px;
+  --wrap:1160px;
+  --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s5:48px; --s6:64px; --s7:96px;
+  --abschnitt:104px;
+  --schatten:0 1px 2px rgba(22,35,59,.04), 0 8px 24px -12px rgba(22,35,59,.10);
+  --schatten-hoch:0 2px 4px rgba(22,35,59,.05), 0 18px 40px -18px rgba(22,35,59,.20);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
@@ -65,340 +53,294 @@ body{
   overflow-x:hidden;
 }
 img,svg{display:block;max-width:100%}
-h1,h2,h3,h4{font-family:var(--head);font-stretch:112%;font-weight:800;line-height:1.08;letter-spacing:-.015em}
+h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.14;letter-spacing:-.02em;color:var(--ink)}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
-::selection{background:var(--accent);color:#fff}
+::selection{background:var(--ink);color:#FFFFFF}
+:focus-visible{outline:2px solid var(--ink-soft);outline-offset:3px;border-radius:4px}
 
-/* sichtbarer Tastatur-Fokus, überall gleich */
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
-
-.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--s5)}
-.sec{padding:var(--sec) 0}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--s4)}
+.sec{padding:var(--abschnitt) 0}
 .sec-alt{background:var(--bg-alt);border-block:1px solid var(--border)}
 
 /* ── Wiederkehrende Bausteine ──────────────────────────────── */
-.eyebrow{
-  font-family:var(--mono);font-size:13px;font-weight:500;
-  letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
-  display:inline-flex;align-items:center;gap:10px;
+.label{
+  display:inline-block;font-size:13px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);
 }
-.eyebrow::before{content:"";width:22px;height:1px;background:currentColor;opacity:.55}
-.mono{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)}
-h2.h2{font-size:clamp(2rem,3.6vw,2.5rem);max-width:19ch}
-.lead{color:var(--text-muted);font-size:19px;max-width:60ch;margin-top:var(--s3)}
-.head-block{margin-bottom:var(--s6)}
-.head-block .eyebrow{margin-bottom:var(--s3)}
+h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
+.lead{color:var(--text-muted);font-size:18.5px;max-width:62ch;margin-top:var(--s3)}
+.kopf-block{margin-bottom:var(--s6);max-width:760px}
+.kopf-block .label{margin-bottom:var(--s2)}
 
-.btn{
+.knopf{
   display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  padding:15px 26px;border-radius:var(--r-btn);
-  font-weight:600;font-size:16px;letter-spacing:-.005em;
-  border:1px solid transparent;cursor:pointer;white-space:nowrap;
+  padding:15px 28px;border-radius:var(--r-knopf);
+  font-weight:600;font-size:16.5px;letter-spacing:-.005em;
+  border:1px solid transparent;white-space:nowrap;
   transition:background .15s var(--ez),border-color .15s var(--ez),
              color .15s var(--ez),transform .15s var(--ez),box-shadow .15s var(--ez);
 }
-.btn svg{width:17px;height:17px;flex:none;transition:transform .3s var(--ez)}
-.btn-main{background:var(--accent);color:#fff;box-shadow:0 1px 2px rgba(20,43,71,.16)}
-.btn-main:hover{background:var(--accent-hover);transform:translateY(-2px);box-shadow:0 8px 22px rgba(47,109,168,.26)}
-.btn-main:hover svg{transform:translateX(4px)}
-.btn-line{border-color:var(--border);color:var(--text);background:var(--surface)}
-.btn-line:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px);background:var(--accent-soft)}
-.btn:active{transform:translateY(0)}
+.knopf svg{width:16px;height:16px;flex:none;transition:transform .3s var(--ez)}
+.knopf-voll{background:var(--ink);color:#FFFFFF;box-shadow:0 1px 2px rgba(22,35,59,.2)}
+.knopf-voll:hover{background:var(--ink-soft);transform:translateY(-2px);box-shadow:0 10px 26px -10px rgba(22,35,59,.45)}
+.knopf-voll:hover svg{transform:translateX(4px)}
+.knopf-linie{border-color:var(--border);color:var(--ink);background:var(--bg)}
+.knopf-linie:hover{border-color:var(--ink);transform:translateY(-2px);background:var(--bg-alt)}
+.knopf:active{transform:translateY(0)}
 
-/* Scroll-Einblendung */
-.rv{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ez),transform .7s var(--ez)}
-.rv.in{opacity:1;transform:none}
+/* Einblenden beim Scrollen */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ez),transform .8s var(--ez)}
+.rv.da{opacity:1;transform:none}
 
-/* ── Ladebalken oben ───────────────────────────────────────── */
+/* Fortschrittsbalken */
 #pb{position:fixed;inset:0 auto auto 0;height:2px;width:0;z-index:120;
-  background:linear-gradient(90deg,var(--accent),var(--accent-hover));transition:width .1s linear}
+  background:linear-gradient(90deg,var(--w-grad-1),var(--w-grad-2));transition:width .1s linear}
 
 /* ── Navigation ────────────────────────────────────────────── */
-.nav{position:sticky;top:0;z-index:100;background:transparent;transition:background .3s var(--ez),border-color .3s var(--ez),backdrop-filter .3s}
+.nav{position:sticky;top:0;z-index:100;transition:background .3s var(--ez),box-shadow .3s var(--ez)}
 .nav::after{content:"";position:absolute;inset:auto 0 0 0;height:1px;background:var(--border);opacity:0;transition:opacity .3s var(--ez)}
-.nav.scr{background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px)}
+.nav.scr{background:rgba(255,255,255,.86);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px)}
 .nav.scr::after{opacity:1}
 .nav-in{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);height:80px}
+
 .logo{display:flex;align-items:center;gap:13px}
-.logo .w{width:40px;height:40px;flex:none;transition:transform .5s var(--ez)}
-.logo:hover .w{transform:rotate(-6deg) scale(1.05)}
-.logo .t{display:flex;flex-direction:column;line-height:1}
-.logo .t b{font-family:var(--head);font-stretch:112%;font-weight:800;font-size:15px;letter-spacing:.07em;color:var(--text)}
-.logo .t small{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--text-muted);margin-top:6px;text-transform:uppercase}
+.logo .mark{width:38px;height:38px;flex:none;transition:transform .5s var(--ez)}
+.logo:hover .mark{transform:translateY(-2px)}
+.logo .wort{display:flex;flex-direction:column;line-height:1.05}
+.logo .wort b{font-family:var(--head);font-weight:700;font-size:14.5px;letter-spacing:.1em;color:var(--ink-soft)}
+.logo .wort small{font-size:8.5px;font-weight:600;letter-spacing:.19em;color:var(--text-muted);margin-top:5px;text-transform:uppercase}
+
 .nl{display:flex;align-items:center;gap:var(--s4)}
-.nl a{font-size:15px;font-weight:500;color:var(--text-muted);position:relative;padding:4px 0;transition:color .15s var(--ez)}
-.nl a::after{content:"";position:absolute;inset:auto 0 0 0;height:1.5px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ez)}
-.nl a:hover{color:var(--text)}
+.nl a{font-size:15.5px;font-weight:500;color:var(--text-muted);position:relative;padding:4px 0;transition:color .15s var(--ez)}
+.nl a::after{content:"";position:absolute;inset:auto 0 0 0;height:1.5px;background:var(--ink);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ez)}
+.nl a:hover{color:var(--ink)}
 .nl a:hover::after{transform:scaleX(1)}
-.nl .btn{padding:11px 20px;font-size:15px}
-.nl .btn::after{display:none}
-.nl a.btn-main{color:#FFFFFF}   /* schlaegt die allgemeine Farbe von .nl a */
-.nl a.btn-main:hover{color:#FFFFFF}
-.burger{display:none;width:42px;height:42px;border:1px solid var(--border);border-radius:var(--r-btn);
-  align-items:center;justify-content:center;background:var(--surface)}
-.burger span{display:block;width:17px;height:1.5px;background:var(--text);position:relative}
-.burger span::before,.burger span::after{content:"";position:absolute;left:0;width:17px;height:1.5px;background:var(--text);transition:transform .3s var(--ez)}
+.nl a.knopf{padding:11px 21px;font-size:15px;color:#FFFFFF}
+.nl a.knopf::after{display:none}
+.nl a.knopf:hover{color:#FFFFFF}
+
+.burger{display:none;width:42px;height:42px;border:1px solid var(--border);border-radius:var(--r-knopf);
+  align-items:center;justify-content:center;background:var(--bg)}
+.burger span{display:block;width:17px;height:1.5px;background:var(--ink);position:relative}
+.burger span::before,.burger span::after{content:"";position:absolute;left:0;width:17px;height:1.5px;background:var(--ink);transition:transform .3s var(--ez)}
 .burger span::before{top:-6px}.burger span::after{top:6px}
 
 /* ── Hero ──────────────────────────────────────────────────── */
-.hero{position:relative;padding:var(--s7) 0 var(--s8);overflow:hidden}
+.hero{position:relative;padding:var(--s7) 0 var(--abschnitt);overflow:hidden}
 .hero::before{
-  content:"";position:absolute;top:-380px;right:-260px;width:900px;height:900px;
-  background:radial-gradient(circle,var(--accent-soft) 0%,transparent 65%);
-  pointer-events:none;z-index:0;
+  content:"";position:absolute;top:-420px;right:-300px;width:960px;height:960px;z-index:0;
+  background:radial-gradient(circle,rgba(53,87,125,.09) 0%,rgba(53,87,125,0) 62%);pointer-events:none;
 }
-/* feines Raster, wie eine Messfläche */
-.hero::after{
-  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
-  background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);
-  background-size:64px 64px;
-  mask-image:radial-gradient(ellipse 80% 60% at 50% 35%,#000 0%,transparent 78%);
-  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 35%,#000 0%,transparent 78%);
-  opacity:.55;
-}
-.hero-in{position:relative;z-index:1;display:grid;grid-template-columns:1fr .82fr;gap:var(--s7);align-items:center}
-.hero h1{font-size:clamp(2.3rem,4.3vw,3.5rem);line-height:1.07;margin:var(--s3) 0 0;letter-spacing:-.025em;max-width:16ch}
-.hero h1 .br{display:block}
-.hero p.sub{color:var(--text-muted);font-size:19px;line-height:1.62;margin-top:var(--s3);max-width:52ch}
-.hero-btns{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s5)}
-.hero-note{display:flex;flex-wrap:wrap;gap:var(--s3) var(--s4);margin-top:var(--s5);padding-top:var(--s4);border-top:1px solid var(--border)}
-.hero-note span{display:inline-flex;align-items:center;gap:9px;font-size:14.5px;color:var(--text-muted)}
-.hero-note svg{width:15px;height:15px;stroke:var(--accent);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.hero-in{position:relative;z-index:1;display:grid;grid-template-columns:1.08fr .82fr;gap:var(--s6);align-items:center}
+.hero h1{font-size:clamp(2.3rem,4.2vw,3.25rem);line-height:1.12;margin:var(--s3) 0 0;letter-spacing:-.028em;max-width:18ch}
+.hero p.sub{color:var(--text-muted);font-size:18.5px;line-height:1.62;margin-top:var(--s3);max-width:52ch}
+.hero-knoepfe{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s5)}
+.hero-hinweis{margin-top:var(--s3);font-size:14.5px;color:var(--text-muted);display:flex;align-items:center;gap:9px}
+.hero-hinweis svg{width:16px;height:16px;flex:none;stroke:var(--w-grad-1);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 
-/* ── Signature: Instrumententafel ──────────────────────────── */
-.gauge{
-  position:relative;border-radius:18px;padding:30px;color:#fff;overflow:hidden;
-  background:linear-gradient(155deg,var(--deep-2),var(--deep) 62%);
-  box-shadow:0 30px 70px -28px rgba(14,32,56,.55),0 2px 0 rgba(255,255,255,.05) inset;
+/* ── Signature: der Kalender ───────────────────────────────── */
+.kal{
+  background:var(--bg);border:1px solid var(--border);border-radius:18px;
+  box-shadow:var(--schatten-hoch);overflow:hidden;
 }
-.gauge::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:linear-gradient(var(--deep-line) 1px,transparent 1px),linear-gradient(90deg,var(--deep-line) 1px,transparent 1px);
-  background-size:34px 34px;opacity:.3;
+.kal-kopf{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.kal-kopf b{font-family:var(--head);font-weight:600;font-size:15px;color:var(--ink)}
+.kal-live{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-muted)}
+.kal-punkt{width:7px;height:7px;border-radius:50%;background:var(--w-grad-1);
+  box-shadow:0 0 0 0 rgba(53,87,125,.55);animation:puls 2.6s infinite}
+@keyframes puls{0%{box-shadow:0 0 0 0 rgba(53,87,125,.5)}70%{box-shadow:0 0 0 10px rgba(53,87,125,0)}100%{box-shadow:0 0 0 0 rgba(53,87,125,0)}}
+
+.kal-woche{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.kal-tag{background:var(--bg-alt);padding:11px 6px;text-align:center}
+.kal-tag span{display:block;font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted)}
+.kal-tag b{display:block;font-family:var(--head);font-weight:600;font-size:16px;color:var(--ink);margin-top:3px}
+.kal-tag.aktiv{background:var(--bg)}
+.kal-tag.aktiv b{color:var(--w-grad-1)}
+
+.kal-liste{padding:16px 18px 20px;display:flex;flex-direction:column;gap:10px}
+.termin{
+  display:flex;align-items:center;gap:13px;padding:13px 15px;
+  border:1px solid var(--border);border-radius:12px;background:var(--bg);
+  opacity:0;transform:translateY(10px) scale(.98);
 }
-.gauge>*{position:relative}
-.g-top{display:flex;align-items:center;justify-content:space-between;gap:var(--s2)}
-.g-lab{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--deep-text)}
-.g-live{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--deep-text)}
-.g-dot{width:6px;height:6px;border-radius:50%;background:var(--success);box-shadow:0 0 0 0 rgba(46,139,107,.7);animation:beat 2.4s infinite}
-@keyframes beat{0%{box-shadow:0 0 0 0 rgba(46,139,107,.55)}70%{box-shadow:0 0 0 9px rgba(46,139,107,0)}100%{box-shadow:0 0 0 0 rgba(46,139,107,0)}}
-.g-val{display:flex;align-items:baseline;gap:10px;margin:14px 0 4px}
-.g-val b{font-family:var(--mono);font-weight:500;font-size:clamp(3rem,6vw,4.1rem);line-height:1;letter-spacing:-.02em;
-  font-variant-numeric:tabular-nums;color:#fff}
-.g-val i{font-style:normal;font-family:var(--mono);font-size:15px;color:var(--deep-text)}
-.g-cmp{font-size:13.5px;color:var(--deep-text)}
-.g-arc{margin:20px 0 24px}
-.g-arc svg{width:100%;height:auto;display:block}
-.g-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--deep-line);
-  border:1px solid var(--deep-line);border-radius:11px;overflow:hidden}
-.g-mini div{background:var(--deep);padding:14px 12px}
-.g-mini span{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--deep-text);margin-bottom:7px}
-.g-mini b{font-family:var(--mono);font-weight:500;font-size:22px;color:#fff;font-variant-numeric:tabular-nums}
-.g-pipe{margin-top:22px;padding-top:20px;border-top:1px solid var(--deep-line)}
-.g-pipe-track{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:11px}
-.g-pipe-track i{height:3px;border-radius:2px;background:var(--deep-line);position:relative;overflow:hidden}
-.g-pipe-track i::after{content:"";position:absolute;inset:0;width:44%;border-radius:2px;
-  background:linear-gradient(90deg,transparent,var(--accent),transparent);
-  transform:translateX(-120%);animation:runlite 4.2s var(--ez) infinite}
-.g-pipe-track i:nth-child(2)::after{animation-delay:.42s}
-.g-pipe-track i:nth-child(3)::after{animation-delay:.84s}
-.g-pipe-track i:nth-child(4)::after{animation-delay:1.26s}
-@keyframes runlite{0%{transform:translateX(-120%)}45%,100%{transform:translateX(320%)}}
-.g-pipe-lab{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;
-  font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--deep-text)}
-.g-pipe-lab span:last-child{color:var(--success)}
+.termin.rein{animation:reinschieben .55s var(--ez) forwards}
+@keyframes reinschieben{to{opacity:1;transform:none}}
+.termin .zeit{font-family:var(--head);font-weight:600;font-size:14px;color:var(--ink);flex:none;width:46px}
+.termin .wer{flex:1;min-width:0}
+.termin .wer b{display:block;font-size:14.5px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.termin .wer span{display:block;font-size:12.5px;color:var(--text-muted);margin-top:1px}
+.haken{width:24px;height:24px;flex:none;border-radius:50%;background:rgba(53,87,125,.10);display:flex;align-items:center;justify-content:center}
+.haken svg{width:13px;height:13px;stroke:var(--w-grad-1);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:22;stroke-dashoffset:22}
+.termin.rein .haken svg{animation:hakenzeichnen .45s var(--ez) .35s forwards}
+@keyframes hakenzeichnen{to{stroke-dashoffset:0}}
+
+.kal-fuss{padding:14px 20px;border-top:1px solid var(--border);background:var(--bg-alt);
+  font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:9px}
+.kal-fuss svg{width:15px;height:15px;flex:none;stroke:var(--text-muted);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 
 /* ── Problem ───────────────────────────────────────────────── */
-.prob{display:grid;grid-template-columns:1fr 1fr;gap:var(--s7);align-items:start}
-.prob-list{display:flex;flex-direction:column;gap:2px}
-.prob-item{display:flex;gap:var(--s3);padding:var(--s3) 0;border-top:1px solid var(--border)}
-.prob-item:last-child{border-bottom:1px solid var(--border)}
-.prob-item b{font-family:var(--mono);font-weight:500;font-size:13px;color:var(--accent);flex:none;padding-top:3px;letter-spacing:.06em}
-.prob-item p{color:var(--text-muted);font-size:17px}
-
-/* ── Angebote ──────────────────────────────────────────────── */
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3);align-items:stretch}
-.card{
-  position:relative;display:flex;flex-direction:column;text-align:left;width:100%;
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);
-  padding:var(--s5) var(--s4) var(--s4);
-  transition:transform .2s var(--ez),border-color .2s var(--ez),box-shadow .2s var(--ez),background .2s var(--ez);
-  cursor:pointer;
-}
-.card:hover{transform:translateY(-4px);border-color:var(--accent);box-shadow:0 20px 44px -26px rgba(20,43,71,.45)}
-.card.reco{border-color:var(--accent);background:var(--surface-raised);box-shadow:0 20px 50px -30px rgba(47,109,168,.5)}
-.card.reco:hover{box-shadow:0 26px 58px -26px rgba(47,109,168,.55)}
-.tag{position:absolute;top:-11px;left:var(--s4);padding:5px 12px;border-radius:99px;
-  background:var(--accent);color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase}
-.card h3{font-size:1.3rem;letter-spacing:-.01em;min-height:2.82rem}  /* zwei Zeilen, damit die Preise auf einer Linie stehen */
-.card .price{font-family:var(--mono);font-weight:500;font-size:2.15rem;color:var(--text);
-  margin:var(--s3) 0 2px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.once{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--text-muted)}
-.card .use{margin:var(--s3) 0 0;font-weight:500;color:var(--text);font-size:16.5px;line-height:1.5}
-.card .how{margin:var(--s2) 0 var(--s3);color:var(--text-muted);font-size:15.5px;line-height:1.6}
-.card ul{list-style:none;display:flex;flex-direction:column;gap:11px;
-  padding-top:var(--s3);border-top:1px solid var(--border);margin-bottom:var(--s4)}
-.card li{display:flex;gap:11px;font-size:15px;color:var(--text-muted);line-height:1.45}
-.card li svg{width:16px;height:16px;flex:none;margin-top:3px;stroke:var(--accent);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-.card .foot{margin-top:auto;display:flex;flex-direction:column;gap:10px}
-.card .more{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);
-  display:inline-flex;align-items:center;gap:7px;justify-content:center;opacity:.85;transition:gap .2s var(--ez)}
-.card:hover .more{gap:12px;opacity:1}
-.card .foot .btn{width:100%}
-.price-note{margin-top:var(--s3);font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;color:var(--text-muted)}
-
-/* ── Detail-Fenster ────────────────────────────────────────── */
-.ov{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:var(--s3)}
-.ov.open{display:flex}
-.ov-bg{position:absolute;inset:0;background:rgba(14,32,56,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
-  opacity:0;transition:opacity .3s var(--ez)}
-.ov.show .ov-bg{opacity:1}
-.ov-box{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:18px;
-  width:min(720px,100%);max-height:88vh;overflow-y:auto;padding:var(--s6) var(--s5) var(--s5);
-  box-shadow:0 40px 90px -30px rgba(14,32,56,.5);
-  opacity:0;transform:translateY(16px) scale(.985);transition:opacity .35s var(--ez),transform .35s var(--ez)}
-.ov.show .ov-box{opacity:1;transform:none}
-.ov-x{position:absolute;top:16px;right:16px;width:38px;height:38px;border:1px solid var(--border);border-radius:var(--r-btn);
-  display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all .15s var(--ez)}
-.ov-x:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
-.ov-x svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round}
-.ov-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s2) var(--s3);
-  padding-bottom:var(--s3);border-bottom:1px solid var(--border)}
-.ov-head h3{font-size:1.8rem}
-.ov-head .p{font-family:var(--mono);font-weight:500;font-size:1.25rem;color:var(--accent);font-variant-numeric:tabular-nums}
-.ov-sec{margin-top:var(--s4)}
-.ov-sec h4{font-family:var(--mono);font-stretch:normal;font-weight:500;font-size:11.5px;letter-spacing:.15em;
-  text-transform:uppercase;color:var(--accent);margin-bottom:11px}
-.ov-sec p{color:var(--text-muted);font-size:16.5px;line-height:1.65}
-.ov-sec ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:11px var(--s3)}
-.ov-sec li{display:flex;gap:10px;font-size:15.5px;color:var(--text-muted);line-height:1.45}
-.ov-sec li svg{width:16px;height:16px;flex:none;margin-top:3px;stroke:var(--accent);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
-.ov-res{margin-top:var(--s4);padding:var(--s3);border-radius:var(--r-card);background:var(--accent-soft);
-  border:1px solid var(--border);font-size:16.5px;line-height:1.55;color:var(--text)}
-.ov-res b{font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--accent);display:block;margin-bottom:7px}
-.ov-btns{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s5)}
-body.lock{overflow:hidden}
+.problem{display:grid;grid-template-columns:1fr 1fr;gap:var(--s7);align-items:start}
+.p-liste{display:flex;flex-direction:column}
+.p-punkt{display:flex;gap:var(--s3);padding:var(--s3) 0;border-top:1px solid var(--border)}
+.p-punkt:last-child{border-bottom:1px solid var(--border)}
+.p-punkt b{font-family:var(--head);font-weight:600;font-size:13.5px;color:var(--w-grad-1);flex:none;padding-top:3px;letter-spacing:.04em}
+.p-punkt p{color:var(--text-muted);font-size:17px}
+.p-punkt p em{font-style:normal;color:var(--text);font-weight:500}
 
 /* ── Ablauf ────────────────────────────────────────────────── */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3);counter-reset:st}
-.step{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);padding:var(--s4);
-  transition:transform .2s var(--ez),border-color .2s var(--ez)}
-.step:hover{transform:translateY(-3px);border-color:var(--accent)}
-.step b{font-family:var(--mono);font-weight:500;font-size:13px;letter-spacing:.1em;color:var(--accent);display:block;margin-bottom:var(--s3)}
-.step h3{font-size:1.2rem;margin-bottom:11px}
-.step p{color:var(--text-muted);font-size:16px}
+.ablauf{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3);margin-top:var(--s6)}
+.linie{position:absolute;top:38px;left:12%;right:12%;height:2px;z-index:0;overflow:hidden}
+.linie i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--w-grad-1),var(--border));
+  transform:scaleX(0);transform-origin:left;transition:transform 1.4s var(--ez)}
+.ablauf.da .linie i{transform:scaleX(1)}
+.schritt{position:relative;z-index:1;background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--r-karte);padding:var(--s4);box-shadow:var(--schatten);
+  transition:transform .2s var(--ez),border-color .2s var(--ez),box-shadow .2s var(--ez)}
+.schritt:hover{transform:translateY(-3px);border-color:var(--w-grad-1);box-shadow:var(--schatten-hoch)}
+.schritt .nr{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;
+  border-radius:12px;background:var(--ink);color:#FFFFFF;font-family:var(--head);font-weight:700;
+  font-size:15px;margin-bottom:var(--s3)}
+.schritt h3{font-size:1.2rem;margin-bottom:10px}
+.schritt p{color:var(--text-muted);font-size:16px}
 
-/* Ablauf-Grafik */
-.flow{margin-top:var(--s6);background:linear-gradient(155deg,var(--deep-2),var(--deep) 65%);
-  border-radius:18px;padding:var(--s5) var(--s4);overflow:hidden;position:relative}
-.flow::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:linear-gradient(var(--deep-line) 1px,transparent 1px),linear-gradient(90deg,var(--deep-line) 1px,transparent 1px);
-  background-size:40px 40px;opacity:.26}
-.flow-cap{position:relative;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--deep-text);text-align:center;margin-bottom:var(--s4)}
-.flow svg{position:relative;width:100%;height:auto;overflow:visible}
-.dash{stroke-dasharray:5 7;animation:dash 1.6s linear infinite}
-@keyframes dash{to{stroke-dashoffset:-24}}
+/* ── Preis ─────────────────────────────────────────────────── */
+.preis-raster{display:grid;grid-template-columns:1fr .82fr;gap:var(--s5);align-items:start}
+.preis-karte{
+  position:relative;border-radius:18px;padding:var(--s5);overflow:hidden;color:#FFFFFF;
+  background:linear-gradient(150deg,var(--w-grad-1) 0%,var(--w-grad-2) 72%);
+  box-shadow:0 24px 60px -26px rgba(21,34,52,.6);
+}
+.preis-karte::before{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:38px 38px;
+}
+.preis-karte>*{position:relative}
+.preis-karte .label{color:rgba(255,255,255,.62)}
+.gratis{display:flex;align-items:baseline;gap:12px;margin:var(--s3) 0 6px}
+.gratis .zahl{font-family:var(--head);font-weight:700;font-size:clamp(3rem,6vw,4.2rem);line-height:1;letter-spacing:-.03em}
+.gratis .wort{font-family:var(--head);font-weight:600;font-size:20px;color:rgba(255,255,255,.9)}
+.gratis-unter{color:rgba(255,255,255,.72);font-size:16px}
+.danach{margin-top:var(--s5);padding-top:var(--s4);border-top:1px solid rgba(255,255,255,.16);
+  display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+.danach .betrag{font-family:var(--head);font-weight:700;font-size:2rem;letter-spacing:-.02em}
+.danach .je{color:rgba(255,255,255,.72);font-size:16px}
+.preis-karte .knopf{margin-top:var(--s5);width:100%;background:#FFFFFF;color:var(--ink)}
+.preis-karte .knopf:hover{background:var(--bg-alt);transform:translateY(-2px)}
+
+.preis-punkte{list-style:none;display:flex;flex-direction:column;gap:var(--s3)}
+.preis-punkte li{display:flex;gap:14px}
+.preis-punkte svg{width:20px;height:20px;flex:none;margin-top:3px;stroke:var(--w-grad-1);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.preis-punkte b{display:block;font-weight:600;color:var(--ink);font-size:16.5px;margin-bottom:2px}
+.preis-punkte span{color:var(--text-muted);font-size:15.5px}
+
+/* ── Warum ─────────────────────────────────────────────────── */
+.warum{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3)}
+.w-karte{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-karte);
+  padding:var(--s4);box-shadow:var(--schatten);transition:transform .2s var(--ez),border-color .2s var(--ez)}
+.w-karte:hover{transform:translateY(-3px);border-color:var(--w-grad-1)}
+.w-karte .sym{width:44px;height:44px;border-radius:12px;background:var(--bg-alt);display:flex;
+  align-items:center;justify-content:center;margin-bottom:var(--s3)}
+.w-karte .sym svg{width:21px;height:21px;stroke:var(--w-grad-1);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.w-karte h3{font-size:1.13rem;margin-bottom:9px}
+.w-karte p{color:var(--text-muted);font-size:16px}
 
 /* ── FAQ ───────────────────────────────────────────────────── */
 .faq{max-width:820px;margin:0 auto;border-top:1px solid var(--border)}
-.q{border-bottom:1px solid var(--border)}
-.q button{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
-  width:100%;text-align:left;padding:var(--s3) 0;font-family:var(--head);font-stretch:112%;
-  font-weight:700;font-size:18.5px;letter-spacing:-.01em;transition:color .15s var(--ez)}
-.q button:hover{color:var(--accent)}
-.q .ic{width:30px;height:30px;flex:none;border:1px solid var(--border);border-radius:8px;
+.frage{border-bottom:1px solid var(--border)}
+.frage button{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
+  width:100%;text-align:left;padding:var(--s3) 0;font-family:var(--head);font-weight:600;
+  font-size:18px;color:var(--ink);letter-spacing:-.01em;transition:color .15s var(--ez)}
+.frage button:hover{color:var(--w-grad-1)}
+.frage .sym{position:relative;width:30px;height:30px;flex:none;border:1px solid var(--border);border-radius:8px;
   display:flex;align-items:center;justify-content:center;transition:all .3s var(--ez)}
-.q .ic::before,.q .ic::after{content:"";position:absolute;width:11px;height:1.5px;background:currentColor;transition:transform .3s var(--ez)}
-.q .ic{position:relative}
-.q .ic::after{transform:rotate(90deg)}
-.q.on .ic{background:var(--accent);border-color:var(--accent);color:#fff}
-.q.on .ic::after{transform:rotate(0)}
-.q .a{overflow:hidden;max-height:0;transition:max-height .45s var(--ez)}
-.q .a p{color:var(--text-muted);font-size:16.5px;line-height:1.65;padding:0 var(--s6) var(--s4) 0}
+.frage .sym::before,.frage .sym::after{content:"";position:absolute;width:11px;height:1.5px;background:currentColor;transition:transform .3s var(--ez)}
+.frage .sym::after{transform:rotate(90deg)}
+.frage.auf .sym{background:var(--ink);border-color:var(--ink);color:#FFFFFF}
+.frage.auf .sym::after{transform:rotate(0)}
+.frage .antwort{overflow:hidden;max-height:0;transition:max-height .45s var(--ez)}
+.frage .antwort p{color:var(--text-muted);font-size:16.5px;line-height:1.65;padding:0 var(--s6) var(--s4) 0}
 
 /* ── Kontakt ───────────────────────────────────────────────── */
-.ct{display:grid;grid-template-columns:1fr 1fr;gap:var(--s7);align-items:start}
-.ct>*{min-width:0}  /* verhindert, dass lange E-Mail-Adressen das Raster aufdehnen */
-.ct-side p{color:var(--text-muted);margin-top:var(--s3)}
-.ct-list{margin-top:var(--s5);display:flex;flex-direction:column;gap:var(--s3);padding-top:var(--s4);border-top:1px solid var(--border)}
-.ct-list div{display:flex;gap:13px;align-items:flex-start}
-.ct-list svg{width:18px;height:18px;flex:none;margin-top:3px;stroke:var(--accent);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.ct-list b{display:block;font-size:15.5px;margin-bottom:2px}
-.ct-list span{font-size:15px;color:var(--text-muted);overflow-wrap:anywhere}
-.ct-list>div>div{min-width:0}
-.ft-bot span{overflow-wrap:anywhere}
-form{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);padding:var(--s5)}
-.fr{margin-bottom:var(--s3)}
-.fr label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--text-muted);margin-bottom:9px}
-.fr input,.fr textarea{width:100%;padding:13px 15px;border:1px solid var(--border);border-radius:var(--r-field);
+.kontakt{display:grid;grid-template-columns:1fr 1fr;gap:var(--s7);align-items:start}
+.kontakt>*{min-width:0}
+.k-seite p{color:var(--text-muted);margin-top:var(--s3)}
+.k-liste{margin-top:var(--s5);display:flex;flex-direction:column;gap:var(--s3);padding-top:var(--s4);border-top:1px solid var(--border)}
+.k-liste div{display:flex;gap:14px;align-items:flex-start;min-width:0}
+.k-liste svg{width:19px;height:19px;flex:none;margin-top:3px;stroke:var(--w-grad-1);fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.k-liste b{display:block;font-size:16px;margin-bottom:1px;color:var(--ink)}
+.k-liste span{font-size:15.5px;color:var(--text-muted);overflow-wrap:anywhere}
+form{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-karte);padding:var(--s5);box-shadow:var(--schatten)}
+.feld{margin-bottom:var(--s3)}
+.feld label{display:block;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:8px}
+.feld input,.feld textarea{width:100%;padding:13px 15px;border:1px solid var(--border);border-radius:var(--r-knopf);
   font-family:var(--body);font-size:16px;color:var(--text);background:var(--bg);
   transition:border-color .15s var(--ez),box-shadow .15s var(--ez)}
-.fr textarea{resize:vertical;min-height:118px}
-.fr input:focus,.fr textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-.fr input[aria-invalid="true"],.fr textarea[aria-invalid="true"]{border-color:#B4483C}
-.err{display:none;font-size:13.5px;color:#B4483C;margin-top:7px}
-.err.on{display:block}
-form .btn{width:100%;margin-top:var(--s2)}
-.ok{display:none;margin-top:var(--s3);padding:15px 17px;border-radius:var(--r-field);
-  background:var(--accent-soft);border:1px solid var(--border);font-size:15.5px;color:var(--text)}
-.ok.on{display:block}
-.form-note{margin-top:var(--s3);font-size:13.5px;color:var(--text-muted);text-align:center}
+.feld textarea{resize:vertical;min-height:120px}
+.feld input:focus,.feld textarea:focus{outline:none;border-color:var(--ink-soft);box-shadow:0 0 0 3px rgba(53,87,125,.12)}
+.feld input[aria-invalid="true"],.feld textarea[aria-invalid="true"]{border-color:#B4483C}
+.fehler{display:none;font-size:13.5px;color:#B4483C;margin-top:7px}
+.fehler.an{display:block}
+form .knopf{width:100%;margin-top:var(--s2)}
+.ok{display:none;margin-top:var(--s3);padding:15px 17px;border-radius:var(--r-knopf);
+  background:var(--bg-alt);border:1px solid var(--border);font-size:15.5px;color:var(--ink)}
+.ok.an{display:block}
+.form-hinweis{margin-top:var(--s3);font-size:13.5px;color:var(--text-muted);text-align:center}
 
 /* ── Footer ────────────────────────────────────────────────── */
-.ft{background:var(--deep);color:#fff;padding:var(--s6) 0 var(--s4)}
+.ft{background:var(--ink);color:#FFFFFF;padding:var(--s6) 0 var(--s4)}
 .ft-in{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s5);align-items:flex-start}
-.ft .logo .t b{color:#fff}
-.ft .logo .t small{color:var(--deep-text)}
-.ft-slog{margin-top:var(--s3);color:var(--deep-text);font-size:15.5px}
+.ft-logo svg{height:52px;width:auto}
+.ft-logo .ftWort{font-family:var(--head)}   /* erbt Montserrat von der Seite */
+.ft-slogan{margin-top:var(--s3);color:rgba(255,255,255,.6);font-size:15.5px}
 .ft-links{display:flex;gap:var(--s4);flex-wrap:wrap}
-.ft-links a{color:var(--deep-text);font-size:15px;transition:color .15s var(--ez)}
-.ft-links a:hover{color:#fff}
-.ft-bot{margin-top:var(--s6);padding-top:var(--s3);border-top:1px solid var(--deep-line);
+.ft-links a{color:rgba(255,255,255,.6);font-size:15px;transition:color .15s var(--ez)}
+.ft-links a:hover{color:#FFFFFF}
+.ft-unten{margin-top:var(--s6);padding-top:var(--s3);border-top:1px solid rgba(255,255,255,.12);
   display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4);justify-content:space-between;
-  font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--deep-text)}
+  font-size:13.5px;color:rgba(255,255,255,.55)}
+.ft-unten span{overflow-wrap:anywhere}
 
 /* ── Breakpoints ───────────────────────────────────────────── */
 @media(max-width:1024px){
-  .wrap{padding:0 var(--s4)}
+  .wrap{padding:0 var(--s3)}
   .hero-in{grid-template-columns:1fr;gap:var(--s6)}
   .hero{padding:var(--s6) 0 var(--s7)}
-  .prob,.ct{grid-template-columns:1fr;gap:var(--s5)}
-  .cards,.steps{grid-template-columns:1fr;max-width:560px;margin:0 auto}
-  .card.reco{order:-1}
+  .problem,.kontakt,.preis-raster{grid-template-columns:1fr;gap:var(--s5)}
+  .ablauf,.warum{grid-template-columns:1fr;max-width:560px;margin-left:auto;margin-right:auto}
+  .linie{display:none}
   .nl{
     position:fixed;inset:80px 0 auto;flex-direction:column;align-items:stretch;gap:0;
     background:rgba(255,255,255,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--border);padding:var(--s3) var(--s4) var(--s4);
+    border-bottom:1px solid var(--border);padding:var(--s3) var(--s3) var(--s4);
     transform:translateY(-14px);opacity:0;pointer-events:none;
     transition:opacity .25s var(--ez),transform .25s var(--ez);
   }
-  .nl.open{opacity:1;transform:none;pointer-events:auto}
-  .nl a{padding:15px 0;border-bottom:1px solid var(--border);font-size:16.5px;color:var(--text)}
+  .nl.auf{opacity:1;transform:none;pointer-events:auto}
+  .nl a{padding:15px 0;border-bottom:1px solid var(--border);font-size:16.5px;color:var(--ink)}
   .nl a::after{display:none}
-  .nl .btn{margin-top:var(--s3);border-bottom:none}
+  .nl a.knopf{margin-top:var(--s3);border-bottom:none;justify-content:center}
   .burger{display:flex}
   .nav{background:rgba(255,255,255,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 }
 @media(max-width:768px){
-  :root{--sec:64px;--wrap:100%}
+  :root{--abschnitt:64px;--wrap:100%}
   body{font-size:16.5px}
-  .wrap{padding:0 var(--s3)}
-  .ov-sec ul{grid-template-columns:1fr}
-  .ov-box{padding:var(--s5) var(--s3) var(--s4)}
-  .gauge{padding:22px}
-  .hero-btns .btn{flex:1 1 100%}
+  .hero-knoepfe .knopf{flex:1 1 100%}
+  .preis-karte{padding:var(--s4)}
   .ft-in{flex-direction:column;gap:var(--s4)}
 }
 @media(max-width:480px){
-  .logo .t small{display:none}
-  .g-mini{grid-template-columns:1fr}
-  .g-pipe-lab{font-size:8.5px}
-  .card{padding:var(--s5) var(--s3) var(--s3)}
-  .q button{font-size:17px}
+  .logo .wort small{display:none}
+  .kal-liste{padding:13px 13px 16px}
+  .termin{padding:11px 12px;gap:10px}
+  .termin .zeit{width:42px;font-size:13px}
+  .frage button{font-size:16.5px}
+  .frage .antwort p{padding-right:var(--s3)}
 }
 
 /* ── Bewegung aus, wenn gewünscht ──────────────────────────── */
@@ -406,6 +348,9 @@ form .btn{width:100%;margin-top:var(--s2)}
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
     transition-duration:.001ms!important;scroll-behavior:auto!important}
   .rv{opacity:1;transform:none}
+  .termin{opacity:1;transform:none}
+  .termin .haken svg{stroke-dashoffset:0}
+  .ablauf .linie i{transform:scaleX(1)}
 }
 </style>
 </head>
@@ -415,24 +360,19 @@ form .btn{width:100%;margin-top:var(--s2)}
 <!-- ══════════════════ NAVIGATION ══════════════════ -->
 <header class="nav" id="nav">
   <div class="wrap nav-in">
-    <!-- LOGO HIER: bei eigener Datei durch <img src="logo.svg" alt="Walter Workflows"> ersetzen -->
-    <a href="#top" class="logo" aria-label="Walter Workflows — Startseite">
-      <svg class="w" viewBox="0 0 100 100" role="img" aria-label="Walter Workflows">
-        <defs><linearGradient id="wg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#2F6DA8"/><stop offset="1" stop-color="#142B47"/>
-        </linearGradient></defs>
-        <path d="M14 22L33 80L50 42L67 80L86 22" fill="none" stroke="url(#wg)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span class="t"><b>WALTER WORKFLOWS</b><small>Automatisierung für Autohäuser</small></span>
+    <!-- LOGO HIER: walter-setting-logo.svg -->
+    <a href="#top" class="logo" aria-label="Walter Setting — Startseite">
+      <img class="mark" src="walter-setting-icon.svg" alt="" width="38" height="38" aria-hidden="true">
+      <span class="wort"><b>WALTER SETTING</b><small>Qualifizierte Termine für Makler</small></span>
     </a>
 
-    <button class="burger" id="bgr" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nl"><span></span></button>
+    <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nl"><span></span></button>
 
     <nav class="nl" id="nl" aria-label="Hauptnavigation">
-      <a href="#angebote">Angebote</a>
-      <a href="#ablauf">Ablauf</a>
+      <a href="#ablauf">So funktioniert's</a>
+      <a href="#angebot">Angebot</a>
       <a href="#faq">FAQ</a>
-      <a href="#kontakt" class="btn btn-main">Kostenloses Erstgespräch</a>
+      <a href="#kontakt" class="knopf knopf-voll">Kostenloses Erstgespräch</a>
     </nav>
   </div>
 </header>
@@ -443,57 +383,57 @@ form .btn{width:100%;margin-top:var(--s2)}
 <section class="hero">
   <div class="wrap hero-in">
     <div class="rv">
-      <span class="eyebrow">Automatisierung für Autohäuser</span>
-      <h1><span class="br">Keine Anfrage bleibt liegen.</span><span class="br">Keine Probefahrt geht verloren.</span></h1>
-      <p class="sub">Walter Workflows beantwortet jede Fahrzeuganfrage in Sekunden, hält Interessenten warm und füllt Ihren Kalender — vollautomatisch, rund um die Uhr.</p>
-      <div class="hero-btns">
-        <a href="#kontakt" class="btn btn-main">Kostenloses Erstgespräch
+      <span class="label">Qualifizierte Termine für Makler</span>
+      <h1>Aus Ihren Anfragen werden Termine im Kalender.</h1>
+      <p class="sub">Walter Setting ruft Ihre Interessenten an, qualifiziert sie am Telefon und legt Ihnen nur die ernsthaften Verkäufer als feste Termine in den Kalender. Sie kümmern sich um den Abschluss — wir um alles davor.</p>
+      <div class="hero-knoepfe">
+        <a href="#kontakt" class="knopf knopf-voll">Kostenloses Erstgespräch
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <a href="#angebote" class="btn btn-line">Angebote ansehen</a>
+        <a href="#angebot" class="knopf knopf-linie">Angebot ansehen</a>
       </div>
-      <div class="hero-note">
-        <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Einmalige Preise, keine monatlichen Kosten</span>
-        <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Persönlicher Ansprechpartner</span>
-        <span><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>In wenigen Tagen einsatzbereit</span>
-      </div>
+      <p class="hero-hinweis">
+        <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+        Die ersten 5 Termine sind kostenlos.
+      </p>
     </div>
 
-    <!-- Signature-Element: Instrumententafel -->
+    <!-- Signature-Element: der Kalender -->
     <div class="rv" style="transition-delay:.14s">
-      <div class="gauge" role="img" aria-label="Beispielhafte Anzeige: durchschnittliche Antwortzeit 38 Sekunden, 24 erfasste Leads, 61 aktive Follow-ups, 9 gebuchte Termine.">
-        <div class="g-top">
-          <span class="g-lab">Ø Antwortzeit</span>
-          <span class="g-live"><i class="g-dot" aria-hidden="true"></i>Aktiv</span>
+      <div class="kal" role="img" aria-label="Beispielhafte Darstellung: drei qualifizierte Termine in einer Kalenderwoche.">
+        <div class="kal-kopf">
+          <b>Ihr Kalender</b>
+          <span class="kal-live"><i class="kal-punkt" aria-hidden="true"></i>Diese Woche</span>
         </div>
 
-        <div class="g-val"><b id="gv">4:20</b><i>Sek</i></div>
-        <p class="g-cmp">Beispielhafte Anzeige eines laufenden Systems.</p>
-
-        <div class="g-arc" aria-hidden="true">
-          <svg viewBox="0 0 320 84" fill="none">
-            <defs>
-              <linearGradient id="arcg" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#2F6DA8"/><stop offset="1" stop-color="#2E8B6B"/>
-              </linearGradient>
-            </defs>
-            <path d="M12 66 A 237 237 0 0 1 308 66" stroke="#24405F" stroke-width="5" stroke-linecap="round"/>
-            <path id="arc" d="M12 66 A 237 237 0 0 1 308 66" stroke="url(#arcg)" stroke-width="5" stroke-linecap="round"
-                  stroke-dasharray="330" stroke-dashoffset="330"/>
-            <g fill="#A8BDD6" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1">
-              <text x="8" y="81">LANGSAM</text><text x="262" y="81">SOFORT</text>
-            </g>
-          </svg>
+        <div class="kal-woche" aria-hidden="true">
+          <div class="kal-tag"><span>Mo</span><b>14</b></div>
+          <div class="kal-tag aktiv"><span>Di</span><b>15</b></div>
+          <div class="kal-tag aktiv"><span>Mi</span><b>16</b></div>
+          <div class="kal-tag"><span>Do</span><b>17</b></div>
+          <div class="kal-tag aktiv"><span>Fr</span><b>18</b></div>
         </div>
 
-        <div class="g-mini">
-          <div><span>Leads erfasst</span><b class="cnt" data-to="24">0</b></div>
-          <div><span>Follow-ups aktiv</span><b class="cnt" data-to="61">0</b></div>
-          <div><span>Termine gebucht</span><b class="cnt" data-to="9">0</b></div>
+        <div class="kal-liste" id="kalListe">
+          <div class="termin" data-verz="0">
+            <span class="zeit">09:30</span>
+            <span class="wer"><b>Familie Berger</b><span>Eigentümer · Verkauf geplant</span></span>
+            <span class="haken"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          </div>
+          <div class="termin" data-verz="1">
+            <span class="zeit">11:00</span>
+            <span class="wer"><b>M. Kaya</b><span>Eigentümer · Verkauf im Quartal</span></span>
+            <span class="haken"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          </div>
+          <div class="termin" data-verz="2">
+            <span class="zeit">15:30</span>
+            <span class="wer"><b>S. Roth</b><span>Eigentümer · Termin fest zugesagt</span></span>
+            <span class="haken"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
+          </div>
         </div>
 
-        <div class="g-pipe">
-          <div class="g-pipe-track" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-          <div class="g-pipe-lab"><span>Anfrage</span><span>Erkannt</span><span>Antwort</span><span>Termin</span></div>
+        <div class="kal-fuss">
+          <svg viewBox="0 0 24 24"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4L12 14.1l-3-3"/></svg>
+          Jeder Termin am Telefon geprüft — Eigentümer, Verkaufsabsicht, feste Zusage.
         </div>
       </div>
     </div>
@@ -502,225 +442,173 @@ form .btn{width:100%;margin-top:var(--s2)}
 
 <!-- ══════════════════ PROBLEM ══════════════════ -->
 <section class="sec sec-alt" id="problem">
-  <div class="wrap prob">
+  <div class="wrap problem">
     <div class="rv">
-      <span class="eyebrow">Die Ausgangslage</span>
-      <h2 class="h2" style="margin-top:var(--s3)">Leads gehen selten verloren, weil das Auto nicht passt — sondern weil zu spät geantwortet wird.</h2>
+      <span class="label">Die Ausgangslage</span>
+      <h2 class="h2" style="margin-top:var(--s3)">Gute Verkäufer-Leads gehen verloren, weil niemand Zeit hat, sie anzurufen.</h2>
     </div>
-    <div class="prob-list rv" style="transition-delay:.1s">
-      <div class="prob-item"><b>01</b><p>Anfragen kommen abends und am Wochenende — dann ist niemand im Autohaus.</p></div>
-      <div class="prob-item"><b>02</b><p>Bis jemand zurückruft, hat der Interessent längst woanders geschrieben.</p></div>
-      <div class="prob-item"><b>03</b><p>Inserate schreiben und Nachfassen kostet Zeit, die für den Verkauf fehlt.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════ ANGEBOTE ══════════════════ -->
-<section class="sec" id="angebote">
-  <div class="wrap">
-    <div class="head-block rv">
-      <span class="eyebrow">Die Angebote</span>
-      <h2 class="h2">Drei Systeme. Einmal eingerichtet. Danach läuft es.</h2>
-      <p class="price-note">Alle Preise einmalig — keine monatlichen Kosten. Karte anklicken für alle Details.</p>
-    </div>
-
-    <div class="cards">
-
-      <!-- Karte 1 -->
-      <button class="card rv" data-sys="anzeigen" aria-haspopup="dialog">
-        <h3>Anzeigen-Generator</h3>
-        <div class="price" data-price="anzeigen">790 €</div>
-        <div class="once">Einmalig</div>
-        <p class="use">Fahrzeugdaten einmal eintragen — fertige Texte für alle Kanäle in Sekunden.</p>
-        <p class="how">Ein Mitarbeiter trägt Modell, Ausstattung, Kilometerstand und Preis ein. Das System schreibt daraus verkaufsstarke Texte, jeweils im passenden Format und Ton für jeden Kanal.</p>
-        <ul>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>mobile.de-Text</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>AutoScout24-Text</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Website-Text</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Instagram- und Facebook-Post</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>WhatsApp-Vorlage</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>SEO-Text</span></li>
-        </ul>
-        <div class="foot">
-          <span class="btn btn-line">Anfragen</span>
-          <span class="more">Details ansehen
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        </div>
-      </button>
-
-      <!-- Karte 2 — Empfohlen -->
-      <button class="card reco rv" data-sys="leads" aria-haspopup="dialog" style="transition-delay:.08s">
-        <span class="tag">Empfohlen</span>
-        <h3>Autohaus Lead-System</h3>
-        <div class="price" data-price="leads">1.900 €</div>
-        <div class="once">Einmalig</div>
-        <p class="use">Jede Anfrage wird sofort erkannt, beantwortet und nachgefasst — bis der Termin steht.</p>
-        <p class="how">Die KI erkennt aus der Anfrage das gewünschte Fahrzeug, die Kaufabsicht und eine mögliche Inzahlungnahme. Sie trägt alles ins CRM ein, benachrichtigt den zuständigen Verkäufer und antwortet dem Interessenten sofort.</p>
-        <ul>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Anfrage-Erkennung: Fahrzeug, Kaufabsicht, Inzahlungnahme</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Sofortige Antwort, rund um die Uhr</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>CRM-Eintrag und Verkäufer-Benachrichtigung</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Follow-ups an Tag 2, 5 und 10 — stoppt bei Antwort</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Probefahrt-Terminbuchung mit Erinnerung</span></li>
-        </ul>
-        <div class="foot">
-          <span class="btn btn-main">Anfragen</span>
-          <span class="more">Details ansehen
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        </div>
-      </button>
-
-      <!-- Karte 3 -->
-      <button class="card rv" data-sys="werkstatt" aria-haspopup="dialog" style="transition-delay:.16s">
-        <h3>Werkstatt-Termin-System</h3>
-        <div class="price" data-price="werkstatt">900 €</div>
-        <div class="once">Einmalig</div>
-        <p class="use">Serviceanfragen automatisch aufnehmen und verplanen — ohne Telefonstau.</p>
-        <p class="how">Schreibt ein Kunde „Ich brauche einen Ölwechsel für meinen Audi A4", erkennt die KI Fahrzeug und Leistung, fragt Fehlendes nach und schlägt einen freien Termin vor.</p>
-        <ul>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Anliegen-Erkennung</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Automatische Rückfragen</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Terminvorschlag mit Kalendereintrag</span></li>
-          <li><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Bestätigung und Erinnerung</span></li>
-        </ul>
-        <div class="foot">
-          <span class="btn btn-line">Anfragen</span>
-          <span class="more">Details ansehen
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        </div>
-      </button>
-
+    <div class="p-liste rv" style="transition-delay:.1s">
+      <div class="p-punkt"><b>01</b><p>Anfragen aus Formularen und Portalen bleiben liegen — <em>wer zu spät anruft, verliert den Interessenten.</em></p></div>
+      <div class="p-punkt"><b>02</b><p>Die meisten wollen erstmal nur den Wert wissen. <em>Die echten Verkäufer herauszufiltern kostet Zeit.</em></p></div>
+      <div class="p-punkt"><b>03</b><p>Alte Interessentenlisten verstauben, <em>obwohl darin verkaufsbereite Eigentümer stecken.</em></p></div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════ ABLAUF ══════════════════ -->
-<section class="sec sec-alt" id="ablauf">
+<!-- ══════════════════ SO FUNKTIONIERT'S ══════════════════ -->
+<section class="sec" id="ablauf">
   <div class="wrap">
-    <div class="head-block rv">
-      <span class="eyebrow">Zusammenarbeit</span>
-      <h2 class="h2">So läuft es ab.</h2>
+    <div class="kopf-block rv">
+      <span class="label">So funktioniert's</span>
+      <h2 class="h2" style="margin-top:var(--s2)">Wir übernehmen den Teil zwischen Anfrage und Verkauf.</h2>
+      <p class="lead">Sie geben uns Ihre eingehenden Anfragen und Ihre alten Listen. Wir rufen an, prüfen, ob echtes Verkaufsinteresse besteht, und buchen die passenden Interessenten als festen Termin in Ihren Kalender. Erscheint jemand nicht, terminieren wir kostenlos nach.</p>
     </div>
 
-    <div class="steps">
-      <div class="step rv"><b>01</b><h3>Kennenlernen</h3><p>Kostenloses Gespräch, rund 20 Minuten. Wir klären, was in Ihrem Autohaus am meisten bringt.</p></div>
-      <div class="step rv" style="transition-delay:.08s"><b>02</b><h3>Einrichtung</h3><p>Ich richte das System einmalig ein, verbinde es mit Ihrem Postfach und Kalender und teste alles durch.</p></div>
-      <div class="step rv" style="transition-delay:.16s"><b>03</b><h3>Läuft</h3><p>Kurze Einweisung, Übergabe — danach arbeitet das System für Sie.</p></div>
+    <div class="ablauf rv" id="ablaufBlock">
+      <div class="linie" aria-hidden="true"><i></i></div>
+      <div class="schritt">
+        <span class="nr">01</span>
+        <h3>Sie übergeben Ihre Leads</h3>
+        <p>Neue Anfragen und/oder bestehende Listen. Wie Sie sie uns geben, klären wir im Erstgespräch — Tabelle, Export oder Weiterleitung.</p>
+      </div>
+      <div class="schritt">
+        <span class="nr">02</span>
+        <h3>Wir telefonieren und qualifizieren</h3>
+        <p>Eigentümer? Verkaufsabsicht? Zeitrahmen? Nur echte Verkäufer kommen durch. Alles andere halten wir Ihnen vom Kalender fern.</p>
+      </div>
+      <div class="schritt">
+        <span class="nr">03</span>
+        <h3>Fertige Termine im Kalender</h3>
+        <p>Sie sprechen nur noch mit ernsthaften Verkäufern — mit allen Angaben aus dem Telefonat vorab.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ ANGEBOT & PREISE ══════════════════ -->
+<section class="sec sec-alt" id="angebot">
+  <div class="wrap">
+    <div class="kopf-block rv">
+      <span class="label">Angebot und Preise</span>
+      <h2 class="h2" style="margin-top:var(--s2)">Sie zahlen nur für echte Termine.</h2>
     </div>
 
-    <!-- Ablauf-Grafik: Weg einer Anfrage -->
-    <div class="flow rv">
-      <p class="flow-cap">Der Weg einer Anfrage</p>
-      <svg viewBox="0 0 1000 260" fill="none" role="img" aria-label="Ablaufgrafik: Eine Anfrage wird erkannt, ins CRM eingetragen, der Verkäufer benachrichtigt, eine Antwort verschickt und ein Termin gebucht.">
-        <defs>
-          <linearGradient id="ng" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#1B3A5E"/><stop offset="1" stop-color="#14304E"/>
-          </linearGradient>
-          <linearGradient id="ngA" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#2F6DA8"/><stop offset="1" stop-color="#255A8D"/>
-          </linearGradient>
-          <linearGradient id="ngS" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#2E8B6B"/><stop offset="1" stop-color="#237056"/>
-          </linearGradient>
-        </defs>
+    <div class="preis-raster">
+      <div class="preis-karte rv">
+        <span class="label">Zum Testen</span>
+        <div class="gratis">
+          <span class="zahl" id="zahl5">5</span>
+          <span class="wort">qualifizierte Termine</span>
+        </div>
+        <p class="gratis-unter">kostenlos — ohne Risiko und ohne Verpflichtung.</p>
 
-        <!-- Verbindungen -->
-        <g stroke="#2F6DA8" stroke-width="1.6" opacity=".85">
-          <path class="dash" d="M186 130 H 300"/>
-          <path class="dash" d="M470 130 H 560"/>
-          <path class="dash" d="M470 130 C 515 130 515 56 560 56"/>
-          <path class="dash" d="M470 130 C 515 130 515 204 560 204"/>
-          <path class="dash" d="M730 56 C 782 56 782 130 820 130"/>
-          <path class="dash" d="M730 130 H 820"/>
-          <path class="dash" d="M730 204 C 782 204 782 130 820 130"/>
-        </g>
+        <div class="danach">
+          <span class="betrag">100 €</span>
+          <span class="je">danach je qualifiziertem Termin</span>
+        </div>
 
-        <!-- Eingang -->
-        <g>
-          <rect x="30" y="98" width="156" height="64" rx="12" fill="url(#ng)" stroke="#24405F"/>
-          <text x="108" y="124" text-anchor="middle" fill="#A8BDD6" font-family="IBM Plex Mono, monospace" font-size="9.5" letter-spacing="1.4">EINGANG</text>
-          <text x="108" y="145" text-anchor="middle" fill="#FFFFFF" font-family="IBM Plex Sans, sans-serif" font-size="14" font-weight="500">Anfrage</text>
-        </g>
+        <a href="#kontakt" class="knopf">Kostenloses Erstgespräch
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
 
-        <!-- KI -->
-        <g>
-          <rect x="300" y="90" width="170" height="80" rx="13" fill="url(#ngA)"/>
-          <text x="385" y="118" text-anchor="middle" fill="#D5E6F5" font-family="IBM Plex Mono, monospace" font-size="9.5" letter-spacing="1.4">ERKENNUNG</text>
-          <text x="385" y="139" text-anchor="middle" fill="#FFFFFF" font-family="IBM Plex Sans, sans-serif" font-size="14.5" font-weight="600">Fahrzeug &amp; Absicht</text>
-          <text x="385" y="156" text-anchor="middle" fill="#D5E6F5" font-family="IBM Plex Sans, sans-serif" font-size="11.5">inkl. Inzahlungnahme</text>
-        </g>
+      <ul class="preis-punkte rv" style="transition-delay:.1s">
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <div><b>Qualifiziert heißt: alle drei Punkte erfüllt</b>
+          <span>Eigentümer der Immobilie, konkrete Verkaufsabsicht und ein fest zugesagter Termin. Fehlt einer davon, zählt der Termin nicht.</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <div><b>Erscheint jemand nicht, terminieren wir kostenlos nach</b>
+          <span>Sie zahlen nur für Termine, die wirklich stattfinden.</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <div><b>Kein Abo, keine monatlichen Kosten</b>
+          <span>Keine Mindestlaufzeit, keine Grundgebühr. Abgerechnet wird pro Termin.</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <div><b>Keine Werbekosten</b>
+          <span>Sie liefern die Leads, wir machen daraus Termine. Wir schalten keine Werbung.</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-        <!-- drei parallele Aktionen -->
-        <g>
-          <rect x="560" y="28" width="170" height="56" rx="12" fill="url(#ng)" stroke="#24405F"/>
-          <text x="645" y="52" text-anchor="middle" fill="#A8BDD6" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1.3">SOFORT</text>
-          <text x="645" y="70" text-anchor="middle" fill="#FFFFFF" font-family="IBM Plex Sans, sans-serif" font-size="13.5">Antwort an Kunden</text>
-        </g>
-        <g>
-          <rect x="560" y="102" width="170" height="56" rx="12" fill="url(#ng)" stroke="#24405F"/>
-          <text x="645" y="126" text-anchor="middle" fill="#A8BDD6" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1.3">ABLAGE</text>
-          <text x="645" y="144" text-anchor="middle" fill="#FFFFFF" font-family="IBM Plex Sans, sans-serif" font-size="13.5">Eintrag ins CRM</text>
-        </g>
-        <g>
-          <rect x="560" y="176" width="170" height="56" rx="12" fill="url(#ng)" stroke="#24405F"/>
-          <text x="645" y="200" text-anchor="middle" fill="#A8BDD6" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1.3">HINWEIS</text>
-          <text x="645" y="218" text-anchor="middle" fill="#FFFFFF" font-family="IBM Plex Sans, sans-serif" font-size="13.5">Verkäufer informiert</text>
-        </g>
+<!-- ══════════════════ WARUM ══════════════════ -->
+<section class="sec" id="warum">
+  <div class="wrap">
+    <div class="kopf-block rv">
+      <span class="label">Zusammenarbeit</span>
+      <h2 class="h2" style="margin-top:var(--s2)">Warum Makler mit uns arbeiten.</h2>
+    </div>
 
-        <!-- Ergebnis -->
-        <g>
-          <rect x="820" y="98" width="152" height="64" rx="12" fill="url(#ngS)"/>
-          <text x="896" y="124" text-anchor="middle" fill="#D4EDE3" font-family="IBM Plex Mono, monospace" font-size="9.5" letter-spacing="1.4">ERGEBNIS</text>
-          <text x="896" y="145" text-anchor="middle" fill="#FFFFFF" font-family="IBM Plex Sans, sans-serif" font-size="14" font-weight="600">Termin steht</text>
-        </g>
-
-        <!-- Nachfass-Hinweis -->
-        <text x="500" y="252" text-anchor="middle" fill="#A8BDD6" font-family="IBM Plex Mono, monospace" font-size="9.5" letter-spacing="1.3">OHNE ANTWORT: NACHFASSEN AN TAG 2 · 5 · 10 — STOPPT SOFORT, SOBALD DER KUNDE SCHREIBT</text>
-      </svg>
+    <div class="warum">
+      <div class="w-karte rv">
+        <span class="sym"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg></span>
+        <h3>Persönlich, kein anonymes Callcenter</h3>
+        <p>Sie haben einen festen Ansprechpartner, der Ihre Leads und Ihre Region kennt — nicht jede Woche eine andere Stimme.</p>
+      </div>
+      <div class="w-karte rv" style="transition-delay:.08s">
+        <span class="sym"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.6V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.6"/><path d="M9.5 21v-6h5v6"/></svg></span>
+        <h3>Erfahrung aus dem Immobilienvertrieb</h3>
+        <p>Wir wissen, wie man Verkäufer erkennt — und woran man merkt, dass jemand nur den Wert wissen will.</p>
+      </div>
+      <div class="w-karte rv" style="transition-delay:.16s">
+        <span class="sym"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg></span>
+        <h3>Ein Fokus: qualifizierte Termine</h3>
+        <p>Nichts anderes. Keine Werbung, keine Software, kein Beratungspaket — nur Termine, für die Sie zahlen würden.</p>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ══════════════════ FAQ ══════════════════ -->
-<section class="sec" id="faq">
+<section class="sec sec-alt" id="faq">
   <div class="wrap">
-    <div class="head-block rv" style="text-align:center">
-      <span class="eyebrow" style="justify-content:center">Häufige Fragen</span>
-      <h2 class="h2" style="margin:var(--s3) auto 0">Das werde ich oft gefragt.</h2>
+    <div class="kopf-block rv" style="text-align:center;margin-left:auto;margin-right:auto">
+      <span class="label">Häufige Fragen</span>
+      <h2 class="h2" style="margin:var(--s2) auto 0">Das werde ich oft gefragt.</h2>
     </div>
 
     <div class="faq rv">
-      <div class="q">
-        <button aria-expanded="false" aria-controls="a1"><span>Fallen monatliche Kosten an?</span><span class="ic" aria-hidden="true"></span></button>
-        <div class="a" id="a1" role="region"><p>Nein. Die Systeme werden einmalig eingerichtet und gekauft. Eine laufende Betreuung oder spätere Anpassungen sind auf Wunsch möglich.</p></div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a1"><span>Was ist ein qualifizierter Termin?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a1" role="region"><p>Ein Termin mit einem Eigentümer, der konkrete Verkaufsabsicht hat und den Termin fest zugesagt hat. Nur dann zählt er.</p></div>
       </div>
-      <div class="q">
-        <button aria-expanded="false" aria-controls="a2"><span>Wird direkt auf mobile.de und AutoScout24 hochgeladen?</span><span class="ic" aria-hidden="true"></span></button>
-        <div class="a" id="a2" role="region"><p>Die Texte werden vollständig fertig erstellt, sodass Sie sie nur noch einfügen. Ein automatisches Hochladen erlauben die Portale nicht zuverlässig — deshalb versprechen wir es bewusst nicht.</p></div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a2"><span>Woher kommen die Leads?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a2" role="region"><p>Von Ihnen — aus Ihren eingehenden Anfragen und bestehenden Listen. Wir schalten keine Werbung und generieren keine Leads.</p></div>
       </div>
-      <div class="q">
-        <button aria-expanded="false" aria-controls="a3"><span>Funktioniert das mit meinem System?</span><span class="ic" aria-hidden="true"></span></button>
-        <div class="a" id="a3" role="region"><p>Die Systeme arbeiten mit E-Mail und Kalender. Die genaue Anbindung stellen wir bei der Einrichtung passend ein.</p></div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a3"><span>Zahle ich monatlich?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a3" role="region"><p>Nein. Sie zahlen nur pro qualifiziertem Termin — und die ersten fünf sind kostenlos.</p></div>
       </div>
-      <div class="q">
-        <button aria-expanded="false" aria-controls="a4"><span>Wie lange dauert die Einrichtung?</span><span class="ic" aria-hidden="true"></span></button>
-        <div class="a" id="a4" role="region"><p>In der Regel wenige Tage nach dem Erstgespräch.</p></div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a4"><span>Was passiert, wenn jemand nicht erscheint?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a4" role="region"><p>Dann terminieren wir kostenlos nach. Sie zahlen nur für Termine, die wirklich stattfinden.</p></div>
+      </div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a5"><span>Für welche Leads eignet sich das?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a5" role="region"><p>Für Verkäufer-Leads: Eigentümer, die über einen Verkauf nachdenken.</p></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ══════════════════ KONTAKT ══════════════════ -->
-<section class="sec sec-alt" id="kontakt">
-  <div class="wrap ct">
-    <div class="ct-side rv">
-      <span class="eyebrow">Erstgespräch</span>
-      <h2 class="h2" style="margin-top:var(--s3)">Bereit, keine Anfrage mehr zu verlieren?</h2>
-      <p>Schreiben Sie mir kurz, was in Ihrem Autohaus gerade am meisten Zeit kostet. Im Gespräch klären wir, ob und welches System sich für Sie lohnt — unverbindlich.</p>
-      <div class="ct-list">
+<section class="sec" id="kontakt">
+  <div class="wrap kontakt">
+    <div class="k-seite rv">
+      <span class="label">Erstgespräch</span>
+      <h2 class="h2" style="margin-top:var(--s3)">Testen Sie es mit 5 kostenlosen Terminen.</h2>
+      <p>Schreiben Sie mir kurz, wie viele Anfragen bei Ihnen liegen und wie alt Ihre Listen sind. Im Gespräch klären wir, ob sich das für Sie lohnt — unverbindlich.</p>
+      <div class="k-liste">
         <div>
           <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-          <div><b>E-Mail</b><span data-contact="email">kontakt@walter-workflows.de</span></div>
+          <div><b>E-Mail</b><span data-kontakt="email">kontakt@walter-setting.de</span></div>
         </div>
         <div>
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
@@ -732,308 +620,248 @@ form .btn{width:100%;margin-top:var(--s2)}
         </div>
       </div>
       <p style="margin-top:var(--s4)">
-        <a class="btn btn-line" id="mailBtn" href="mailto:kontakt@walter-workflows.de">Direkt E-Mail schreiben</a>
+        <a class="knopf knopf-linie" id="mailKnopf" href="mailto:kontakt@walter-setting.de">Direkt E-Mail schreiben</a>
       </p>
     </div>
 
     <!-- Formular später mit echtem E-Mail-Versand verbinden -->
     <form id="cf" class="rv" style="transition-delay:.1s" novalidate>
-      <div class="fr">
+      <div class="feld">
         <label for="f-name">Name</label>
         <input id="f-name" name="name" type="text" autocomplete="name" required>
-        <p class="err" id="e-name">Bitte tragen Sie Ihren Namen ein.</p>
+        <p class="fehler" id="e-name">Bitte tragen Sie Ihren Namen ein.</p>
       </div>
-      <div class="fr">
-        <label for="f-firma">Autohaus</label>
-        <input id="f-firma" name="firma" type="text" autocomplete="organization" required>
-        <p class="err" id="e-firma">Bitte tragen Sie den Namen Ihres Autohauses ein.</p>
+      <div class="feld">
+        <label for="f-buero">Maklerbüro</label>
+        <input id="f-buero" name="buero" type="text" autocomplete="organization" required>
+        <p class="fehler" id="e-buero">Bitte tragen Sie den Namen Ihres Büros ein.</p>
       </div>
-      <div class="fr">
+      <div class="feld">
         <label for="f-mail">E-Mail</label>
         <input id="f-mail" name="email" type="email" autocomplete="email" required>
-        <p class="err" id="e-mail">Bitte prüfen Sie die E-Mail-Adresse.</p>
+        <p class="fehler" id="e-mail">Bitte prüfen Sie die E-Mail-Adresse.</p>
       </div>
-      <div class="fr">
+      <div class="feld">
         <label for="f-msg">Nachricht</label>
-        <textarea id="f-msg" name="nachricht" required placeholder="Was kostet Sie im Alltag am meisten Zeit?"></textarea>
-        <p class="err" id="e-msg">Bitte beschreiben Sie kurz Ihr Anliegen.</p>
+        <textarea id="f-msg" name="nachricht" required placeholder="Wie viele Anfragen liegen bei Ihnen? Wie groß ist Ihre Liste?"></textarea>
+        <p class="fehler" id="e-msg">Bitte beschreiben Sie kurz Ihr Anliegen.</p>
       </div>
-      <button type="submit" class="btn btn-main">Erstgespräch anfragen
+      <button type="submit" class="knopf knopf-voll">Erstgespräch anfragen
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       <p class="ok" id="ok" role="status">Danke. Ihre Anfrage ist bereit — wir melden uns zeitnah.</p>
-      <p class="form-note">Ihre Angaben werden ausschliesslich zur Beantwortung Ihrer Anfrage verwendet.</p>
+      <p class="form-hinweis">Ihre Angaben werden ausschließlich zur Beantwortung Ihrer Anfrage verwendet.</p>
     </form>
   </div>
 </section>
 
 </main>
 
-<!-- ══════════════════ DETAIL-FENSTER ══════════════════ -->
-<div class="ov" id="ov" role="dialog" aria-modal="true" aria-labelledby="ov-t">
-  <div class="ov-bg" data-close></div>
-  <div class="ov-box">
-    <button class="ov-x" data-close aria-label="Schliessen">
-      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
-    </button>
-    <div class="ov-head"><h3 id="ov-t"></h3><span class="p" id="ov-p"></span><span class="once" id="ov-o">Einmalig</span></div>
-    <div class="ov-sec"><h4>Das Problem</h4><p id="ov-prob"></p></div>
-    <div class="ov-sec"><h4>So funktioniert es</h4><p id="ov-how"></p></div>
-    <div class="ov-sec"><h4>Was Sie bekommen</h4><ul id="ov-list"></ul></div>
-    <div class="ov-res"><b>Ergebnis</b><span id="ov-res"></span></div>
-    <div class="ov-btns">
-      <a href="#kontakt" class="btn btn-main" data-close>Dieses System anfragen
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      <button class="btn btn-line" data-close>Schliessen</button>
-    </div>
-  </div>
-</div>
-
 <!-- ══════════════════ FOOTER ══════════════════ -->
 <footer class="ft">
   <div class="wrap">
     <div class="ft-in">
       <div>
-        <!-- LOGO HIER: bei eigener Datei durch <img src="logo.svg" alt="Walter Workflows"> ersetzen -->
-        <a href="#top" class="logo" aria-label="Walter Workflows — nach oben">
-          <svg class="w" viewBox="0 0 100 100" role="img" aria-label="Walter Workflows">
-            <defs><linearGradient id="wg2" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#4E8FCB"/><stop offset="1" stop-color="#FFFFFF"/>
+        <!-- LOGO HIER: walter-setting-logo.svg
+             Als SVG direkt eingesetzt statt über <img>, aus zwei Gründen:
+             1. die Wortmarke ist dunkelblau und waere auf dem dunklen Footer unsichtbar
+             2. in einem <img> laedt der Browser die Schrift Montserrat nicht nach
+             So erbt das Logo die Seitenschrift und die Farben passen. -->
+        <a href="#top" class="ft-logo" aria-label="Walter Setting — nach oben">
+          <svg viewBox="55 30 1085 415" role="img" aria-label="Walter Setting">
+            <defs><linearGradient id="ftGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#7FA0C4"/><stop offset="1" stop-color="#FFFFFF"/>
             </linearGradient></defs>
-            <path d="M14 22L33 80L50 42L67 80L86 22" fill="none" stroke="url(#wg2)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+            <polyline points="95,80 195,400 278,210 360,400 455,80"
+                      fill="none" stroke="url(#ftGrad)" stroke-width="80"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Der Untertitel steht als Slogan direkt darunter und waere hier zu klein zum Lesen -->
+            <text class="ftWort" x="560" y="205" font-size="96" font-weight="700"
+                  letter-spacing="6" fill="#FFFFFF">WALTER</text>
+            <text class="ftWort" x="560" y="320" font-size="96" font-weight="700"
+                  letter-spacing="6" fill="#FFFFFF">SETTING</text>
           </svg>
-          <span class="t"><b>WALTER WORKFLOWS</b><small>Tim Walter</small></span>
         </a>
-        <p class="ft-slog">Automatisierung für Autohäuser.</p>
+        <p class="ft-slogan">Qualifizierte Termine für Makler.</p>
       </div>
-      <nav class="ft-links" aria-label="Rechtliches">
-        <a href="#angebote">Angebote</a>
-        <a href="#ablauf">Ablauf</a>
+      <nav class="ft-links" aria-label="Weitere Seiten">
+        <a href="#ablauf">So funktioniert's</a>
+        <a href="#angebot">Angebot</a>
         <a href="#faq">FAQ</a>
+        <!-- muss noch ergänzt werden -->
         <a href="impressum.html">Impressum</a>
         <a href="datenschutz.html">Datenschutz</a>
       </nav>
     </div>
-    <div class="ft-bot">
-      <span>© <span id="yr">2026</span> Walter Workflows · Tim Walter</span>
-      <span data-contact="email">kontakt@walter-workflows.de</span>
+    <div class="ft-unten">
+      <span>© <span id="jahr">2026</span> Walter Setting · Tim Walter</span>
+      <span data-kontakt="email">kontakt@walter-setting.de</span>
     </div>
   </div>
 </footer>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   EINSTELLUNGEN — hier Preise und Kontaktdaten pflegen.
+   EINSTELLUNGEN — hier Kontaktdaten pflegen.
    ═══════════════════════════════════════════════════════════════ */
 const CONFIG = {
-  preise:   { anzeigen:"790 €", leads:"1.900 €", werkstatt:"900 €" },
-  kontakt:  { email:"kontakt@walter-workflows.de" },
-  formEndpoint:"",   /* leer = Anfrage öffnet das E-Mail-Programm */
-  bookingLink:""     /* optional: Link zur Terminbuchung */
+  kontakt: { email: "kontakt@walter-setting.de" },
+  formEndpoint: "",   /* leer = Anfrage öffnet das E-Mail-Programm */
+  bookingLink: ""     /* optional: Link zur Terminbuchung */
 };
 
-/* ── Angebots-Details für das Detail-Fenster ───────────────── */
-const SYSTEME = {
-  anzeigen:{
-    titel:"Anzeigen-Generator", preis:"anzeigen",
-    problem:"Für jedes Fahrzeug ein gutes Inserat auf mobile.de, AutoScout24, der eigenen Website und in den sozialen Netzwerken zu schreiben, kostet pro Auto viel Zeit — und die Qualität schwankt je nachdem, wer es gerade macht.",
-    how:"Ein Mitarbeiter trägt einmal die Fahrzeugdaten ein: Modell, Ausstattung, Kilometerstand, Preis und Besonderheiten. Das System erstellt daraus in Sekunden fertige, verkaufsstarke Texte für jeden Kanal — jeweils im passenden Format und Ton. Alles ist copy-ready und muss nur noch eingefügt werden.",
-    liste:["Beschreibung für mobile.de","Beschreibung für AutoScout24","Text für Ihre Website","Instagram-Post","Facebook-Post","WhatsApp-Antwortvorlage","SEO-Text","Einheitlicher Ton über alle Kanäle"],
-    ergebnis:"Alle Inserate wirken hochwertig und einheitlich — ohne Zeitaufwand."
-  },
-  leads:{
-    titel:"Autohaus Lead-System", preis:"leads",
-    problem:"Die meisten Online-Anfragen kommen ausserhalb der Öffnungszeiten. Bis jemand zurückruft, hat der Interessent längst woanders geschrieben — der Lead ist verloren.",
-    how:"Sobald eine Anfrage eingeht, etwa „Ist der BMW noch da? Nehmen Sie meinen Golf 7 in Zahlung?“, erkennt die KI automatisch das gewünschte Fahrzeug, die Kaufabsicht und eine mögliche Inzahlungnahme. Sie trägt alles ins CRM ein, benachrichtigt den zuständigen Verkäufer und schickt dem Interessenten sofort eine passende Antwort. Meldet sich der Kunde nicht, fasst das System an Tag 2, 5 und 10 automatisch nach und bietet bei Bedarf ein Alternativfahrzeug an — die Kette stoppt sofort, sobald der Kunde antwortet. Auf Wunsch bucht das System direkt einen Probefahrt-Termin samt Erinnerung.",
-    liste:["Automatische Anfrage-Erkennung","Erkennung der Kaufabsicht","Erkennung einer Inzahlungnahme","Sofortige, passende Antwort","Eintrag ins CRM","Benachrichtigung des Verkäufers","Follow-up an Tag 2, 5 und 10","Stoppt sofort bei Kundenantwort","Vorschlag eines Alternativfahrzeugs","Probefahrt-Termin mit Erinnerung"],
-    ergebnis:"Kein Lead bleibt liegen. Jede Anfrage wird in Sekunden beantwortet — rund um die Uhr."
-  },
-  werkstatt:{
-    titel:"Werkstatt-Termin-System", preis:"werkstatt",
-    problem:"Serviceanfragen binden Telefonzeit und gehen im Tagesgeschäft unter. Wer nicht durchkommt, ruft beim nächsten Betrieb an.",
-    how:"Schreibt ein Kunde „Ich brauche einen Ölwechsel für meinen Audi A4“, erkennt die KI Fahrzeug und gewünschte Leistung, fragt fehlende Angaben nach, schlägt einen freien Termin vor, trägt ihn in den Werkstattkalender ein und sendet Bestätigung und Erinnerung.",
-    liste:["Anliegen-Erkennung","Erkennung des Fahrzeugs","Automatische Rückfragen bei fehlenden Angaben","Terminvorschlag aus freien Zeiten","Eintrag in den Werkstattkalender","Bestätigung an den Kunden","Erinnerung vor dem Termin"],
-    ergebnis:"Volle Werkstattauslastung ohne Telefonstau."
-  }
-};
-
-/* ── Werte aus CONFIG einsetzen ────────────────────────────── */
-document.querySelectorAll('[data-price]').forEach(e=>{const v=CONFIG.preise[e.dataset.price];if(v)e.textContent=v});
-document.querySelectorAll('[data-contact]').forEach(e=>{const v=CONFIG.kontakt[e.dataset.contact];if(v)e.textContent=v});
-document.getElementById('mailBtn').href='mailto:'+CONFIG.kontakt.email;
-document.getElementById('yr').textContent=new Date().getFullYear();
-
-const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/* ── Navigation: Zustand beim Scrollen + Fortschrittsbalken ── */
-const nav=document.getElementById('nav'), pb=document.getElementById('pb');
-addEventListener('scroll',()=>{
-  nav.classList.toggle('scr', scrollY>10);
-  const h=document.documentElement, max=h.scrollHeight-innerHeight;
-  pb.style.width = (max>0 ? scrollY/max*100 : 0)+'%';
-},{passive:true});
-
-/* ── Burger-Menü ───────────────────────────────────────────── */
-const bgr=document.getElementById('bgr'), nl=document.getElementById('nl');
-bgr.addEventListener('click',()=>{
-  const open = nl.classList.toggle('open');
-  bgr.setAttribute('aria-expanded', open ? 'true' : 'false');
-  bgr.setAttribute('aria-label', open ? 'Menü schliessen' : 'Menü öffnen');
+document.querySelectorAll('[data-kontakt]').forEach(e => {
+  const v = CONFIG.kontakt[e.dataset.kontakt];
+  if (v) e.textContent = v;
 });
-nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
-  nl.classList.remove('open'); bgr.setAttribute('aria-expanded','false');
+document.getElementById('mailKnopf').href = 'mailto:' + CONFIG.kontakt.email;
+document.getElementById('jahr').textContent = new Date().getFullYear();
+
+const WENIGER = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ── Navigation und Fortschritt ────────────────────────────── */
+const nav = document.getElementById('nav'), pb = document.getElementById('pb');
+addEventListener('scroll', () => {
+  nav.classList.toggle('scr', scrollY > 10);
+  const h = document.documentElement, max = h.scrollHeight - innerHeight;
+  pb.style.width = (max > 0 ? scrollY / max * 100 : 0) + '%';
+}, { passive: true });
+
+const burger = document.getElementById('burger'), nl = document.getElementById('nl');
+burger.addEventListener('click', () => {
+  const auf = nl.classList.toggle('auf');
+  burger.setAttribute('aria-expanded', auf ? 'true' : 'false');
+  burger.setAttribute('aria-label', auf ? 'Menü schliessen' : 'Menü öffnen');
+});
+nl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  nl.classList.remove('auf');
+  burger.setAttribute('aria-expanded', 'false');
 }));
 
 /* ── Abschnitte beim Scrollen einblenden ───────────────────── */
-const io=new IntersectionObserver(es=>{
-  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-},{threshold:.12, rootMargin:'0px 0px -60px 0px'});
-document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('da'); io.unobserve(e.target); } });
+}, { threshold: .12, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
 
-/* ── Zählende Kennzahlen ───────────────────────────────────── */
-const cio=new IntersectionObserver(es=>{
-  es.forEach(e=>{
-    if(!e.isIntersecting) return;
-    cio.unobserve(e.target);
-    const el=e.target, to=+el.dataset.to;
-    if(REDUCED){ el.textContent=to; return; }
-    const t0=performance.now(), d=1400;
-    (function f(t){
-      const p=Math.min((t-t0)/d,1), k=1-Math.pow(1-p,3);
-      el.textContent=Math.round(to*k);
-      if(p<1) requestAnimationFrame(f);
-    })(t0);
-  });
-},{threshold:.6});
-document.querySelectorAll('.cnt').forEach(el=>cio.observe(el));
-
-/* ── Antwortzeit-Anzeige: zählt von 4:20 auf 0:38 herunter ─── */
-(function(){
-  const el=document.getElementById('gv'), arc=document.getElementById('arc');
-  const von=260, bis=38;                       /* Sekunden */
-  const fmt=s=>Math.floor(s/60)+':'+String(Math.round(s%60)).padStart(2,'0');
-  if(REDUCED){ el.textContent=fmt(bis); if(arc) arc.style.strokeDashoffset='40'; return; }
-  const start=performance.now(), d=1800;
-  requestAnimationFrame(function f(t){
-    const p=Math.min((t-start)/d,1), k=1-Math.pow(1-p,3);
-    el.textContent=fmt(von+(bis-von)*k);
-    if(arc) arc.style.strokeDashoffset = String(330-290*k);
-    if(p<1) requestAnimationFrame(f);
-  });
+/* ── Die Termine schieben sich nacheinander in den Kalender ── */
+(function () {
+  const liste = document.getElementById('kalListe');
+  if (!liste) return;
+  const termine = liste.querySelectorAll('.termin');
+  if (WENIGER) { termine.forEach(t => t.classList.add('rein')); return; }
+  const kio = new IntersectionObserver(es => {
+    es.forEach(e => {
+      if (!e.isIntersecting) return;
+      kio.unobserve(e.target);
+      termine.forEach(t => {
+        setTimeout(() => t.classList.add('rein'), 350 + Number(t.dataset.verz) * 480);
+      });
+    });
+  }, { threshold: .35 });
+  kio.observe(liste);
 })();
 
-/* ── Detail-Fenster für die Angebote ───────────────────────── */
-const ov=document.getElementById('ov');
-let letzterAusloeser=null;
+/* ── Die 5 zählt hoch ──────────────────────────────────────── */
+(function () {
+  const el = document.getElementById('zahl5');
+  if (!el || WENIGER) return;
+  const zio = new IntersectionObserver(es => {
+    es.forEach(e => {
+      if (!e.isIntersecting) return;
+      zio.unobserve(e.target);
+      const ziel = 5, start = performance.now(), dauer = 900;
+      requestAnimationFrame(function f(t) {
+        const p = Math.min((t - start) / dauer, 1), k = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(ziel * k);
+        if (p < 1) requestAnimationFrame(f);
+      });
+    });
+  }, { threshold: .6 });
+  zio.observe(el);
+})();
 
-function ovOeffnen(key){
-  const s=SYSTEME[key]; if(!s) return;
-  document.getElementById('ov-t').textContent   = s.titel;
-  document.getElementById('ov-p').textContent   = CONFIG.preise[s.preis];
-  document.getElementById('ov-prob').textContent= s.problem;
-  document.getElementById('ov-how').textContent = s.how;
-  document.getElementById('ov-res').textContent = s.ergebnis;
-  const ul=document.getElementById('ov-list');
-  ul.innerHTML='';
-  s.liste.forEach(t=>{
-    const li=document.createElement('li');
-    li.innerHTML='<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>';
-    li.appendChild(document.createTextNode(t));
-    ul.appendChild(li);
-  });
-  ov.classList.add('open');
-  document.body.classList.add('lock');
-  requestAnimationFrame(()=>ov.classList.add('show'));
-  ov.querySelector('.ov-x').focus();
-}
-function ovSchliessen(){
-  ov.classList.remove('show');
-  document.body.classList.remove('lock');
-  setTimeout(()=>ov.classList.remove('open'), REDUCED?0:300);
-  if(letzterAusloeser) letzterAusloeser.focus();
-}
-document.querySelectorAll('.card').forEach(c=>{
-  c.addEventListener('click',()=>{ letzterAusloeser=c; ovOeffnen(c.dataset.sys); });
-});
-ov.querySelectorAll('[data-close]').forEach(el=>el.addEventListener('click',ovSchliessen));
-addEventListener('keydown',e=>{ if(e.key==='Escape' && ov.classList.contains('open')) ovSchliessen(); });
-
-/* Tastaturfalle: Fokus bleibt im offenen Fenster */
-ov.addEventListener('keydown',e=>{
-  if(e.key!=='Tab') return;
-  const f=ov.querySelectorAll('button, [href]');
-  if(!f.length) return;
-  const first=f[0], last=f[f.length-1];
-  if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
-  else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
-});
+/* ── Die Linie im Ablauf zeichnet sich ─────────────────────── */
+(function () {
+  const block = document.getElementById('ablaufBlock');
+  if (!block) return;
+  const lio = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('da'); lio.unobserve(e.target); } });
+  }, { threshold: .3 });
+  lio.observe(block);
+})();
 
 /* ── FAQ ───────────────────────────────────────────────────── */
-document.querySelectorAll('.q').forEach(q=>{
-  const btn=q.querySelector('button'), a=q.querySelector('.a');
-  btn.addEventListener('click',()=>{
-    const auf=q.classList.contains('on');
-    document.querySelectorAll('.q').forEach(o=>{
-      o.classList.remove('on');
-      o.querySelector('.a').style.maxHeight='0px';
-      o.querySelector('button').setAttribute('aria-expanded','false');
+document.querySelectorAll('.frage').forEach(f => {
+  const knopf = f.querySelector('button'), antwort = f.querySelector('.antwort');
+  knopf.addEventListener('click', () => {
+    const warAuf = f.classList.contains('auf');
+    document.querySelectorAll('.frage').forEach(o => {
+      o.classList.remove('auf');
+      o.querySelector('.antwort').style.maxHeight = '0px';
+      o.querySelector('button').setAttribute('aria-expanded', 'false');
     });
-    if(!auf){
-      q.classList.add('on');
-      a.style.maxHeight=a.scrollHeight+'px';
-      btn.setAttribute('aria-expanded','true');
+    if (!warAuf) {
+      f.classList.add('auf');
+      antwort.style.maxHeight = antwort.scrollHeight + 'px';
+      knopf.setAttribute('aria-expanded', 'true');
     }
   });
 });
 
 /* ── Formular ──────────────────────────────────────────────── */
-const felder=[
-  {id:'f-name', err:'e-name', pruef:v=>v.trim().length>1},
-  {id:'f-firma',err:'e-firma',pruef:v=>v.trim().length>1},
-  {id:'f-mail', err:'e-mail', pruef:v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim())},
-  {id:'f-msg',  err:'e-msg',  pruef:v=>v.trim().length>4}
+const felder = [
+  { id: 'f-name',  fehler: 'e-name',  pruef: v => v.trim().length > 1 },
+  { id: 'f-buero', fehler: 'e-buero', pruef: v => v.trim().length > 1 },
+  { id: 'f-mail',  fehler: 'e-mail',  pruef: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) },
+  { id: 'f-msg',   fehler: 'e-msg',   pruef: v => v.trim().length > 4 }
 ];
-felder.forEach(f=>{
-  const el=document.getElementById(f.id);
-  el.addEventListener('input',()=>{
-    if(f.pruef(el.value)){
-      document.getElementById(f.err).classList.remove('on');
+felder.forEach(f => {
+  const el = document.getElementById(f.id);
+  el.addEventListener('input', () => {
+    if (f.pruef(el.value)) {
+      document.getElementById(f.fehler).classList.remove('an');
       el.removeAttribute('aria-invalid');
     }
   });
 });
 
-document.getElementById('cf').addEventListener('submit',async e=>{
+document.getElementById('cf').addEventListener('submit', async e => {
   e.preventDefault();
-  let ok=true, ersterFehler=null;
-  felder.forEach(f=>{
-    const el=document.getElementById(f.id), meldung=document.getElementById(f.err);
-    if(f.pruef(el.value)){ meldung.classList.remove('on'); el.removeAttribute('aria-invalid'); }
-    else { meldung.classList.add('on'); el.setAttribute('aria-invalid','true'); ok=false; if(!ersterFehler) ersterFehler=el; }
+  let gut = true, ersterFehler = null;
+  felder.forEach(f => {
+    const el = document.getElementById(f.id), meldung = document.getElementById(f.fehler);
+    if (f.pruef(el.value)) { meldung.classList.remove('an'); el.removeAttribute('aria-invalid'); }
+    else { meldung.classList.add('an'); el.setAttribute('aria-invalid', 'true'); gut = false; if (!ersterFehler) ersterFehler = el; }
   });
-  if(!ok){ ersterFehler.focus(); return; }
+  if (!gut) { ersterFehler.focus(); return; }
 
-  const d={
-    name:     document.getElementById('f-name').value.trim(),
-    firma:    document.getElementById('f-firma').value.trim(),
-    email:    document.getElementById('f-mail').value.trim(),
-    nachricht:document.getElementById('f-msg').value.trim()
+  const d = {
+    name:      document.getElementById('f-name').value.trim(),
+    buero:     document.getElementById('f-buero').value.trim(),
+    email:     document.getElementById('f-mail').value.trim(),
+    nachricht: document.getElementById('f-msg').value.trim()
   };
 
-  if(CONFIG.formEndpoint){
-    try{
-      const r=await fetch(CONFIG.formEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
-      if(r.ok){ e.target.reset(); document.getElementById('ok').classList.add('on'); return; }
-    }catch(_){}
+  if (CONFIG.formEndpoint) {
+    try {
+      const r = await fetch(CONFIG.formEndpoint, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d)
+      });
+      if (r.ok) { e.target.reset(); document.getElementById('ok').classList.add('an'); return; }
+    } catch (_) {}
   }
-  const body=encodeURIComponent('Name: '+d.name+'\nAutohaus: '+d.firma+'\nE-Mail: '+d.email+'\n\n'+d.nachricht);
-  location.href='mailto:'+CONFIG.kontakt.email+'?subject='+encodeURIComponent('Erstgespräch — '+d.firma)+'&body='+body;
-  document.getElementById('ok').classList.add('on');
+  const text = encodeURIComponent(
+    'Name: ' + d.name + '\nMaklerbüro: ' + d.buero + '\nE-Mail: ' + d.email + '\n\n' + d.nachricht);
+  location.href = 'mailto:' + CONFIG.kontakt.email
+                + '?subject=' + encodeURIComponent('Erstgespräch — ' + d.buero)
+                + '&body=' + text;
+  document.getElementById('ok').classList.add('an');
 });
 
 /* Terminbuchungs-Link, falls hinterlegt */
-if(CONFIG.bookingLink){
-  document.querySelectorAll('a[href="#kontakt"].btn-main').forEach(a=>{
-    a.href=CONFIG.bookingLink; a.target='_blank'; a.rel='noopener';
+if (CONFIG.bookingLink) {
+  document.querySelectorAll('a[href="#kontakt"].knopf').forEach(a => {
+    a.href = CONFIG.bookingLink; a.target = '_blank'; a.rel = 'noopener';
   });
 }
 </script>

@@ -1,0 +1,11 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Walter Setting Icon">
+  <defs>
+    <linearGradient id="wgrad2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#35577D"/>
+      <stop offset="1" stop-color="#152234"/>
+    </linearGradient>
+  </defs>
+  <polyline points="52,60 92,190 120,108 148,190 188,60"
+            fill="none" stroke="url(#wgrad2)" stroke-width="34"
+            stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
