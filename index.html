@@ -228,7 +228,9 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
   display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
 .danach .betrag{font-family:var(--head);font-weight:700;font-size:2rem;letter-spacing:-.02em}
 .danach .je{color:rgba(255,255,255,.72);font-size:16px}
-.preis-karte .knopf{margin-top:var(--s5);width:100%;background:#FFFFFF;color:var(--ink)}
+.preis-karte .rest{margin-top:12px;font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.66)}
+.preis-karte .danach+.danach{margin-top:var(--s3);padding-top:var(--s3)}
+.preis-karte .knopf{margin-top:var(--s4);width:100%;background:#FFFFFF;color:var(--ink)}
 .preis-karte .knopf:hover{background:var(--bg-alt);transform:translateY(-2px)}
 
 .preis-punkte{list-style:none;display:flex;flex-direction:column;gap:var(--s3)}
@@ -237,8 +239,19 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
 .preis-punkte b{display:block;font-weight:600;color:var(--ink);font-size:16.5px;margin-bottom:2px}
 .preis-punkte span{color:var(--text-muted);font-size:15.5px}
 
+/* Protokollband unter dem Ablauf */
+.protokoll{margin-top:var(--s5);padding:var(--s4) var(--s5);background:var(--bg-alt);
+  border:1px solid var(--border);border-radius:var(--r-karte)}
+.protokoll>b{display:block;font-family:var(--head);font-weight:600;font-size:15px;
+  color:var(--ink);margin-bottom:var(--s3)}
+.protokoll ul{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:12px var(--s5)}
+.protokoll li{position:relative;padding-left:22px;font-size:15.5px;color:var(--text-muted)}
+.protokoll li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;
+  border-radius:50%;background:var(--w-grad-1);opacity:.55}
+
 /* ── Warum ─────────────────────────────────────────────────── */
-.warum{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s3)}
+/* Zwei Spalten statt drei: die Karten tragen jetzt laengere Texte */
+.warum{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s3)}
 .w-karte{background:var(--bg);border:1px solid var(--border);border-radius:var(--r-karte);
   padding:var(--s4);box-shadow:var(--schatten);transition:transform .2s var(--ez),border-color .2s var(--ez)}
 .w-karte:hover{transform:translateY(-3px);border-color:var(--w-grad-1)}
@@ -351,6 +364,10 @@ body.intro-an #intro{display:flex}
 .staffel.da>*:nth-child(2){transition-delay:.16s}
 .staffel.da>*:nth-child(3){transition-delay:.27s}
 .staffel.da>*:nth-child(4){transition-delay:.38s}
+.staffel.da>*:nth-child(5){transition-delay:.46s}
+.staffel.da>*:nth-child(6){transition-delay:.53s}
+.staffel.da>*:nth-child(7){transition-delay:.59s}
+.staffel.da>*:nth-child(8){transition-delay:.64s}
 
 /* Ueberschrift schiebt sich hinter einer Kante hervor */
 /* padding+negativer Rand: sonst schneidet overflow die Unterlaengen (g, j) ab */
@@ -382,6 +399,7 @@ body.intro-an #intro{display:flex}
   .hero{padding:var(--s6) 0 var(--s7)}
   .problem,.kontakt,.preis-raster{grid-template-columns:1fr;gap:var(--s5)}
   .ablauf,.warum{grid-template-columns:1fr;max-width:560px;margin-left:auto;margin-right:auto}
+  .protokoll{max-width:560px;margin-left:auto;margin-right:auto}
   .linie{display:none}
   .nl{
     position:fixed;inset:80px 0 auto;flex-direction:column;align-items:stretch;gap:0;
@@ -399,6 +417,8 @@ body.intro-an #intro{display:flex}
 }
 @media(max-width:768px){
   :root{--abschnitt:64px;--wrap:100%}
+  .protokoll{padding:var(--s3)}
+  .protokoll ul{grid-template-columns:1fr;gap:10px}
   body{font-size:16.5px}
   .hero-knoepfe .knopf{flex:1 1 100%}
   .preis-karte{padding:var(--s4)}
@@ -470,7 +490,7 @@ body.intro-an #intro{display:flex}
     <div class="rv">
       <span class="label">Qualifizierte Termine für Makler</span>
       <h1 class="maske rv"><span>Aus Ihren Anfragen werden Termine im Kalender.</span></h1>
-      <p class="sub">Walter Setting ruft Ihre Interessenten an, qualifiziert sie am Telefon und legt Ihnen nur die ernsthaften Verkäufer als feste Termine in den Kalender. Sie kümmern sich um den Abschluss — wir um alles davor.</p>
+      <p class="sub">Wir kontaktieren Ihre Interessenten telefonisch, prüfen Eigentum, Verkaufsabsicht und Zeitrahmen und übergeben Ihnen ausschließlich verbindlich zugesagte Termine — mit vollständigem Gesprächsprotokoll. Sie führen den Abschluss, wir verantworten alles davor.</p>
       <div class="hero-knoepfe">
         <a href="#kontakt" class="knopf knopf-voll">Kostenloses Erstgespräch
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -518,7 +538,7 @@ body.intro-an #intro{display:flex}
 
         <div class="kal-fuss">
           <svg viewBox="0 0 24 24"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4L12 14.1l-3-3"/></svg>
-          Jeder Termin am Telefon geprüft — Eigentümer, Verkaufsabsicht, feste Zusage.
+          Jeder Termin telefonisch geprüft: Eigentum, Verkaufsabsicht, verbindliche Zusage.
         </div>
       </div>
     </div>
@@ -530,12 +550,12 @@ body.intro-an #intro{display:flex}
   <div class="wrap problem">
     <div class="rv">
       <span class="label">Die Ausgangslage</span>
-      <h2 class="h2 maske rv" style="margin-top:var(--s3)"><span>Gute Verkäufer-Leads gehen verloren, weil niemand Zeit hat, sie anzurufen.</span></h2>
+      <h2 class="h2 maske rv" style="margin-top:var(--s3)"><span>Verkäuferkontakte gehen nicht verloren, weil sie schlecht sind — sondern weil niemand dazu kommt, sie anzurufen.</span></h2>
     </div>
     <div class="p-liste rv staffel" style="transition-delay:.1s">
-      <div class="p-punkt"><b>01</b><p>Anfragen aus Formularen und Portalen bleiben liegen — <em>wer zu spät anruft, verliert den Interessenten.</em></p></div>
-      <div class="p-punkt"><b>02</b><p>Die meisten wollen erstmal nur den Wert wissen. <em>Die echten Verkäufer herauszufiltern kostet Zeit.</em></p></div>
-      <div class="p-punkt"><b>03</b><p>Alte Interessentenlisten verstauben, <em>obwohl darin verkaufsbereite Eigentümer stecken.</em></p></div>
+      <div class="p-punkt"><b>01</b><p>Anfragen aus Portalen und Formularen bleiben im Tagesgeschäft liegen. <em>Wer erst Tage später zurückruft, spricht mit einem Eigentümer, der bereits anderweitig im Gespräch ist.</em></p></div>
+      <div class="p-punkt"><b>02</b><p>Ein großer Teil der Anfragen zielt allein auf eine Wertauskunft. <em>Diese Kontakte von echten Verkaufsabsichten zu trennen, kostet genau die Stunden, die im Kalender fehlen.</em></p></div>
+      <div class="p-punkt"><b>03</b><p>Bestandslisten werden nicht mehr nachgefasst, <em>obwohl sich die Lebenssituation vieler Eigentümer seit dem Erstkontakt verändert hat.</em></p></div>
     </div>
   </div>
 </section>
@@ -546,7 +566,7 @@ body.intro-an #intro{display:flex}
     <div class="kopf-block rv">
       <span class="label">So funktioniert's</span>
       <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Wir übernehmen den Teil zwischen Anfrage und Verkauf.</span></h2>
-      <p class="lead">Sie geben uns Ihre eingehenden Anfragen und Ihre alten Listen. Wir rufen an, prüfen, ob echtes Verkaufsinteresse besteht, und buchen die passenden Interessenten als festen Termin in Ihren Kalender. Erscheint jemand nicht, terminieren wir kostenlos nach.</p>
+      <p class="lead">Sie übergeben uns Ihre eingehenden Anfragen und Ihre Bestandslisten. Wir nehmen telefonisch Kontakt auf, prüfen die Verkaufsabsicht und tragen die geeigneten Eigentümer als verbindlichen Termin in Ihren Kalender ein. Erscheint jemand nicht, terminieren wir kostenfrei nach.</p>
     </div>
 
     <div class="ablauf rv" id="ablaufBlock">
@@ -554,18 +574,33 @@ body.intro-an #intro{display:flex}
       <div class="schritt">
         <span class="nr">01</span>
         <h3>Sie übergeben Ihre Leads</h3>
-        <p>Neue Anfragen und/oder bestehende Listen. Wie Sie sie uns geben, klären wir im Erstgespräch — Tabelle, Export oder Weiterleitung.</p>
+        <p>Neue Anfragen, Bestandslisten oder beides. Das Übergabeformat klären wir im Erstgespräch — Export, Tabelle oder automatische Weiterleitung, ganz wie es in Ihre bestehenden Abläufe passt.</p>
       </div>
       <div class="schritt">
         <span class="nr">02</span>
         <h3>Wir telefonieren und qualifizieren</h3>
-        <p>Eigentümer? Verkaufsabsicht? Zeitrahmen? Nur echte Verkäufer kommen durch. Alles andere halten wir Ihnen vom Kalender fern.</p>
+        <p>Wir prüfen Eigentumsverhältnis, Verkaufsabsicht und Zeitrahmen. Nur wer alle Kriterien erfüllt, erhält einen Termin. Alles andere erreicht Ihren Kalender gar nicht erst.</p>
       </div>
       <div class="schritt">
         <span class="nr">03</span>
-        <h3>Fertige Termine im Kalender</h3>
-        <p>Sie sprechen nur noch mit ernsthaften Verkäufern — mit allen Angaben aus dem Telefonat vorab.</p>
+        <h3>Der Termin steht in Ihrem Kalender</h3>
+        <p>Mit Datum, Uhrzeit und dem vollständigen Gesprächsprotokoll. Sie gehen vorbereitet in den Termin und müssen nichts mehr abfragen, was am Telefon längst geklärt wurde.</p>
       </div>
+    </div>
+
+    <!-- Was der Makler zu jedem Termin mitgeliefert bekommt -->
+    <div class="protokoll rv">
+      <b>In jedem Terminprotokoll steht:</b>
+      <ul class="staffel">
+        <li>Eigentumsverhältnis — Alleineigentum, Erbengemeinschaft oder Miteigentum</li>
+        <li>Objektart, Lage und ungefähre Größe</li>
+        <li>Anlass des Verkaufs</li>
+        <li>Zeitrahmen — wann der Verkauf stattfinden soll</li>
+        <li>Preisvorstellung, soweit vorhanden</li>
+        <li>Ob das Objekt selbst bewohnt oder vermietet ist</li>
+        <li>Ob bereits ein anderer Makler beauftragt ist</li>
+        <li>Wer mitentscheidet und ob diese Person am Termin teilnimmt</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -575,7 +610,7 @@ body.intro-an #intro{display:flex}
   <div class="wrap">
     <div class="kopf-block rv">
       <span class="label">Angebot und Preise</span>
-      <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Sie zahlen nur für echte Termine.</span></h2>
+      <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Vergütet wird ausschließlich, was tatsächlich stattfindet.</span></h2>
     </div>
 
     <div class="preis-raster">
@@ -589,8 +624,14 @@ body.intro-an #intro{display:flex}
 
         <div class="danach">
           <span class="betrag">100 €</span>
-          <span class="je">danach je qualifiziertem Termin</span>
+          <span class="je">danach je Termin, der stattgefunden hat</span>
         </div>
+
+        <div class="danach">
+          <span class="betrag">10 %</span>
+          <span class="je">der Maklerprovision — nur bei Abschluss</span>
+        </div>
+        <p class="rest">Neun Zehntel Ihrer Provision bleiben bei Ihnen. Kommt kein Abschluss zustande, entsteht auch keine Beteiligung.</p>
 
         <a href="#kontakt" class="knopf">Kostenloses Erstgespräch
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -599,23 +640,33 @@ body.intro-an #intro{display:flex}
       <ul class="preis-punkte rv staffel" style="transition-delay:.1s">
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-          <div><b>Qualifiziert heißt: alle drei Punkte erfüllt</b>
-          <span>Eigentümer der Immobilie, konkrete Verkaufsabsicht und ein fest zugesagter Termin. Fehlt einer davon, zählt der Termin nicht.</span></div>
+          <div><b>Qualifiziert heißt: drei Bedingungen, alle erfüllt</b>
+          <span>Der Ansprechpartner ist Eigentümer, er verfolgt eine konkrete Verkaufsabsicht, und er hat den Termin verbindlich zugesagt. Fehlt eine der drei, berechnen wir den Termin nicht.</span></div>
         </li>
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-          <div><b>Erscheint jemand nicht, terminieren wir kostenlos nach</b>
-          <span>Sie zahlen nur für Termine, die wirklich stattfinden.</span></div>
+          <div><b>Abgerechnet wird erst, wenn der Termin stattgefunden hat</b>
+          <span>Ein zugesagter Termin allein genügt nicht. Erscheint der Eigentümer nicht, terminieren wir kostenfrei nach.</span></div>
         </li>
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-          <div><b>Kein Abo, keine monatlichen Kosten</b>
-          <span>Keine Mindestlaufzeit, keine Grundgebühr. Abgerechnet wird pro Termin.</span></div>
+          <div><b>Nachweis ohne Streitfall geregelt</b>
+          <span>Wir bestätigen jeden Termin beim Eigentümer nach. Sie melden einen Ausfall innerhalb von sieben Tagen formlos zurück — bis dahin gilt der Termin als offen. Weichen die Angaben voneinander ab, klären wir das gemeinsam mit dem Eigentümer, bevor abgerechnet wird.</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <div><b>Erfolgsbeteiligung von 10 % der Maklerprovision</b>
+          <span>Fällig ausschließlich, wenn aus einem unserer Termine ein unterschriebener Vertrag wird. Grundlage ist die Provision, die Sie an diesem Objekt tatsächlich vereinnahmen.</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <div><b>Keine Grundgebühr, kein Abonnement, keine Laufzeit</b>
+          <span>Es gibt keine monatlichen Kosten und keine Mindestabnahme. Die Zusammenarbeit lässt sich jederzeit beenden.</span></div>
         </li>
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <div><b>Keine Werbekosten</b>
-          <span>Sie liefern die Leads, wir machen daraus Termine. Wir schalten keine Werbung.</span></div>
+          <span>Die Leads stammen aus Ihrem Bestand. Wir schalten keine Anzeigen und rechnen kein Mediabudget ab.</span></div>
         </li>
       </ul>
     </div>
@@ -627,24 +678,29 @@ body.intro-an #intro{display:flex}
   <div class="wrap">
     <div class="kopf-block rv">
       <span class="label">Zusammenarbeit</span>
-      <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Warum Makler mit uns arbeiten.</span></h2>
+      <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Weshalb Maklerbüros mit uns arbeiten.</span></h2>
     </div>
 
     <div class="warum rv staffel">
       <div class="w-karte">
         <span class="sym"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg></span>
-        <h3>Persönlich, kein anonymes Callcenter</h3>
-        <p>Sie haben einen festen Ansprechpartner, der Ihre Leads und Ihre Region kennt — nicht jede Woche eine andere Stimme.</p>
+        <h3>Das Telefon ist unser Handwerk</h3>
+        <p>Die Gespräche führe ich selbst — und ich führe sie gern. Ob jemand ungern zum Hörer greift, hört ein Eigentümer in den ersten Sekunden. Bei uns ist die Telefonakquise kein lästiger Nebenschauplatz, sondern die einzige Aufgabe, auf die alles ausgerichtet ist.</p>
+      </div>
+      <div class="w-karte">
+        <span class="sym"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+        <h3>Sie gewinnen Ihre Zeit zurück</h3>
+        <p>Akquise scheitert selten am Können, sondern am Kalender. Wir übernehmen die Telefonarbeit vollständig, damit Sie sich auf das konzentrieren, was nur Sie leisten können: Bewertung, Besichtigung, Verhandlung und Abschluss.</p>
       </div>
       <div class="w-karte">
         <span class="sym"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.6V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.6"/><path d="M9.5 21v-6h5v6"/></svg></span>
         <h3>Erfahrung aus dem Immobilienvertrieb</h3>
-        <p>Wir wissen, wie man Verkäufer erkennt — und woran man merkt, dass jemand nur den Wert wissen will.</p>
+        <p>Wir kennen die Fragen, an denen sich echte Verkaufsabsicht zeigt — und die Antworten, hinter denen sich jemand verbirgt, der nur den Marktwert wissen möchte.</p>
       </div>
       <div class="w-karte">
         <span class="sym"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg></span>
-        <h3>Ein Fokus: qualifizierte Termine</h3>
-        <p>Nichts anderes. Keine Werbung, keine Software, kein Beratungspaket — nur Termine, für die Sie zahlen würden.</p>
+        <h3>Ein einziger Leistungsbereich</h3>
+        <p>Keine Werbung, keine Software, kein Beratungspaket. Wir liefern qualifizierte Termine — und werden ausschließlich dann vergütet, wenn diese Termine auch stattfinden.</p>
       </div>
     </div>
   </div>
@@ -655,29 +711,41 @@ body.intro-an #intro{display:flex}
   <div class="wrap">
     <div class="kopf-block rv" style="text-align:center;margin-left:auto;margin-right:auto">
       <span class="label">Häufige Fragen</span>
-      <h2 class="h2 maske rv" style="margin:var(--s2) auto 0"><span>Das werde ich oft gefragt.</span></h2>
+      <h2 class="h2 maske rv" style="margin:var(--s2) auto 0"><span>Häufig gestellte Fragen.</span></h2>
     </div>
 
     <div class="faq rv">
       <div class="frage">
-        <button aria-expanded="false" aria-controls="a1"><span>Was ist ein qualifizierter Termin?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a1" role="region"><p>Ein Termin mit einem Eigentümer, der konkrete Verkaufsabsicht hat und den Termin fest zugesagt hat. Nur dann zählt er.</p></div>
+        <button aria-expanded="false" aria-controls="a1"><span>Was genau gilt als qualifizierter Termin?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a1" role="region"><p>Ein Termin zählt, wenn drei Bedingungen zusammenkommen: Der Ansprechpartner ist Eigentümer der Immobilie, es besteht eine konkrete Verkaufsabsicht, und der Termin wurde verbindlich zugesagt. Ist eine davon nicht erfüllt, stellen wir den Termin nicht in Rechnung. Reine Wertauskünfte fallen ausdrücklich nicht darunter.</p></div>
       </div>
       <div class="frage">
-        <button aria-expanded="false" aria-controls="a2"><span>Woher kommen die Leads?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a2" role="region"><p>Von Ihnen — aus Ihren eingehenden Anfragen und bestehenden Listen. Wir schalten keine Werbung und generieren keine Leads.</p></div>
+        <button aria-expanded="false" aria-controls="a2"><span>Woher stammen die Interessenten?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a2" role="region"><p>Ausschließlich aus Ihrem eigenen Bestand — eingehenden Anfragen, Portalkontakten und bestehenden Listen. Wir schalten keine Werbung und generieren keine eigenen Leads. Die Datenhoheit bleibt vollständig bei Ihnen.</p></div>
       </div>
       <div class="frage">
-        <button aria-expanded="false" aria-controls="a3"><span>Zahle ich monatlich?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a3" role="region"><p>Nein. Sie zahlen nur pro qualifiziertem Termin — und die ersten fünf sind kostenlos.</p></div>
+        <button aria-expanded="false" aria-controls="a3"><span>Wie wird nachgewiesen, dass ein Termin stattgefunden hat?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a3" role="region"><p>Wir bestätigen jeden Termin im Nachgang beim Eigentümer. Zusätzlich haben Sie sieben Tage Zeit, einen Ausfall formlos zu melden. Widersprechen sich die Angaben, klären wir den Fall gemeinsam mit dem Eigentümer, bevor abgerechnet wird — Ihnen entsteht in dieser Zeit keine Forderung.</p></div>
       </div>
       <div class="frage">
-        <button aria-expanded="false" aria-controls="a4"><span>Was passiert, wenn jemand nicht erscheint?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a4" role="region"><p>Dann terminieren wir kostenlos nach. Sie zahlen nur für Termine, die wirklich stattfinden.</p></div>
+        <button aria-expanded="false" aria-controls="a4"><span>Wie wird die Erfolgsbeteiligung berechnet und fällig?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a4" role="region"><p>Die Beteiligung beträgt 10 % der Provision, die Sie an dem betreffenden Objekt tatsächlich vereinnahmen, und wird ausschließlich bei einem unterschriebenen Kaufvertrag fällig. Grundlage ist Ihre vereinnahmte Provision, nicht der Kaufpreis. Abgerechnet wird nach Ihrem Zahlungseingang.</p></div>
       </div>
       <div class="frage">
-        <button aria-expanded="false" aria-controls="a5"><span>Für welche Leads eignet sich das?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a5" role="region"><p>Für Verkäufer-Leads: Eigentümer, die über einen Verkauf nachdenken.</p></div>
+        <button aria-expanded="false" aria-controls="a5"><span>Gibt es eine Mindestlaufzeit oder monatliche Kosten?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a5" role="region"><p>Nein. Es gibt keine Grundgebühr, kein Abonnement und keine Mindestabnahme. Abgerechnet werden ausschließlich stattgefundene Termine sowie eine etwaige Erfolgsbeteiligung. Die Zusammenarbeit können Sie jederzeit ohne Frist beenden.</p></div>
+      </div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a6"><span>Wie werden die Daten meiner Interessenten verarbeitet?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a6" role="region"><p>Wir verarbeiten die Daten ausschließlich in Ihrem Auftrag und nach Ihrer Weisung. Vor Beginn schließen wir dazu einen Vertrag zur Auftragsverarbeitung nach Artikel 28 DSGVO. Die Daten werden weder für eigene Zwecke genutzt noch an Dritte weitergegeben.</p></div>
+      </div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a7"><span>Wie viele Maklerbüros betreuen Sie gleichzeitig?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a7" role="region"><p>Bewusst nur wenige. Ich führe die Gespräche selbst und gebe sie nicht an ein Callcenter ab — entsprechend begrenzt ist die Zahl der Mandate, die ich gleichzeitig sauber bedienen kann. Ist die Kapazität ausgeschöpft, sage ich das offen, statt die Qualität zu senken.</p></div>
+      </div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a8"><span>Für welche Art von Kontakten eignet sich die Zusammenarbeit?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a8" role="region"><p>Für Verkäuferkontakte: Eigentümer, die einen Verkauf erwägen. Dazu zählen ausdrücklich auch ältere Listen, die seit Monaten nicht mehr bearbeitet wurden — dort stecken erfahrungsgemäß die Kontakte, die im Tagesgeschäft untergehen.</p></div>
       </div>
     </div>
   </div>
@@ -689,7 +757,7 @@ body.intro-an #intro{display:flex}
     <div class="k-seite rv">
       <span class="label">Erstgespräch</span>
       <h2 class="h2 maske rv" style="margin-top:var(--s3)"><span>Testen Sie es mit 5 kostenlosen Terminen.</span></h2>
-      <p>Schreiben Sie mir kurz, wie viele Anfragen bei Ihnen liegen und wie alt Ihre Listen sind. Im Gespräch klären wir, ob sich das für Sie lohnt — unverbindlich.</p>
+      <p>Schildern Sie mir kurz, wie viele Anfragen derzeit unbearbeitet sind und wie umfangreich Ihre Bestandsliste ist. Im Gespräch klären wir, ob sich die Zusammenarbeit für Sie rechnet — unverbindlich und ohne Verkaufsgespräch.</p>
       <div class="k-liste">
         <div>
           <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
@@ -701,7 +769,7 @@ body.intro-an #intro{display:flex}
         </div>
         <div>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-          <div><b>Unverbindlich</b><span>Rund 20 Minuten, ohne Verpflichtung.</span></div>
+          <div><b>Umfang</b><span>Etwa 20 Minuten, ohne Verpflichtung.</span></div>
         </div>
       </div>
       <p style="margin-top:var(--s4)">
