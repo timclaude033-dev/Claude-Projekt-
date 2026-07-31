@@ -305,6 +305,76 @@ form .knopf{width:100%;margin-top:var(--s2)}
   font-size:13.5px;color:rgba(255,255,255,.55)}
 .ft-unten span{overflow-wrap:anywhere}
 
+/* ══════════════════════════════════════════════════════════════
+   ANFANGSANIMATION
+   Der Vorhang liegt nur dann über der Seite, wenn JavaScript läuft
+   (body bekommt die Klasse per Skript). Ohne JS ist die Seite sofort
+   da — sie darf nie hinter einem Vorhang haengen bleiben.
+   ══════════════════════════════════════════════════════════════ */
+#intro{
+  position:fixed;inset:0;z-index:200;display:none;
+  align-items:center;justify-content:center;flex-direction:column;gap:var(--s4);
+  background:linear-gradient(150deg,var(--w-grad-1) 0%,var(--w-grad-2) 78%);
+}
+body.intro-an{overflow:hidden}
+body.intro-an #intro{display:flex}
+#intro .zeichen{width:88px;height:auto;overflow:visible}
+#intro .zeichen polyline{
+  fill:none;stroke:#FFFFFF;stroke-width:80;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:1500;stroke-dashoffset:1500;
+  animation:wZeichnen 1s var(--ez) .12s forwards;
+}
+@keyframes wZeichnen{to{stroke-dashoffset:0}}
+#intro .schrift{
+  font-family:var(--head);font-weight:700;font-size:13px;letter-spacing:.34em;
+  color:rgba(255,255,255,.82);opacity:0;transform:translateY(8px);
+  animation:introSchrift .6s var(--ez) .85s forwards;
+}
+@keyframes introSchrift{to{opacity:1;transform:none}}
+#intro.weg{animation:vorhangHoch .75s var(--ez) forwards}
+@keyframes vorhangHoch{to{transform:translateY(-101%)}}
+
+/* ══════════════════════════════════════════════════════════════
+   SCROLL-ANIMATIONEN
+   ══════════════════════════════════════════════════════════════ */
+/* Richtungsvarianten des Einblendens */
+.rv-l{transform:translateX(-28px)}
+.rv-r{transform:translateX(28px)}
+.rv-sc{transform:scale(.965);transform-origin:center}
+.rv-l.da,.rv-r.da,.rv-sc.da{transform:none}
+
+/* Versatz innerhalb einer Gruppe: jedes Kind startet etwas spaeter */
+.staffel>*{opacity:0;transform:translateY(22px);
+  transition:opacity .7s var(--ez),transform .7s var(--ez)}
+.staffel.da>*{opacity:1;transform:none}
+.staffel.da>*:nth-child(1){transition-delay:.05s}
+.staffel.da>*:nth-child(2){transition-delay:.16s}
+.staffel.da>*:nth-child(3){transition-delay:.27s}
+.staffel.da>*:nth-child(4){transition-delay:.38s}
+
+/* Ueberschrift schiebt sich hinter einer Kante hervor */
+/* padding+negativer Rand: sonst schneidet overflow die Unterlaengen (g, j) ab */
+.maske{overflow:hidden;display:block;padding-bottom:.1em;margin-bottom:-.1em}
+.maske>span{display:block;transform:translateY(105%);
+  transition:transform .9s var(--ez)}
+.maske.da>span{transform:none}
+
+/* Der weiche Lichtschein im Hero wandert beim Scrollen langsamer mit */
+.hero::before{transform:translate3d(0,var(--py,0px),0);will-change:transform}
+/* Die Kalenderkarte schwebt dabei minimal gegenlaeufig */
+.kal{transform:translate3d(0,var(--ky,0px),0)}
+
+/* Preiskarte: das Raster wandert langsam, solange sie sichtbar ist */
+.preis-karte.da::before{animation:rasterWandern 22s linear infinite}
+@keyframes rasterWandern{to{background-position:38px 38px}}
+
+/* Schritt-Nummern springen kurz an, wenn der Block erscheint */
+.ablauf.da .schritt .nr{animation:nrAn .6s var(--ez) backwards}
+.ablauf.da .schritt:nth-child(2) .nr{animation-delay:.14s}
+.ablauf.da .schritt:nth-child(3) .nr{animation-delay:.28s}
+.ablauf.da .schritt:nth-child(4) .nr{animation-delay:.42s}
+@keyframes nrAn{from{transform:scale(.6);opacity:0}}
+
 /* ── Breakpoints ───────────────────────────────────────────── */
 @media(max-width:1024px){
   .wrap{padding:0 var(--s3)}
@@ -348,6 +418,11 @@ form .knopf{width:100%;margin-top:var(--s2)}
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;
     transition-duration:.001ms!important;scroll-behavior:auto!important}
   .rv{opacity:1;transform:none}
+  .staffel>*{opacity:1;transform:none}
+  .maske>span{transform:none}
+  .hero::before,.kal{transform:none}
+  #intro{display:none!important}
+  body.intro-an{overflow:auto}
   .termin{opacity:1;transform:none}
   .termin .haken svg{stroke-dashoffset:0}
   .ablauf .linie i{transform:scaleX(1)}
@@ -355,6 +430,16 @@ form .knopf{width:100%;margin-top:var(--s2)}
 </style>
 </head>
 <body id="top">
+
+<!-- Anfangsanimation: das W zeichnet sich, dann faehrt der Vorhang hoch.
+     aria-hidden, damit Screenreader direkt beim Inhalt landen. -->
+<div id="intro" aria-hidden="true">
+  <svg class="zeichen" viewBox="60 40 430 400">
+    <polyline points="95,80 195,400 278,210 360,400 455,80"/>
+  </svg>
+  <span class="schrift">WALTER SETTING</span>
+</div>
+
 <div id="pb" aria-hidden="true"></div>
 
 <!-- ══════════════════ NAVIGATION ══════════════════ -->
@@ -384,7 +469,7 @@ form .knopf{width:100%;margin-top:var(--s2)}
   <div class="wrap hero-in">
     <div class="rv">
       <span class="label">Qualifizierte Termine für Makler</span>
-      <h1>Aus Ihren Anfragen werden Termine im Kalender.</h1>
+      <h1 class="maske rv"><span>Aus Ihren Anfragen werden Termine im Kalender.</span></h1>
       <p class="sub">Walter Setting ruft Ihre Interessenten an, qualifiziert sie am Telefon und legt Ihnen nur die ernsthaften Verkäufer als feste Termine in den Kalender. Sie kümmern sich um den Abschluss — wir um alles davor.</p>
       <div class="hero-knoepfe">
         <a href="#kontakt" class="knopf knopf-voll">Kostenloses Erstgespräch
@@ -398,7 +483,7 @@ form .knopf{width:100%;margin-top:var(--s2)}
     </div>
 
     <!-- Signature-Element: der Kalender -->
-    <div class="rv" style="transition-delay:.14s">
+    <div class="rv rv-r" style="transition-delay:.14s">
       <div class="kal" role="img" aria-label="Beispielhafte Darstellung: drei qualifizierte Termine in einer Kalenderwoche.">
         <div class="kal-kopf">
           <b>Ihr Kalender</b>
@@ -445,9 +530,9 @@ form .knopf{width:100%;margin-top:var(--s2)}
   <div class="wrap problem">
     <div class="rv">
       <span class="label">Die Ausgangslage</span>
-      <h2 class="h2" style="margin-top:var(--s3)">Gute Verkäufer-Leads gehen verloren, weil niemand Zeit hat, sie anzurufen.</h2>
+      <h2 class="h2 maske rv" style="margin-top:var(--s3)"><span>Gute Verkäufer-Leads gehen verloren, weil niemand Zeit hat, sie anzurufen.</span></h2>
     </div>
-    <div class="p-liste rv" style="transition-delay:.1s">
+    <div class="p-liste rv staffel" style="transition-delay:.1s">
       <div class="p-punkt"><b>01</b><p>Anfragen aus Formularen und Portalen bleiben liegen — <em>wer zu spät anruft, verliert den Interessenten.</em></p></div>
       <div class="p-punkt"><b>02</b><p>Die meisten wollen erstmal nur den Wert wissen. <em>Die echten Verkäufer herauszufiltern kostet Zeit.</em></p></div>
       <div class="p-punkt"><b>03</b><p>Alte Interessentenlisten verstauben, <em>obwohl darin verkaufsbereite Eigentümer stecken.</em></p></div>
@@ -460,7 +545,7 @@ form .knopf{width:100%;margin-top:var(--s2)}
   <div class="wrap">
     <div class="kopf-block rv">
       <span class="label">So funktioniert's</span>
-      <h2 class="h2" style="margin-top:var(--s2)">Wir übernehmen den Teil zwischen Anfrage und Verkauf.</h2>
+      <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Wir übernehmen den Teil zwischen Anfrage und Verkauf.</span></h2>
       <p class="lead">Sie geben uns Ihre eingehenden Anfragen und Ihre alten Listen. Wir rufen an, prüfen, ob echtes Verkaufsinteresse besteht, und buchen die passenden Interessenten als festen Termin in Ihren Kalender. Erscheint jemand nicht, terminieren wir kostenlos nach.</p>
     </div>
 
@@ -490,11 +575,11 @@ form .knopf{width:100%;margin-top:var(--s2)}
   <div class="wrap">
     <div class="kopf-block rv">
       <span class="label">Angebot und Preise</span>
-      <h2 class="h2" style="margin-top:var(--s2)">Sie zahlen nur für echte Termine.</h2>
+      <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Sie zahlen nur für echte Termine.</span></h2>
     </div>
 
     <div class="preis-raster">
-      <div class="preis-karte rv">
+      <div class="preis-karte rv rv-sc">
         <span class="label">Zum Testen</span>
         <div class="gratis">
           <span class="zahl" id="zahl5">5</span>
@@ -511,7 +596,7 @@ form .knopf{width:100%;margin-top:var(--s2)}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
 
-      <ul class="preis-punkte rv" style="transition-delay:.1s">
+      <ul class="preis-punkte rv staffel" style="transition-delay:.1s">
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <div><b>Qualifiziert heißt: alle drei Punkte erfüllt</b>
@@ -542,21 +627,21 @@ form .knopf{width:100%;margin-top:var(--s2)}
   <div class="wrap">
     <div class="kopf-block rv">
       <span class="label">Zusammenarbeit</span>
-      <h2 class="h2" style="margin-top:var(--s2)">Warum Makler mit uns arbeiten.</h2>
+      <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Warum Makler mit uns arbeiten.</span></h2>
     </div>
 
-    <div class="warum">
-      <div class="w-karte rv">
+    <div class="warum rv staffel">
+      <div class="w-karte">
         <span class="sym"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg></span>
         <h3>Persönlich, kein anonymes Callcenter</h3>
         <p>Sie haben einen festen Ansprechpartner, der Ihre Leads und Ihre Region kennt — nicht jede Woche eine andere Stimme.</p>
       </div>
-      <div class="w-karte rv" style="transition-delay:.08s">
+      <div class="w-karte">
         <span class="sym"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.6V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.6"/><path d="M9.5 21v-6h5v6"/></svg></span>
         <h3>Erfahrung aus dem Immobilienvertrieb</h3>
         <p>Wir wissen, wie man Verkäufer erkennt — und woran man merkt, dass jemand nur den Wert wissen will.</p>
       </div>
-      <div class="w-karte rv" style="transition-delay:.16s">
+      <div class="w-karte">
         <span class="sym"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg></span>
         <h3>Ein Fokus: qualifizierte Termine</h3>
         <p>Nichts anderes. Keine Werbung, keine Software, kein Beratungspaket — nur Termine, für die Sie zahlen würden.</p>
@@ -570,7 +655,7 @@ form .knopf{width:100%;margin-top:var(--s2)}
   <div class="wrap">
     <div class="kopf-block rv" style="text-align:center;margin-left:auto;margin-right:auto">
       <span class="label">Häufige Fragen</span>
-      <h2 class="h2" style="margin:var(--s2) auto 0">Das werde ich oft gefragt.</h2>
+      <h2 class="h2 maske rv" style="margin:var(--s2) auto 0"><span>Das werde ich oft gefragt.</span></h2>
     </div>
 
     <div class="faq rv">
@@ -603,7 +688,7 @@ form .knopf{width:100%;margin-top:var(--s2)}
   <div class="wrap kontakt">
     <div class="k-seite rv">
       <span class="label">Erstgespräch</span>
-      <h2 class="h2" style="margin-top:var(--s3)">Testen Sie es mit 5 kostenlosen Terminen.</h2>
+      <h2 class="h2 maske rv" style="margin-top:var(--s3)"><span>Testen Sie es mit 5 kostenlosen Terminen.</span></h2>
       <p>Schreiben Sie mir kurz, wie viele Anfragen bei Ihnen liegen und wie alt Ihre Listen sind. Im Gespräch klären wir, ob sich das für Sie lohnt — unverbindlich.</p>
       <div class="k-liste">
         <div>
@@ -625,7 +710,7 @@ form .knopf{width:100%;margin-top:var(--s2)}
     </div>
 
     <!-- Formular später mit echtem E-Mail-Versand verbinden -->
-    <form id="cf" class="rv" style="transition-delay:.1s" novalidate>
+    <form id="cf" class="rv rv-r" style="transition-delay:.1s" novalidate>
       <div class="feld">
         <label for="f-name">Name</label>
         <input id="f-name" name="name" type="text" autocomplete="name" required>
@@ -741,7 +826,70 @@ nl.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
 const io = new IntersectionObserver(es => {
   es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('da'); io.unobserve(e.target); } });
 }, { threshold: .12, rootMargin: '0px 0px -60px 0px' });
-document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+/* Alles, was erst nach der Anfangsanimation loslaufen darf, meldet sich
+   hier an — sonst liefen Kalender und Zaehler hinter dem Vorhang ab und
+   der Besucher saehe sie nie. */
+const nachIntro = [];
+let losGelaufen = false;
+function wennBereit(fn) { losGelaufen ? fn() : nachIntro.push(fn); }
+
+function starteEinblenden() {
+  document.querySelectorAll('.rv').forEach(el => io.observe(el));
+  losGelaufen = true;
+  nachIntro.splice(0).forEach(fn => fn());
+}
+
+/* ── Anfangsanimation ──────────────────────────────────────────
+   Der Vorhang laeuft nur beim ersten Aufruf pro Sitzung. Wer auf der
+   Seite hin und her springt, soll ihn nicht jedes Mal sehen.
+   Erst wenn er oben ist, beginnt das Einblenden — sonst waere der
+   Hero schon fertig eingeblendet, waehrend er noch verdeckt ist. */
+(function () {
+  const intro = document.getElementById('intro');
+  const schonGesehen = (() => {
+    try { return sessionStorage.getItem('ws-intro') === '1'; } catch (_) { return false; }
+  })();
+
+  if (!intro || WENIGER || schonGesehen) {
+    if (intro) intro.remove();
+    starteEinblenden();
+    return;
+  }
+
+  document.body.classList.add('intro-an');
+  try { sessionStorage.setItem('ws-intro', '1'); } catch (_) {}
+
+  setTimeout(() => {
+    intro.classList.add('weg');
+    starteEinblenden();
+    setTimeout(() => {
+      intro.remove();
+      document.body.classList.remove('intro-an');
+    }, 750);
+  }, 1550);
+})();
+
+/* ── Lichtschein und Kalender wandern beim Scrollen mit ────────
+   Zwei Geschwindigkeiten, damit der Hero Tiefe bekommt. Gerechnet
+   wird nur in requestAnimationFrame, sonst ruckelt das Scrollen. */
+(function () {
+  const hero = document.querySelector('.hero'), kal = document.querySelector('.kal');
+  if (!hero || WENIGER) return;
+  let offen = false;
+  addEventListener('scroll', () => {
+    if (offen) return;
+    offen = true;
+    requestAnimationFrame(() => {
+      const y = scrollY;
+      if (y < innerHeight * 1.4) {
+        hero.style.setProperty('--py', (y * 0.22).toFixed(1) + 'px');
+        if (kal) kal.style.setProperty('--ky', (y * -0.045).toFixed(1) + 'px');
+      }
+      offen = false;
+    });
+  }, { passive: true });
+})();
 
 /* ── Die Termine schieben sich nacheinander in den Kalender ── */
 (function () {
@@ -758,7 +906,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
       });
     });
   }, { threshold: .35 });
-  kio.observe(liste);
+  wennBereit(() => kio.observe(liste));
 })();
 
 /* ── Die 5 zählt hoch ──────────────────────────────────────── */
@@ -777,7 +925,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
       });
     });
   }, { threshold: .6 });
-  zio.observe(el);
+  wennBereit(() => zio.observe(el));
 })();
 
 /* ── Die Linie im Ablauf zeichnet sich ─────────────────────── */
@@ -787,7 +935,7 @@ document.querySelectorAll('.rv').forEach(el => io.observe(el));
   const lio = new IntersectionObserver(es => {
     es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('da'); lio.unobserve(e.target); } });
   }, { threshold: .3 });
-  lio.observe(block);
+  wennBereit(() => lio.observe(block));
 })();
 
 /* ── FAQ ───────────────────────────────────────────────────── */
