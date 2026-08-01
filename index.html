@@ -206,7 +206,44 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
 .schritt p{color:var(--text-muted);font-size:16px}
 
 /* ── Preis ─────────────────────────────────────────────────── */
-.preis-raster{display:grid;grid-template-columns:1fr .82fr;gap:var(--s5);align-items:start}
+/* Zwei Angebote nebeneinander: dunkel = Kerngeschaeft, hell = Ergaenzung */
+.angebote{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4);align-items:start}
+/* ohne min-width:0 waechst eine Rasterspalte auf die Mindestbreite
+   ihres breitesten Kindes und sprengt schmale Schirme */
+.angebote>*{min-width:0}
+.angebote *{min-width:0}
+.ak-titel{font-size:1.35rem;margin:var(--s3) 0 10px}
+.ak-was{font-size:16px;line-height:1.6}
+.preis-karte .ak-titel{color:#FFFFFF}
+.preis-karte .ak-was{color:rgba(255,255,255,.74)}
+
+.kauf-karte{position:relative;border-radius:18px;padding:var(--s5);
+  background:var(--bg);border:1px solid var(--border);box-shadow:var(--schatten-hoch);
+  display:flex;flex-direction:column}
+.kauf-karte::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;border-radius:18px 18px 0 0;
+  background:linear-gradient(90deg,var(--w-grad-1),var(--ink))}
+.kauf-karte .ak-was{color:var(--text-muted)}
+.kauf-karte .danach{border-top-color:var(--border);margin-top:var(--s4);padding-top:var(--s4)}
+.kauf-karte .betrag{color:var(--ink)}
+.kauf-karte .je,.kauf-karte .rest{color:var(--text-muted)}
+.ak-listenkopf{display:block;margin-top:var(--s4);padding-top:var(--s4);
+  border-top:1px solid var(--border);font-family:var(--head);font-weight:600;
+  font-size:14px;color:var(--ink);letter-spacing:.02em}
+.ak-liste{list-style:none;margin-top:var(--s3);display:grid;gap:2px}
+.ak-liste li{display:flex;gap:13px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--border)}
+.ak-liste li:first-child{border-top:none;padding-top:0}
+.ak-liste i{font-family:var(--head);font-style:normal;font-weight:700;font-size:11.5px;
+  color:var(--w-grad-1);flex:none;padding-top:3px;opacity:.75}
+.ak-liste b{display:block;font-weight:600;font-size:15.5px;color:var(--ink)}
+.ak-liste span{display:block;font-size:14px;color:var(--text-muted);margin-top:1px}
+.kauf-karte .knopf{margin-top:auto;padding-top:15px;width:100%}
+.kauf-karte>.knopf{margin-top:var(--s5)}
+
+/* Gemeinsame Bedingungen unter beiden Angeboten */
+.bedingungen{margin-top:var(--s5);padding-top:var(--s5);border-top:1px solid var(--border)}
+.bedingungen>b{display:block;font-family:var(--head);font-weight:700;font-size:1.05rem;
+  color:var(--ink);margin-bottom:var(--s4)}
+.bedingungen .preis-punkte{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s3) var(--s5)}
 .preis-karte{
   position:relative;border-radius:18px;padding:var(--s5);overflow:hidden;color:#FFFFFF;
   background:linear-gradient(150deg,var(--w-grad-1) 0%,var(--w-grad-2) 72%);
@@ -233,7 +270,7 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
 .preis-karte .knopf{margin-top:var(--s4);width:100%;background:#FFFFFF;color:var(--ink)}
 .preis-karte .knopf:hover{background:var(--bg-alt);transform:translateY(-2px)}
 
-.preis-punkte{list-style:none;display:flex;flex-direction:column;gap:var(--s3)}
+.preis-punkte{list-style:none}
 .preis-punkte li{display:flex;gap:14px}
 .preis-punkte svg{width:20px;height:20px;flex:none;margin-top:3px;stroke:var(--w-grad-1);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .preis-punkte b{display:block;font-weight:600;color:var(--ink);font-size:16.5px;margin-bottom:2px}
@@ -404,10 +441,16 @@ body.intro-an #intro{display:flex}
 
 /* ── Breakpoints ───────────────────────────────────────────── */
 @media(max-width:1024px){
+  /* Seitliche Versaetze wuerden auf schmalen Schirmen ueber den Rand
+     ragen -- dort blenden wir nur senkrecht ein. */
+  .rv-l,.rv-r{transform:translateY(24px)}
+  .rv-sc{transform:translateY(24px)}
   .wrap{padding:0 var(--s3)}
   .hero-in{grid-template-columns:1fr;gap:var(--s6)}
   .hero{padding:var(--s6) 0 var(--s7)}
-  .problem,.kontakt,.preis-raster{grid-template-columns:1fr;gap:var(--s5)}
+  .problem,.kontakt{grid-template-columns:1fr;gap:var(--s5)}
+  .angebote{grid-template-columns:1fr;gap:var(--s4)}
+  .bedingungen .preis-punkte{grid-template-columns:1fr;gap:var(--s3)}
   .ablauf,.warum{grid-template-columns:1fr;max-width:560px;margin-left:auto;margin-right:auto}
   .protokoll{max-width:560px;margin-left:auto;margin-right:auto}
   .linie{display:none}
@@ -432,7 +475,7 @@ body.intro-an #intro{display:flex}
   .pk-liste li:nth-child(2){border-top:1px solid var(--border)}
   body{font-size:16.5px}
   .hero-knoepfe .knopf{flex:1 1 100%}
-  .preis-karte{padding:var(--s4)}
+  .preis-karte,.kauf-karte{padding:var(--s4)}
   .ft-in{flex-direction:column;gap:var(--s4)}
 }
 @media(max-width:480px){
@@ -501,7 +544,7 @@ body.intro-an #intro{display:flex}
     <div class="rv">
       <span class="label">Qualifizierte Termine für Makler</span>
       <h1 class="maske rv"><span>Aus Ihren Anfragen werden Termine im Kalender.</span></h1>
-      <p class="sub">Wir kontaktieren Ihre Interessenten telefonisch, prüfen Eigentum, Verkaufsabsicht und Zeitrahmen und übergeben Ihnen ausschließlich verbindlich zugesagte Termine — mit vollständigem Gesprächsprotokoll. Sie führen den Abschluss, wir verantworten alles davor.</p>
+      <p class="sub">Wir übernehmen die Telefonarbeit auf beiden Seiten: Wir prüfen bei Eigentümern die Verkaufsabsicht und bei Kaufinteressenten Budget und Finanzierung. Sie erhalten ausschließlich verbindlich zugesagte Termine — mit vollständigem Gesprächsprotokoll.</p>
       <div class="hero-knoepfe">
         <a href="#kontakt" class="knopf knopf-voll">Kostenloses Erstgespräch
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -549,7 +592,7 @@ body.intro-an #intro{display:flex}
 
         <div class="kal-fuss">
           <svg viewBox="0 0 24 24"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4L12 14.1l-3-3"/></svg>
-          Jeder Termin telefonisch geprüft: Eigentum, Verkaufsabsicht, verbindliche Zusage.
+          Jeder Termin telefonisch geprüft — auf der Verkäufer- wie auf der Käuferseite.
         </div>
       </div>
     </div>
@@ -577,7 +620,7 @@ body.intro-an #intro{display:flex}
     <div class="kopf-block rv">
       <span class="label">So funktioniert's</span>
       <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Wir übernehmen den Teil zwischen Anfrage und Verkauf.</span></h2>
-      <p class="lead">Sie übergeben uns Ihre eingehenden Anfragen und Ihre Bestandslisten. Wir nehmen telefonisch Kontakt auf, prüfen die Verkaufsabsicht und tragen die geeigneten Eigentümer als verbindlichen Termin in Ihren Kalender ein. Erscheint jemand nicht, terminieren wir kostenfrei nach.</p>
+      <p class="lead">Sie übergeben uns Ihre Kontakte — Eigentümer aus Anfragen und Bestandslisten oder Interessenten zu einem konkreten Objekt. Wir nehmen telefonisch Kontakt auf, prüfen die für die jeweilige Seite entscheidenden Punkte und tragen die geeigneten Personen als verbindlichen Termin in Ihren Kalender ein. Erscheint jemand nicht, terminieren wir kostenfrei nach.</p>
     </div>
 
     <div class="ablauf rv" id="ablaufBlock">
@@ -585,12 +628,12 @@ body.intro-an #intro{display:flex}
       <div class="schritt">
         <span class="nr">01</span>
         <h3>Sie übergeben Ihre Leads</h3>
-        <p>Neue Anfragen, Bestandslisten oder beides. Das Übergabeformat klären wir im Erstgespräch — Export, Tabelle oder automatische Weiterleitung, ganz wie es in Ihre bestehenden Abläufe passt.</p>
+        <p>Eigentümerkontakte, Interessenten zu einem Objekt oder beides. Das Übergabeformat klären wir im Erstgespräch — Export, Tabelle oder automatische Weiterleitung, ganz wie es in Ihre bestehenden Abläufe passt.</p>
       </div>
       <div class="schritt">
         <span class="nr">02</span>
         <h3>Wir telefonieren und qualifizieren</h3>
-        <p>Wir prüfen Eigentumsverhältnis, Verkaufsabsicht und Zeitrahmen. Nur wer alle Kriterien erfüllt, erhält einen Termin. Alles andere erreicht Ihren Kalender gar nicht erst.</p>
+        <p>Bei Eigentümern prüfen wir Eigentumsverhältnis, Verkaufsabsicht und Zeitrahmen, bei Kaufinteressenten Budget und Finanzierungsstand. Nur wer die Kriterien erfüllt, erhält einen Termin.</p>
       </div>
       <div class="schritt">
         <span class="nr">03</span>
@@ -604,8 +647,8 @@ body.intro-an #intro{display:flex}
       <div class="pk-kopf">
         <span class="pk-sym"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>
         <div>
-          <b>In jedem Terminprotokoll steht:</b>
-          <span>Diese acht Punkte klären wir am Telefon — damit Sie im Termin nicht bei null anfangen.</span>
+          <b>Im Protokoll eines Verkäufer-Termins steht:</b>
+          <span>Diese acht Punkte klären wir am Telefon — damit Sie im Termin nicht bei null anfangen. Was wir auf der Käuferseite abfragen, steht beim zweiten Angebot.</span>
         </div>
       </div>
       <ul class="pk-liste rv staffel">
@@ -627,53 +670,78 @@ body.intro-an #intro{display:flex}
   <div class="wrap">
     <div class="kopf-block rv">
       <span class="label">Angebot und Preise</span>
-      <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Vergütet wird ausschließlich, was tatsächlich stattfindet.</span></h2>
+      <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Zwei Angebote, ein Prinzip.</span></h2>
+      <p class="lead">Ob Eigentümer oder Kaufinteressent — wir führen das Telefonat, prüfen die entscheidenden Punkte und übergeben Ihnen einen verbindlichen Termin. Vergütet wird ausschließlich, was tatsächlich stattfindet.</p>
     </div>
 
-    <div class="preis-raster">
+    <!-- Zwei getrennte Angebote: Verkaeufer- und Kaeuferseite -->
+    <div class="angebote">
+
       <div class="preis-karte rv rv-sc">
-        <span class="label">Zum Testen</span>
+        <span class="label">Angebot 01 — Verkäuferseite</span>
+        <h3 class="ak-titel">Qualifizierte Verkäufer-Termine</h3>
+        <p class="ak-was">Wir rufen Ihre Eigentümerkontakte an und übergeben Ihnen ausschließlich Termine mit belegter Verkaufsabsicht.</p>
         <div class="gratis">
           <span class="zahl" id="zahl5">5</span>
-          <span class="wort">qualifizierte Termine</span>
+          <span class="wort">Termine gratis</span>
         </div>
-        <p class="gratis-unter">kostenlos — ohne Risiko und ohne Verpflichtung.</p>
-
+        <p class="gratis-unter">zum Testen — ohne Risiko und ohne Verpflichtung.</p>
         <div class="danach">
           <span class="betrag">100 €</span>
           <span class="je">danach je Termin, der stattgefunden hat</span>
         </div>
-
         <div class="danach">
           <span class="betrag">5 %</span>
           <span class="je">der Maklerprovision — nur bei Abschluss</span>
         </div>
         <p class="rest">Der weitaus größte Teil Ihrer Provision bleibt bei Ihnen. Kommt kein Abschluss zustande, entsteht auch keine Beteiligung.</p>
-
         <a href="#kontakt" class="knopf">Kostenloses Erstgespräch
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
 
-      <ul class="preis-punkte rv staffel" style="transition-delay:.1s">
+      <div class="kauf-karte rv rv-sc" style="transition-delay:.08s">
+        <span class="label">Angebot 02 — Käuferseite</span>
+        <h3 class="ak-titel">Vorqualifizierte Kaufinteressenten</h3>
+        <p class="ak-was">Für Interessenten zu einem konkreten Objekt: Wir klären am Telefon Budget, Finanzierungsstand und Vorstellungen — damit Sie Besichtigungen nur noch mit Käufern führen, die das Objekt auch erwerben können.</p>
+        <div class="danach">
+          <span class="betrag">90 €</span>
+          <span class="je">je Termin, der stattgefunden hat</span>
+        </div>
+        <p class="rest">Keine Erfolgsbeteiligung — auf der Käuferseite rechnen wir ausschließlich pro Termin ab.</p>
+
+        <b class="ak-listenkopf">Am Telefon geklärt:</b>
+        <ul class="ak-liste staffel rv">
+          <li><i>01</i><div><b>Finanzierung</b><span>Bankzusage, Eigenkapital, Finanzierungsstand</span></div></li>
+          <li><i>02</i><div><b>Budget</b><span>Belastbare Preisobergrenze statt Wunschdenken</span></div></li>
+          <li><i>03</i><div><b>Objektwunsch</b><span>Art, Größe und Zimmerzahl</span></div></li>
+          <li><i>04</i><div><b>Lage</b><span>Bevorzugte Stadtteile oder Umkreis</span></div></li>
+          <li><i>05</i><div><b>Zeitrahmen</b><span>Ab wann der Kauf erfolgen soll</span></div></li>
+          <li><i>06</i><div><b>Nutzung</b><span>Eigennutzung oder Kapitalanlage</span></div></li>
+          <li><i>07</i><div><b>Abhängigkeit</b><span>Ob zuvor eine eigene Immobilie verkauft werden muss</span></div></li>
+          <li><i>08</i><div><b>Besichtigung</b><span>Verbindliche Zusage für einen konkreten Termin</span></div></li>
+        </ul>
+        <a href="#kontakt" class="knopf knopf-voll">Kostenloses Erstgespräch
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+
+    <div class="bedingungen">
+      <b>Für beide Angebote gilt:</b>
+      <ul class="preis-punkte rv staffel">
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-          <div><b>Qualifiziert heißt: drei Bedingungen, alle erfüllt</b>
-          <span>Der Ansprechpartner ist Eigentümer, er verfolgt eine konkrete Verkaufsabsicht, und er hat den Termin verbindlich zugesagt. Fehlt eine der drei, berechnen wir den Termin nicht.</span></div>
+          <div><b>Die ersten fünf Termine sind kostenlos</b>
+          <span>Der Testlauf gilt unabhängig davon, welches der beiden Angebote Sie zuerst ausprobieren.</span></div>
         </li>
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <div><b>Abgerechnet wird erst, wenn der Termin stattgefunden hat</b>
-          <span>Ein zugesagter Termin allein genügt nicht. Erscheint der Eigentümer nicht, terminieren wir kostenfrei nach.</span></div>
+          <span>Ein zugesagter Termin allein genügt nicht. Erscheint der Interessent nicht, terminieren wir kostenfrei nach.</span></div>
         </li>
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <div><b>Nachweis ohne Streitfall geregelt</b>
-          <span>Wir bestätigen jeden Termin beim Eigentümer nach. Sie melden einen Ausfall innerhalb von sieben Tagen formlos zurück — bis dahin gilt der Termin als offen. Weichen die Angaben voneinander ab, klären wir das gemeinsam mit dem Eigentümer, bevor abgerechnet wird.</span></div>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-          <div><b>Erfolgsbeteiligung von 5 % der Maklerprovision</b>
-          <span>Fällig ausschließlich, wenn aus einem unserer Termine ein unterschriebener Vertrag wird. Grundlage ist die Provision, die Sie an diesem Objekt tatsächlich vereinnahmen.</span></div>
+          <span>Wir bestätigen jeden Termin beim Interessenten nach. Sie melden einen Ausfall innerhalb von sieben Tagen formlos zurück. Weichen die Angaben voneinander ab, klären wir das gemeinsam, bevor abgerechnet wird.</span></div>
         </li>
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
@@ -683,9 +751,15 @@ body.intro-an #intro{display:flex}
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <div><b>Keine Werbekosten</b>
-          <span>Die Leads stammen aus Ihrem Bestand. Wir schalten keine Anzeigen und rechnen kein Mediabudget ab.</span></div>
+          <span>Alle Kontakte stammen aus Ihrem eigenen Bestand. Wir schalten keine Anzeigen und rechnen kein Mediabudget ab.</span></div>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+          <div><b>Beide Angebote sind einzeln buchbar</b>
+          <span>Sie können mit der Verkäuferseite beginnen, nur die Käuferseite beauftragen oder beides kombinieren.</span></div>
         </li>
       </ul>
+    </div>
     </div>
   </div>
 </section>
@@ -743,6 +817,14 @@ body.intro-an #intro{display:flex}
       <div class="frage">
         <button aria-expanded="false" aria-controls="a3"><span>Wie wird nachgewiesen, dass ein Termin stattgefunden hat?</span><span class="sym" aria-hidden="true"></span></button>
         <div class="antwort" id="a3" role="region"><p>Wir bestätigen jeden Termin im Nachgang beim Eigentümer. Zusätzlich haben Sie sieben Tage Zeit, einen Ausfall formlos zu melden. Widersprechen sich die Angaben, klären wir den Fall gemeinsam mit dem Eigentümer, bevor abgerechnet wird — Ihnen entsteht in dieser Zeit keine Forderung.</p></div>
+      </div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a9"><span>Was prüfen Sie bei einem Kaufinteressenten?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a9" role="region"><p>Finanzierungsstand und verfügbares Eigenkapital, eine belastbare Preisobergrenze, die konkreten Objekt- und Lagevorstellungen, den Zeitrahmen, ob eigengenutzt oder als Kapitalanlage gekauft werden soll und ob zuvor eine eigene Immobilie verkauft werden muss. Erst danach vereinbaren wir die Besichtigung. Angaben zur Finanzierung erheben wir ausschließlich in dem Umfang, den Sie für die Vorauswahl benötigen — eine Bonitätsprüfung führen wir nicht durch.</p></div>
+      </div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a10"><span>Fällt bei Käufer-Terminen ebenfalls eine Erfolgsbeteiligung an?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a10" role="region"><p>Nein. Auf der Käuferseite rechnen wir ausschließlich pro stattgefundenem Termin mit 90 € ab. Die Erfolgsbeteiligung von 5 % gilt allein für Abschlüsse aus Verkäufer-Terminen.</p></div>
       </div>
       <div class="frage">
         <button aria-expanded="false" aria-controls="a4"><span>Wie wird die Erfolgsbeteiligung berechnet und fällig?</span><span class="sym" aria-hidden="true"></span></button>
