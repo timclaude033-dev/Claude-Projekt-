@@ -240,14 +240,24 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
 .preis-punkte span{color:var(--text-muted);font-size:15.5px}
 
 /* Protokollband unter dem Ablauf */
-.protokoll{margin-top:var(--s5);padding:var(--s4) var(--s5);background:var(--bg-alt);
-  border:1px solid var(--border);border-radius:var(--r-karte)}
-.protokoll>b{display:block;font-family:var(--head);font-weight:600;font-size:15px;
-  color:var(--ink);margin-bottom:var(--s3)}
-.protokoll ul{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:12px var(--s5)}
-.protokoll li{position:relative;padding-left:22px;font-size:15.5px;color:var(--text-muted)}
-.protokoll li::before{content:"";position:absolute;left:0;top:9px;width:7px;height:7px;
-  border-radius:50%;background:var(--w-grad-1);opacity:.55}
+.protokoll{margin-top:var(--s5);padding:var(--s5);background:var(--bg);
+  border:1px solid var(--border);border-radius:var(--r-karte);box-shadow:var(--schatten)}
+.pk-kopf{display:flex;gap:16px;align-items:flex-start;padding-bottom:var(--s4);
+  border-bottom:1px solid var(--border);margin-bottom:var(--s4)}
+.pk-sym{width:38px;height:38px;flex:none;border-radius:11px;background:var(--ink);
+  display:flex;align-items:center;justify-content:center}
+.pk-sym svg{width:18px;height:18px;stroke:#FFFFFF;fill:none;stroke-width:2.6;
+  stroke-linecap:round;stroke-linejoin:round}
+.pk-kopf b{display:block;font-family:var(--head);font-weight:700;font-size:1.05rem;color:var(--ink)}
+.pk-kopf span{display:block;margin-top:4px;font-size:15.5px;color:var(--text-muted);max-width:60ch}
+.pk-liste{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:2px var(--s5)}
+.pk-liste li{display:flex;gap:14px;align-items:flex-start;padding:13px 0;
+  border-top:1px solid var(--border)}
+.pk-liste li:nth-child(1),.pk-liste li:nth-child(2){border-top:none}
+.pk-liste i{font-family:var(--head);font-style:normal;font-weight:700;font-size:12px;
+  color:var(--w-grad-1);flex:none;padding-top:4px;letter-spacing:.04em;opacity:.75}
+.pk-liste b{display:block;font-weight:600;font-size:16px;color:var(--ink)}
+.pk-liste span{display:block;font-size:14.5px;color:var(--text-muted);margin-top:1px}
 
 /* ── Warum ─────────────────────────────────────────────────── */
 /* Zwei Spalten statt drei: die Karten tragen jetzt laengere Texte */
@@ -417,8 +427,9 @@ body.intro-an #intro{display:flex}
 }
 @media(max-width:768px){
   :root{--abschnitt:64px;--wrap:100%}
-  .protokoll{padding:var(--s3)}
-  .protokoll ul{grid-template-columns:1fr;gap:10px}
+  .protokoll{padding:var(--s4) var(--s3)}
+  .pk-liste{grid-template-columns:1fr;gap:0}
+  .pk-liste li:nth-child(2){border-top:1px solid var(--border)}
   body{font-size:16.5px}
   .hero-knoepfe .knopf{flex:1 1 100%}
   .preis-karte{padding:var(--s4)}
@@ -590,16 +601,22 @@ body.intro-an #intro{display:flex}
 
     <!-- Was der Makler zu jedem Termin mitgeliefert bekommt -->
     <div class="protokoll rv">
-      <b>In jedem Terminprotokoll steht:</b>
-      <ul class="staffel">
-        <li>Eigentumsverhältnis — Alleineigentum, Erbengemeinschaft oder Miteigentum</li>
-        <li>Objektart, Lage und ungefähre Größe</li>
-        <li>Anlass des Verkaufs</li>
-        <li>Zeitrahmen — wann der Verkauf stattfinden soll</li>
-        <li>Preisvorstellung, soweit vorhanden</li>
-        <li>Ob das Objekt selbst bewohnt oder vermietet ist</li>
-        <li>Ob bereits ein anderer Makler beauftragt ist</li>
-        <li>Wer mitentscheidet und ob diese Person am Termin teilnimmt</li>
+      <div class="pk-kopf">
+        <span class="pk-sym"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg></span>
+        <div>
+          <b>In jedem Terminprotokoll steht:</b>
+          <span>Diese acht Punkte klären wir am Telefon — damit Sie im Termin nicht bei null anfangen.</span>
+        </div>
+      </div>
+      <ul class="pk-liste rv staffel">
+        <li><i>01</i><div><b>Eigentumsverhältnis</b><span>Alleineigentum, Erbengemeinschaft oder Miteigentum</span></div></li>
+        <li><i>02</i><div><b>Objekt</b><span>Art, Lage und ungefähre Größe</span></div></li>
+        <li><i>03</i><div><b>Anlass</b><span>Weshalb verkauft werden soll</span></div></li>
+        <li><i>04</i><div><b>Zeitrahmen</b><span>Wann der Verkauf stattfinden soll</span></div></li>
+        <li><i>05</i><div><b>Preisvorstellung</b><span>Soweit der Eigentümer eine nennt</span></div></li>
+        <li><i>06</i><div><b>Nutzung</b><span>Selbst bewohnt oder vermietet</span></div></li>
+        <li><i>07</i><div><b>Wettbewerb</b><span>Ob bereits ein Makler beauftragt ist</span></div></li>
+        <li><i>08</i><div><b>Entscheider</b><span>Wer mitentscheidet und ob er teilnimmt</span></div></li>
       </ul>
     </div>
   </div>
