@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Walter Setting — Qualifizierte Termine für Makler</title>
-<meta name="description" content="Wir rufen Ihre Interessenten an, qualifizieren sie am Telefon und legen Ihnen nur die ernsthaften Verkäufer als feste Termine in den Kalender. Die ersten fünf Termine sind kostenlos.">
+<meta name="description" content="Wir rufen Ihre Interessenten an, qualifizieren sie am Telefon und legen Ihnen nur die ernsthaften Verkäufer als feste Termine in den Kalender. Die ersten drei Termine sind kostenlos.">
 <meta name="theme-color" content="#16233B">
 <meta property="og:title" content="Walter Setting — Qualifizierte Termine für Makler">
 <meta property="og:description" content="Aus Ihren Anfragen werden Termine im Kalender. Sie zahlen nur für echte Termine.">
@@ -206,38 +206,79 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
 .schritt p{color:var(--text-muted);font-size:16px}
 
 /* ── Preis ─────────────────────────────────────────────────── */
-/* Zwei Angebote nebeneinander: dunkel = Kerngeschaeft, hell = Ergaenzung */
-.angebote{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4);align-items:start}
-/* ohne min-width:0 waechst eine Rasterspalte auf die Mindestbreite
-   ihres breitesten Kindes und sprengt schmale Schirme */
+/* ── Die zwei Angebotskarten ────────────────────────────────
+   Beide gleich aufgebaut und gleich hoch. Die Detailflaeche liegt
+   ausserhalb der Karte und faehrt beim Darueberfahren hoch -- als
+   Ueberlagerung, damit sich die Hoehe der Karte nicht aendert. */
+.angebote{display:grid;grid-template-columns:1fr 1fr;gap:var(--s4);align-items:stretch}
 .angebote>*{min-width:0}
 .angebote *{min-width:0}
-.ak-titel{font-size:1.35rem;margin:var(--s3) 0 10px}
-.ak-was{font-size:16px;line-height:1.6}
-.preis-karte .ak-titel{color:#FFFFFF}
-.preis-karte .ak-was{color:rgba(255,255,255,.74)}
 
-.kauf-karte{position:relative;border-radius:18px;padding:var(--s5);
-  background:var(--bg);border:1px solid var(--border);box-shadow:var(--schatten-hoch);
-  display:flex;flex-direction:column}
-.kauf-karte::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;border-radius:18px 18px 0 0;
+.ak-karte{position:relative;overflow:hidden;border-radius:18px;isolation:isolate;
+  display:flex;flex-direction:column;
+  transition:transform .3s var(--ez),box-shadow .3s var(--ez)}
+.ak-karte:hover,.ak-karte:focus-within{transform:translateY(-4px)}
+.ak-inhalt{display:flex;flex-direction:column;flex:1;padding:var(--s5)}
+
+.ak-dunkel{color:#FFFFFF;background:linear-gradient(150deg,var(--w-grad-1) 0%,var(--w-grad-2) 72%);
+  box-shadow:0 24px 60px -26px rgba(21,34,52,.6)}
+.ak-dunkel::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;z-index:0;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:38px 38px}
+.ak-dunkel.da::before{animation:rasterWandern 22s linear infinite}
+.ak-dunkel>*{position:relative;z-index:1}
+.ak-dunkel .label{color:rgba(255,255,255,.62)}
+.ak-dunkel .ak-titel{color:#FFFFFF}
+.ak-dunkel .ak-was,.ak-dunkel .je,.ak-dunkel .rest{color:rgba(255,255,255,.72)}
+.ak-dunkel .knopf{background:#FFFFFF;color:var(--ink)}
+.ak-dunkel .knopf:hover{background:var(--bg-alt)}
+
+.ak-hell{background:var(--bg);border:1px solid var(--border);box-shadow:var(--schatten-hoch)}
+.ak-hell::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;z-index:2;
   background:linear-gradient(90deg,var(--w-grad-1),var(--ink))}
-.kauf-karte .ak-was{color:var(--text-muted)}
-.kauf-karte .danach{border-top-color:var(--border);margin-top:var(--s4);padding-top:var(--s4)}
-.kauf-karte .betrag{color:var(--ink)}
-.kauf-karte .je,.kauf-karte .rest{color:var(--text-muted)}
-.ak-listenkopf{display:block;margin-top:var(--s4);padding-top:var(--s4);
-  border-top:1px solid var(--border);font-family:var(--head);font-weight:600;
-  font-size:14px;color:var(--ink);letter-spacing:.02em}
-.ak-liste{list-style:none;margin-top:var(--s3);display:grid;gap:2px}
-.ak-liste li{display:flex;gap:13px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--border)}
-.ak-liste li:first-child{border-top:none;padding-top:0}
-.ak-liste i{font-family:var(--head);font-style:normal;font-weight:700;font-size:11.5px;
-  color:var(--w-grad-1);flex:none;padding-top:3px;opacity:.75}
-.ak-liste b{display:block;font-weight:600;font-size:15.5px;color:var(--ink)}
-.ak-liste span{display:block;font-size:14px;color:var(--text-muted);margin-top:1px}
-.kauf-karte .knopf{margin-top:auto;padding-top:15px;width:100%}
-.kauf-karte>.knopf{margin-top:var(--s5)}
+.ak-hell .ak-was,.ak-hell .je,.ak-hell .rest{color:var(--text-muted)}
+.ak-hell .betrag,.ak-hell .zahl,.ak-hell .ak-titel{color:var(--ink)}
+
+.ak-titel{font-size:1.4rem;margin:var(--s3) 0 10px}
+.ak-was{font-size:16px;line-height:1.58}
+.ak-gratis{display:flex;align-items:baseline;gap:11px;margin:var(--s4) 0 0}
+.ak-gratis .zahl{font-family:var(--head);font-weight:700;font-size:3.2rem;line-height:1;letter-spacing:-.03em}
+.ak-gratis .wort{font-family:var(--head);font-weight:600;font-size:16px;opacity:.9}
+.ak-preis{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;
+  margin-top:var(--s4);padding-top:var(--s3);border-top:1px solid rgba(255,255,255,.16)}
+.ak-hell .ak-preis{border-top-color:var(--border)}
+.ak-zweit{margin-top:var(--s2);padding-top:var(--s2);border-top:none}
+.ak-preis .betrag{font-family:var(--head);font-weight:700;font-size:1.9rem;letter-spacing:-.02em}
+.ak-preis .je{font-size:15.5px}
+.ak-karte .rest{margin-top:12px;font-size:14px;line-height:1.5}
+.ak-karte .knopf{margin-top:auto;width:100%}
+.ak-karte .ak-was+.ak-gratis{margin-top:var(--s3)}
+
+/* Detailflaeche */
+.ak-detail{position:absolute;inset:auto 0 0 0;z-index:3;padding:var(--s4) var(--s5) var(--s5);
+  background:var(--ink);color:#FFFFFF;
+  transform:translateY(101%);transition:transform .45s var(--ez)}
+.ak-hell .ak-detail{background:var(--ink)}
+.ak-karte:hover .ak-detail,.ak-karte:focus-within .ak-detail{transform:translateY(0)}
+.ak-detail>b{display:block;font-family:var(--head);font-weight:700;font-size:13px;
+  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:var(--s3)}
+.ak-detail ul{list-style:none;display:grid;gap:9px}
+.ak-detail li{display:flex;gap:12px;align-items:baseline;font-size:15.5px}
+.ak-detail i{font-family:var(--head);font-style:normal;font-weight:700;font-size:11.5px;
+  color:#7FA0C4;flex:none}
+.ak-hinweis{position:absolute;right:var(--s4);bottom:var(--s4);z-index:4;
+  font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text-muted);opacity:.75;transition:opacity .25s var(--ez);pointer-events:none}
+.ak-dunkel .ak-hinweis{color:rgba(255,255,255,.55)}
+.ak-karte:hover .ak-hinweis,.ak-karte:focus-within .ak-hinweis{opacity:0}
+
+/* Ohne Maus gibt es kein Darueberfahren: Details fest anzeigen */
+@media(hover:none){
+  .ak-detail{position:static;transform:none;padding:var(--s4) var(--s5) var(--s5)}
+  .ak-hinweis{display:none}
+  .ak-karte:hover{transform:none}
+}
 
 /* Gemeinsame Bedingungen unter beiden Angeboten */
 .bedingungen{margin-top:var(--s5);padding-top:var(--s5);border-top:1px solid var(--border)}
@@ -552,7 +593,7 @@ body.intro-an #intro{display:flex}
       </div>
       <p class="hero-hinweis">
         <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-        Die ersten 5 Termine sind kostenlos.
+        Die ersten 3 Termine sind kostenlos.
       </p>
     </div>
 
@@ -674,55 +715,67 @@ body.intro-an #intro{display:flex}
       <p class="lead">Ob Eigentümer oder Kaufinteressent — wir führen das Telefonat, prüfen die entscheidenden Punkte und übergeben Ihnen einen verbindlichen Termin. Vergütet wird ausschließlich, was tatsächlich stattfindet.</p>
     </div>
 
-    <!-- Zwei getrennte Angebote: Verkaeufer- und Kaeuferseite -->
+    <!-- Zwei gleich aufgebaute Angebote; die Details fahren beim
+         Darueberfahren hoch. Ohne Maus stehen sie fest sichtbar. -->
     <div class="angebote">
-
-      <div class="preis-karte rv rv-sc">
-        <span class="label">Angebot 01 — Verkäuferseite</span>
-        <h3 class="ak-titel">Qualifizierte Verkäufer-Termine</h3>
-        <p class="ak-was">Wir rufen Ihre Eigentümerkontakte an und übergeben Ihnen ausschließlich Termine mit belegter Verkaufsabsicht.</p>
-        <div class="gratis">
-          <span class="zahl" id="zahl5">5</span>
-          <span class="wort">Termine gratis</span>
+      <article class="ak-karte ak-dunkel rv rv-sc" style="transition-delay:0s">
+        <div class="ak-inhalt">
+          <span class="label">Angebot 01 — Verkäuferseite</span>
+          <h3 class="ak-titel">Verkäufer-Termine</h3>
+          <p class="ak-was">Wir prüfen Ihre Eigentümerkontakte am Telefon und übergeben nur Termine mit echter Verkaufsabsicht.</p>
+          <div class="ak-gratis"><span class="zahl" id="zahl5">3</span><span class="wort">Termine gratis zum Testen</span></div>
+          <div class="ak-preis">
+            <span class="betrag">100 €</span>
+            <span class="je">je Termin, der stattgefunden hat</span>
+          </div>
+          <div class="ak-preis ak-zweit">
+            <span class="betrag">5 %</span>
+            <span class="je">der Maklerprovision bei Abschluss</span>
+          </div>
+          <p class="rest">Kommt kein Abschluss zustande, entsteht keine Beteiligung.</p>
+          <a href="#kontakt" class="knopf ">Kostenloses Erstgespräch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
-        <p class="gratis-unter">zum Testen — ohne Risiko und ohne Verpflichtung.</p>
-        <div class="danach">
-          <span class="betrag">100 €</span>
-          <span class="je">danach je Termin, der stattgefunden hat</span>
+        <div class="ak-detail">
+          <b>Am Telefon geklärt</b>
+          <ul>
+            <li><i>01</i>Eigentumsverhältnis</li>
+            <li><i>02</i>Konkrete Verkaufsabsicht</li>
+            <li><i>03</i>Zeitrahmen des Verkaufs</li>
+            <li><i>04</i>Preisvorstellung</li>
+            <li><i>05</i>Wer mitentscheidet</li>
+          </ul>
         </div>
-        <div class="danach">
-          <span class="betrag">5 %</span>
-          <span class="je">der Maklerprovision — nur bei Abschluss</span>
+        <span class="ak-hinweis" aria-hidden="true">Details ansehen</span>
+      </article>
+      <article class="ak-karte ak-hell rv rv-sc" style="transition-delay:.08s">
+        <div class="ak-inhalt">
+          <span class="label">Angebot 02 — Käuferseite</span>
+          <h3 class="ak-titel">Käufer-Vorqualifizierung</h3>
+          <p class="ak-was">Sie haben ein Objekt im Verkauf: Wir prüfen die Interessenten, bevor Sie zur Besichtigung fahren.</p>
+          <div class="ak-gratis"><span class="zahl">3</span><span class="wort">Termine gratis zum Testen</span></div>
+          <div class="ak-preis">
+            <span class="betrag">50 €</span>
+            <span class="je">je Termin, der stattgefunden hat</span>
+          </div>
+          <div class="ak-preis ak-zweit">
+            <span class="betrag">5 %</span>
+            <span class="je">der Maklerprovision bei Abschluss</span>
+          </div>
+          <p class="rest">Kommt kein Abschluss zustande, entsteht keine Beteiligung.</p>
+          <a href="#kontakt" class="knopf knopf-voll">Kostenloses Erstgespräch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
-        <p class="rest">Der weitaus größte Teil Ihrer Provision bleibt bei Ihnen. Kommt kein Abschluss zustande, entsteht auch keine Beteiligung.</p>
-        <a href="#kontakt" class="knopf">Kostenloses Erstgespräch
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
-
-      <div class="kauf-karte rv rv-sc" style="transition-delay:.08s">
-        <span class="label">Angebot 02 — Käuferseite</span>
-        <h3 class="ak-titel">Vorqualifizierte Kaufinteressenten</h3>
-        <p class="ak-was">Für Interessenten zu einem konkreten Objekt: Wir klären am Telefon Budget, Finanzierungsstand und Vorstellungen — damit Sie Besichtigungen nur noch mit Käufern führen, die das Objekt auch erwerben können.</p>
-        <div class="danach">
-          <span class="betrag">90 €</span>
-          <span class="je">je Termin, der stattgefunden hat</span>
+        <div class="ak-detail">
+          <b>Am Telefon geklärt</b>
+          <ul>
+            <li><i>01</i>Finanzierungsstand</li>
+            <li><i>02</i>Belastbares Budget</li>
+            <li><i>03</i>Objekt- und Lagewunsch</li>
+            <li><i>04</i>Zeitrahmen des Kaufs</li>
+            <li><i>05</i>Verbindliche Besichtigungszusage</li>
+          </ul>
         </div>
-        <p class="rest">Keine Erfolgsbeteiligung — auf der Käuferseite rechnen wir ausschließlich pro Termin ab.</p>
-
-        <b class="ak-listenkopf">Am Telefon geklärt:</b>
-        <ul class="ak-liste staffel rv">
-          <li><i>01</i><div><b>Finanzierung</b><span>Bankzusage, Eigenkapital, Finanzierungsstand</span></div></li>
-          <li><i>02</i><div><b>Budget</b><span>Belastbare Preisobergrenze statt Wunschdenken</span></div></li>
-          <li><i>03</i><div><b>Objektwunsch</b><span>Art, Größe und Zimmerzahl</span></div></li>
-          <li><i>04</i><div><b>Lage</b><span>Bevorzugte Stadtteile oder Umkreis</span></div></li>
-          <li><i>05</i><div><b>Zeitrahmen</b><span>Ab wann der Kauf erfolgen soll</span></div></li>
-          <li><i>06</i><div><b>Nutzung</b><span>Eigennutzung oder Kapitalanlage</span></div></li>
-          <li><i>07</i><div><b>Abhängigkeit</b><span>Ob zuvor eine eigene Immobilie verkauft werden muss</span></div></li>
-          <li><i>08</i><div><b>Besichtigung</b><span>Verbindliche Zusage für einen konkreten Termin</span></div></li>
-        </ul>
-        <a href="#kontakt" class="knopf knopf-voll">Kostenloses Erstgespräch
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
+        <span class="ak-hinweis" aria-hidden="true">Details ansehen</span>
+      </article>
     </div>
 
     <div class="bedingungen">
@@ -730,33 +783,33 @@ body.intro-an #intro{display:flex}
       <ul class="preis-punkte rv staffel">
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-          <div><b>Die ersten fünf Termine sind kostenlos</b>
+          <div><b>Die ersten drei Termine sind kostenlos</b>
           <span>Der Testlauf gilt unabhängig davon, welches der beiden Angebote Sie zuerst ausprobieren.</span></div>
         </li>
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <div><b>Abgerechnet wird erst, wenn der Termin stattgefunden hat</b>
-          <span>Ein zugesagter Termin allein genügt nicht. Erscheint der Interessent nicht, terminieren wir kostenfrei nach.</span></div>
+          <span>Erscheint der Interessent nicht, terminieren wir kostenfrei nach.</span></div>
         </li>
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <div><b>Nachweis ohne Streitfall geregelt</b>
-          <span>Wir bestätigen jeden Termin beim Interessenten nach. Sie melden einen Ausfall innerhalb von sieben Tagen formlos zurück. Weichen die Angaben voneinander ab, klären wir das gemeinsam, bevor abgerechnet wird.</span></div>
+          <span>Wir bestätigen jeden Termin nach. Sie melden einen Ausfall binnen sieben Tagen formlos zurück.</span></div>
         </li>
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <div><b>Keine Grundgebühr, kein Abonnement, keine Laufzeit</b>
-          <span>Es gibt keine monatlichen Kosten und keine Mindestabnahme. Die Zusammenarbeit lässt sich jederzeit beenden.</span></div>
+          <span>Keine monatlichen Kosten, keine Mindestabnahme, jederzeit beendbar.</span></div>
         </li>
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <div><b>Keine Werbekosten</b>
-          <span>Alle Kontakte stammen aus Ihrem eigenen Bestand. Wir schalten keine Anzeigen und rechnen kein Mediabudget ab.</span></div>
+          <span>Alle Kontakte stammen aus Ihrem Bestand. Wir schalten keine Anzeigen.</span></div>
         </li>
         <li>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <div><b>Beide Angebote sind einzeln buchbar</b>
-          <span>Sie können mit der Verkäuferseite beginnen, nur die Käuferseite beauftragen oder beides kombinieren.</span></div>
+          <span>Einzeln oder kombiniert — ganz wie es zu Ihrem Bestand passt.</span></div>
         </li>
       </ul>
     </div>
@@ -823,8 +876,8 @@ body.intro-an #intro{display:flex}
         <div class="antwort" id="a9" role="region"><p>Finanzierungsstand und verfügbares Eigenkapital, eine belastbare Preisobergrenze, die konkreten Objekt- und Lagevorstellungen, den Zeitrahmen, ob eigengenutzt oder als Kapitalanlage gekauft werden soll und ob zuvor eine eigene Immobilie verkauft werden muss. Erst danach vereinbaren wir die Besichtigung. Angaben zur Finanzierung erheben wir ausschließlich in dem Umfang, den Sie für die Vorauswahl benötigen — eine Bonitätsprüfung führen wir nicht durch.</p></div>
       </div>
       <div class="frage">
-        <button aria-expanded="false" aria-controls="a10"><span>Fällt bei Käufer-Terminen ebenfalls eine Erfolgsbeteiligung an?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a10" role="region"><p>Nein. Auf der Käuferseite rechnen wir ausschließlich pro stattgefundenem Termin mit 90 € ab. Die Erfolgsbeteiligung von 5 % gilt allein für Abschlüsse aus Verkäufer-Terminen.</p></div>
+        <button aria-expanded="false" aria-controls="a10"><span>Wodurch unterscheiden sich die beiden Angebote?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a10" role="region"><p>Auf der Verkäuferseite gewinnen Sie ein neues Mandat: Wir prüfen Eigentümerkontakte auf ihre Verkaufsabsicht, der Termin kostet 100 €. Auf der Käuferseite haben Sie ein Objekt bereits im Verkauf, und wir qualifizieren die Interessenten vor der Besichtigung; hier kostet der Termin 50 €. Die Erfolgsbeteiligung von 5 % der Maklerprovision gilt in beiden Fällen und ausschließlich bei einem unterschriebenen Kaufvertrag.</p></div>
       </div>
       <div class="frage">
         <button aria-expanded="false" aria-controls="a4"><span>Wie wird die Erfolgsbeteiligung berechnet und fällig?</span><span class="sym" aria-hidden="true"></span></button>
@@ -855,7 +908,7 @@ body.intro-an #intro{display:flex}
   <div class="wrap kontakt">
     <div class="k-seite rv">
       <span class="label">Erstgespräch</span>
-      <h2 class="h2 maske rv" style="margin-top:var(--s3)"><span>Testen Sie es mit 5 kostenlosen Terminen.</span></h2>
+      <h2 class="h2 maske rv" style="margin-top:var(--s3)"><span>Testen Sie es mit 3 kostenlosen Terminen.</span></h2>
       <p>Schildern Sie mir kurz, wie viele Anfragen derzeit unbearbeitet sind und wie umfangreich Ihre Bestandsliste ist. Im Gespräch klären wir, ob sich die Zusammenarbeit für Sie rechnet — unverbindlich und ohne Verkaufsgespräch.</p>
       <div class="k-liste">
         <div>
@@ -1084,7 +1137,7 @@ function starteEinblenden() {
     es.forEach(e => {
       if (!e.isIntersecting) return;
       zio.unobserve(e.target);
-      const ziel = 5, start = performance.now(), dauer = 900;
+      const ziel = 3, start = performance.now(), dauer = 900;
       requestAnimationFrame(function f(t) {
         const p = Math.min((t - start) / dauer, 1), k = 1 - Math.pow(1 - p, 3);
         el.textContent = Math.round(ziel * k);
