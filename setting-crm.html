@@ -727,9 +727,12 @@ a{color:var(--info)}
 .tab .zaehler{font-size:11px;padding:1px 6px;border-radius:20px;background:rgba(127,160,196,.22)}
 .kopf-rechts{margin-left:auto;display:flex;align-items:center;gap:7px}
 .suche-global{position:relative;width:210px}
-.suche-global input{width:100%;padding:7px 11px 7px 32px;border:1px solid var(--rand);border-radius:8px;
-  background:var(--bg);font-size:13.5px}
-.suche-global svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;
+/* Der Typwaehler input[type=search] steht weiter unten und hat dieselbe
+   Spezifitaet -- ohne den Typ hier waere der linke Abstand wieder 11px
+   und das Symbol laege in der Schrift. */
+.suche-global input[type=search]{width:100%;padding:7px 11px 7px 34px;
+  border:1px solid var(--rand);border-radius:8px;background:var(--bg);font-size:13.5px}
+.suche-global svg{position:absolute;left:11px;pointer-events:none;z-index:1;top:50%;transform:translateY(-50%);width:14px;height:14px;
   stroke:var(--muted);fill:none;stroke-width:2}
 .ik{width:34px;height:34px;border:1px solid var(--rand);border-radius:8px;display:flex;flex:none;
   align-items:center;justify-content:center;transition:background .15s,border-color .15s}
@@ -1397,19 +1400,30 @@ async function ortFinden(ort){
  if(!j.length)throw new Error('Ort nicht gefunden');
  return{lat:Number(j[0].lat),lon:Number(j[0].lon),name:(j[0].display_name||ort).split(',')[0]};
 }
-/* nwr = node, way und relation zugleich. Nur node/way zu fragen war der
-   Grund, weshalb einzelne Bueros fehlten. */
-function abfrage(lat,lon,radius){
+/* Zwei getrennte Abfragen statt einer grossen.
+   Grund: Overpass bricht eine zu teure Abfrage nach der Zeitgrenze ab
+   und antwortet dann mit HTTP 200, leerer Liste und einem Feld remark.
+   Wer das nicht auswertet, sieht "nichts gefunden", obwohl es in
+   Wahrheit tausende Treffer gibt. Die erste Abfrage ist guenstig und
+   praezise, die zweite erweitert ueber den Namen und laeuft nur, wenn
+   die erste wenig geliefert hat. nwr deckt Punkt, Flaeche und
+   Relation zugleich ab. */
+function abfrageGenau(lat,lon,radius){
  const um=`(around:${radius},${lat},${lon})`;
- return `[out:json][timeout:25];(`
+ return `[out:json][timeout:90];(`
   +`nwr["office"="estate_agent"]${um};`
   +`nwr["shop"="estate_agent"]${um};`
-  +`nwr["office"="property_management"]${um};`
-  +`nwr["name"~"${NAMEN_RX}",i]["office"]${um};`
-  +`nwr["name"~"${NAMEN_RX}",i]["shop"]${um};`
-  +`nwr["name"~"${NAMEN_RX}",i]["building"="commercial"]${um};`
   +`);out center;`;
 }
+function abfrageBreit(lat,lon,radius){
+ const um=`(around:${Math.min(radius,25000)},${lat},${lon})`;
+ return `[out:json][timeout:90];(`
+  +`nwr["office"="property_management"]${um};`
+  +`nwr["office"]["name"~"${NAMEN_RX}",i]${um};`
+  +`nwr["shop"]["name"~"${NAMEN_RX}",i]${um};`
+  +`);out center;`;
+}
+
 async function overpass(query){
  let letzter='unbekannt';
  for(const server of OVERPASS){
@@ -1421,7 +1435,10 @@ async function overpass(query){
      headers:{'Content-Type':'application/x-www-form-urlencoded'},signal:abbruch.signal});
    clearTimeout(uhr);
    if(!r.ok){letzter=server.split('/')[2]+' meldet '+r.status;continue;}
-   return await r.json();
+   const j=await r.json();
+   /* remark bedeutet: der Server hat abgebrochen, nicht "nichts da". */
+   if(j.remark&&!(j.elements||[]).length){letzter='Server überlastet ('+j.remark.slice(0,70)+')';continue;}
+   return j;
   }catch(e){letzter=/abort/i.test(e.message||'')?'Zeitgrenze überschritten':(e.message||'Verbindungsfehler');}
  }
  throw new Error(letzter);
@@ -1451,8 +1468,20 @@ async function scanAusfuehren(lat,lon,radius,ortName){
  if(kreis)karte.removeLayer(kreis);
  kreis=L.circle([lat,lon],{radius,color:'#35577D',weight:1.5,fillColor:'#35577D',fillOpacity:.07}).addTo(karte);
  try{
-  const daten=await overpass(abfrage(lat,lon,radius));
-  const roh=(daten.elements||[]).map(zuTreffer).filter(Boolean);
+  const daten=await overpass(abfrageGenau(lat,lon,radius));
+  let elemente=(daten.elements||[]);
+  /* Wenig Ausbeute? Dann zusaetzlich ueber den Namen suchen. Fehler in
+     diesem zweiten Schritt duerfen das Ergebnis der ersten Abfrage
+     nicht verwerfen. */
+  if(elemente.length<40){
+   scanStatus('Erweitere die Suche über Firmennamen …','laeuft');
+   try{
+    const zwei=await overpass(abfrageBreit(lat,lon,radius));
+    elemente=elemente.concat(zwei.elements||[]);
+   }catch(e){ /* stillschweigend: die genaue Abfrage hat ja geliefert */ }
+  }
+  const daten2={elements:elemente};
+  const roh=elemente.map(zuTreffer).filter(Boolean);
   /* Dasselbe Buero steht oft mehrfach in der Karte -- als Punkt, als
      Gebaeudeumriss und als Relation, jeweils unterschiedlich
      vollstaendig. Zusammengefasst wird ueber den Namen, und die
@@ -1469,7 +1498,7 @@ async function scanAusfuehren(lat,lon,radius,ortName){
   });
   treffer=[...gesehen.values()].sort((a,b)=>b.punkte-a.punkte);
   gewaehlt.clear();scanKnopf(false);
-  const roheZahl=(daten.elements||[]).length;
+  const roheZahl=elemente.length;
   if(!treffer.length){
     scanStatus(roheZahl?('Die Karte kennt hier '+roheZahl+' Einträge, aber kein Maklerbüro. Größeren Umkreis versuchen.')
       :'Keine Einträge gefunden. Bitte größeren Umkreis wählen.','fehler');
