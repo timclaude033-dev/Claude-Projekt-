@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walter Setting CRM</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="walter-setting-icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   WALTER SETTING CRM
+   Akquise-System fuer die Terminierungsagentur.
+   Eine Datei, keine Abhaengigkeiten. Alle Daten bleiben im Browser
+   (localStorage) und verlassen das Geraet nie.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root{
+  /* Markenfarben wie auf der Webseite */
+  --ink:#16233B; --ink-soft:#21395A; --grad-1:#35577D; --grad-2:#152234;
+  --text:#1C2A3F; --muted:#6E7F95; --bg:#F5F7FA; --flaeche:#FFFFFF;
+  --rand:#E2E7EE; --schatten:0 1px 2px rgba(22,35,59,.04),0 8px 24px -12px rgba(22,35,59,.10);
+  --gut:#2E7D5B; --warn:#B07A22; --schlecht:#B4483C; --info:#35577D;
+  --head:'Montserrat',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+  --ez:cubic-bezier(.22,1,.36,1); --r:12px;
+}
+[data-theme="dark"]{
+  --ink:#E8EEF6; --ink-soft:#C3D2E4; --text:#E8EEF6; --muted:#8FA3BC;
+  --bg:#0F1723; --flaeche:#17202F; --rand:#26334799;
+  --schatten:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.6);
+  --gut:#5FBF92; --warn:#E0A94A; --schlecht:#E1786B; --info:#7FA0C4;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--body);font-size:15px;line-height:1.55;background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;transition:background .25s var(--ez),color .25s var(--ez)}
+h1,h2,h3,h4{font-family:var(--head);font-weight:700;color:var(--ink);line-height:1.2}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:none;cursor:pointer}
+a{color:var(--info)}
+:focus-visible{outline:2px solid var(--grad-1);outline-offset:2px;border-radius:6px}
+::selection{background:var(--grad-1);color:#fff}
+
+/* ── Kopfzeile ─────────────────────────────────────────────── */
+.kopf{position:sticky;top:0;z-index:60;background:var(--flaeche);border-bottom:1px solid var(--rand)}
+.kopf-in{max-width:1500px;margin:0 auto;padding:0 20px;height:62px;display:flex;align-items:center;gap:18px}
+.marke{display:flex;align-items:center;gap:10px;flex:none}
+.marke svg{width:30px;height:30px}
+.marke b{font-family:var(--head);font-size:13.5px;letter-spacing:.09em;color:var(--ink)}
+.marke small{display:block;font-size:9px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+.tabs{display:flex;gap:2px;margin-left:8px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:8px 14px;border-radius:9px;font-size:14px;font-weight:500;color:var(--muted);
+  white-space:nowrap;transition:background .15s,color .15s}
+.tab:hover{background:var(--bg);color:var(--ink)}
+.tab.on{background:var(--ink);color:var(--flaeche);font-weight:600}
+[data-theme="dark"] .tab.on{color:#0F1723}
+.kopf-rechts{margin-left:auto;display:flex;align-items:center;gap:8px}
+.ik{width:36px;height:36px;border:1px solid var(--rand);border-radius:9px;display:flex;
+  align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.ik:hover{background:var(--bg);border-color:var(--grad-1)}
+.ik svg{width:17px;height:17px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── Grundbausteine ────────────────────────────────────────── */
+.huelle{max-width:1500px;margin:0 auto;padding:22px 20px 80px}
+.view{display:none}
+.view.on{display:block;animation:rein .3s var(--ez)}
+@keyframes rein{from{opacity:0;transform:translateY(8px)}}
+.karte{background:var(--flaeche);border:1px solid var(--rand);border-radius:var(--r);
+  box-shadow:var(--schatten)}
+.karte-p{padding:18px}
+.kopfzeile{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.kopfzeile h2{font-size:1.25rem}
+.kopfzeile .hin{font-size:13px;color:var(--muted)}
+.rechts{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+
+.knopf{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 16px;
+  border-radius:9px;font-size:14px;font-weight:600;border:1px solid transparent;
+  transition:background .15s,border-color .15s,transform .12s,opacity .15s;white-space:nowrap}
+.knopf svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.knopf-voll{background:var(--ink);color:var(--flaeche)}
+[data-theme="dark"] .knopf-voll{color:#0F1723}
+.knopf-voll:hover{background:var(--ink-soft)}
+.knopf-linie{border-color:var(--rand);color:var(--ink);background:var(--flaeche)}
+.knopf-linie:hover{border-color:var(--grad-1);background:var(--bg)}
+.knopf-weg{border-color:var(--rand);color:var(--schlecht);background:var(--flaeche)}
+.knopf-weg:hover{border-color:var(--schlecht)}
+.knopf:active{transform:translateY(1px)}
+.knopf:disabled{opacity:.45;cursor:not-allowed}
+.knopf-klein{padding:6px 11px;font-size:13px}
+
+.feld{margin-bottom:13px}
+.feld label{display:block;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:5px}
+input[type=text],input[type=email],input[type=tel],input[type=url],input[type=number],
+input[type=date],select,textarea{
+  width:100%;padding:9px 12px;border:1px solid var(--rand);border-radius:9px;background:var(--flaeche);
+  font-size:14.5px;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--grad-1);
+  box-shadow:0 0 0 3px rgba(53,87,125,.14)}
+textarea{resize:vertical;min-height:90px;font-family:var(--body);line-height:1.55}
+.reihe{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.reihe-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.chk{display:flex;align-items:flex-start;gap:9px;padding:7px 0;font-size:14px;cursor:pointer}
+.chk input{width:17px;height:17px;flex:none;margin-top:2px;accent-color:var(--grad-1);cursor:pointer}
+
+.pille{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;
+  font-size:11.5px;font-weight:600;letter-spacing:.02em}
+.p-gut{background:rgba(46,125,91,.13);color:var(--gut)}
+.p-warn{background:rgba(176,122,34,.14);color:var(--warn)}
+.p-schlecht{background:rgba(180,72,60,.13);color:var(--schlecht)}
+.p-info{background:rgba(53,87,125,.13);color:var(--info)}
+.p-grau{background:var(--bg);color:var(--muted)}
+
+.leer{text-align:center;padding:46px 20px;color:var(--muted)}
+.leer svg{width:38px;height:38px;stroke:var(--rand);fill:none;stroke-width:1.5;margin:0 auto 12px}
+.leer b{display:block;color:var(--ink);font-family:var(--head);margin-bottom:5px}
+
+/* ── Radar: Eignungspruefung ───────────────────────────────── */
+.radar-raster{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:start}
+.punktzahl{text-align:center;padding:22px 18px;border-radius:var(--r);
+  background:linear-gradient(150deg,var(--grad-1),var(--grad-2));color:#fff;margin-bottom:16px}
+.punktzahl .zahl{font-family:var(--head);font-size:3.4rem;font-weight:700;line-height:1}
+.punktzahl .von{opacity:.6;font-size:1.1rem}
+.punktzahl .urteil{margin-top:8px;font-family:var(--head);font-weight:700;font-size:1.05rem}
+.punktzahl .warum{margin-top:5px;font-size:13.5px;opacity:.78}
+.gruende{list-style:none;display:grid;gap:7px;margin-top:14px}
+.gruende li{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;padding:8px 11px;
+  border-radius:9px;background:var(--bg)}
+.gruende .vz{font-weight:700;flex:none;font-family:var(--head);font-size:12.5px;min-width:30px}
+.vz-plus{color:var(--gut)} .vz-minus{color:var(--schlecht)} .vz-null{color:var(--muted)}
+
+/* ── Pipeline ──────────────────────────────────────────────── */
+.brett{display:flex;gap:12px;overflow-x:auto;padding-bottom:12px;scroll-snap-type:x proximity}
+.spalte{flex:0 0 268px;scroll-snap-align:start;background:var(--flaeche);border:1px solid var(--rand);
+  border-radius:var(--r);display:flex;flex-direction:column;max-height:70vh}
+.spalte-kopf{padding:12px 14px;border-bottom:1px solid var(--rand);display:flex;align-items:center;gap:8px}
+.spalte-kopf b{font-family:var(--head);font-size:13px;color:var(--ink)}
+.spalte-kopf .n{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);
+  background:var(--bg);padding:2px 8px;border-radius:20px}
+.spalte-kopf i{width:8px;height:8px;border-radius:50%;flex:none}
+.spalte-inhalt{padding:10px;overflow-y:auto;display:grid;gap:9px;align-content:start;min-height:70px}
+.spalte.ziel{border-color:var(--grad-1);background:rgba(53,87,125,.05)}
+.lead{padding:11px 12px;border:1px solid var(--rand);border-radius:10px;background:var(--flaeche);
+  cursor:grab;transition:border-color .15s,box-shadow .15s,transform .12s}
+.lead:hover{border-color:var(--grad-1);box-shadow:var(--schatten)}
+.lead.zieht{opacity:.4;transform:rotate(1.5deg)}
+.lead b{display:block;font-size:14px;font-weight:600;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lead .ort{display:block;font-size:12.5px;color:var(--muted);margin-top:1px}
+.lead-fuss{display:flex;align-items:center;gap:6px;margin-top:9px;flex-wrap:wrap}
+.lead .faellig{font-size:11.5px;color:var(--muted);margin-left:auto}
+.lead .faellig.jetzt{color:var(--schlecht);font-weight:600}
+
+/* ── Detailfenster ─────────────────────────────────────────── */
+.ueberlage{position:fixed;inset:0;z-index:90;background:rgba(15,23,35,.5);backdrop-filter:blur(3px);
+  display:none;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto}
+.ueberlage.auf{display:flex}
+.fenster{background:var(--flaeche);border-radius:16px;width:100%;max-width:760px;
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.55);animation:hoch .28s var(--ez)}
+@keyframes hoch{from{opacity:0;transform:translateY(18px)}}
+.f-kopf{padding:18px 22px;border-bottom:1px solid var(--rand);display:flex;align-items:center;gap:12px}
+.f-kopf h3{font-size:1.15rem;flex:1;min-width:0}
+.f-koerper{padding:20px 22px;max-height:70vh;overflow-y:auto}
+.f-fuss{padding:14px 22px;border-top:1px solid var(--rand);display:flex;gap:8px;flex-wrap:wrap}
+
+.verlauf{list-style:none;display:grid;gap:0;margin-top:6px}
+.verlauf li{display:flex;gap:11px;padding:10px 0;border-top:1px solid var(--rand);font-size:13.5px}
+.verlauf li:first-child{border-top:none}
+.verlauf .wann{flex:none;width:104px;color:var(--muted);font-size:12.5px}
+.verlauf .was b{color:var(--ink)}
+
+/* ── E-Mail ────────────────────────────────────────────────── */
+.mail-raster{display:grid;grid-template-columns:290px 1fr;gap:18px;align-items:start}
+.stufen{list-style:none;display:grid;gap:8px}
+.stufen li{padding:12px 14px;border:1px solid var(--rand);border-radius:10px;cursor:pointer;
+  transition:border-color .15s,background .15s}
+.stufen li:hover{border-color:var(--grad-1)}
+.stufen li.on{border-color:var(--ink);background:var(--bg)}
+.stufen b{display:block;font-family:var(--head);font-size:14px;color:var(--ink)}
+.stufen span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.platzhalter{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 14px}
+.ph{padding:4px 9px;border:1px solid var(--rand);border-radius:7px;font-size:12px;
+  font-family:ui-monospace,monospace;color:var(--info);cursor:pointer;transition:background .15s}
+.ph:hover{background:var(--bg)}
+.vorschau{background:var(--bg);border:1px solid var(--rand);border-radius:10px;padding:15px;
+  font-size:14px;white-space:pre-wrap;word-break:break-word;line-height:1.6}
+.vorschau .betreff{font-weight:700;color:var(--ink);display:block;margin-bottom:9px;
+  padding-bottom:9px;border-bottom:1px solid var(--rand)}
+
+.warnung{display:flex;gap:11px;padding:13px 15px;border-radius:10px;font-size:13.5px;
+  background:rgba(176,122,34,.11);border:1px solid rgba(176,122,34,.3);color:var(--text);margin-bottom:16px}
+.warnung svg{width:18px;height:18px;flex:none;margin-top:1px;stroke:var(--warn);fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+.warnung b{color:var(--warn)}
+
+/* ── Tabellen ──────────────────────────────────────────────── */
+.tab-huelle{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);padding:9px 11px;border-bottom:1px solid var(--rand);white-space:nowrap}
+td{padding:10px 11px;border-bottom:1px solid var(--rand);vertical-align:middle}
+tbody tr:hover{background:var(--bg)}
+td.r,th.r{text-align:right}
+
+/* ── Kennzahlen ────────────────────────────────────────────── */
+.kz-raster{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.kz{background:var(--flaeche);border:1px solid var(--rand);border-radius:var(--r);padding:15px 16px}
+.kz .t{font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.kz .w{font-family:var(--head);font-size:1.9rem;font-weight:700;color:var(--ink);margin-top:5px;line-height:1}
+.kz .u{font-size:12.5px;color:var(--muted);margin-top:3px}
+.trichter{display:grid;gap:9px}
+.tr-zeile{display:flex;align-items:center;gap:12px}
+.tr-name{width:150px;flex:none;font-size:13.5px;color:var(--muted)}
+.tr-balken{flex:1;height:26px;background:var(--bg);border-radius:7px;overflow:hidden;position:relative}
+.tr-balken i{display:block;height:100%;background:linear-gradient(90deg,var(--grad-1),var(--ink));
+  border-radius:7px;transition:width .8s var(--ez)}
+.tr-wert{width:80px;flex:none;text-align:right;font-weight:600;font-size:13.5px}
+
+/* ── Meldung ───────────────────────────────────────────────── */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120%);z-index:120;
+  background:var(--ink);color:var(--flaeche);padding:11px 20px;border-radius:10px;font-size:14px;
+  font-weight:500;box-shadow:0 12px 30px -10px rgba(0,0,0,.5);transition:transform .3s var(--ez)}
+[data-theme="dark"] .toast{color:#0F1723}
+.toast.auf{transform:translateX(-50%) translateY(0)}
+
+@media(max-width:1100px){
+  .radar-raster,.mail-raster{grid-template-columns:1fr}
+  .kz-raster{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:820px){
+  /* Kopfzeile umbrechen: sonst schieben sich Marke, Reiter und
+     Schaltflaechen uebereinander und die Reiter sind nicht mehr
+     anklickbar. */
+  .kopf-in{height:auto;flex-wrap:wrap;padding:9px 13px 0;gap:10px}
+  .tabs{order:3;width:100%;margin:0;padding-bottom:7px;
+    border-top:1px solid var(--rand);padding-top:7px}
+  .kopf-rechts{margin-left:auto}
+}
+@media(max-width:680px){
+  .huelle{padding:16px 13px 70px}
+  .reihe,.reihe-3{grid-template-columns:1fr}
+  .kz-raster{grid-template-columns:1fr 1fr}
+  .marke small{display:none}
+  .ueberlage{padding:0}
+  .fenster{border-radius:0;min-height:100vh}
+  .tr-name{width:96px;font-size:12.5px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="kopf">
+  <div class="kopf-in">
+    <div class="marke">
+      <svg viewBox="60 40 430 400" aria-hidden="true">
+        <polyline points="95,80 195,400 278,210 360,400 455,80" fill="none" stroke="#35577D"
+                  stroke-width="80" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span><b>WALTER SETTING</b><small>Akquise-System</small></span>
+    </div>
+
+    <nav class="tabs" id="tabs" aria-label="Bereiche">
+      <button class="tab on" data-view="radar">Radar</button>
+      <button class="tab" data-view="pipeline">Pipeline</button>
+      <button class="tab" data-view="mail">Kaltakquise</button>
+      <button class="tab" data-view="heute">Heute</button>
+      <button class="tab" data-view="zahlen">Auswertung</button>
+    </nav>
+
+    <div class="kopf-rechts">
+      <button class="ik" id="btnThema" title="Hell / Dunkel" aria-label="Darstellung wechseln">
+        <svg id="icoThema" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="ik" id="btnExport" title="Daten sichern" aria-label="Daten sichern">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+      </button>
+      <button class="ik" id="btnImport" title="Daten laden" aria-label="Daten laden">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+      </button>
+      <input type="file" id="dateiImport" accept="application/json" hidden>
+    </div>
+  </div>
+</header>
+
+<div class="huelle">
+
+<!-- ═══════════════ RADAR ═══════════════ -->
+<section class="view on" id="v-radar">
+  <div class="kopfzeile">
+    <h2>Radar</h2>
+    <span class="hin">Prüft, ob ein Maklerbüro als Kunde in Frage kommt — bevor Sie Zeit investieren.</span>
+  </div>
+
+  <div class="radar-raster">
+    <div class="karte karte-p">
+      <div class="reihe">
+        <div class="feld"><label for="rName">Maklerbüro</label><input type="text" id="rName" placeholder="Muster Immobilien"></div>
+        <div class="feld"><label for="rOrt">Ort</label><input type="text" id="rOrt" placeholder="Musterstadt"></div>
+      </div>
+      <div class="reihe">
+        <div class="feld"><label for="rPerson">Ansprechpartner</label><input type="text" id="rPerson" placeholder="Vor- und Nachname"></div>
+        <div class="feld"><label for="rMail">E-Mail</label><input type="email" id="rMail" placeholder="kontakt@..."></div>
+      </div>
+      <div class="reihe">
+        <div class="feld"><label for="rTel">Telefon</label><input type="tel" id="rTel"></div>
+        <div class="feld"><label for="rWeb">Webseite</label><input type="url" id="rWeb" placeholder="https://"></div>
+      </div>
+      <div class="reihe-3">
+        <div class="feld"><label for="rMit">Mitarbeiter</label><input type="number" id="rMit" min="1" max="500" placeholder="3"></div>
+        <div class="feld"><label for="rObj">Objekte online</label><input type="number" id="rObj" min="0" max="9999" placeholder="12"></div>
+        <div class="feld"><label for="rJahre">Am Markt seit (Jahr)</label><input type="number" id="rJahre" min="1900" max="2100" placeholder="2015"></div>
+      </div>
+
+      <label class="chk"><input type="checkbox" id="rKette"><span>Gehört zu einer Kette oder einem Franchise-System</span></label>
+      <label class="chk"><input type="checkbox" id="rPerson2" checked><span>Ansprechpartner namentlich bekannt</span></label>
+      <label class="chk"><input type="checkbox" id="rFormular" checked><span>Eigene Webseite mit Kontaktmöglichkeit</span></label>
+      <label class="chk"><input type="checkbox" id="rRegion" checked><span>Region passt zu meinem Einzugsgebiet</span></label>
+      <label class="chk"><input type="checkbox" id="rVerkauf" checked><span>Vermittelt Verkäufe, nicht nur Vermietung</span></label>
+
+      <div class="feld" style="margin-top:13px"><label for="rNotiz">Notiz</label>
+        <textarea id="rNotiz" placeholder="Auffälligkeiten, Gesprächsaufhänger, Quelle des Kontakts …"></textarea></div>
+
+      <div class="rechts" style="margin-left:0">
+        <button class="knopf knopf-voll" id="btnUebernehmen">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>In die Pipeline übernehmen</button>
+        <button class="knopf knopf-linie" id="btnLeeren">Formular leeren</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="punktzahl">
+        <div><span class="zahl" id="rPunkte">0</span><span class="von"> / 100</span></div>
+        <div class="urteil" id="rUrteil">Noch keine Angaben</div>
+        <div class="warum" id="rWarum">Tragen Sie links die Eckdaten ein.</div>
+      </div>
+      <div class="karte karte-p">
+        <h3 style="font-size:.95rem">Wie sich die Bewertung ergibt</h3>
+        <ul class="gruende" id="rGruende"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PIPELINE ═══════════════ -->
+<section class="view" id="v-pipeline">
+  <div class="kopfzeile">
+    <h2>Pipeline</h2>
+    <span class="hin" id="pipeHin"></span>
+    <div class="rechts">
+      <select id="pFilter" style="width:auto">
+        <option value="alle">Alle Büros</option>
+        <option value="passt">Nur passende (ab 60 Punkten)</option>
+        <option value="faellig">Nur fällige Aufgaben</option>
+      </select>
+      <button class="knopf knopf-linie knopf-klein" id="btnCsv">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>CSV</button>
+    </div>
+  </div>
+  <div class="brett" id="brett"></div>
+</section>
+
+<!-- ═══════════════ KALTAKQUISE ═══════════════ -->
+<section class="view" id="v-mail">
+  <div class="kopfzeile">
+    <h2>Kaltakquise</h2>
+    <span class="hin">Dreistufige Abfolge mit Vorlagen, Versandprotokoll und Abmeldeliste.</span>
+  </div>
+
+  <div class="warnung">
+    <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+    <div><b>Rechtlicher Hinweis zur Kaltakquise per E-Mail.</b>
+    Werbe-E-Mails ohne vorherige Einwilligung sind nach § 7 UWG auch gegenüber Unternehmen grundsätzlich unzulässig und können abgemahnt werden. Für Deutschland gilt das ausdrücklich auch im Geschäftsverkehr. Rechtssicher sind der telefonische Erstkontakt, Post, eine Kontaktaufnahme über das Kontaktformular der Webseite sowie E-Mails an Empfänger, die zuvor eingewilligt haben. Nutzen Sie dieses Modul deshalb bevorzugt für Empfänger mit Einwilligung und für die Nachfassung nach einem Telefonat — und klären Sie den Einsatz im Zweifel anwaltlich. Jede Abmeldung wird hier dauerhaft gesperrt.</div>
+  </div>
+
+  <div class="mail-raster">
+    <div>
+      <div class="karte karte-p" style="margin-bottom:14px">
+        <h3 style="font-size:.95rem;margin-bottom:11px">Abfolge</h3>
+        <ul class="stufen" id="stufen"></ul>
+      </div>
+      <div class="karte karte-p">
+        <h3 style="font-size:.95rem;margin-bottom:9px">Absender</h3>
+        <div class="feld"><label for="mAbsName">Ihr Name</label><input type="text" id="mAbsName" placeholder="Tim Walter"></div>
+        <div class="feld"><label for="mAbsMail">Ihre E-Mail</label><input type="email" id="mAbsMail" placeholder="kontakt@walter-setting.de"></div>
+        <div class="feld"><label for="mLimit">Höchstzahl pro Tag</label><input type="number" id="mLimit" min="1" max="200" value="20"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="karte karte-p" style="margin-bottom:14px">
+        <div class="kopfzeile" style="margin-bottom:11px">
+          <h3 style="font-size:.95rem" id="mTitel">Erstansprache</h3>
+          <div class="rechts">
+            <button class="knopf knopf-linie knopf-klein" id="btnStandard">Auf Standard zurücksetzen</button>
+          </div>
+        </div>
+        <div class="feld"><label for="mBetreff">Betreff</label><input type="text" id="mBetreff"></div>
+        <div class="platzhalter" id="platzhalter"></div>
+        <div class="feld"><label for="mText">Text</label><textarea id="mText" style="min-height:210px"></textarea></div>
+        <h4 style="font-size:.85rem;margin:14px 0 7px;color:var(--muted)">Vorschau mit Beispieldaten</h4>
+        <div class="vorschau" id="mVorschau"></div>
+      </div>
+
+      <div class="karte karte-p">
+        <div class="kopfzeile" style="margin-bottom:11px">
+          <h3 style="font-size:.95rem">Heute zu versenden</h3>
+          <span class="hin" id="mHeuteHin"></span>
+        </div>
+        <div class="tab-huelle"><table id="mHeute"></table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ HEUTE ═══════════════ -->
+<section class="view" id="v-heute">
+  <div class="kopfzeile">
+    <h2 id="heuteTitel">Heute</h2>
+    <span class="hin" id="heuteHin"></span>
+  </div>
+  <div class="karte karte-p">
+    <div class="tab-huelle"><table id="heuteTab"></table></div>
+  </div>
+</section>
+
+<!-- ═══════════════ AUSWERTUNG ═══════════════ -->
+<section class="view" id="v-zahlen">
+  <div class="kopfzeile">
+    <h2>Auswertung</h2>
+    <span class="hin">Alle Werte errechnen sich aus Ihren erfassten Büros.</span>
+  </div>
+  <div class="kz-raster" id="kzRaster"></div>
+  <div class="karte karte-p" style="margin-bottom:14px">
+    <h3 style="font-size:.95rem;margin-bottom:14px">Trichter</h3>
+    <div class="trichter" id="trichter"></div>
+  </div>
+  <div class="karte karte-p">
+    <h3 style="font-size:.95rem;margin-bottom:6px">Umsatzschätzung</h3>
+    <p style="font-size:13.5px;color:var(--muted);margin-bottom:14px">
+      Hochrechnung aus den Büros in der Testphase und den gewonnenen Kunden. Die Annahmen können Sie anpassen.</p>
+    <div class="reihe-3">
+      <div class="feld"><label for="zTermine">Termine je Kunde und Monat</label><input type="number" id="zTermine" min="1" max="100" value="6"></div>
+      <div class="feld"><label for="zPreis">Durchschnittspreis je Termin</label><input type="number" id="zPreis" min="1" max="1000" value="80"></div>
+      <div class="feld"><label for="zQuote">Abschlüsse je 10 Termine</label><input type="number" id="zQuote" min="0" max="10" value="1"></div>
+    </div>
+    <div class="tab-huelle"><table id="zTab"></table></div>
+  </div>
+</section>
+
+</div>
+
+<!-- Detailfenster -->
+<div class="ueberlage" id="ueberlage">
+  <div class="fenster" role="dialog" aria-modal="true" aria-labelledby="fTitel">
+    <div class="f-kopf">
+      <h3 id="fTitel">Büro</h3>
+      <span class="pille p-grau" id="fPunkte">0</span>
+      <button class="ik" id="fZu" aria-label="Schliessen">
+        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="f-koerper" id="fKoerper"></div>
+    <div class="f-fuss" id="fFuss"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   DATEN
+   Alles liegt im localStorage dieses Browsers. Kein Server, kein
+   Konto, keine Uebertragung nach aussen.
+   ═══════════════════════════════════════════════════════════════ */
+const KEY = 'wsCrm';
+
+const STUFEN = [
+  { id:'neu',        name:'Neu',           farbe:'#8FA3BC' },
+  { id:'recherche',  name:'Recherchiert',  farbe:'#7FA0C4' },
+  { id:'erstkontakt',name:'Erstkontakt',   farbe:'#35577D' },
+  { id:'nachfass',   name:'Nachfass',      farbe:'#21395A' },
+  { id:'antwort',    name:'Antwort da',    farbe:'#B07A22' },
+  { id:'gespraech',  name:'Erstgespräch',  farbe:'#16233B' },
+  { id:'test',       name:'Testphase',     farbe:'#2E7D5B' },
+  { id:'kunde',      name:'Kunde',         farbe:'#2E7D5B' },
+  { id:'abgelehnt',  name:'Abgelehnt',     farbe:'#B4483C' }
+];
+
+const STANDARDMAILS = [
+  { id:1, tage:0, name:'Erstansprache', kurz:'Sofort',
+    betreff:'Qualifizierte Termine für {{buero}}',
+    text:`Guten Tag {{person}},
+
+ich habe gesehen, dass Sie in {{ort}} als Makler tätig sind.
+
+Kurz zu meinem Anliegen: Ich rufe für Maklerbüros deren vorhandene Kontakte an — eingehende Anfragen und ältere Listen — und prüfe am Telefon, wer tatsächlich verkaufen will. Nur diese Eigentümer bekommen Sie als festen Termin in den Kalender, mit vollständigem Gesprächsprotokoll.
+
+Sie liefern die Kontakte, ich übernehme die Telefonarbeit. Berechnet wird nur, was auch stattfindet — die ersten drei Termine sind kostenlos.
+
+Hätten Sie kommende Woche 20 Minuten für ein unverbindliches Gespräch?
+
+Freundliche Grüße
+{{absender}}` },
+  { id:2, tage:4, name:'Erste Nachfassung', kurz:'Nach 4 Tagen',
+    betreff:'Kurze Rückfrage zu meiner Nachricht',
+    text:`Guten Tag {{person}},
+
+ich melde mich noch einmal kurz zu meiner Nachricht von vergangener Woche.
+
+Der häufigste Einwand, den ich höre, ist: „Die Kontakte haben wir ja schon." Genau darum geht es — nicht um neue Adressen, sondern darum, aus den vorhandenen die herauszufiltern, die wirklich verkaufen wollen. Diese Arbeit bleibt im Tagesgeschäft meist liegen.
+
+Wenn das für {{buero}} gerade nicht passt, sagen Sie mir gern kurz Bescheid, dann hake ich es ab.
+
+Freundliche Grüße
+{{absender}}` },
+  { id:3, tage:9, name:'Letzte Nachfassung', kurz:'Nach 9 Tagen',
+    betreff:'Letzte Nachricht von mir',
+    text:`Guten Tag {{person}},
+
+ich möchte nicht aufdringlich werden, deshalb ist das meine letzte Nachricht in dieser Sache.
+
+Mein Angebot bleibt bestehen: drei kostenlose Termine, damit Sie ohne Risiko beurteilen können, ob die Qualität stimmt. Melden Sie sich einfach, wenn es zu einem späteren Zeitpunkt passt.
+
+Freundliche Grüße
+{{absender}}` }
+];
+
+const PLATZHALTER = ['{{person}}','{{buero}}','{{ort}}','{{absender}}'];
+
+let D = laden();
+let aktuelleStufe = 1;
+let offenesBuero = null;
+
+function grund(){ return { buerosammlung:[], mails:STANDARDMAILS.map(m=>({...m})), abmeldungen:[],
+  absender:{ name:'', mail:'' }, limit:20, thema:'light',
+  annahmen:{ termine:6, preis:80, quote:1 } }; }
+
+function laden(){
+  try{
+    const roh = localStorage.getItem(KEY);
+    if(!roh) return grund();
+    const d = JSON.parse(roh);
+    const g = grund();
+    /* fehlende Felder ergaenzen, damit aeltere Staende weiterlaufen */
+    return { ...g, ...d, absender:{ ...g.absender, ...(d.absender||{}) },
+             annahmen:{ ...g.annahmen, ...(d.annahmen||{}) },
+             mails:(d.mails&&d.mails.length===3)?d.mails:g.mails };
+  }catch(e){ return grund(); }
+}
+function sichern(){
+  try{ localStorage.setItem(KEY, JSON.stringify(D)); }
+  catch(e){ melde('Speichern fehlgeschlagen — Speicher voll?'); }
+}
+
+/* ── Kleine Helfer ─────────────────────────────────────────── */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function sicher(t){ return String(t==null?'':t)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function heute(){ return new Date().toISOString().slice(0,10); }
+function plusTage(n, ab){ const d = ab? new Date(ab): new Date();
+  d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
+function datum(s){ if(!s) return '—';
+  const d = new Date(s+'T00:00:00');
+  return d.toLocaleDateString('de-DE',{ day:'2-digit', month:'2-digit', year:'numeric' }); }
+function zeitpunkt(s){ return new Date(s).toLocaleString('de-DE',
+  { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
+let toastZeit;
+function melde(t){ const el = $('#toast'); el.textContent = t; el.classList.add('auf');
+  clearTimeout(toastZeit); toastZeit = setTimeout(()=>el.classList.remove('auf'), 2600); }
+
+/* ═══════════════ BEWERTUNG ═══════════════
+   Ziel sind ausdruecklich kleinere Bueros: gross genug, um Kontakte
+   zu haben, aber zu klein fuer eine eigene Telefonkraft. Grosse
+   Ketten werden bewusst abgewertet. */
+function bewerten(b){
+  const g = [];
+  const mit = Number(b.mitarbeiter)||0, obj = Number(b.objekte)||0;
+
+  if(mit === 0)            g.push([ 0,'Mitarbeiterzahl unbekannt — bitte nachtragen']);
+  else if(mit <= 3)        g.push([ 30,'1 bis 3 Mitarbeiter: keine eigene Telefonkraft, Inhaber telefoniert selbst']);
+  else if(mit <= 8)        g.push([ 22,'4 bis 8 Mitarbeiter: Akquise läuft nebenher, Bedarf meist vorhanden']);
+  else if(mit <= 15)       g.push([  6,'9 bis 15 Mitarbeiter: teilweise eigene Vertriebsleute']);
+  else                     g.push([-25,'Über 15 Mitarbeiter: eigene Vertriebsabteilung, passt nicht ins Beuteschema']);
+
+  if(obj === 0)            g.push([  0,'Objektzahl unbekannt — bitte nachtragen']);
+  else if(obj < 3)         g.push([  4,'Unter 3 Objekte: sehr wenig Volumen, lohnt selten']);
+  else if(obj <= 25)       g.push([ 25,'3 bis 25 Objekte: laufendes Geschäft mit genug Anfragen']);
+  else if(obj <= 60)       g.push([ 12,'26 bis 60 Objekte: gutes Volumen, vermutlich schon Strukturen']);
+  else                     g.push([-12,'Über 60 Objekte: großer Anbieter, Entscheidungswege lang']);
+
+  g.push(b.kette   ? [-20,'Kette oder Franchise: Entscheidung fällt nicht vor Ort']
+                   : [ 15,'Inhabergeführt: kurze Entscheidungswege']);
+  g.push(b.verkauf ? [ 10,'Vermittelt Verkäufe: passt zum Angebot']
+                   : [-20,'Nur Vermietung: für Verkäufer-Termine ungeeignet']);
+  g.push(b.person  ? [ 10,'Ansprechpartner bekannt: persönliche Ansprache möglich']
+                   : [  0,'Kein Ansprechpartner: Ansprache bleibt unpersönlich']);
+  g.push(b.formular? [  5,'Webseite mit Kontaktmöglichkeit vorhanden']
+                   : [  0,'Keine Kontaktmöglichkeit auf der Webseite gefunden']);
+  g.push(b.region  ? [  5,'Region passt zum Einzugsgebiet']
+                   : [-10,'Außerhalb des Einzugsgebiets']);
+
+  const roh = g.reduce((s,x)=>s+x[0], 0);
+  const punkte = Math.max(0, Math.min(100, roh));
+  let urteil, warum, art;
+  if(punkte >= 60){ urteil='Passt';  art='gut';
+    warum='Kleineres Büro mit laufendem Geschäft — genau die Zielgruppe.'; }
+  else if(punkte >= 40){ urteil='Prüfen'; art='warn';
+    warum='Grenzfall. Ein kurzer Blick auf die Webseite lohnt, bevor Sie Zeit investieren.'; }
+  else { urteil='Passt nicht'; art='schlecht';
+    warum='Entweder zu groß, zu klein oder inhaltlich unpassend. Nicht weiterverfolgen.'; }
+  return { punkte, urteil, warum, art, gruende:g };
+}
+
+function radarLesen(){
+  return {
+    name:$('#rName').value.trim(), ort:$('#rOrt').value.trim(),
+    person:$('#rPerson').value.trim(), mail:$('#rMail').value.trim(),
+    telefon:$('#rTel').value.trim(), web:$('#rWeb').value.trim(),
+    mitarbeiter:$('#rMit').value, objekte:$('#rObj').value, seit:$('#rJahre').value,
+    kette:$('#rKette').checked, verkauf:$('#rVerkauf').checked,
+    person2:$('#rPerson2').checked, formular:$('#rFormular').checked, region:$('#rRegion').checked,
+    notiz:$('#rNotiz').value.trim()
+  };
+}
+function radarZeigen(){
+  const roh = radarLesen();
+  const b = { ...roh, person: roh.person2 && !!roh.person || roh.person2 };
+  const e = bewerten({ ...roh, person: roh.person2 });
+  $('#rPunkte').textContent = e.punkte;
+  $('#rUrteil').textContent = roh.name ? e.urteil : 'Noch keine Angaben';
+  $('#rWarum').textContent  = roh.name ? e.warum : 'Tragen Sie links die Eckdaten ein.';
+  $('#rGruende').innerHTML = e.gruende.map(([w,t])=>{
+    const k = w>0?'vz-plus':(w<0?'vz-minus':'vz-null');
+    const v = w>0?('+'+w):(w<0?String(w):'±0');
+    return `<li><span class="vz ${k}">${v}</span><span>${sicher(t)}</span></li>`;
+  }).join('');
+}
+
+/* ═══════════════ PIPELINE ═══════════════ */
+function faelligkeit(b){
+  if(!b.naechste) return null;
+  const diff = Math.round((new Date(b.naechste+'T00:00:00') - new Date(heute()+'T00:00:00'))/86400000);
+  return diff;
+}
+function brettBauen(){
+  const filter = $('#pFilter').value;
+  const liste = D.buerosammlung.filter(b=>{
+    if(filter === 'passt')   return b.punkte >= 60;
+    if(filter === 'faellig'){ const d = faelligkeit(b); return d !== null && d <= 0; }
+    return true;
+  });
+  $('#pipeHin').textContent = liste.length + ' von ' + D.buerosammlung.length + ' Büros';
+
+  $('#brett').innerHTML = STUFEN.map(st=>{
+    const drin = liste.filter(b=>b.stufe === st.id);
+    const karten = drin.map(b=>{
+      const d = faelligkeit(b);
+      const f = d === null ? '' :
+        `<span class="faellig ${d<=0?'jetzt':''}">${d<0?'überfällig':(d===0?'heute':'in '+d+' T')}</span>`;
+      const art = b.punkte>=60?'p-gut':(b.punkte>=40?'p-warn':'p-schlecht');
+      return `<div class="lead" draggable="true" data-id="${b.id}" tabindex="0" role="button">
+          <b>${sicher(b.name)}</b>
+          <span class="ort">${sicher(b.ort||'—')}${b.mitarbeiter?' · '+sicher(b.mitarbeiter)+' MA':''}</span>
+          <div class="lead-fuss"><span class="pille ${art}">${b.punkte}</span>${f}</div>
+        </div>`;
+    }).join('') || '<div style="font-size:12.5px;color:var(--muted);padding:8px 4px">leer</div>';
+    return `<div class="spalte" data-stufe="${st.id}">
+        <div class="spalte-kopf"><i style="background:${st.farbe}"></i><b>${st.name}</b>
+          <span class="n">${drin.length}</span></div>
+        <div class="spalte-inhalt">${karten}</div>
+      </div>`;
+  }).join('');
+
+  $$('.lead').forEach(el=>{
+    el.addEventListener('click', ()=>fensterAuf(el.dataset.id));
+    el.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fensterAuf(el.dataset.id); }});
+    el.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', el.dataset.id);
+      el.classList.add('zieht'); });
+    el.addEventListener('dragend', ()=>el.classList.remove('zieht'));
+  });
+  $$('.spalte').forEach(sp=>{
+    sp.addEventListener('dragover', e=>{ e.preventDefault(); sp.classList.add('ziel'); });
+    sp.addEventListener('dragleave', ()=>sp.classList.remove('ziel'));
+    sp.addEventListener('drop', e=>{
+      e.preventDefault(); sp.classList.remove('ziel');
+      const id = e.dataTransfer.getData('text/plain');
+      stufeSetzen(id, sp.dataset.stufe);
+    });
+  });
+}
+function stufeSetzen(id, stufe){
+  const b = D.buerosammlung.find(x=>x.id===id);
+  if(!b || b.stufe===stufe) return;
+  const alt = STUFEN.find(s=>s.id===b.stufe), neu = STUFEN.find(s=>s.id===stufe);
+  b.stufe = stufe;
+  b.verlauf.unshift({ zeit:new Date().toISOString(), was:'Stufe geändert',
+    text:(alt?alt.name:'?')+' → '+(neu?neu.name:'?') });
+  sichern(); brettBauen(); zahlenBauen();
+  melde(b.name+' → '+(neu?neu.name:''));
+}
+
+/* ═══════════════ DETAILFENSTER ═══════════════ */
+function fensterAuf(id){
+  const b = D.buerosammlung.find(x=>x.id===id);
+  if(!b) return;
+  offenesBuero = id;
+  const art = b.punkte>=60?'p-gut':(b.punkte>=40?'p-warn':'p-schlecht');
+  $('#fTitel').textContent = b.name;
+  $('#fPunkte').className = 'pille '+art;
+  $('#fPunkte').textContent = b.punkte+' Punkte';
+
+  const zeile = (t,w)=>`<div class="feld"><label>${t}</label><div style="font-size:14.5px">${w||'—'}</div></div>`;
+  const mailto = b.mail ? `<a href="mailto:${sicher(b.mail)}">${sicher(b.mail)}</a>` : '';
+  const web = b.web ? `<a href="${sicher(b.web)}" target="_blank" rel="noopener">${sicher(b.web)}</a>` : '';
+
+  $('#fKoerper').innerHTML = `
+    <div class="reihe">
+      ${zeile('Ansprechpartner', sicher(b.person))}
+      ${zeile('Ort', sicher(b.ort))}
+    </div>
+    <div class="reihe">
+      ${zeile('E-Mail', mailto)}
+      ${zeile('Telefon', b.telefon?`<a href="tel:${sicher(b.telefon)}">${sicher(b.telefon)}</a>`:'')}
+    </div>
+    <div class="reihe">
+      ${zeile('Webseite', web)}
+      ${zeile('Größe', (b.mitarbeiter?sicher(b.mitarbeiter)+' Mitarbeiter':'—')
+        + (b.objekte?' · '+sicher(b.objekte)+' Objekte':''))}
+    </div>
+    <div class="reihe">
+      <div class="feld"><label for="fStufe">Stufe</label>
+        <select id="fStufe">${STUFEN.map(s=>`<option value="${s.id}"${s.id===b.stufe?' selected':''}>${s.name}</option>`).join('')}</select></div>
+      <div class="feld"><label for="fNaechste">Nächste Aktion am</label>
+        <input type="date" id="fNaechste" value="${sicher(b.naechste||'')}"></div>
+    </div>
+    <div class="feld"><label for="fNotiz">Notiz</label>
+      <textarea id="fNotiz">${sicher(b.notiz||'')}</textarea></div>
+    <div class="feld"><label for="fNeu">Neuer Eintrag im Verlauf</label>
+      <input type="text" id="fNeu" placeholder="Telefonat, Absage, Rückfrage …"></div>
+    <h4 style="font-size:.85rem;color:var(--muted);margin:16px 0 4px">Verlauf</h4>
+    <ul class="verlauf">${b.verlauf.map(v=>
+      `<li><span class="wann">${zeitpunkt(v.zeit)}</span>
+        <span class="was"><b>${sicher(v.was)}</b>${v.text?'<br>'+sicher(v.text):''}</span></li>`).join('')
+      || '<li style="color:var(--muted)">Noch keine Einträge.</li>'}</ul>`;
+
+  $('#fFuss').innerHTML = `
+    <button class="knopf knopf-voll" id="fSpeichern">Speichern</button>
+    ${b.mail?'<button class="knopf knopf-linie" id="fMail">E-Mail schreiben</button>':''}
+    ${b.telefon?'<button class="knopf knopf-linie" id="fAnruf">Anruf notieren</button>':''}
+    <button class="knopf knopf-weg" id="fLoeschen" style="margin-left:auto">Löschen</button>`;
+
+  $('#fSpeichern').onclick = ()=>{
+    const neueStufe = $('#fStufe').value;
+    if(neueStufe !== b.stufe){
+      const alt = STUFEN.find(s=>s.id===b.stufe), neu = STUFEN.find(s=>s.id===neueStufe);
+      b.verlauf.unshift({ zeit:new Date().toISOString(), was:'Stufe geändert',
+        text:(alt?alt.name:'?')+' → '+(neu?neu.name:'?') });
+      b.stufe = neueStufe;
+    }
+    b.naechste = $('#fNaechste').value;
+    b.notiz = $('#fNotiz').value.trim();
+    const neuerEintrag = $('#fNeu').value.trim();
+    if(neuerEintrag) b.verlauf.unshift({ zeit:new Date().toISOString(), was:'Notiz', text:neuerEintrag });
+    sichern(); fensterZu(); brettBauen(); heuteBauen(); zahlenBauen();
+    melde('Gespeichert.');
+  };
+  if(b.mail) $('#fMail').onclick = ()=>mailOeffnen(b, 1);
+  if(b.telefon) $('#fAnruf').onclick = ()=>{
+    b.verlauf.unshift({ zeit:new Date().toISOString(), was:'Telefonat', text:'Anruf geführt' });
+    b.naechste = plusTage(3); sichern(); fensterAuf(id); melde('Telefonat notiert.');
+  };
+  $('#fLoeschen').onclick = ()=>{
+    if(!confirm('„'+b.name+'" wirklich löschen? Das lässt sich nicht rückgängig machen.')) return;
+    D.buerosammlung = D.buerosammlung.filter(x=>x.id!==id);
+    sichern(); fensterZu(); brettBauen(); heuteBauen(); zahlenBauen(); melde('Gelöscht.');
+  };
+  $('#ueberlage').classList.add('auf');
+}
+function fensterZu(){ $('#ueberlage').classList.remove('auf'); offenesBuero = null; }
+
+/* ═══════════════ KALTAKQUISE ═══════════════ */
+function stufenBauen(){
+  $('#stufen').innerHTML = D.mails.map((m,i)=>
+    `<li data-i="${i}" class="${i===aktuelleStufe-1?'on':''}"><b>${sicher(m.name)}</b>
+      <span>${sicher(m.kurz)}${m.tage?' · Versand '+m.tage+' Tage nach der Erstansprache':''}</span></li>`).join('');
+  $$('#stufen li').forEach(li=>li.onclick = ()=>{ aktuelleStufe = Number(li.dataset.i)+1; mailBauen(); });
+}
+function mailBauen(){
+  stufenBauen();
+  const m = D.mails[aktuelleStufe-1];
+  $('#mTitel').textContent = m.name;
+  $('#mBetreff').value = m.betreff;
+  $('#mText').value = m.text;
+  $('#platzhalter').innerHTML = PLATZHALTER.map(p=>`<button class="ph" data-p="${p}">${p}</button>`).join('');
+  $$('.ph').forEach(b=>b.onclick = ()=>{
+    const ta = $('#mText'), s = ta.selectionStart, e = ta.selectionEnd;
+    ta.value = ta.value.slice(0,s) + b.dataset.p + ta.value.slice(e);
+    ta.focus(); ta.selectionStart = ta.selectionEnd = s + b.dataset.p.length;
+    m.text = ta.value; sichern(); vorschauBauen();
+  });
+  vorschauBauen(); heuteMailBauen();
+}
+function fuellen(text, b){
+  return text
+    .replace(/\{\{person\}\}/g,  b.person || 'Damen und Herren')
+    .replace(/\{\{buero\}\}/g,   b.name   || 'Ihr Büro')
+    .replace(/\{\{ort\}\}/g,     b.ort    || 'Ihrer Region')
+    .replace(/\{\{absender\}\}/g, D.absender.name || 'Tim Walter');
+}
+function vorschauBauen(){
+  const m = D.mails[aktuelleStufe-1];
+  const bsp = { person:'Frau Schmitt', name:'Schmitt Immobilien', ort:'Koblenz' };
+  $('#mVorschau').innerHTML = '<span class="betreff">'+sicher(fuellen(m.betreff,bsp))+'</span>'
+    + sicher(fuellen(m.text,bsp));
+}
+function faelligeMails(){
+  const raus = [];
+  D.buerosammlung.forEach(b=>{
+    if(!b.mail) return;
+    if(D.abmeldungen.includes(b.mail.toLowerCase())) return;
+    if(['kunde','abgelehnt','test','gespraech','antwort'].includes(b.stufe)) return;
+    const gesendet = b.mailsGesendet || [];
+    for(let stufe=1; stufe<=3; stufe++){
+      if(gesendet.includes(stufe)) continue;
+      const m = D.mails[stufe-1];
+      if(stufe === 1){ raus.push({ b, stufe }); }
+      else {
+        const erste = b.ersteMail;
+        if(!erste) break;
+        if(plusTage(m.tage, erste) <= heute()) raus.push({ b, stufe });
+      }
+      break;  /* je Buero nur die naechste faellige Stufe */
+    }
+  });
+  return raus;
+}
+function heuteMailBauen(){
+  const liste = faelligeMails();
+  const heuteGesendet = D.buerosammlung.reduce((s,b)=>
+    s + ((b.mailProtokoll||[]).filter(p=>p.datum===heute()).length), 0);
+  const rest = Math.max(0, (D.limit||20) - heuteGesendet);
+  $('#mHeuteHin').textContent = liste.length + ' fällig · heute schon versandt: '
+    + heuteGesendet + ' von ' + (D.limit||20);
+
+  if(!liste.length){
+    $('#mHeute').innerHTML = '<tr><td style="color:var(--muted);padding:18px 4px">'
+      + 'Nichts fällig. Erfassen Sie im Radar weitere Büros mit E-Mail-Adresse.</td></tr>';
+    return;
+  }
+  $('#mHeute').innerHTML =
+    '<thead><tr><th>Büro</th><th>Ansprechpartner</th><th>Stufe</th><th class="r">Aktion</th></tr></thead><tbody>'
+    + liste.slice(0,60).map(({b,stufe})=>
+      `<tr><td><b>${sicher(b.name)}</b><br><span style="font-size:12.5px;color:var(--muted)">${sicher(b.mail)}</span></td>
+        <td>${sicher(b.person||'—')}</td>
+        <td><span class="pille p-info">${sicher(D.mails[stufe-1].name)}</span></td>
+        <td class="r">
+          <button class="knopf knopf-linie knopf-klein" data-mail="${b.id}" data-stufe="${stufe}"
+            ${rest<=0?'disabled title="Tageslimit erreicht"':''}>Öffnen</button>
+          <button class="knopf knopf-linie knopf-klein" data-ab="${b.id}">Abmelden</button>
+        </td></tr>`).join('')
+    + '</tbody>';
+
+  $$('[data-mail]').forEach(btn=>btn.onclick = ()=>{
+    const b = D.buerosammlung.find(x=>x.id===btn.dataset.mail);
+    mailOeffnen(b, Number(btn.dataset.stufe));
+  });
+  $$('[data-ab]').forEach(btn=>btn.onclick = ()=>{
+    const b = D.buerosammlung.find(x=>x.id===btn.dataset.ab);
+    if(!b || !b.mail) return;
+    D.abmeldungen.push(b.mail.toLowerCase());
+    b.verlauf.unshift({ zeit:new Date().toISOString(), was:'Abgemeldet',
+      text:'Keine weiteren E-Mails an diese Adresse' });
+    sichern(); heuteMailBauen(); melde('Adresse dauerhaft gesperrt.');
+  });
+}
+function mailOeffnen(b, stufe){
+  if(!b || !b.mail) return;
+  if(D.abmeldungen.includes(b.mail.toLowerCase())){ melde('Diese Adresse ist abgemeldet.'); return; }
+  const m = D.mails[stufe-1];
+  const betreff = fuellen(m.betreff, b), text = fuellen(m.text, b);
+  location.href = 'mailto:' + encodeURIComponent(b.mail)
+    + '?subject=' + encodeURIComponent(betreff)
+    + '&body=' + encodeURIComponent(text);
+
+  b.mailsGesendet = b.mailsGesendet || [];
+  if(!b.mailsGesendet.includes(stufe)) b.mailsGesendet.push(stufe);
+  b.mailProtokoll = b.mailProtokoll || [];
+  b.mailProtokoll.push({ datum:heute(), stufe });
+  if(stufe === 1) b.ersteMail = heute();
+  b.verlauf.unshift({ zeit:new Date().toISOString(), was:'E-Mail geöffnet', text:m.name+': '+betreff });
+  if(b.stufe === 'neu' || b.stufe === 'recherche') b.stufe = 'erstkontakt';
+  else if(stufe > 1) b.stufe = 'nachfass';
+  const naechste = D.mails[stufe];
+  b.naechste = naechste ? plusTage(naechste.tage - m.tage) : plusTage(7);
+  sichern(); heuteMailBauen(); brettBauen(); heuteBauen(); zahlenBauen();
+}
+
+/* ═══════════════ HEUTE ═══════════════ */
+function heuteBauen(){
+  const faellig = D.buerosammlung.filter(b=>{ const d = faelligkeit(b); return d !== null && d <= 0; })
+    .sort((a,b)=>(a.naechste||'').localeCompare(b.naechste||''));
+  const mails = faelligeMails();
+  $('#heuteTitel').textContent = 'Heute — ' +
+    new Date().toLocaleDateString('de-DE',{ weekday:'long', day:'2-digit', month:'long' });
+  $('#heuteHin').textContent = faellig.length + ' offene Aufgaben · ' + mails.length + ' E-Mails fällig';
+
+  if(!faellig.length && !mails.length){
+    $('#heuteTab').innerHTML = '<tr><td style="padding:26px 4px;color:var(--muted)">'
+      + 'Nichts offen. Erfassen Sie im Radar neue Büros oder setzen Sie Wiedervorlagen.</td></tr>';
+    return;
+  }
+  const zeilen = faellig.map(b=>{
+    const d = faelligkeit(b);
+    const st = STUFEN.find(s=>s.id===b.stufe);
+    return `<tr><td><b>${sicher(b.name)}</b><br>
+        <span style="font-size:12.5px;color:var(--muted)">${sicher(b.ort||'')}</span></td>
+      <td><span class="pille p-grau">${st?st.name:''}</span></td>
+      <td>${sicher(b.notiz ? b.notiz.slice(0,70) : '—')}</td>
+      <td><span class="pille ${d<0?'p-schlecht':'p-warn'}">${d<0?Math.abs(d)+' Tage überfällig':'heute'}</span></td>
+      <td class="r"><button class="knopf knopf-linie knopf-klein" data-oeffnen="${b.id}">Öffnen</button></td></tr>`;
+  }).join('');
+  $('#heuteTab').innerHTML =
+    '<thead><tr><th>Büro</th><th>Stufe</th><th>Notiz</th><th>Fällig</th><th class="r"></th></tr></thead><tbody>'
+    + zeilen + '</tbody>';
+  $$('[data-oeffnen]').forEach(b=>b.onclick = ()=>fensterAuf(b.dataset.oeffnen));
+}
+
+/* ═══════════════ AUSWERTUNG ═══════════════ */
+function zahlenBauen(){
+  const alle = D.buerosammlung;
+  const n = s => alle.filter(b=>b.stufe===s).length;
+  const passend = alle.filter(b=>b.punkte>=60).length;
+  const kontaktiert = alle.filter(b=>(b.mailsGesendet||[]).length>0).length;
+  const antworten = n('antwort')+n('gespraech')+n('test')+n('kunde');
+  const kunden = n('kunde');
+  const quote = kontaktiert ? Math.round(antworten/kontaktiert*100) : 0;
+
+  $('#kzRaster').innerHTML = [
+    ['Büros erfasst', alle.length, alle.length? passend+' davon passend' : 'noch keine'],
+    ['Angeschrieben', kontaktiert, 'mindestens eine E-Mail'],
+    ['Rückmeldungen', antworten, quote+' % der Angeschriebenen'],
+    ['Kunden', kunden, n('test')+' in der Testphase']
+  ].map(([t,w,u])=>`<div class="kz"><div class="t">${t}</div><div class="w">${w}</div><div class="u">${u}</div></div>`).join('');
+
+  const max = Math.max(1, alle.length);
+  const stufenZahl = [
+    ['Erfasst', alle.length],
+    ['Angeschrieben', kontaktiert],
+    ['Rückmeldung', antworten],
+    ['Erstgespräch', n('gespraech')+n('test')+n('kunde')],
+    ['Testphase', n('test')+n('kunde')],
+    ['Kunde', kunden]
+  ];
+  $('#trichter').innerHTML = stufenZahl.map(([t,w])=>
+    `<div class="tr-zeile"><span class="tr-name">${t}</span>
+      <span class="tr-balken"><i style="width:${Math.round(w/max*100)}%"></i></span>
+      <span class="tr-wert">${w}</span></div>`).join('');
+
+  const a = D.annahmen;
+  const proKunde = a.termine * a.preis;
+  const zeilen = [
+    ['Kunden aktuell', kunden, kunden*proKunde],
+    ['Testphase (noch keine Zahlung)', n('test'), 0],
+    ['Erstgespräche laufend', n('gespraech'), 0]
+  ];
+  $('#zTab').innerHTML =
+    '<thead><tr><th>Gruppe</th><th class="r">Büros</th><th class="r">Umsatz je Monat</th></tr></thead><tbody>'
+    + zeilen.map(([t,anz,um])=>`<tr><td>${t}</td><td class="r">${anz}</td>
+        <td class="r">${um.toLocaleString('de-DE')} €</td></tr>`).join('')
+    + `<tr><td><b>Laufender Monatsumsatz</b></td><td class="r"><b>${kunden}</b></td>
+        <td class="r"><b>${(kunden*proKunde).toLocaleString('de-DE')} €</b></td></tr>`
+    + `<tr><td colspan="3" style="color:var(--muted);font-size:13px;border:none;padding-top:12px">
+        Grundlage: ${a.termine} Termine je Kunde und Monat zu ${a.preis} € im Schnitt.
+        Die Erfolgsbeteiligung von 5 % ist hier nicht enthalten, weil sie vom Abschluss abhängt.</td></tr>`
+    + '</tbody>';
+}
+
+/* ═══════════════ ALLGEMEIN ═══════════════ */
+function alleBauen(){ radarZeigen(); brettBauen(); mailBauen(); heuteBauen(); zahlenBauen(); }
+
+function themaSetzen(t){
+  D.thema = t; document.documentElement.dataset.theme = t; sichern();
+  $('#icoThema').innerHTML = t==='dark'
+    ? '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'
+    : '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+}
+
+/* Bedienung */
+$$('#tabs .tab').forEach(t=>t.onclick = ()=>{
+  $$('#tabs .tab').forEach(x=>x.classList.remove('on'));
+  $$('.view').forEach(v=>v.classList.remove('on'));
+  t.classList.add('on'); $('#v-'+t.dataset.view).classList.add('on');
+});
+['rName','rOrt','rPerson','rMail','rTel','rWeb','rMit','rObj','rJahre','rNotiz']
+  .forEach(id=>$('#'+id).addEventListener('input', radarZeigen));
+['rKette','rPerson2','rFormular','rRegion','rVerkauf']
+  .forEach(id=>$('#'+id).addEventListener('change', radarZeigen));
+
+$('#btnUebernehmen').onclick = ()=>{
+  const r = radarLesen();
+  if(!r.name){ melde('Bitte tragen Sie den Namen des Büros ein.'); $('#rName').focus(); return; }
+  const e = bewerten({ ...r, person:r.person2 });
+  D.buerosammlung.unshift({
+    id: 'b'+Date.now()+Math.random().toString(36).slice(2,7),
+    name:r.name, ort:r.ort, person:r.person, mail:r.mail, telefon:r.telefon, web:r.web,
+    mitarbeiter:r.mitarbeiter, objekte:r.objekte, seit:r.seit,
+    kette:r.kette, verkauf:r.verkauf, formular:r.formular, region:r.region,
+    punkte:e.punkte, urteil:e.urteil, notiz:r.notiz,
+    stufe:'neu', naechste:heute(), mailsGesendet:[], mailProtokoll:[],
+    verlauf:[{ zeit:new Date().toISOString(), was:'Angelegt',
+      text:'Bewertung: '+e.punkte+' Punkte — '+e.urteil }]
+  });
+  sichern(); $('#btnLeeren').click(); alleBauen();
+  melde(r.name+' übernommen ('+e.punkte+' Punkte).');
+};
+$('#btnLeeren').onclick = ()=>{
+  ['rName','rOrt','rPerson','rMail','rTel','rWeb','rMit','rObj','rJahre','rNotiz']
+    .forEach(id=>$('#'+id).value = '');
+  $('#rKette').checked = false;
+  ['rPerson2','rFormular','rRegion','rVerkauf'].forEach(id=>$('#'+id).checked = true);
+  radarZeigen(); $('#rName').focus();
+};
+$('#pFilter').onchange = brettBauen;
+$('#fZu').onclick = fensterZu;
+$('#ueberlage').onclick = e=>{ if(e.target === $('#ueberlage')) fensterZu(); };
+addEventListener('keydown', e=>{ if(e.key === 'Escape' && offenesBuero) fensterZu(); });
+
+$('#mBetreff').addEventListener('input', e=>{
+  D.mails[aktuelleStufe-1].betreff = e.target.value; sichern(); vorschauBauen(); });
+$('#mText').addEventListener('input', e=>{
+  D.mails[aktuelleStufe-1].text = e.target.value; sichern(); vorschauBauen(); });
+$('#btnStandard').onclick = ()=>{
+  if(!confirm('Diese Vorlage auf den Standardtext zurücksetzen?')) return;
+  D.mails[aktuelleStufe-1] = { ...STANDARDMAILS[aktuelleStufe-1] };
+  sichern(); mailBauen(); melde('Vorlage zurückgesetzt.');
+};
+$('#mAbsName').addEventListener('input', e=>{ D.absender.name = e.target.value; sichern(); vorschauBauen(); });
+$('#mAbsMail').addEventListener('input', e=>{ D.absender.mail = e.target.value; sichern(); });
+$('#mLimit').addEventListener('input', e=>{ D.limit = Number(e.target.value)||20; sichern(); heuteMailBauen(); });
+['zTermine','zPreis','zQuote'].forEach(id=>$('#'+id).addEventListener('input', e=>{
+  D.annahmen[id.slice(1).toLowerCase()] = Number(e.target.value)||0; sichern(); zahlenBauen(); }));
+
+$('#btnThema').onclick = ()=>themaSetzen(D.thema==='dark'?'light':'dark');
+
+$('#btnCsv').onclick = ()=>{
+  const kopf = ['Buero','Ort','Ansprechpartner','EMail','Telefon','Mitarbeiter','Objekte','Punkte','Stufe','Naechste Aktion'];
+  const zeilen = D.buerosammlung.map(b=>[b.name,b.ort,b.person,b.mail,b.telefon,
+    b.mitarbeiter,b.objekte,b.punkte,(STUFEN.find(s=>s.id===b.stufe)||{}).name,b.naechste]);
+  const csv = [kopf,...zeilen].map(r=>r.map(z=>'"'+String(z==null?'':z).replace(/"/g,'""')+'"').join(';')).join('\r\n');
+  herunterladen('﻿'+csv, 'walter-setting-bueros.csv', 'text/csv');
+};
+$('#btnExport').onclick = ()=>herunterladen(JSON.stringify(D,null,2),
+  'walter-setting-sicherung-'+heute()+'.json', 'application/json');
+$('#btnImport').onclick = ()=>$('#dateiImport').click();
+$('#dateiImport').onchange = e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const leser = new FileReader();
+  leser.onload = ()=>{
+    try{
+      const neu = JSON.parse(leser.result);
+      if(!neu || !Array.isArray(neu.buerosammlung)) throw new Error('Format');
+      if(!confirm('Sicherung einspielen? Der aktuelle Stand wird ersetzt.')) return;
+      D = { ...grund(), ...neu };
+      sichern(); themaSetzen(D.thema||'light'); feldereinlesen(); alleBauen();
+      melde('Sicherung eingespielt.');
+    }catch(err){ melde('Datei konnte nicht gelesen werden.'); }
+  };
+  leser.readAsText(f); e.target.value = '';
+};
+function herunterladen(inhalt, name, typ){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([inhalt],{ type:typ+';charset=utf-8' }));
+  a.download = name; a.click(); URL.revokeObjectURL(a.href);
+}
+function feldereinlesen(){
+  $('#mAbsName').value = D.absender.name || '';
+  $('#mAbsMail').value = D.absender.mail || '';
+  $('#mLimit').value = D.limit || 20;
+  $('#zTermine').value = D.annahmen.termine;
+  $('#zPreis').value = D.annahmen.preis;
+  $('#zQuote').value = D.annahmen.quote;
+}
+
+themaSetzen(D.thema || 'light');
+feldereinlesen();
+alleBauen();
+</script>
+</body>
+</html>
