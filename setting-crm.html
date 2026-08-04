@@ -1039,6 +1039,13 @@ td.r,th.r{text-align:right}
           <span class="hin" id="tlZahl"></span>
         </div>
         <div class="status" style="margin-top:9px"><i class="lampe" id="sLampe"></i><span id="sText">Bereit.</span></div>
+        <details style="margin-top:9px">
+          <summary style="cursor:pointer;font-size:12.5px;color:var(--muted)">Ausschlussliste bearbeiten</summary>
+          <p class="hin" style="margin:7px 0">Ein Begriff je Zeile. Jedes Büro, dessen Name einen davon
+            enthält, wird künftig ausgeblendet — auch in anderen Städten.</p>
+          <textarea id="ausschluss" style="min-height:70px;font-size:13px"
+            placeholder="Riedel&#10;Musterfirma"></textarea>
+        </details>
         <div class="tl-filter">
           <label class="chk"><input type="checkbox" id="fKlein" checked><span>nur kleine Büros</span></label>
           <label class="chk"><input type="checkbox" id="fKontakt"><span>nur mit Kontakt</span></label>
@@ -1284,7 +1291,7 @@ Wie viele Anfragen kommen bei Ihnen im Monat rein — und wie viele davon rufen 
 
 Die ersten drei Termine sind kostenlos. Wenn die Qualität nicht stimmt, haben Sie nichts verloren ausser der Liste.`;
 
-function grund(){return{bueros:[],mails:STANDARDMAILS.map(m=>({...m})),abmeldungen:[],verworfen:[],
+function grund(){return{bueros:[],mails:STANDARDMAILS.map(m=>({...m})),abmeldungen:[],verworfen:[],ausschluss:'',
   absender:{name:'',mail:'',tel:''},limit:20,thema:'light',
   ziel:{summe:190000,monate:18,termine:6,preis:80,prov:700,abschl:1},
   letzterOrt:'',karte:{lat:50.9,lon:7.6,zoom:6}};}
@@ -1349,31 +1356,62 @@ const NOMINATIM='https://nominatim.openstreetmap.org/search';
 const TILES={light:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
              dark:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'};
 
-/* Ketten und Konzerne — nicht die Zielgruppe. */
+/* Begriffe, an denen ein Maklerbuero erkennbar ist, wenn das
+   Kartenmerkmal fehlt. Hausverwaltungen sind bewusst nicht dabei:
+   sie verwalten, sie vermitteln keine Verkaeufe. */
+const NAMEN_RX='Immobilien|Immobilienmakler|Makler';
+
+/* Drei Ausschlussgruppen. Keine davon ist ein Werturteil ueber die
+   Firma -- sie sind schlicht keine Kunden fuer eine Terminierung:
+   Ketten entscheiden nicht vor Ort, Bautraeger verkaufen eigene
+   Projekte statt fremder Objekte, und grosse oder auf Luxus
+   ausgerichtete Haeuser haben eigene Leute am Telefon. */
 const KETTEN=['remax','re/max','engel & völkers','engel und völkers','engel&völkers','engel voelkers',
  'von poll','mcmakler','homeday','immoscout','immobilienscout','planethome','century 21','century21',
  'dahler','hausgold','realbest','wüstenrot','schwäbisch hall','lbs','sparkasse','volksbank','raiffeisen',
  'vr bank','vr-bank','vereinigte volksbank','allianz','postbank','commerzbank','deutsche bank','ing-diba',
- 'vonovia','deutsche wohnen','grand city','akelius','saga','gewobag','degewo','howoge','wohnungsbau',
- 'wohnungsgesellschaft','wohnungsgenossenschaft','baugenossenschaft','siedlungswerk','aengevelt',
- 'jones lang','cbre','colliers','bnp paribas','savills','engel & voelkers'];
-/* Begriffe, die auf einen Makler hindeuten, wenn das Merkmal fehlt. */
-const NAMEN_RX='Immobilien|Makler|Immobilienmakler|Hausverwaltung|Immo';
+ 'vonovia','deutsche wohnen','grand city','akelius','saga','gewobag','degewo','howoge',
+ 'aengevelt','jones lang','lasalle','cbre','colliers','bnp paribas','savills','cushman','knight frank',
+ 'sotheby','christie','barnes','first citiz','riedel'];
 
-function istKette(name,tags){
- const n=(name||'').toLowerCase();
- if(KETTEN.some(k=>n.includes(k)))return true;
+/* Bautraeger, Projektentwickler und Bauunternehmen. */
+const BAUTRAEGER=['bauträger','bautraeger','bauunternehm','projektentwickl','projektbau','wohnbau',
+ 'hausbau','baugesellschaft','baugenossenschaft','siedlungswerk','wohnungsbau','wohnungsgesellschaft',
+ 'wohnungsgenossenschaft','baubetreuung','generalunternehm','schlüsselfertig','bauplanung','ingenieurbau',
+ 'immobilienentwicklung','projektierung','massivhaus','fertighaus','town & country','viebrockhaus'];
+
+/* Hinweise auf ein grosses oder auf Luxus ausgerichtetes Haus. */
+const GROSS=['luxus','luxury','premium','exklusiv','exclusive','prestige','finest','fine homes',
+ 'penthouse','villen','estates','international','worldwide','holding','group',' gruppe','konzern',
+ ' ag','aktiengesellschaft',' se ','asset management','investment','capital','property management',
+ 'real estate group','immobilien ag','immobiliengruppe','residences'];
+
+function passtNicht(name,tags){
+ const n=(' '+(name||'')+' ').toLowerCase();
+ const eigene=(D.ausschluss||'').split(/[\n,;]+/).map(x=>x.trim().toLowerCase()).filter(x=>x.length>2);
+ if(eigene.some(k=>n.includes(k))) return 'gesperrt';
+ if(KETTEN.some(k=>n.includes(k))) return 'kette';
  const t=tags||{};
  const b=((t.brand||t.operator||'')+'').toLowerCase();
- if(b&&KETTEN.some(k=>b.includes(k)))return true;
- if(t['brand:wikidata'])return true;
- return false;
+ if(b&&KETTEN.some(k=>b.includes(k))) return 'kette';
+ if(t['brand:wikidata']) return 'kette';
+ if(BAUTRAEGER.some(k=>n.includes(k))) return 'bauträger';
+ /* Merkmale aus der Karte, die einen Bautraeger verraten */
+ if(t.craft==='builder'||t.office==='construction_company'||t.building==='construction') return 'bauträger';
+ if(GROSS.some(k=>n.includes(k))) return 'groß';
+ return '';
 }
+function istKette(name,tags){ return passtNicht(name,tags)!==''; }
+
 /* Vorbewertung aus dem, was in der Karte steht. Mitarbeiter- und
    Objektzahl gibt es dort nicht — die traegt man spaeter nach. */
 function vorbewerten(t){
  const g=[];
- g.push(t.kette?[-30,'Kette oder Filiale']:[40,'kein bekanntes Franchise — vermutlich inhabergeführt']);
+ g.push(t.kette?[-40,({kette:'Kette oder Filiale',
+   'bauträger':'Bauträger oder Bauunternehmen — verkauft eigene Projekte',
+   'groß':'großes oder auf Luxus ausgerichtetes Haus',
+   gesperrt:'steht auf Ihrer Ausschlussliste'})[t.grundAus]||'passt nicht ins Beuteschema']
+  :[40,'kein Franchise, kein Bauträger — vermutlich inhabergeführt']);
  g.push(t.mail?[20,'E-Mail hinterlegt']:[0,'keine E-Mail in den Kartendaten']);
  g.push(t.telefon?[18,'Telefonnummer hinterlegt']:[0,'keine Telefonnummer']);
  g.push(t.web?[12,'eigene Webseite']:[0,'keine Webseite']);
@@ -1424,7 +1462,6 @@ function abfrageGenau(lat,lon,radius){
 function abfrageBreit(lat,lon,radius){
  const um=`(around:${Math.min(radius,25000)},${lat},${lon})`;
  return `[out:json][timeout:90];(`
-  +`nwr["office"="property_management"]${um};`
   +`nwr["office"]["name"~"${NAMEN_RX}",i]${um};`
   +`nwr["shop"]["name"~"${NAMEN_RX}",i]${um};`
   +`);out center;`;
@@ -1453,15 +1490,16 @@ function zuTreffer(el){
  const t=el.tags||{};
  if(!t.name)return null;
  const istMakler = t.office==='estate_agent'||t.shop==='estate_agent'
-   ||t.office==='property_management'|| new RegExp(NAMEN_RX,'i').test(t.name);
+   || new RegExp(NAMEN_RX,'i').test(t.name);
  if(!istMakler)return null;
  const lat=Number.isFinite(el.lat)?el.lat:(el.center?el.center.lat:null);
  const lon=Number.isFinite(el.lon)?el.lon:(el.center?el.center.lon:null);
  const strasse=[t['addr:street'],t['addr:housenumber']].filter(Boolean).join(' ');
  const ort=[t['addr:postcode'],t['addr:city']].filter(Boolean).join(' ');
+ const grundAus=passtNicht(t.name,t);
  const roh={id:el.type+'_'+el.id,name:t.name,strasse,ort,lat,lon,
    telefon:t['contact:phone']||t.phone||'',mail:t['contact:email']||t.email||'',
-   web:t['contact:website']||t.website||'',kette:istKette(t.name,t),
+   web:t['contact:website']||t.website||'',kette:grundAus!=='',grundAus,
    sicher:t.office==='estate_agent'||t.shop==='estate_agent'};
  const b=vorbewerten(roh);
  return{...roh,punkte:b.punkte,gruende:b.gruende};
@@ -1580,7 +1618,7 @@ function trefferBauen(){
        aria-label="Verwerfen">✕</button></div>
    <div class="tr-adr">${sicher([t.strasse,t.ort].filter(Boolean).join(', ')||'Anschrift unbekannt')}</div>
    <div class="tr-fuss">
-     ${t.kette?'<span class="pille p-schlecht">Kette</span>':''}
+     ${t.grundAus?`<span class="pille p-schlecht">${sicher(t.grundAus)}</span>`:''}
      ${t.sicher?'':'<span class="pille p-grau">über Namen erkannt</span>'}
      ${t.telefon?'<span class="mini"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg>Telefon</span>':''}
      ${t.mail?'<span class="mini"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>E-Mail</span>':''}
@@ -2005,6 +2043,13 @@ $$('#tabs .tab').forEach(t=>t.onclick=()=>{
 $('#btnScan').onclick=scanStarten;
 $('#sOrt').addEventListener('keydown',e=>{if(e.key==='Enter')scanStarten();});
 ['fKlein','fKontakt','fNeu'].forEach(id=>$('#'+id).onchange=trefferBauen);
+/* Aendert sich die Liste, muessen die vorhandenen Treffer neu beurteilt
+   werden -- sonst wirkt sie erst beim naechsten Scan. */
+$('#ausschluss').addEventListener('input',e=>{
+ D.ausschluss=e.target.value;sichern();
+ treffer.forEach(t=>{const g=passtNicht(t.name,null);t.grundAus=g;t.kette=g!=='';
+   const b=vorbewerten(t);t.punkte=b.punkte;t.gruende=b.gruende;});
+ trefferBauen();});
 $('#btnAlle').onclick=()=>{
  const l=gefilterteTreffer().filter(t=>!schonDrin(t));
  const alleDrin=l.every(t=>gewaehlt.has(t.id));
@@ -2079,6 +2124,7 @@ function felderFuellen(){
  $('#mAbsTel').value=D.absender.tel||'';
  $('#mLimit').value=D.limit||20;
  $('#sOrt').value=D.letzterOrt||'';
+ $('#ausschluss').value=D.ausschluss||'';
  [['zZiel','summe'],['zMonate','monate'],['zTermine','termine'],['zPreis','preis'],
   ['zProv','prov'],['zAbschl','abschl']].forEach(([id,k])=>$('#'+id).value=D.ziel[k]);
  $('#leitfaden').textContent=LEITFADEN;
