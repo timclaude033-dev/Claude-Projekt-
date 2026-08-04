@@ -824,6 +824,10 @@ textarea{resize:vertical;min-height:80px;font-family:var(--body);line-height:1.5
 .tr-name{font-weight:600;color:var(--ink);font-size:14px;flex:1;min-width:0;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tr-adr{font-size:12.5px;color:var(--muted);margin-top:2px}
+.verwerf{width:22px;height:22px;flex:none;border-radius:6px;color:var(--muted);font-size:13px;
+  line-height:1;display:flex;align-items:center;justify-content:center;
+  transition:background .15s,color .15s}
+.verwerf:hover{background:rgba(180,72,60,.13);color:var(--schlecht)}
 .tr-fuss{display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap}
 .mini{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted)}
 .mini svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
@@ -1046,6 +1050,8 @@ td.r,th.r{text-align:right}
       </div>
       <div class="tl-fuss">
         <button class="knopf knopf-linie knopf-klein" id="btnAlle">Alle wählen</button>
+        <button class="knopf knopf-linie knopf-klein" id="btnRest" title="Alle übrigen aussortieren">Rest verwerfen</button>
+        <button class="knopf knopf-linie knopf-klein" id="btnKarteLeeren">Karte leeren</button>
         <button class="knopf knopf-voll knopf-klein" id="btnUeber" disabled>Übernehmen</button>
         <span class="hin" id="tlAuswahl" style="margin-left:auto"></span>
       </div>
@@ -1278,7 +1284,7 @@ Wie viele Anfragen kommen bei Ihnen im Monat rein — und wie viele davon rufen 
 
 Die ersten drei Termine sind kostenlos. Wenn die Qualität nicht stimmt, haben Sie nichts verloren ausser der Liste.`;
 
-function grund(){return{bueros:[],mails:STANDARDMAILS.map(m=>({...m})),abmeldungen:[],
+function grund(){return{bueros:[],mails:STANDARDMAILS.map(m=>({...m})),abmeldungen:[],verworfen:[],
   absender:{name:'',mail:'',tel:''},limit:20,thema:'light',
   ziel:{summe:190000,monate:18,termine:6,preis:80,prov:700,abschl:1},
   letzterOrt:'',karte:{lat:50.9,lon:7.6,zoom:6}};}
@@ -1529,18 +1535,35 @@ async function scanStarten(){
  }
 }
 
+/* Leert nur die Anzeige. Die uebernommenen Bueros und alle Einstellungen
+   bleiben unberuehrt -- die liegen im Speicher, nicht auf der Karte. */
+function karteLeeren(){
+ treffer=[];gewaehlt.clear();
+ marker.forEach(m=>karte.removeLayer(m));marker=[];
+ if(kreis){karte.removeLayer(kreis);kreis=null;}
+ trefferBauen();scanStatus('Karte geleert. Die Büros im System bleiben erhalten.','');
+}
 function schonDrin(t){return D.bueros.some(b=>b.osmId===t.id
   ||(b.name||'').toLowerCase().trim()===t.name.toLowerCase().trim());}
+function istVerworfen(t){return (D.verworfen||[]).includes(t.id);}
+/* "nur neue" heisst: weder uebernommen noch von Hand verworfen. Ohne den
+   zweiten Teil taucht ein Buero, das man bewusst aussortiert hat, beim
+   naechsten Durchgang derselben Stadt wieder auf. */
 function gefilterteTreffer(){
  return treffer.filter(t=>{
   if($('#fKlein').checked&&t.kette)return false;
   if($('#fKontakt').checked&&!t.mail&&!t.telefon)return false;
-  if($('#fNeu').checked&&schonDrin(t))return false;
+  if($('#fNeu').checked&&(schonDrin(t)||istVerworfen(t)))return false;
   return true;});
+}
+function ausgeblendet(){
+ return treffer.filter(t=>schonDrin(t)||istVerworfen(t)).length;
 }
 function trefferBauen(){
  const liste=gefilterteTreffer();
- $('#tlZahl').textContent=liste.length+' von '+treffer.length;
+ const weg=ausgeblendet();
+ $('#tlZahl').textContent=liste.length+' von '+treffer.length
+   +(weg&&$('#fNeu').checked?' · '+weg+' ausgeblendet':'');
  marker.forEach(m=>karte.removeLayer(m));marker=[];
  if(!liste.length){
   $('#tlInhalt').innerHTML='<div class="leer"><b>Keine Treffer</b>'
@@ -1552,7 +1575,9 @@ function trefferBauen(){
   const art=t.punkte>=60?'p-gut':(t.punkte>=40?'p-warn':'p-schlecht');
   return `<div class="treffer${gewaehlt.has(t.id)?' gewaehlt':''}${drin?' drin':''}" data-id="${sicher(t.id)}">
    <div class="tr-zeile1"><span class="tr-name">${sicher(t.name)}</span>
-     <span class="pille ${art}">${t.punkte}</span></div>
+     <span class="pille ${art}">${t.punkte}</span>
+     <button class="verwerf" data-v="${sicher(t.id)}" title="Verwerfen — taucht bei der nächsten Suche nicht mehr auf"
+       aria-label="Verwerfen">✕</button></div>
    <div class="tr-adr">${sicher([t.strasse,t.ort].filter(Boolean).join(', ')||'Anschrift unbekannt')}</div>
    <div class="tr-fuss">
      ${t.kette?'<span class="pille p-schlecht">Kette</span>':''}
@@ -1560,6 +1585,7 @@ function trefferBauen(){
      ${t.telefon?'<span class="mini"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg>Telefon</span>':''}
      ${t.mail?'<span class="mini"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>E-Mail</span>':''}
      ${drin?'<span class="mini" style="margin-left:auto">bereits übernommen</span>':''}
+     ${!drin&&istVerworfen(t)?'<span class="mini" style="margin-left:auto">verworfen</span>':''}
    </div></div>`;}).join('');
 
  liste.forEach(t=>{
@@ -1572,7 +1598,15 @@ function trefferBauen(){
   m.on('click',()=>waehlen(t.id));
   marker.push(m);
  });
- $$('.treffer').forEach(el=>el.onclick=()=>waehlen(el.dataset.id));
+ $$('.treffer').forEach(el=>el.onclick=e=>{
+  if(e.target.closest('.verwerf'))return;
+  waehlen(el.dataset.id);});
+ $$('.verwerf').forEach(btn=>btn.onclick=e=>{
+  e.stopPropagation();
+  const id=btn.dataset.v;
+  D.verworfen=D.verworfen||[];
+  if(!D.verworfen.includes(id))D.verworfen.push(id);
+  gewaehlt.delete(id);sichern();trefferBauen();melde('Verworfen — taucht nicht wieder auf.');});
  auswahlBauen();
 }
 function waehlen(id){
@@ -1977,6 +2011,14 @@ $('#btnAlle').onclick=()=>{
  l.forEach(t=>alleDrin?gewaehlt.delete(t.id):gewaehlt.add(t.id));
  trefferBauen();};
 $('#btnUeber').onclick=()=>uebernehmen([...gewaehlt].map(id=>treffer.find(t=>t.id===id)));
+$('#btnRest').onclick=()=>{
+ const l=gefilterteTreffer().filter(t=>!gewaehlt.has(t.id));
+ if(!l.length){melde('Nichts zu verwerfen.');return;}
+ if(!confirm(l.length+' Büros verwerfen? Sie tauchen bei der nächsten Suche nicht mehr auf.'))return;
+ D.verworfen=D.verworfen||[];
+ l.forEach(t=>{if(!D.verworfen.includes(t.id))D.verworfen.push(t.id);});
+ sichern();trefferBauen();melde(l.length+' verworfen.');};
+$('#btnKarteLeeren').onclick=()=>karteLeeren();
 $('#pFilter').onchange=brettBauen;
 $('#bStufe').onchange=buerosBauen;
 $('#globalSuche').addEventListener('input',()=>{brettBauen();buerosBauen();});
