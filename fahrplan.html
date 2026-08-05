@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walter Setting — Fahrplan</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="walter-setting-icon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   WALTER SETTING — FAHRPLAN
+   Alle Aufgaben von der Gruendung bis zum ersten Umsatz.
+   Eine Datei. Der Stand liegt im Browser (localStorage).
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --ink:#16233B; --ink-soft:#21395A; --grad-1:#35577D; --grad-2:#152234;
+  --text:#1C2A3F; --muted:#6E7F95; --bg:#F2F5F9; --flaeche:#FFFFFF; --flaeche-2:#F7F9FC;
+  --rand:#E2E7EE; --gut:#2E7D5B; --warn:#B07A22; --schlecht:#B4483C; --info:#35577D;
+  --head:'Montserrat',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+  --ez:cubic-bezier(.22,1,.36,1); --r:12px;
+  --schatten:0 1px 2px rgba(22,35,59,.04),0 6px 20px -10px rgba(22,35,59,.13);
+}
+[data-theme="dark"]{
+  --ink:#E8EEF6; --ink-soft:#C3D2E4; --text:#DFE8F3; --muted:#8FA3BC;
+  --bg:#0D141F; --flaeche:#151E2C; --flaeche-2:#1B2536; --rand:#26334799;
+  --gut:#5FBF92; --warn:#E0A94A; --schlecht:#E1786B; --info:#7FA0C4;
+  --schatten:0 1px 2px rgba(0,0,0,.35),0 6px 20px -10px rgba(0,0,0,.6);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--body);font-size:15px;line-height:1.6;background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;transition:background .25s var(--ez),color .25s var(--ez)}
+h1,h2,h3{font-family:var(--head);font-weight:700;color:var(--ink);line-height:1.2}
+button,input,textarea,select{font:inherit;color:inherit}
+button{background:none;border:none;cursor:pointer}
+a{color:var(--info)}
+:focus-visible{outline:2px solid var(--grad-1);outline-offset:2px;border-radius:6px}
+
+.kopf{position:sticky;top:0;z-index:50;background:var(--flaeche);border-bottom:1px solid var(--rand)}
+.kopf-in{max-width:1000px;margin:0 auto;padding:14px 20px}
+.kopf-oben{display:flex;align-items:center;gap:12px;margin-bottom:13px}
+.marke{display:flex;align-items:center;gap:10px;flex:none}
+.marke svg{width:28px;height:28px}
+.marke b{font-family:var(--head);font-size:13px;letter-spacing:.09em;color:var(--ink);display:block}
+.marke small{display:block;font-size:8.5px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+.kopf-rechts{margin-left:auto;display:flex;gap:7px;align-items:center}
+.ik{width:34px;height:34px;border:1px solid var(--rand);border-radius:8px;display:flex;flex:none;
+  align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.ik:hover{background:var(--bg);border-color:var(--grad-1)}
+.ik svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.fortschritt{display:flex;align-items:center;gap:14px}
+.balken{flex:1;height:10px;background:var(--bg);border-radius:20px;overflow:hidden}
+.balken i{display:block;height:100%;border-radius:20px;transition:width .7s var(--ez);
+  background:linear-gradient(90deg,var(--grad-1),var(--ink))}
+.fortschritt b{font-family:var(--head);font-size:1.15rem;color:var(--ink);flex:none}
+.fortschritt span{font-size:13px;color:var(--muted);flex:none}
+
+.huelle{max-width:1000px;margin:0 auto;padding:20px 20px 90px}
+.naechste{background:linear-gradient(150deg,var(--grad-1),var(--grad-2));color:#fff;border-radius:var(--r);
+  padding:18px 20px;margin-bottom:20px;box-shadow:var(--schatten)}
+.naechste .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.65}
+.naechste h2{color:#fff;font-size:1.15rem;margin:5px 0 5px}
+.naechste p{font-size:14px;opacity:.82}
+.naechste .wo{display:inline-block;margin-top:9px;font-size:13px;background:rgba(255,255,255,.14);
+  padding:4px 10px;border-radius:20px}
+
+.leiste{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.fbtn{padding:6px 13px;border:1px solid var(--rand);border-radius:20px;font-size:13.5px;
+  color:var(--muted);background:var(--flaeche);transition:all .15s}
+.fbtn:hover{border-color:var(--grad-1);color:var(--ink)}
+.fbtn.on{background:var(--ink);color:var(--flaeche);border-color:var(--ink);font-weight:600}
+[data-theme="dark"] .fbtn.on{color:#0D141F}
+
+.phase{margin-bottom:22px}
+.phase-kopf{display:flex;align-items:center;gap:12px;margin-bottom:11px;cursor:pointer;
+  padding:11px 14px;background:var(--flaeche);border:1px solid var(--rand);border-radius:var(--r)}
+.phase-kopf .nr{width:32px;height:32px;flex:none;border-radius:9px;background:var(--ink);color:var(--flaeche);
+  display:flex;align-items:center;justify-content:center;font-family:var(--head);font-weight:700;font-size:13px}
+[data-theme="dark"] .phase-kopf .nr{color:#0D141F}
+.phase.fertig .phase-kopf .nr{background:var(--gut)}
+.phase-kopf h2{font-size:1.05rem;flex:1;min-width:0}
+.phase-kopf .zeit{font-size:12.5px;color:var(--muted);flex:none}
+.phase-kopf .stand{font-size:12.5px;font-weight:600;color:var(--muted);flex:none;
+  background:var(--bg);padding:3px 10px;border-radius:20px}
+.phase.fertig .phase-kopf .stand{background:rgba(46,125,91,.14);color:var(--gut)}
+.phase-kopf .pfeil{width:14px;height:14px;flex:none;stroke:var(--muted);fill:none;stroke-width:2.4;
+  transition:transform .25s var(--ez)}
+.phase.zu .phase-kopf .pfeil{transform:rotate(-90deg)}
+.phase.zu .aufgaben{display:none}
+.aufgaben{display:grid;gap:8px;padding-left:14px}
+
+.aufgabe{background:var(--flaeche);border:1px solid var(--rand);border-radius:10px;padding:13px 15px;
+  display:flex;gap:13px;align-items:flex-start;transition:border-color .15s,opacity .2s}
+.aufgabe:hover{border-color:var(--grad-1)}
+.aufgabe.ab{opacity:.55}
+.aufgabe.ab .titel{text-decoration:line-through;color:var(--muted)}
+.hk{width:22px;height:22px;flex:none;margin-top:1px;border:1.8px solid var(--rand);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;transition:all .18s var(--ez);background:var(--flaeche)}
+.hk:hover{border-color:var(--grad-1)}
+.aufgabe.ab .hk{background:var(--gut);border-color:var(--gut)}
+.hk svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:22;stroke-dashoffset:22;transition:stroke-dashoffset .3s var(--ez)}
+.aufgabe.ab .hk svg{stroke-dashoffset:0}
+.inhalt{flex:1;min-width:0}
+.titel{font-weight:600;color:var(--ink);font-size:14.5px}
+.was{font-size:13.5px;color:var(--muted);margin-top:3px}
+.meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;
+  padding:2px 9px;border-radius:20px;background:var(--bg);color:var(--muted)}
+.tag.wo{background:rgba(53,87,125,.12);color:var(--info)}
+.tag.geld{background:rgba(176,122,34,.13);color:var(--warn)}
+.tag.pflicht{background:rgba(180,72,60,.12);color:var(--schlecht)}
+.tag a{color:inherit;text-decoration:underline}
+.warn{display:flex;gap:9px;margin-top:9px;padding:10px 12px;border-radius:8px;font-size:13px;
+  background:rgba(176,122,34,.10);border:1px solid rgba(176,122,34,.28)}
+.warn b{color:var(--warn)}
+.notiz{width:100%;margin-top:9px;padding:7px 10px;border:1px solid var(--rand);border-radius:7px;
+  font-size:13px;background:var(--flaeche-2);resize:vertical;min-height:34px;display:none}
+.notiz.auf{display:block}
+.nbtn{font-size:11.5px;color:var(--muted);padding:2px 8px;border-radius:20px;background:var(--bg)}
+.nbtn:hover{color:var(--ink)}
+.datum{font-size:11.5px;color:var(--gut);font-weight:600}
+
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(140%);z-index:90;
+  background:var(--ink);color:var(--flaeche);padding:10px 18px;border-radius:9px;font-size:13.5px;
+  box-shadow:0 12px 30px -10px rgba(0,0,0,.5);transition:transform .3s var(--ez)}
+[data-theme="dark"] .toast{color:#0D141F}
+.toast.auf{transform:translateX(-50%) translateY(0)}
+.fertig-alles{text-align:center;padding:30px;background:var(--flaeche);border:1px solid var(--rand);
+  border-radius:var(--r);margin-bottom:20px}
+.fertig-alles h2{color:var(--gut);margin-bottom:6px}
+
+@media(max-width:640px){
+  .huelle{padding:16px 13px 80px}
+  .kopf-in{padding:12px 13px}
+  .aufgaben{padding-left:0}
+  .phase-kopf .zeit{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.001ms!important}}
+@media print{
+  .kopf-rechts,.leiste,.nbtn,.naechste{display:none}
+  .aufgabe,.phase-kopf{break-inside:avoid}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header class="kopf">
+  <div class="kopf-in">
+    <div class="kopf-oben">
+      <div class="marke">
+        <svg viewBox="60 40 430 400" aria-hidden="true"><polyline points="95,80 195,400 278,210 360,400 455,80"
+          fill="none" stroke="#35577D" stroke-width="80" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span><b>WALTER SETTING</b><small>Fahrplan bis zum ersten Umsatz</small></span>
+      </div>
+      <div class="kopf-rechts">
+        <button class="ik" id="btnThema" title="Hell / Dunkel" aria-label="Darstellung wechseln">
+          <svg id="icoThema" viewBox="0 0 24 24"></svg></button>
+        <button class="ik" id="btnDruck" title="Drucken" aria-label="Drucken">
+          <svg viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 15h12v6H6z"/></svg></button>
+        <button class="ik" id="btnReset" title="Alles zurücksetzen" aria-label="Zurücksetzen">
+          <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+      </div>
+    </div>
+    <div class="fortschritt">
+      <b id="prozent">0 %</b>
+      <span class="balken"><i id="balken" style="width:0%"></i></span>
+      <span id="stand">0 von 0 erledigt</span>
+    </div>
+  </div>
+</header>
+
+<div class="huelle">
+  <div id="naechsteBox"></div>
+  <div class="leiste">
+    <button class="fbtn on" data-f="alle">Alle</button>
+    <button class="fbtn" data-f="offen">Nur offene</button>
+    <button class="fbtn" data-f="fertig">Nur erledigte</button>
+    <button class="fbtn" data-f="pflicht">Nur Pflicht</button>
+    <button class="fbtn" id="btnAlleZu" style="margin-left:auto">Alle einklappen</button>
+  </div>
+  <div id="liste"></div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   DIE AUFGABEN
+   fertig: true  = bereits erledigt (Stand bei der Erstellung)
+   pflicht: true = rechtlich oder sachlich unverzichtbar
+   ═══════════════════════════════════════════════════════════════ */
+const PHASEN = [
+{ nr:'0', name:'Angebot und Grundlagen', zeit:'erledigt', aufgaben:[
+  {id:'a1',t:'Geschäftsmodell festlegen',fertig:true,
+   was:'Terminvereinbarung für Maklerbüros. Sie liefern die Kontakte, Sie führen die Gespräche.',wo:'—'},
+  {id:'a2',t:'Zielgruppe eingrenzen',fertig:true,
+   was:'Kleine, inhabergeführte Maklerbüros mit 1–8 Mitarbeitern und 3–25 Objekten. Keine Ketten, keine Bauträger, keine Luxusanbieter.',wo:'—'},
+  {id:'a3',t:'Preise festlegen',fertig:true,
+   was:'100 € je Verkäufer-Termin, 50 € je Käufer-Termin, 5 % der Maklerprovision bei Abschluss, die ersten drei Termine kostenlos.',wo:'—'},
+  {id:'a4',t:'Name und Logo',fertig:true,was:'Walter Setting, Wortmarke und Zeichen liegen als SVG vor.',wo:'—'},
+]},
+
+{ nr:'1', name:'Außenauftritt', zeit:'weitgehend erledigt', aufgaben:[
+  {id:'b1',t:'Webseite bauen',fertig:true,
+   was:'Problem, Vorteile, Ablauf, zwei Angebote, FAQ, Kontakt — alles vorhanden.',wo:'index.html'},
+  {id:'b2',t:'Webseite veröffentlichen',fertig:true,
+   was:'Läuft über GitHub Pages, jeder Push auf main wird automatisch veröffentlicht.',
+   wo:'timclaude033-dev.github.io/Claude-Projekt-/',link:'https://timclaude033-dev.github.io/Claude-Projekt-/'},
+  {id:'b3',t:'Impressum und Datenschutz anlegen',fertig:true,
+   was:'Beide Seiten sind vorhanden, inklusive Abschnitt zur Auftragsverarbeitung nach Art. 28 DSGVO.',wo:'impressum.html'},
+  {id:'b4',t:'Impressum vervollständigen',pflicht:true,
+   was:'Straße, PLZ und Ort, Telefonnummer sowie Steuernummer beziehungsweise USt-IdNr. eintragen. Solange dort Platzhalter stehen, ist die Seite abmahnfähig.',
+   wo:'impressum.html',
+   warn:'Muss stehen, bevor der erste Makler die Seite sieht.'},
+  {id:'b5',t:'Eigene Domain sichern',
+   was:'walter-setting.de prüfen und buchen, danach auf die GitHub-Seiten zeigen lassen. Wirkt deutlich seriöser als eine github.io-Adresse.',
+   wo:'Domainanbieter',geld:'ca. 15 € im Jahr'},
+  {id:'b6',t:'Geschäfts-E-Mail einrichten',
+   was:'kontakt@walter-setting.de statt einer privaten Adresse. Danach in der Webseite und im CRM eintragen.',
+   wo:'Domainanbieter',geld:'ab 3 € im Monat'},
+  {id:'b7',t:'Kontaktformular anschließen',
+   was:'Im CONFIG-Block der Webseite den formEndpoint eintragen. Ohne ihn öffnet das Formular nur das Mailprogramm des Besuchers — viele brechen dort ab.',
+   wo:'index.html, CONFIG'},
+  {id:'b8',t:'Terminbuchung verknüpfen',
+   was:'Buchungslink anlegen und als bookingLink eintragen. Dann führen alle Schaltflächen direkt in Ihren Kalender.',
+   wo:'index.html, CONFIG'},
+]},
+
+{ nr:'2', name:'Gewerbe und Steuern', zeit:'2 Stunden, ~50 €', aufgaben:[
+  {id:'c1',t:'Gewerbe anmelden',pflicht:true,
+   was:'Als Tätigkeit eintragen: „Telefonische Terminvereinbarung und Vertriebsunterstützung für Immobilienunternehmen“.',
+   wo:'Gewerbeamt Ihrer Stadt, oft online',geld:'20–60 €',
+   warn:'Keine Formulierung mit „Vermittlung von Immobilien“ wählen — das wäre erlaubnispflichtig nach § 34c GewO und zwingt Sie in ein Genehmigungsverfahren. Sie vereinbaren Termine, Sie vermitteln nicht.'},
+  {id:'c2',t:'Fragebogen zur steuerlichen Erfassung',pflicht:true,
+   was:'Kommt nach der Gewerbeanmeldung, wird über ELSTER ausgefüllt. Ergebnis ist Ihre Steuernummer.',
+   wo:'elster.de',link:'https://www.elster.de'},
+  {id:'c3',t:'Regelbesteuerung wählen, nicht Kleinunternehmer',
+   was:'Ihre Kunden sind Unternehmen und ziehen die Umsatzsteuer als Vorsteuer ab — für sie ändert sich nichts. Sie selbst ziehen dafür Ihre eigene Vorsteuer und müssen nicht mitten im ersten guten Jahr umstellen.',
+   wo:'im Fragebogen',
+   warn:'Bei 190.000 € Zielumsatz wäre die Kleinunternehmerregelung ohnehin nur eine Zwischenstation.'},
+  {id:'c4',t:'USt-IdNr. beantragen',
+   was:'Im selben Fragebogen mitbeantragen. Kostenlos und später im Impressum nutzbar.',wo:'im Fragebogen'},
+  {id:'c5',t:'Geschäftskonto eröffnen',
+   was:'Keine Pflicht beim Einzelunternehmen, aber die saubere Trennung erspart Ihnen später viel Sortierarbeit.',
+   wo:'Bank Ihrer Wahl',geld:'0–10 € im Monat'},
+  {id:'c6',t:'Steuerberater ansprechen',
+   was:'Ein Erstgespräch genügt zunächst. Klären Sie Umsatzsteuervoranmeldung und ob Sie die Buchhaltung selbst führen.',
+   wo:'örtlich'},
+  {id:'c7',t:'Rechnungsvorlage anlegen',pflicht:true,
+   was:'Pflichtangaben: Ihr Name und Anschrift, Steuernummer oder USt-IdNr., fortlaufende Rechnungsnummer, Datum, Leistung, Zeitraum, Netto, 19 % Umsatzsteuer, Brutto.',
+   wo:'Textprogramm oder Rechnungsdienst'},
+]},
+
+{ nr:'3', name:'Recht und Datenschutz', zeit:'1 Tag', aufgaben:[
+  {id:'d1',t:'Einwilligung der Eigentümer klären',pflicht:true,
+   was:'Lassen Sie sich von jedem Makler pro Übergabe schriftlich bestätigen, woher die Kontakte stammen und dass eine Einwilligung zur telefonischen Kontaktaufnahme vorliegt.',
+   wo:'Vertrag und Übergabeliste',
+   warn:'Der wichtigste Punkt überhaupt. Ihre Kunden sind Unternehmen — die dürfen Sie anrufen. Die Eigentümer, die Sie für sie anrufen, sind Privatpersonen. Werbeanrufe bei Verbrauchern ohne deren ausdrückliche vorherige Einwilligung sind nach § 7 UWG unzulässig, das Bußgeld reicht bis 300.000 € und trifft im Zweifel beide Seiten. Sauber ist es, wenn der Eigentümer selbst angefragt hat. Riskant sind genau die alten Bestandslisten.'},
+  {id:'d2',t:'Vertrag zur Auftragsverarbeitung (AVV)',pflicht:true,
+   was:'Nach Art. 28 DSGVO verpflichtend, weil Sie fremde personenbezogene Daten im Auftrag verarbeiten. Muster gibt es kostenlos bei den IHKs.',
+   wo:'IHK-Muster',warn:'Muss unterschrieben sein, bevor der erste Lead bei Ihnen ankommt.'},
+  {id:'d3',t:'Verzeichnis von Verarbeitungstätigkeiten',pflicht:true,
+   was:'Nach Art. 30 DSGVO. Eine Tabelle genügt: welche Daten, wozu, woher, wie lange, wie geschützt.',
+   wo:'IHK-Muster'},
+  {id:'d4',t:'Löschfristen festlegen',
+   was:'Wie lange behalten Sie Kontaktdaten nach Abschluss eines Auftrags? Legen Sie eine Frist fest und halten Sie sie ein.',
+   wo:'im Verzeichnis'},
+  {id:'d5',t:'Dienstleistungsvertrag aufsetzen',pflicht:true,
+   was:'Eine Seite genügt: Leistung, Preise (100 € / 50 € / 5 %), drei Gratis-Termine, Definition des qualifizierten Termins, Nachweisregel mit Sieben-Tage-Frist, Kündigung jederzeit.',
+   wo:'Textprogramm'},
+  {id:'d6',t:'Nachlauffrist der Erfolgsbeteiligung festlegen',
+   was:'Wie lange nach einem Termin gilt ein Abschluss noch als Ihrer? Üblich sind 6 bis 12 Monate.',
+   wo:'im Vertrag',
+   warn:'Ohne diese Frist streiten Sie sich über jeden Abschluss, der Monate später zustande kommt.'},
+  {id:'d7',t:'Berufshaftpflicht prüfen',
+   was:'Keine Pflicht, aber sinnvoll, sobald Sie mit fremden Kundendaten arbeiten. Vermögensschadenhaftpflicht.',
+   wo:'Versicherungsmakler',geld:'ab ca. 25 € im Monat'},
+]},
+
+{ nr:'4', name:'Werkzeuge und Erreichbarkeit', zeit:'halber Tag', aufgaben:[
+  {id:'e1',t:'CRM einrichten',fertig:true,
+   was:'Radar mit Karte, Pipeline, Büroliste, Akquise, Ziel-Rechnung. Läuft vollständig im Browser.',
+   wo:'setting-crm.html',link:'setting-crm.html'},
+  {id:'e2',t:'E-Mail-Vorlagen',fertig:true,
+   was:'Dreistufige Abfolge mit Erstansprache und zwei Nachfassungen liegt im CRM.',wo:'CRM, Akquise'},
+  {id:'e3',t:'Telefonleitfaden',fertig:true,was:'Steht im CRM neben den Vorlagen.',wo:'CRM, Akquise'},
+  {id:'e4',t:'Absenderdaten im CRM eintragen',
+   was:'Name, E-Mail und Telefonnummer hinterlegen, damit die Platzhalter in den Vorlagen gefüllt werden.',
+   wo:'CRM, Akquise, Absender'},
+  {id:'e5',t:'Geschäftliche Telefonnummer',
+   was:'Getrennt von privat. Eine zweite SIM oder eine Nummer über einen Anbieter genügt.',
+   wo:'Mobilfunkanbieter',geld:'ab ca. 5 € im Monat'},
+  {id:'e6',t:'Kalender für Termine vorbereiten',
+   was:'Feste Telefonblöcke eintragen — vier Stunden am Tag sind realistisch. Was nicht im Kalender steht, findet nicht statt.',
+   wo:'Kalender'},
+  {id:'e7',t:'Übergabeformat festlegen',
+   was:'Eine Tabelle mit Name, Telefon, Objekt, Quelle des Kontakts und Datum der Einwilligung. Dieses Format geben Sie vor — passen Sie sich nicht jedem Makler einzeln an.',
+   wo:'Tabellenprogramm'},
+  {id:'e8',t:'Erste Sicherung anlegen',
+   was:'Im CRM oben rechts auf Sichern. Die Daten liegen nur in diesem Browser — ohne Sicherung sind sie beim Leeren des Verlaufs weg.',
+   wo:'CRM, Kopfzeile'},
+]},
+
+{ nr:'5', name:'Zielkunden aufbauen', zeit:'Woche 2', aufgaben:[
+  {id:'f1',t:'Region festlegen',
+   was:'Ein Umkreis, in dem Sie sich auskennen. Lieber eine Stadt gründlich als fünf oberflächlich.',wo:'—'},
+  {id:'f2',t:'Radar über die Region laufen lassen',
+   was:'Stadt eingeben, Umkreis wählen, suchen. Passende Büros übernehmen, den Rest verwerfen.',
+   wo:'CRM, Radar'},
+  {id:'f3',t:'Zweite Quelle nutzen',
+   was:'Nicht jedes kleine Büro steht in den Kartendaten. Ergänzen Sie über Portale, Gelbe Seiten und die örtliche Suche.',
+   wo:'CRM, Büro anlegen'},
+  {id:'f4',t:'50 Büros mit Ansprechpartner sammeln',
+   was:'Ziel sind 50 Einträge mit Namen des Inhabers und Telefonnummer. Ohne Namen ist die Ansprache deutlich schwächer.',
+   wo:'CRM, Büros'},
+  {id:'f5',t:'Größe nachtragen',
+   was:'Mitarbeiter- und Objektzahl von den Webseiten übernehmen. Erst dann rechnet das CRM die vollständige Bewertung.',
+   wo:'CRM, Detailfenster'},
+]},
+
+{ nr:'6', name:'Akquise', zeit:'Woche 2–4', aufgaben:[
+  {id:'g1',t:'Erste zehn Anrufe führen',
+   was:'Die ersten zehn dienen dem Üben, nicht dem Abschluss. Danach sitzt der Einstieg.',
+   wo:'CRM, Heute'},
+  {id:'g2',t:'Feste Tagesmenge festlegen',
+   was:'20 Anrufe am Tag, jeden Werktag. Menge schlägt Perfektion — die Formulierung verbessert sich beim Telefonieren, nicht am Schreibtisch.',
+   wo:'Kalender'},
+  {id:'g3',t:'Jedes Gespräch im CRM festhalten',
+   was:'Ergebnis und Wiedervorlage direkt nach dem Auflegen eintragen. Was nicht notiert ist, ist verloren.',
+   wo:'CRM, Detailfenster'},
+  {id:'g4',t:'Nachfassen statt aufgeben',
+   was:'Die meisten Abschlüsse entstehen ab dem zweiten oder dritten Kontakt. Der Bereich Heute zeigt Ihnen, was ansteht.',
+   wo:'CRM, Heute'},
+  {id:'g5',t:'Einwände sammeln',
+   was:'Notieren Sie jeden Einwand mit. Nach zwanzig Gesprächen kennen Sie die drei, die immer kommen — und haben eine Antwort darauf.',
+   wo:'CRM, Notizen'},
+  {id:'g6',t:'Fünf Erstgespräche vereinbaren',
+   was:'Etwa 50 Anrufe ergeben grob 15 erreichte Entscheider und daraus vier bis sechs Gespräche. Das ist eine Annahme, keine Zusage.',
+   wo:'CRM, Pipeline'},
+]},
+
+{ nr:'7', name:'Erster Kunde und Testlauf', zeit:'Woche 3–5', aufgaben:[
+  {id:'h1',t:'Erstgespräch führen',
+   was:'20 Minuten. Zwei Fragen entscheiden: Wie viele Anfragen kommen im Monat, und wie viele davon werden zurückgerufen?',
+   wo:'Telefon'},
+  {id:'h2',t:'Vertrag und AVV unterschreiben lassen',pflicht:true,
+   was:'Beides vor der ersten Kontaktübergabe. Ohne AVV dürfen Sie die Daten nicht verarbeiten.',
+   wo:'per E-Mail'},
+  {id:'h3',t:'Kontakte übernehmen und Einwilligung prüfen',pflicht:true,
+   was:'Nur Kontakte annehmen, bei denen die Herkunft klar ist. Im Zweifel nachfragen, bevor Sie wählen.',
+   wo:'Übergabeliste'},
+  {id:'h4',t:'Drei Gratis-Termine liefern',
+   was:'Das ist der eigentliche Verkauf. Qualität vor Menge — lieber zwei sehr gute als drei mittelmäßige.',
+   wo:'Telefon'},
+  {id:'h5',t:'Protokolle sauber übergeben',
+   was:'Zu jedem Termin die acht Punkte: Eigentum, Verkaufsabsicht, Anlass, Zeitrahmen, Preisvorstellung, Nutzung, Wettbewerb, Entscheider.',
+   wo:'Kalendereintrag'},
+  {id:'h6',t:'Rückmeldung einholen',
+   was:'Nach den drei Terminen anrufen und fragen, wie die Gespräche liefen. Daraus wird der Auftrag — oder Sie erfahren, was fehlt.',
+   wo:'Telefon'},
+  {id:'h7',t:'Nur ein bis zwei Neukunden im Monat starten',
+   was:'Jeder Neukunde kostet Sie drei kostenlose Termine. Drei Starts gleichzeitig sind neun Termine ohne Bezahlung.',
+   wo:'—',
+   warn:'Sie führen die Gespräche selbst. Ihre Kapazität liegt bei etwa 40 bis 80 Terminen im Monat, das reicht für sechs bis zehn Kunden.'},
+]},
+
+{ nr:'8', name:'Erster Umsatz', zeit:'Woche 4–6', aufgaben:[
+  {id:'i1',t:'Vierten Termin liefern',
+   was:'Ab dem vierten Termin wird abgerechnet. Die ersten drei waren der Testlauf.',wo:'Telefon'},
+  {id:'i2',t:'Termine dokumentieren',
+   was:'Datum, Uhrzeit, Eigentümer, Ergebnis. Grundlage der Rechnung und Ihr Nachweis im Streitfall.',
+   wo:'CRM'},
+  {id:'i3',t:'Stattgefundene Termine bestätigen lassen',
+   was:'Kurz beim Eigentümer nachfassen. Der Makler hat sieben Tage, einen Ausfall zu melden.',wo:'Telefon'},
+  {id:'i4',t:'Erste Rechnung schreiben',
+   was:'Anzahl der Termine mal 100 € beziehungsweise 50 €, zuzüglich 19 % Umsatzsteuer. Zahlungsziel 14 Tage.',
+   wo:'Rechnungsvorlage'},
+  {id:'i5',t:'Zahlungseingang prüfen',
+   was:'Nach 14 Tagen freundlich erinnern, nach 30 Tagen mahnen. Nicht aus Höflichkeit warten.',wo:'Konto'},
+  {id:'i6',t:'Umsatzsteuer abführen',pflicht:true,
+   was:'Im ersten Jahr meist monatliche Voranmeldung über ELSTER. Legen Sie die Umsatzsteuer sofort beiseite — sie gehört Ihnen nie.',
+   wo:'elster.de',link:'https://www.elster.de'},
+  {id:'i7',t:'Zahlen im CRM eintragen',
+   was:'Im Bereich Ziel sehen Sie, wie viele Kunden Sie für 190.000 € in 18 Monaten brauchen und wo Sie stehen.',
+   wo:'CRM, Ziel'},
+]},
+];
+
+const KEY = 'wsFahrplan';
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+function sicher(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
+function grund(){
+  const st = {};
+  PHASEN.forEach(p => p.aufgaben.forEach(a => {
+    st[a.id] = { ab: !!a.fertig, seit: a.fertig ? 'vorab' : null, notiz: '' };
+  }));
+  return { stand:st, thema:'light', zu:[], filter:'alle' };
+}
+function laden(){
+  try{
+    const roh = localStorage.getItem(KEY);
+    if(!roh) return grund();
+    const d = JSON.parse(roh), g = grund();
+    /* Neue Aufgaben ergaenzen, ohne den bisherigen Stand zu verlieren */
+    Object.keys(g.stand).forEach(id => { if(d.stand && d.stand[id]) g.stand[id] = d.stand[id]; });
+    return { ...g, ...d, stand:g.stand };
+  }catch(e){ return grund(); }
+}
+let D = laden();
+function sichern(){ try{ localStorage.setItem(KEY, JSON.stringify(D)); }catch(e){} }
+
+let toastZeit;
+function melde(t){ const el=$('#toast'); el.textContent=t; el.classList.add('auf');
+  clearTimeout(toastZeit); toastZeit=setTimeout(()=>el.classList.remove('auf'),2200); }
+
+function alleAufgaben(){ return PHASEN.flatMap(p => p.aufgaben.map(a => ({...a, phase:p}))); }
+function offeneAufgaben(){ return alleAufgaben().filter(a => !D.stand[a.id].ab); }
+
+function bauen(){
+  const alle = alleAufgaben();
+  const fertig = alle.filter(a => D.stand[a.id].ab).length;
+  const anteil = Math.round(fertig / alle.length * 100);
+  $('#prozent').textContent = anteil + ' %';
+  $('#balken').style.width = anteil + '%';
+  $('#stand').textContent = fertig + ' von ' + alle.length + ' erledigt';
+
+  /* Nächster offener Schritt */
+  const naechste = offeneAufgaben()[0];
+  $('#naechsteBox').innerHTML = naechste
+    ? `<div class="naechste"><div class="lbl">Ihr nächster Schritt</div>
+        <h2>${sicher(naechste.t)}</h2><p>${sicher(naechste.was)}</p>
+        ${naechste.wo && naechste.wo!=='—' ? `<span class="wo">Wo: ${sicher(naechste.wo)}</span>` : ''}</div>`
+    : `<div class="fertig-alles"><h2>Alles erledigt.</h2>
+        <p>Von der Gründung bis zum ersten Umsatz ist jeder Punkt abgehakt.</p></div>`;
+
+  $('#liste').innerHTML = PHASEN.map(p => {
+    const auf = p.aufgaben.filter(a => {
+      if(D.filter==='offen')   return !D.stand[a.id].ab;
+      if(D.filter==='fertig')  return D.stand[a.id].ab;
+      if(D.filter==='pflicht') return !!a.pflicht;
+      return true;
+    });
+    if(!auf.length) return '';
+    const f = p.aufgaben.filter(a => D.stand[a.id].ab).length;
+    const komplett = f === p.aufgaben.length;
+    const zu = D.zu.includes(p.nr);
+    return `<div class="phase ${komplett?'fertig':''} ${zu?'zu':''}" data-p="${p.nr}">
+      <div class="phase-kopf" role="button" tabindex="0">
+        <span class="nr">${komplett?'✓':p.nr}</span>
+        <h2>${sicher(p.name)}</h2>
+        <span class="zeit">${sicher(p.zeit)}</span>
+        <span class="stand">${f}/${p.aufgaben.length}</span>
+        <svg class="pfeil" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="aufgaben">${auf.map(a => karte(a)).join('')}</div>
+    </div>`;
+  }).join('');
+
+  $$('.phase-kopf').forEach(k => {
+    const p = k.closest('.phase').dataset.p;
+    const um = () => { D.zu = D.zu.includes(p) ? D.zu.filter(x=>x!==p) : D.zu.concat(p);
+      sichern(); bauen(); };
+    k.onclick = um;
+    k.onkeydown = e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); um(); } };
+  });
+  $$('[data-hk]').forEach(el => el.onclick = e => { e.stopPropagation(); umschalten(el.dataset.hk); });
+  $$('[data-n]').forEach(el => el.onclick = e => { e.stopPropagation();
+    const t = $('#n-'+el.dataset.n); t.classList.toggle('auf'); if(t.classList.contains('auf')) t.focus(); });
+  $$('.notiz').forEach(t => t.oninput = () => { D.stand[t.dataset.id].notiz = t.value; sichern(); });
+}
+
+function karte(a){
+  const s = D.stand[a.id];
+  return `<div class="aufgabe ${s.ab?'ab':''}">
+    <button class="hk" data-hk="${a.id}" aria-label="${s.ab?'Als offen markieren':'Als erledigt markieren'}">
+      <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></button>
+    <div class="inhalt">
+      <div class="titel">${sicher(a.t)}</div>
+      <div class="was">${sicher(a.was)}</div>
+      <div class="meta">
+        ${a.wo && a.wo!=='—' ? (a.link
+           ? `<span class="tag wo">Wo: <a href="${sicher(a.link)}" target="_blank" rel="noopener">${sicher(a.wo)}</a></span>`
+           : `<span class="tag wo">Wo: ${sicher(a.wo)}</span>`) : ''}
+        ${a.geld ? `<span class="tag geld">${sicher(a.geld)}</span>` : ''}
+        ${a.pflicht ? '<span class="tag pflicht">Pflicht</span>' : ''}
+        ${s.ab && s.seit && s.seit!=='vorab' ? `<span class="datum">erledigt ${sicher(s.seit)}</span>` : ''}
+        ${s.ab && s.seit==='vorab' ? '<span class="datum">bereits erledigt</span>' : ''}
+        <button class="nbtn" data-n="${a.id}">Notiz</button>
+      </div>
+      ${a.warn ? `<div class="warn"><div><b>Achtung.</b> ${sicher(a.warn)}</div></div>` : ''}
+      <textarea class="notiz ${s.notiz?'auf':''}" id="n-${a.id}" data-id="${a.id}"
+        placeholder="Notiz, Ansprechpartner, Frist …">${sicher(s.notiz)}</textarea>
+    </div></div>`;
+}
+
+function umschalten(id){
+  const s = D.stand[id];
+  s.ab = !s.ab;
+  s.seit = s.ab ? new Date().toLocaleDateString('de-DE') : null;
+  sichern(); bauen();
+  const offen = offeneAufgaben().length;
+  melde(s.ab ? (offen ? 'Erledigt. Noch ' + offen + ' offen.' : 'Alles erledigt.') : 'Wieder offen.');
+}
+
+function themaSetzen(t){
+  D.thema = t; document.documentElement.dataset.theme = t; sichern();
+  $('#icoThema').innerHTML = t==='dark'
+    ? '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'
+    : '<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+}
+
+$$('.fbtn[data-f]').forEach(b => b.onclick = () => {
+  D.filter = b.dataset.f; sichern();
+  $$('.fbtn[data-f]').forEach(x => x.classList.toggle('on', x===b));
+  bauen();
+});
+$('#btnAlleZu').onclick = () => {
+  D.zu = D.zu.length ? [] : PHASEN.map(p => p.nr);
+  $('#btnAlleZu').textContent = D.zu.length ? 'Alle aufklappen' : 'Alle einklappen';
+  sichern(); bauen();
+};
+$('#btnThema').onclick = () => themaSetzen(D.thema==='dark' ? 'light' : 'dark');
+$('#btnDruck').onclick = () => print();
+$('#btnReset').onclick = () => {
+  if(!confirm('Alle Haken zurücksetzen? Notizen gehen dabei ebenfalls verloren.')) return;
+  D = grund(); sichern(); themaSetzen(D.thema); bauen(); melde('Zurückgesetzt.');
+};
+
+themaSetzen(D.thema || 'light');
+$$('.fbtn[data-f]').forEach(x => x.classList.toggle('on', x.dataset.f === D.filter));
+bauen();
+</script>
+</body>
+</html>
