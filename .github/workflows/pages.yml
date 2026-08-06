@@ -12,11 +12,13 @@ permissions:
   pages: write
   id-token: write
 
-# Laufende Veroeffentlichungen nicht abbrechen, sonst geht eine halb
-# hochgeladene Seite live.
+# Ein neuer Lauf loest den alten ab. Vorher stand hier false -- dann
+# stellt sich jeder neue Lauf hinter einen haengenden und startet nie.
+# Die Veroeffentlichung selbst ist atomar: erst wird hochgeladen, dann
+# umgeschaltet. Ein Abbruch kann also keine halbe Seite hinterlassen.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   veroeffentlichen:
@@ -24,6 +26,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
