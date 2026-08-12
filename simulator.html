@@ -561,6 +561,29 @@ button{background:none;border:none;cursor:pointer}
 .dash-karte .neben{flex:1;min-width:170px}
 @media(max-width:560px){.dash-kopf .rechts{margin-left:0;text-align:left;width:100%}}
 
+/* ═══════ Gutschrift auf die Karte ═══════ */
+.gutschrift{position:fixed;right:18px;bottom:18px;z-index:200;width:min(340px,calc(100vw - 36px));
+  background:var(--flaeche);border:1px solid var(--rand);border-radius:15px;padding:15px;
+  box-shadow:var(--schatten-hoch);display:grid;gap:12px;
+  transform:translateY(24px) scale(.96);opacity:0;pointer-events:none;
+  transition:transform .45s var(--federn),opacity .35s var(--ez)}
+.gutschrift.auf{transform:none;opacity:1}
+.gs-karte{border-radius:11px;overflow:hidden;background:linear-gradient(160deg,#243244,#141d29);padding:12px}
+.gs-karte svg{display:block;width:100%;height:auto;animation:gsKarte .6s var(--federn) both}
+@keyframes gsKarte{from{transform:translateX(-26%) rotate(-4deg);opacity:0}to{transform:none;opacity:1}}
+.gs-kopf{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gut);
+  font-weight:700;margin-bottom:9px}
+.gs-z{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:3px 0;align-items:baseline}
+.gs-z span{color:var(--muted);min-width:0}
+.gs-z b{flex:none;color:var(--gut);font-variant-numeric:tabular-nums}
+.gs-summe{display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  margin-top:8px;padding-top:8px;border-top:1px solid var(--rand)}
+.gs-summe span{font-size:13px;color:var(--ink)}
+.gs-summe b{font-family:var(--head);font-size:1.2rem;color:var(--gut);font-variant-numeric:tabular-nums}
+.gs-fuss{font-size:11.5px;color:var(--muted);margin-top:6px}
+@media(max-width:560px){.gutschrift{right:10px;left:10px;bottom:10px;width:auto}
+  .gs-karte{display:none}}
+
 </style>
 </head>
 <body>
@@ -743,6 +766,7 @@ button{background:none;border:none;cursor:pointer}
 <canvas id="konfetti" style="position:fixed;inset:0;z-index:190;pointer-events:none;display:none"></canvas>
 <div class="ueberlage" id="ueberlage"><div class="fenster" id="fenster"></div></div>
 <div class="toast" id="toast" role="status"></div>
+<div class="gutschrift" id="gutschrift" role="status" hidden></div>
 
 <script>
 /* ═══════════════════════════════════════════════════════════════
@@ -1312,11 +1336,40 @@ function pinPruefen(){
  setTimeout(()=>{
   if(!Z)return;
   const dann=Z.dann;
-  S.karte.umsaetze.unshift({zweck:Z.zweck,betrag:Z.betrag,woche:S.woche,tag:S.tag});
+  S.karte.umsaetze.unshift({zweck:Z.zweck,betrag:Z.betrag,art:'zahlung',woche:S.woche,tag:S.tag});
   if(S.karte.umsaetze.length>40)S.karte.umsaetze.length=40;
   Z.schritt='ok'; terminalZeichnen();
   if(dann)dann();
  },1100);
+}
+/* ═══════════════════════════════════════════════════════════════
+   GUTSCHRIFT AUF DIE KARTE
+   Was verdient wird, landet auf derselben Karte, mit der bezahlt
+   wird. Kein Fenster zum Wegklicken: der Beleg schiebt sich ein,
+   bleibt ein paar Sekunden stehen und verschwindet von selbst --
+   sonst stuende er jedes Mal im Weg.
+   ═══════════════════════════════════════════════════════════════ */
+let gutschriftZeit;
+function gutschrift(posten,grund){
+ karteSichern();
+ const summe=posten.reduce((a,p)=>a+p.betrag,0);
+ if(summe<=0)return;
+ S.karte.umsaetze.unshift({zweck:grund,betrag:summe,art:'gutschrift',
+  posten:posten.map(p=>({t:p.t,betrag:p.betrag})),woche:S.woche,tag:S.tag});
+ if(S.karte.umsaetze.length>40)S.karte.umsaetze.length=40;
+ const el=$('#gutschrift');
+ el.innerHTML=`<div class="gs-karte">${amexSvg(false)}</div>
+  <div class="gs-inhalt">
+   <div class="gs-kopf">Gutschrift auf Ihre Karte</div>
+   ${posten.map(p=>`<div class="gs-z"><span>${sicher(p.t)}</span><b>+ ${euro(p.betrag)}</b></div>`).join('')}
+   <div class="gs-summe"><span>Gesamt</span><b>+ ${euro(summe)}</b></div>
+   <div class="gs-fuss">•••• ${sicher(S.karte.nummer.slice(-5))} · sofort verfügbar</div>
+  </div>`;
+ el.hidden=false;
+ el.classList.remove('auf'); void el.offsetWidth; el.classList.add('auf');
+ clearTimeout(gutschriftZeit);
+ gutschriftZeit=setTimeout(()=>{el.classList.remove('auf');
+  setTimeout(()=>{el.hidden=true;},400);},5200);
 }
 function terminalSchliessen(){
  Z=null;
@@ -1329,7 +1382,17 @@ function terminalSchliessen(){
    50 € je Käufer-Termin, die ersten drei Termine je Kunde gratis.
    ═══════════════════════════════════════════════════════════════ */
 const ZIEL=190000, WOCHEN=78;
-const PREIS_VERK=100, PREIS_KAUF=50, PROVISION=700;
+const PREIS_VERK=100, PREIS_KAUF=50;
+/* Der Makler nimmt ueblicherweise rund 3,57 % vom Kaufpreis. Davon
+   gehen 5 % an Sie -- so steht es im Angebot. Aus einem Objekt fuer
+   400.000 € werden also 14.280 € Maklerprovision und 714 € fuer Sie. */
+const MAKLER_SATZ=0.0357, BETEILIGUNG=0.05;
+function erfolgsbeteiligung(lead){
+ if(!lead)return 0;
+ /* Kontakte aus aelteren Spielstaenden haben noch keinen Objektwert. */
+ if(!lead.wert)lead.wert=(36+Math.floor(Math.random()*94))*5000;
+ return Math.round(lead.wert*MAKLER_SATZ*BETEILIGUNG);
+}
 const GRATIS_JE_KUNDE=3, FIXKOSTEN_MONAT=20, GEHALT_MONAT=2200, GEWERBE_KOSTEN=50;
 
 const GRADE=[
@@ -1372,8 +1435,10 @@ const EREIGNISSE=[
  {t:'Ein zufriedener Makler empfiehlt Sie weiter.',w:0.1,wirk:S=>{neuerLead(S,true);return'Ein warmer Kontakt liegt im Radar.';}},
  {t:'Grippewelle. Diese Woche geht weniger.',w:0.07,wirk:S=>{S.energieMalus=3;return'';}},
  {t:'Ein Eigentümer beschwert sich über einen Anruf.',w:0.06,wirk:S=>{S.ruf=Math.max(0,S.ruf-8);return'Prüfen Sie die Herkunft der Kontakte.';}},
- {t:'Aus einem Ihrer Termine wurde ein Abschluss.',w:0.11,bedingung:S=>S.stat.gemeldet>=3,
-  wirk:S=>{einnahme(S,PROVISION,'Erfolgsbeteiligung aus einem Abschluss');return'';}},
+ /* Die Erfolgsbeteiligung kommt jetzt sofort mit jeder Meldung auf die
+    Karte, nicht mehr als Zufallsereignis -- sonst zaehlte sie doppelt. */
+ {t:'Ein Makler lobt Sie in seiner Bewertung.',w:0.09,bedingung:S=>S.stat.gemeldet>=3,
+  wirk:S=>{S.ruf=Math.min(100,S.ruf+5);return'Ihr Ruf steigt.';}},
  {t:'Ein Makler kündigt die Zusammenarbeit.',w:0.06,bedingung:S=>S.kunden.some(k=>(k.vertrauen||70)<40),
   wirk:S=>{const i=S.kunden.findIndex(k=>(k.vertrauen||70)<40);const k=S.kunden.splice(i,1)[0];
    S.crm=S.crm.filter(l=>l.maklerId!==k.id);return k.name+' steigt aus.';}},
@@ -1954,14 +2019,27 @@ function mailSenden(){
   }else{
    k.vertrauen=Math.min(100,(k.vertrauen||70)+4);
   }
-  /* Abrechnung erst mit der Meldung */
+  /* Abrechnung erst mit der Meldung -- und direkt auf die Karte.
+     Zwei Posten: das Honorar je Termin und die Erfolgsbeteiligung
+     von 5 % an der Maklerprovision des Objekts. */
+  const posten=[];
   if(k.gratis<GRATIS_JE_KUNDE){
    k.gratis++;
    notiz('Testtermin '+k.gratis+' von '+GRATIS_JE_KUNDE+' an '+k.name+' gemeldet','gut');
-   melde('Testtermin gemeldet — noch kein Geld, aber Vertrauen.');
+   melde('Testtermin — kein Honorar, die Beteiligung gibt es trotzdem.');
   }else{
-   const betrag=l.art==='verkauf'?PREIS_VERK:PREIS_KAUF;
-   einnahme(S,betrag,'Termin für '+k.name); geldFliegen(betrag);
+   const honorar=l.art==='verkauf'?PREIS_VERK:PREIS_KAUF;
+   einnahme(S,honorar,'Termin für '+k.name);
+   posten.push({t:(l.art==='verkauf'?'Verkäufer-Termin':'Käufer-Termin')+' · '+k.name,betrag:honorar});
+  }
+  const beteiligung=erfolgsbeteiligung(l);
+  if(beteiligung>0){
+   einnahme(S,beteiligung,'5 % Beteiligung · '+l.objekt);
+   posten.push({t:'5 % Maklerprovision · '+l.objekt,betrag:beteiligung});
+  }
+  if(posten.length){
+   geldFliegen(posten.reduce((a,p)=>a+p.betrag,0));
+   gutschrift(posten,'Termin '+l.name);
   }
   mailAnlegen({von:k.nach+' · '+k.name,betreff:'Re: Qualifizierter Termin',
    text:anteil>=0.6?'Danke, das Protokoll ist vollständig. Ich fahre hin.'
@@ -1997,6 +2075,8 @@ function neuerEigLead(kunde,guete){
   maklerId:kunde.id,maklerName:kunde.name,
   objekt:zufall(OBJEKTE),strasse:zufall(STRASSEN),ort:kunde.ort,
   art:Math.random()<0.72?'verkauf':'kauf',
+  /* Objektwert: daraus ergibt sich spaeter die Beteiligung. */
+  wert:(36+Math.floor(Math.random()*94))*5000,
   gut,status:'neu',protokoll:{},versuche:0,
   datum:(1+Math.floor(Math.random()*27))+'.'+(1+Math.floor(Math.random()*9))+'.'};
 }
@@ -2605,9 +2685,14 @@ function gespraechEnde(){
 function dashZahlen(){
  const st=S.stat;
  const tageGesamt=(S.woche-1)*5+S.tag;
- const ausgaben=(S.karte&&S.karte.umsaetze||[]).reduce((a,u)=>a+u.betrag,0);
+ const posten=(S.karte&&S.karte.umsaetze)||[];
+ /* Eintraege aus aelteren Staenden haben kein art-Feld -- das waren
+    ausschliesslich Zahlungen. */
+ const ausgaben=posten.filter(u=>u.art!=='gutschrift').reduce((a,u)=>a+u.betrag,0);
+ const gutgeschrieben=posten.filter(u=>u.art==='gutschrift').reduce((a,u)=>a+u.betrag,0);
+ const zahlungen=posten.filter(u=>u.art!=='gutschrift').length;
  return {
-  tageGesamt,ausgaben,
+  tageGesamt,ausgaben,gutgeschrieben,zahlungen,
   anteil:Math.min(100,S.umsatz/ZIEL*100),
   proTermin:st.gemeldet?S.umsatz/st.gemeldet:0,
   proWoche:S.umsatz/Math.max(1,S.woche),
@@ -2663,7 +2748,8 @@ function dashZeichnen(){
    ${kachel('Umsatz je Woche',euro(z.proWoche),'nötig: '+euro(z.noetigProWoche))}
    ${kachel('Antwortgüte',z.quote+' %',st.perfekt+' fehlerfreie Gespräche',z.quote>=70?'gut':'')}
    ${kachel('Ruf',S.ruf+' %',S.ruf<50?'leidet':'stabil',S.ruf<50?'schlecht':'gut')}
-   ${kachel('Privat ausgegeben',euro(z.ausgaben),(S.karte.umsaetze.length)+' Kartenzahlungen')}
+   ${kachel('Auf die Karte',euro(z.gutgeschrieben),'Honorare und Beteiligungen','gut')}
+   ${kachel('Privat ausgegeben',euro(z.ausgaben),z.zahlungen+' Kartenzahlungen')}
   </div>
 
   <div class="dash-reihe">
@@ -2695,9 +2781,11 @@ function dashZeichnen(){
    <div class="dash-k"><h4>Ihre Karte</h4>
     <div class="dash-karte">${amexSvg(false)}
      <div class="neben"><div class="dash-liste">
-      ${(S.karte.umsaetze.slice(0,5).map(u=>
-        `<div class="dash-z"><span class="name">${sicher(u.zweck)}</span><b>${euro(u.betrag)}</b></div>`).join(''))
-       ||'<p style="font-size:13px;color:var(--muted)">Noch nichts gekauft.</p>'}
+      ${(S.karte.umsaetze.slice(0,6).map(u=>{
+         const gs=u.art==='gutschrift';
+         return `<div class="dash-z"><span class="name">${sicher(u.zweck)}</span>
+          <b style="${gs?'color:var(--gut)':''}">${gs?'+ ':'− '}${euro(u.betrag)}</b></div>`;}).join(''))
+       ||'<p style="font-size:13px;color:var(--muted)">Noch keine Bewegung auf der Karte.</p>'}
      </div></div>
     </div>
    </div>
@@ -3204,6 +3292,7 @@ $('#btnStart').onclick=()=>{
  +'Zum Schluss schicken Sie das Protokoll per E-Mail an den Makler — erst mit dieser Meldung wird abgerechnet. '
  +'Ihr Arbeitsplatz ist ein Schreibtisch in einer Marmorgarage — der Stellplatz daneben ist noch leer. '
  +'Bezahlt wird alles mit Ihrer American Express: Karte ins Lesegerät stecken, PIN 1904 eingeben, Freigabe abwarten. '
+ +'Was Sie verdienen, kommt auf dieselbe Karte: Honorar und 5 % Maklerprovision, sofort nach jeder Terminmeldung. '
  +'Unter „Dashboard" sehen Sie jederzeit alles, was Sie bisher erreicht haben.');
 };
 $$('#reiter .rbtn').forEach(b=>b.onclick=()=>reiterZu(b.dataset.r));
@@ -3211,8 +3300,9 @@ $('#btnThema').onclick=()=>themaSetzen(S.thema==='dark'?'light':'dark');
 $('#btnNeu').onclick=neuStarten;
 $('#btnHilfe').onclick=()=>fenster('Spielregeln',
  'Fünf Arbeitstage je Woche mit begrenzter Energie. Ein Maklerkunde testet Sie mit drei kostenlosen Terminen — '
-+'erst ab dem vierten fließt Geld: 100 € je Verkäufer-Termin, 50 € je Käufer-Termin. Abgerechnet wird erst, wenn Sie '
-+'das Protokoll per E-Mail gemeldet haben. Jede Antwort im Gespräch bringt Punkte, und Sie können jederzeit selbst '
++'erst ab dem vierten gibt es Honorar: 100 € je Verkäufer-Termin, 50 € je Käufer-Termin. Dazu kommen bei jedem '
++'gemeldeten Termin 5 % der Maklerprovision des Objekts. Beides wird sofort mit der Meldung Ihrer Karte '
++'gutgeschrieben — abgerechnet wird also erst, wenn Sie das Protokoll per E-Mail gemeldet haben. Jede Antwort im Gespräch bringt Punkte, und Sie können jederzeit selbst '
 +'formulieren statt auszuwählen. Ziel sind 190.000 € in 18 Monaten.');
 $('#ueberlage').onclick=e=>{if(e.target===$('#ueberlage'))$('#ueberlage').classList.remove('auf');};
 addEventListener('keydown',e=>{if(e.key==='Escape')$('#ueberlage').classList.remove('auf');});
