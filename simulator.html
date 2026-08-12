@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="de" data-theme="light">
+<html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vertriebler-Simulator — Walter Setting</title>
-<meta name="robots" content="noindex, nofollow">
-<link rel="icon" href="walter-setting-icon.svg" type="image/svg+xml">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+<meta name="description" content="Trainingsspiel fuer Terminvereinbarung im Immobilienvertrieb.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════════════
    VERTRIEBLER-SIMULATOR
@@ -450,6 +451,116 @@ button{background:none;border:none;cursor:pointer}
 /* Nachtmodus der Büroszene */
 .szene.nacht{box-shadow:0 0 0 2px rgba(185,138,46,.25),var(--schatten)}
 
+/* ═══════ Kartenterminal ═══════ */
+.terminal{text-align:left}
+.term-kopf{display:grid;gap:2px;padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--rand)}
+.term-kopf b{font-family:var(--head);font-size:1.05rem;color:var(--ink)}
+.term-kopf span{font-size:13px;color:var(--muted)}
+.term-kopf .betrag{font-family:var(--head);font-size:1.5rem;font-weight:700;color:var(--ink);margin-top:4px}
+
+.leser{position:relative;border-radius:14px;padding:20px 16px 16px;
+  background:linear-gradient(160deg,#243244,#141d29);overflow:hidden}
+.leser.eng{padding-bottom:14px}
+.leser .schlitz{height:14px;border-radius:7px;background:#0a1119;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.8);position:relative;margin-bottom:-7px;z-index:3}
+.schlitz-lippe{position:absolute;left:8px;right:8px;top:5px;height:3px;border-radius:2px;background:#2c3d55}
+.leser .amex{display:block;width:76%;max-width:270px;margin:0 auto;position:relative;z-index:2;
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.45));animation:kartenRein .55s var(--federn) both}
+@keyframes kartenRein{from{transform:translateY(38px) rotate(-3deg);opacity:0}to{transform:none;opacity:1}}
+.leser .amex.drin{animation:kartenStecken .5s var(--ez) both}
+@keyframes kartenStecken{from{transform:translateY(0)}to{transform:translateY(-38px) scale(.94)}}
+.leser-anzeige{margin-top:12px;text-align:center;font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;color:#7e90a8;font-weight:600}
+.leser-anzeige.gruen{color:#5fc48f}
+
+.pin-frage{text-align:center;font-size:14px;color:var(--muted);margin:18px 0 10px}
+.pinpunkte{display:flex;gap:14px;justify-content:center;margin-bottom:14px}
+.pinpunkte.wackeln{animation:wackeln .4s}
+@keyframes wackeln{0%,100%{transform:none}20%{transform:translateX(-9px)}40%{transform:translateX(9px)}
+  60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.pinpunkt{width:14px;height:14px;border-radius:50%;border:2px solid var(--rand);transition:all .16s var(--federn)}
+.pinpunkt.voll{background:var(--ink);border-color:var(--ink);transform:scale(1.15)}
+.pin-fehler{text-align:center;font-size:13px;color:var(--schlecht);margin-bottom:12px}
+.pinfeld{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.pintaste{padding:15px 0;border:1px solid var(--rand);border-radius:11px;background:var(--flaeche);
+  font-family:var(--head);font-size:1.15rem;font-weight:600;color:var(--ink);
+  transition:transform .12s var(--federn),background .15s}
+.pintaste:hover:not(:disabled){background:var(--flaeche-2)}
+.pintaste:active:not(:disabled){transform:scale(.93)}
+.pintaste:disabled{opacity:.4}
+.pintaste.rot,.pintaste.gruen{font-size:.85rem}
+.pintaste.rot{color:var(--schlecht)}
+.pintaste.gruen{color:#fff;background:var(--gut);border-color:var(--gut)}
+
+.pruefkasten{text-align:center;padding:26px 0}
+.pruefkasten p{font-size:15px;margin-top:14px}
+.pruefkasten .frei{color:var(--gut);font-weight:600}
+.pruefkasten .abgelehnt{color:var(--schlecht);font-weight:600}
+.ring{width:46px;height:46px;margin:0 auto;border-radius:50%;border:4px solid var(--rand);
+  border-top-color:var(--ink);animation:dreht .8s linear infinite}
+@keyframes dreht{to{transform:rotate(360deg)}}
+.haken svg{width:56px;height:56px;stroke:var(--gut);stroke-width:3.5;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.haken circle{stroke-dasharray:151;stroke-dashoffset:151;animation:zeichnen .5s var(--ez) forwards}
+.haken path{stroke-dasharray:40;stroke-dashoffset:40;animation:zeichnen .35s var(--ez) .42s forwards}
+@keyframes zeichnen{to{stroke-dashoffset:0}}
+.kreuz{width:56px;height:56px;margin:0 auto;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:26px;color:#fff;background:var(--schlecht)}
+.beleg{margin-top:16px;padding:14px 16px;border-radius:11px;background:var(--flaeche-2);
+  border:1px dashed var(--rand)}
+.beleg-kopf{font-size:10.5px;letter-spacing:.14em;color:var(--muted);text-align:center;
+  padding-bottom:9px;margin-bottom:9px;border-bottom:1px dashed var(--rand)}
+.beleg-z{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:3px 0}
+.beleg-z span{color:var(--muted)}
+.beleg-z b{color:var(--ink);font-weight:600}
+
+/* ═══════ Dashboard im Verwaltungs-Stil ═══════ */
+.dash{display:grid;gap:13px}
+.dash-kopf{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;
+  padding:20px 22px;border-radius:14px;color:#fff;
+  background:linear-gradient(135deg,var(--grad-2),var(--grad-1))}
+.dash-kopf h3{font-family:var(--head);font-size:1.3rem;margin:0}
+.dash-kopf p{font-size:13px;opacity:.85;margin-top:3px}
+.dash-kopf .rechts{margin-left:auto;text-align:right}
+.dash-kopf .gross{font-family:var(--head);font-size:1.9rem;font-weight:700;line-height:1.1}
+.dash-kopf .klein{font-size:12px;opacity:.85}
+.kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:11px}
+.kachel{background:var(--flaeche);border:1px solid var(--rand);border-radius:12px;padding:15px;
+  min-width:0;transition:transform .18s var(--federn),box-shadow .18s}
+.kachel:hover{transform:translateY(-2px);box-shadow:var(--schatten)}
+.kachel .lbl{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.kachel .zahl{font-family:var(--head);font-size:1.55rem;font-weight:700;color:var(--ink);
+  margin-top:6px;font-variant-numeric:tabular-nums;line-height:1.15}
+.kachel .fuss{font-size:12px;color:var(--muted);margin-top:4px}
+.kachel .fuss.gut{color:var(--gut)}
+.kachel .fuss.schlecht{color:var(--schlecht)}
+.dash-reihe{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:13px}
+.dash-k{background:var(--flaeche);border:1px solid var(--rand);border-radius:13px;padding:17px;min-width:0}
+.dash-k h4{font-size:.92rem;font-family:var(--head);margin-bottom:13px;color:var(--ink)}
+.saeulen{display:flex;align-items:flex-end;gap:6px;height:120px;padding-top:6px}
+.saeule{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;
+  align-items:center;gap:5px;height:100%}
+.saeule i{display:block;width:100%;border-radius:5px 5px 0 0;
+  background:linear-gradient(180deg,var(--grad-1),var(--grad-2));
+  animation:saeuleHoch .6s var(--ez) both;transform-origin:bottom}
+@keyframes saeuleHoch{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.saeule small{font-size:10px;color:var(--muted);white-space:nowrap}
+.dash-liste{display:grid;gap:7px}
+.dash-z{display:flex;align-items:center;gap:10px;font-size:13.5px}
+.dash-z .name{flex:1;min-width:0;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash-z .bar{flex:0 0 90px;height:7px;border-radius:20px;background:var(--bg);overflow:hidden}
+.dash-z .bar i{display:block;height:100%;border-radius:20px;background:var(--grad-1)}
+.dash-z b{flex:none;font-variant-numeric:tabular-nums;color:var(--ink);font-size:13px}
+.abz{display:flex;flex-wrap:wrap;gap:7px}
+.abz span{padding:5px 11px;border-radius:20px;font-size:12px;background:var(--flaeche-2);
+  border:1px solid var(--rand);color:var(--muted)}
+.abz span.hat{background:rgba(46,125,91,.11);border-color:rgba(46,125,91,.3);color:var(--gut);font-weight:600}
+.dash-karte{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.dash-karte svg{width:210px;max-width:100%;height:auto;flex:none;
+  filter:drop-shadow(0 6px 16px rgba(0,0,0,.18))}
+.dash-karte .neben{flex:1;min-width:170px}
+@media(max-width:560px){.dash-kopf .rechts{margin-left:0;text-align:left;width:100%}}
+
 </style>
 </head>
 <body>
@@ -497,6 +608,7 @@ button{background:none;border:none;cursor:pointer}
 
   <div class="reiter" id="reiter">
     <button class="rbtn on" data-r="buero">Heute</button>
+    <button class="rbtn" data-r="dash">Dashboard</button>
     <button class="rbtn" data-r="karte">Karte</button>
     <button class="rbtn" data-r="kunden">Kunden</button>
     <button class="rbtn" data-r="crm">CRM</button>
@@ -513,6 +625,10 @@ button{background:none;border:none;cursor:pointer}
   <div id="r-buero" class="rteil">
     <div class="karte karte-p"><h3 style="font-size:.95rem;margin-bottom:11px">Was passiert ist</h3>
       <div class="log" id="log"></div></div>
+  </div>
+
+  <div id="r-dash" class="rteil" hidden>
+    <div id="dashInhalt"></div>
   </div>
 
   <div id="r-karte" class="rteil" hidden>
@@ -557,8 +673,9 @@ button{background:none;border:none;cursor:pointer}
 
   <div id="r-privat" class="rteil" hidden>
     <div class="karte karte-p" style="margin-bottom:13px">
-      <h3 style="font-size:.95rem;margin-bottom:4px">Ihre Garage</h3>
-      <p style="font-size:13px;color:var(--muted)">Was Sie kaufen, steht hier. Auftreten wirkt auf Makler — der Rest ist Freude.</p>
+      <h3 style="font-size:.95rem;margin-bottom:4px">Ihre Marmorgarage</h3>
+      <p style="font-size:13px;color:var(--muted)">Der Stellplatz gehört Ihnen von Anfang an — ein Auto noch nicht.
+        Bezahlt wird mit Karte am Terminal. Auftreten wirkt auf Makler, der Rest ist Freude.</p>
     </div>
     <div class="garagenfeld" id="garage"></div>
     <div class="karte karte-p"><div id="luxus"></div></div>
@@ -1055,6 +1172,158 @@ const STOERUNGEN=[
  {t:'Kurze Stille. Er wartet, dass Sie weitersprechen.',w:0.1},
 ];
 /* ═══════════════════════════════════════════════════════════════
+   BEZAHLEN MIT KARTE
+   Nichts wird mehr per Knopfdruck abgebucht. Jede Anschaffung laeuft
+   ueber das Terminal: Karte stecken, PIN eingeben, Freigabe abwarten.
+   Das ist bewusst der langsame Weg -- Geld ausgeben soll sich anfuehlen
+   wie Geld ausgeben und nicht wie ein Klick.
+   ═══════════════════════════════════════════════════════════════ */
+const PIN_RICHTIG='1904';
+const PIN_VERSUCHE=3;
+
+function karteAnlegen(name){
+ return {inhaber:(name||'CHEF').toUpperCase(),
+  nummer:'3782 822463 10005',
+  gueltig:'12 / 30',
+  umsaetze:[]};
+}
+/* Aeltere Spielstaende hatten noch keine Karte. */
+function karteSichern(){
+ if(!S.karte)S.karte=karteAnlegen(S.name);
+ if(!S.karte.umsaetze)S.karte.umsaetze=[];
+}
+
+/* Die Karte wird an zwei Stellen gezeichnet (Terminal und Dashboard).
+   Gleiche Verlaufs-IDs waeren dokumentweit doppelt -- dann greift
+   url(#...) auf die erste, moeglicherweise ausgeblendete Fassung zu
+   und die Karte bleibt schwarz. Deshalb je Zeichnung eigene IDs. */
+let amexNr=0;
+function amexSvg(gesteckt){
+ const n=++amexNr, gA='amexG'+n, gC='chipG'+n;
+ return `<svg class="amex ${gesteckt?'drin':''}" viewBox="0 0 340 214" role="img" aria-label="American Express Karte">
+  <defs>
+   <linearGradient id="${gA}" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#dfe7ef"/><stop offset=".45" stop-color="#c3d0dd"/>
+    <stop offset=".62" stop-color="#eef3f8"/><stop offset="1" stop-color="#b9c7d6"/></linearGradient>
+   <linearGradient id="${gC}" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#e8cd85"/><stop offset="1" stop-color="#b3903f"/></linearGradient>
+  </defs>
+  <rect width="340" height="214" rx="16" fill="url(#${gA})"/>
+  <rect x="1" y="1" width="338" height="212" rx="15" fill="none" stroke="#9fb0c2" stroke-width="1.5"/>
+  <rect x="20" y="18" width="86" height="26" rx="3" fill="#2E77BC"/>
+  <text x="26" y="30" font-family="Montserrat,sans-serif" font-size="8.5" font-weight="700" fill="#fff">AMERICAN</text>
+  <text x="26" y="40" font-family="Montserrat,sans-serif" font-size="8.5" font-weight="700" fill="#fff">EXPRESS</text>
+  <rect x="26" y="74" width="46" height="35" rx="6" fill="url(#${gC})"/>
+  <g stroke="#8a6d2c" stroke-width="1.1" opacity=".8">
+   <path d="M26 86h46M26 97h46M49 74v35M38 86v11M60 86v11"/></g>
+  <text x="26" y="146" font-family="Inter,sans-serif" font-size="17" letter-spacing="1.5"
+    font-weight="600" fill="#2b3a4d">${sicher(S.karte.nummer)}</text>
+  <text x="26" y="170" font-family="Inter,sans-serif" font-size="8" letter-spacing=".12em" fill="#6b7c90">GÜLTIG BIS</text>
+  <text x="26" y="186" font-family="Inter,sans-serif" font-size="12" font-weight="600" fill="#2b3a4d">${sicher(S.karte.gueltig)}</text>
+  <text x="140" y="186" font-family="Inter,sans-serif" font-size="12.5" letter-spacing=".08em"
+    font-weight="600" fill="#2b3a4d">${sicher(S.karte.inhaber)}</text>
+ </svg>`;
+}
+
+/* zweck: Text fuer den Beleg, betrag: Euro, dann: laeuft nur bei Freigabe */
+let Z=null;
+function bezahlen(zweck,betrag,dann){
+ karteSichern();
+ if(S.geld<betrag){melde('Dafür reicht das Guthaben nicht.');return;}
+ Z={zweck,betrag,dann,pin:'',versuch:0,schritt:'stecken'};
+ $('#ueberlage').classList.add('auf');
+ terminalZeichnen();
+}
+function terminalZeichnen(){
+ if(!Z)return;
+ const kopf=`<div class="term-kopf"><b>Zahlung</b>
+   <span>${sicher(Z.zweck)}</span><span class="betrag tab-zahl">${euro(Z.betrag)}</span></div>`;
+ let inhalt='';
+ if(Z.schritt==='stecken'){
+  inhalt=`<div class="leser">
+    <div class="schlitz"><span class="schlitz-lippe"></span></div>
+    ${amexSvg(false)}
+    <div class="leser-anzeige">Karte einstecken</div>
+   </div>
+   <button class="knopf knopf-voll" id="tStecken" style="width:100%;margin-top:16px">Karte stecken</button>`;
+ }else if(Z.schritt==='pin'){
+  const pkt=[0,1,2,3].map(i=>`<span class="pinpunkt ${i<Z.pin.length?'voll':''}"></span>`).join('');
+  inhalt=`<div class="leser eng">
+    <div class="schlitz"><span class="schlitz-lippe"></span></div>
+    ${amexSvg(true)}
+    <div class="leser-anzeige gruen">Karte gelesen · AMEX</div>
+   </div>
+   <p class="pin-frage">Bitte PIN eingeben</p>
+   <div class="pinpunkte" id="pinpunkte">${pkt}</div>
+   ${Z.versuch?`<p class="pin-fehler">Falsche PIN. Noch ${PIN_VERSUCHE-Z.versuch} Versuch${PIN_VERSUCHE-Z.versuch===1?'':'e'}.</p>`:''}
+   <div class="pinfeld" id="pinfeld">
+    ${[1,2,3,4,5,6,7,8,9].map(n=>`<button class="pintaste" data-pin="${n}">${n}</button>`).join('')}
+    <button class="pintaste rot" data-pin="loeschen">Löschen</button>
+    <button class="pintaste" data-pin="0">0</button>
+    <button class="pintaste gruen" data-pin="ok" ${Z.pin.length<4?'disabled':''}>OK</button>
+   </div>
+   <button class="knopf knopf-linie knopf-klein" id="tAbbruch" style="width:100%;margin-top:12px">Abbrechen</button>`;
+ }else if(Z.schritt==='pruefen'){
+  inhalt=`<div class="pruefkasten"><div class="ring"></div><p>Verbindung zur Bank …</p></div>`;
+ }else if(Z.schritt==='ok'){
+  inhalt=`<div class="pruefkasten"><div class="haken"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l8 8 15-16"/></svg></div>
+    <p class="frei">Zahlung freigegeben</p></div>
+   <div class="beleg">
+    <div class="beleg-kopf">BELEG · AMERICAN EXPRESS</div>
+    <div class="beleg-z"><span>Verwendung</span><b>${sicher(Z.zweck)}</b></div>
+    <div class="beleg-z"><span>Betrag</span><b class="tab-zahl">${euro(Z.betrag)}</b></div>
+    <div class="beleg-z"><span>Karte</span><b>•••• ${sicher(S.karte.nummer.slice(-5))}</b></div>
+    <div class="beleg-z"><span>Verfahren</span><b>Chip &amp; PIN</b></div>
+    <div class="beleg-z"><span>Restguthaben</span><b class="tab-zahl">${euro(S.geld-Z.betrag)}</b></div>
+   </div>
+   <button class="knopf knopf-voll" id="tFertig" style="width:100%;margin-top:16px">Beleg mitnehmen</button>`;
+ }else{
+  inhalt=`<div class="pruefkasten"><div class="kreuz">✕</div>
+    <p class="abgelehnt">Zahlung abgelehnt</p>
+    <p style="color:var(--muted);font-size:13px;margin-top:6px">Dreimal die falsche PIN. Die Karte bleibt gesperrt, bis Sie es erneut versuchen.</p></div>
+   <button class="knopf knopf-linie" id="tFertig" style="width:100%;margin-top:16px">Schließen</button>`;
+ }
+ $('#fenster').innerHTML=`<div class="terminal" id="terminal">${kopf}${inhalt}</div>`;
+ if($('#tStecken'))$('#tStecken').onclick=()=>{Z.schritt='pin';terminalZeichnen();};
+ if($('#tAbbruch'))$('#tAbbruch').onclick=terminalSchliessen;
+ if($('#tFertig'))$('#tFertig').onclick=terminalSchliessen;
+ $$('[data-pin]').forEach(b=>b.onclick=()=>pinTaste(b.dataset.pin));
+}
+function pinTaste(t){
+ if(!Z||Z.schritt!=='pin')return;
+ if(t==='loeschen'){Z.pin='';terminalZeichnen();return;}
+ if(t==='ok'){pinPruefen();return;}
+ if(Z.pin.length>=4)return;
+ Z.pin+=t;
+ terminalZeichnen();
+ if(Z.pin.length===4)setTimeout(pinPruefen,240);
+}
+function pinPruefen(){
+ if(!Z||Z.pin.length<4)return;
+ if(Z.pin!==PIN_RICHTIG){
+  Z.versuch++; Z.pin='';
+  if(Z.versuch>=PIN_VERSUCHE){Z.schritt='nein';terminalZeichnen();
+   melde('Karte abgelehnt.');return;}
+  terminalZeichnen();
+  const el=$('#pinpunkte'); if(el){el.classList.remove('wackeln');void el.offsetWidth;el.classList.add('wackeln');}
+  return;
+ }
+ Z.schritt='pruefen'; terminalZeichnen();
+ setTimeout(()=>{
+  if(!Z)return;
+  const dann=Z.dann;
+  S.karte.umsaetze.unshift({zweck:Z.zweck,betrag:Z.betrag,woche:S.woche,tag:S.tag});
+  if(S.karte.umsaetze.length>40)S.karte.umsaetze.length=40;
+  Z.schritt='ok'; terminalZeichnen();
+  if(dann)dann();
+ },1100);
+}
+function terminalSchliessen(){
+ Z=null;
+ $('#ueberlage').classList.remove('auf');
+ $('#fenster').innerHTML='';
+}
+/* ═══════════════════════════════════════════════════════════════
    VERTRIEBLER-SIMULATOR — Grundlagen
    Zahlen wie im echten Angebot: 100 € je Verkäufer-Termin,
    50 € je Käufer-Termin, die ersten drei Termine je Kunde gratis.
@@ -1131,7 +1400,11 @@ function neuerStand(name,grad){
   stat:{anrufeMakler:0,anrufeEig:0,kunden:0,termine:0,gemeldet:0,geplatzt:0,absagen:0,
         summePunkte:0,summeMax:0,perfekt:0,frei:0},
   notizen:[],erfolge:[],log:[],thema:'light',ende:null,bonusAbschluss:0,kaffeeHeute:false,
-  luxus:[],auftreten:0,nacht:false,uebermuedet:0,plaetze:2,importListe:null,crmFilter:'alle'};
+  /* Die Marmorgarage ist der Startpunkt, nicht die Belohnung: dort steht
+     der Schreibtisch, von dem aus alles losgeht. Ein Auto gibt es nicht --
+     das muss verdient und gekauft werden. */
+  luxus:['garage'],auftreten:0,nacht:false,uebermuedet:0,plaetze:2,
+  importListe:null,crmFilter:'alle',karte:karteAnlegen(name)};
 }
 function laden(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
 function sichern(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
@@ -1455,13 +1728,11 @@ const LUXUS=[
   info:'Wer damit vorfährt, wird anders empfangen.',wirk:S=>{S.auftreten=(S.auftreten||0)+6;}},
  {id:'auto3',name:'Sportwagen',preis:95000,art:'auto',stufe:3,
   info:'Beeindruckt — und schreckt manche ab. Wirkt nicht bei jedem gleich.',wirk:S=>{S.auftreten=(S.auftreten||0)+8;}},
- {id:'garage',name:'Marmorgarage',preis:26000,art:'garage',stufe:1,
-  info:'Der richtige Rahmen für die Sammlung. Reine Freude, kein Vorteil.'},
  {id:'buero2',name:'Eigene Büroetage',preis:52000,art:'buero',stufe:1,
   info:'Platz für vier Arbeitsplätze statt zwei.',wirk:S=>{S.plaetze=4;}},
 ];
 function luxusZeichnen(){
- const gruppen=[['uhr','Uhren'],['auto','Fahrzeuge'],['garage','Garage'],['buero','Räume']];
+ const gruppen=[['uhr','Uhren'],['auto','Fahrzeuge'],['buero','Räume']];
  $('#luxus').innerHTML=gruppen.map(([art,titel])=>{
   const stuecke=LUXUS.filter(l=>l.art===art);
   return `<h4 style="font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px">${titel}</h4>
@@ -1477,16 +1748,19 @@ function luxusZeichnen(){
 function luxusKaufen(id){
  const l=LUXUS.find(x=>x.id===id);
  if(S.geld<l.preis){melde('Dafür reicht das Geld nicht.');return;}
- if(!confirm(l.name+' für '+euro(l.preis)+' kaufen? Das Geld fehlt Ihnen dann für den Betrieb.'))return;
- S.geld-=l.preis; S.luxus.push(id);
- if(l.wirk)l.wirk(S);
- pruefeErfolg('luxus');
- notiz(l.name+' gekauft für '+euro(l.preis),'');
- melde(l.name+' gehört Ihnen.'); konfetti(45); sichern(); zeichnen();
+ /* Bezahlt wird am Terminal: Karte stecken, PIN, Freigabe.
+    Erst danach laeuft der Rest -- ohne Freigabe passiert nichts. */
+ bezahlen(l.name,l.preis,()=>{
+  S.geld-=l.preis; S.luxus.push(id);
+  if(l.wirk)l.wirk(S);
+  pruefeErfolg('luxus');
+  notiz(l.name+' gekauft für '+euro(l.preis),'');
+  melde(l.name+' gehört Ihnen.'); konfetti(45); sichern(); zeichnen();
+ });
 }
 function garageZeichnen(){
  const autos=LUXUS.filter(l=>l.art==='auto'&&S.luxus.includes(l.id));
- const marmor=S.luxus.includes('garage');
+ const marmor=true;   /* Die Garage ist von Anfang an aus Marmor. */
  $('#garage').innerHTML=`<svg viewBox="0 0 800 300" role="img" aria-label="Ihre Garage">
   <defs><linearGradient id="marm" x1="0" y1="0" x2="1" y2="1">
    <stop offset="0" stop-color="#eceff3"/><stop offset=".5" stop-color="#dfe4ea"/><stop offset="1" stop-color="#f4f6f9"/></linearGradient></defs>
@@ -1497,8 +1771,7 @@ function garageZeichnen(){
   ${marmor?'<g stroke="#e2e7ee" stroke-width="1"><path d="M0 60 H800"/><path d="M0 130 H800"/><path d="M266 0 V212"/><path d="M533 0 V212"/></g>':''}
   ${autos.length?autos.map((a,i)=>autoSvg(a.stufe,90+i*230,180)).join('')
    :`<text x="400" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="14"
-      fill="${marmor?'#8792a3':'#4a5a70'}">Noch keine Fahrzeuge. Erst das Geschäft, dann die Garage.</text>`}
-  ${!marmor?'<text x="400" y="286" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4a5a70">Einfache Garage — eine Marmorgarage gibt es unter Anschaffungen.</text>':''}
+      fill="#8792a3">Der Stellplatz ist frei. Ein Auto gibt es unter Anschaffungen.</text>`}
  </svg>`;
 }
 function autoSvg(stufe,x,y){
@@ -1671,6 +1944,7 @@ function mailSenden(){
   const l=S.crm.find(x=>x.id===e.leadId);
   const k=S.kunden.find(x=>x.id===l.maklerId);
   l.status='gemeldet';
+  l.meldeWoche=S.woche;   /* fuers Dashboard: Umsatz je Woche */
   S.mails.ausgang.unshift({an:k.name,betreff:'Qualifizierter Termin: '+l.name,woche:S.woche,tag:S.tag});
   S.stat.gemeldet++;
   if(anteil<0.6){
@@ -1729,8 +2003,10 @@ function neuerEigLead(kunde,guete){
 
 /* ═══════════════════════════════════════════════════════════════
    BÜROSZENE
-   Alles gezeichnet, keine Bilddateien. Was gekauft wurde, steht
-   sichtbar im Raum -- das ist der eigentliche Reiz am Ausbauen.
+   Das Buero ist eine Marmorgarage mit einem Schreibtisch darin --
+   von Anfang an, ohne Kauf. Alles gezeichnet, keine Bilddateien.
+   Was gekauft wurde, steht sichtbar im Raum: das ist der Reiz am
+   Ausbauen.
    ═══════════════════════════════════════════════════════════════ */
 const HIMMEL=[['#7FA8D4','#CBDCEF'],['#8FB4DA','#D6E4F2'],['#A8C4E0','#E2ECF6'],
               ['#D9A87C','#F0D5BA'],['#3E5578','#8A6E8C']];
@@ -1745,7 +2021,12 @@ function bueroSvg(){
  return `<svg viewBox="0 0 800 380" role="img" aria-label="Ihr Büro">
   <defs>
    <linearGradient id="wand" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#1b2738"/><stop offset="1" stop-color="#121b28"/></linearGradient>
+    <stop offset="0" stop-color="${nacht?'#2a3242':'#f2f4f7'}"/>
+    <stop offset="1" stop-color="${nacht?'#1a212c':'#dfe4ea'}"/></linearGradient>
+   <linearGradient id="boden" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="${nacht?'#232b38':'#e7ebf0'}"/>
+    <stop offset=".5" stop-color="${nacht?'#2b3442':'#f6f8fa'}"/>
+    <stop offset="1" stop-color="${nacht?'#212936':'#e2e7ee'}"/></linearGradient>
    <linearGradient id="himmel" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="${h[0]}"/><stop offset="1" stop-color="${h[1]}"/></linearGradient>
    <linearGradient id="tisch" x1="0" y1="0" x2="0" y2="1">
@@ -1753,9 +2034,26 @@ function bueroSvg(){
    <linearGradient id="schirm" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0" stop-color="#2f4f74"/><stop offset="1" stop-color="#1d3350"/></linearGradient>
   </defs>
+  <!-- Marmorwand -->
   <rect width="800" height="380" fill="url(#wand)"/>
-  <rect y="300" width="800" height="80" fill="#0d1420"/>
-  <rect y="298" width="800" height="4" fill="#1e2b3d"/>
+  <g stroke="${nacht?'#3a4557':'#d3dae3'}" stroke-width="1.1" fill="none" opacity=".9">
+   <path d="M0 84 Q190 66 400 92 T800 74"/><path d="M0 168 Q230 152 470 176 T800 158"/>
+   <path d="M212 0 V300"/><path d="M596 0 V300"/></g>
+  <!-- Marmorboden -->
+  <rect y="300" width="800" height="80" fill="url(#boden)"/>
+  <rect y="298" width="800" height="4" fill="${nacht?'#3a4557':'#c9d2dc'}"/>
+  <g stroke="${nacht?'#3a4557':'#d6dde5'}" stroke-width="1.2" fill="none" opacity=".85">
+   <path d="M0 330 Q210 318 430 338 T800 326"/><path d="M0 360 Q270 348 540 366 T800 354"/>
+   <path d="M136 302 L104 380"/><path d="M498 302 L540 380"/></g>
+  <!-- Garagentor über dem Kopf: das hier ist eine Garage, kein Bürohaus -->
+  <g>
+   <rect width="800" height="30" fill="${nacht?'#20293a':'#c8d2dd'}"/>
+   <g stroke="${nacht?'#151d29':'#aeb9c6'}" stroke-width="2">
+    <path d="M0 8 H800"/><path d="M0 17 H800"/><path d="M0 26 H800"/></g>
+   <rect y="30" width="800" height="5" fill="${nacht?'#151d29':'#9fabba'}"/>
+  </g>
+  <text x="790" y="52" text-anchor="end" font-family="Montserrat,sans-serif" font-size="10"
+    letter-spacing="2" fill="${nacht?'#4c5a70':'#a7b2c0'}">MARMORGARAGE</text>
 
   <!-- Fenster -->
   <g>
@@ -2298,6 +2596,135 @@ function gespraechEnde(){
  $('#zurueck').onclick=()=>{sichern();ansicht('spiel');zeichnen();};
  sichern();
 }
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD
+   Eine Seite, auf der alles steht, was bisher erreicht wurde.
+   Alle Zahlen kommen aus dem laufenden Spielstand -- nichts davon
+   ist geschaetzt oder ausgedacht.
+   ═══════════════════════════════════════════════════════════════ */
+function dashZahlen(){
+ const st=S.stat;
+ const tageGesamt=(S.woche-1)*5+S.tag;
+ const ausgaben=(S.karte&&S.karte.umsaetze||[]).reduce((a,u)=>a+u.betrag,0);
+ return {
+  tageGesamt,ausgaben,
+  anteil:Math.min(100,S.umsatz/ZIEL*100),
+  proTermin:st.gemeldet?S.umsatz/st.gemeldet:0,
+  proWoche:S.umsatz/Math.max(1,S.woche),
+  quote:st.summeMax>0?Math.round(st.summePunkte/st.summeMax*100):0,
+  maklerQuote:st.anrufeMakler?Math.round(st.kunden/st.anrufeMakler*100):0,
+  terminQuote:st.anrufeEig?Math.round(st.termine/st.anrufeEig*100):0,
+  restWochen:Math.max(0,WOCHEN-S.woche),
+  noetigProWoche:Math.max(0,ZIEL-S.umsatz)/Math.max(1,WOCHEN-S.woche+1),
+ };
+}
+function kachel(lbl,zahl,fuss,art){
+ return `<div class="kachel"><div class="lbl">${sicher(lbl)}</div>
+  <div class="zahl">${sicher(zahl)}</div>
+  <div class="fuss ${art||''}">${sicher(fuss||'')}</div></div>`;
+}
+function dashZeichnen(){
+ const el=$('#dashInhalt'); if(!el)return;
+ karteSichern();
+ const z=dashZahlen(), st=S.stat;
+
+ /* Umsatz je Woche als Saeulen. Der Verlauf steht im Log als
+    Wochenabschluss -- hier wird aus dem Gesamtumsatz gleichmaessig
+    nichts abgeleitet, sondern nur gezeigt, was wirklich gemeldet ist. */
+ const wochen=[];
+ for(let w=Math.max(1,S.woche-7);w<=S.woche;w++){
+  const n=S.crm.filter(l=>l.status==='gemeldet'&&l.meldeWoche===w).length;
+  wochen.push([w,n]);
+ }
+ const maxW=Math.max(1,...wochen.map(x=>x[1]));
+
+ const trichter=[['Büros gefunden',S.leads.length+S.kunden.length+st.absagen],
+  ['Makler angerufen',st.anrufeMakler],['Kunden gewonnen',st.kunden],
+  ['Kontakte im CRM',S.crm.length],['Vorqualifiziert',st.anrufeEig],
+  ['Termine',st.termine],['Gemeldet',st.gemeldet]];
+ const maxT=Math.max(1,...trichter.map(x=>x[1]));
+
+ const besitz=LUXUS.filter(l=>S.luxus.includes(l.id));
+ const autos=besitz.filter(l=>l.art==='auto');
+
+ el.innerHTML=`<div class="dash">
+  <div class="dash-kopf">
+   <div><h3>${sicher(S.name)}</h3>
+    <p>Woche ${S.woche} von ${WOCHEN} · Tag ${z.tageGesamt} seit Gründung${S.gewerbe?'':' · Gewerbe noch nicht angemeldet'}</p></div>
+   <div class="rechts"><div class="gross">${euro(S.umsatz)}</div>
+    <div class="klein">${Math.round(z.anteil)} % vom Ziel · noch ${euro(Math.max(0,ZIEL-S.umsatz))}</div></div>
+  </div>
+
+  <div class="kacheln">
+   ${kachel('Umsatz gesamt',euro(S.umsatz),Math.round(z.anteil)+' % von '+euro(ZIEL))}
+   ${kachel('Auf dem Konto',euro(S.geld),S.geld<400?'wird knapp':'verfügbar',S.geld<400?'schlecht':'gut')}
+   ${kachel('Kunden',S.kunden.length,st.kunden+' insgesamt gewonnen')}
+   ${kachel('Gemeldete Termine',st.gemeldet,'davon '+st.termine+' qualifiziert')}
+   ${kachel('Umsatz je Woche',euro(z.proWoche),'nötig: '+euro(z.noetigProWoche))}
+   ${kachel('Antwortgüte',z.quote+' %',st.perfekt+' fehlerfreie Gespräche',z.quote>=70?'gut':'')}
+   ${kachel('Ruf',S.ruf+' %',S.ruf<50?'leidet':'stabil',S.ruf<50?'schlecht':'gut')}
+   ${kachel('Privat ausgegeben',euro(z.ausgaben),(S.karte.umsaetze.length)+' Kartenzahlungen')}
+  </div>
+
+  <div class="dash-reihe">
+   <div class="dash-k"><h4>Gemeldete Termine je Woche</h4>
+    <div class="saeulen">${wochen.map(([w,n])=>
+     `<span class="saeule"><i style="height:${Math.round(n/maxW*100)}%"></i><small>W${w}</small></span>`).join('')}</div>
+   </div>
+   <div class="dash-k"><h4>Trichter</h4>
+    <div class="dash-liste">${trichter.map(([t,n])=>
+     `<div class="dash-z"><span class="name">${sicher(t)}</span>
+      <span class="bar"><i style="width:${Math.round(n/maxT*100)}%"></i></span><b>${n}</b></div>`).join('')}</div>
+   </div>
+  </div>
+
+  <div class="dash-reihe">
+   <div class="dash-k"><h4>Quoten</h4>
+    <div class="dash-liste">
+     <div class="dash-z"><span class="name">Kunden je Akquiseanruf</span>
+      <span class="bar"><i style="width:${Math.min(100,z.maklerQuote)}%"></i></span><b>${z.maklerQuote} %</b></div>
+     <div class="dash-z"><span class="name">Termine je Qualifizierung</span>
+      <span class="bar"><i style="width:${Math.min(100,z.terminQuote)}%"></i></span><b>${z.terminQuote} %</b></div>
+     <div class="dash-z"><span class="name">Antwortgüte</span>
+      <span class="bar"><i style="width:${z.quote}%"></i></span><b>${z.quote} %</b></div>
+     <div class="dash-z"><span class="name">Vertrauen der Kunden</span>
+      <span class="bar"><i style="width:${S.kunden.length?Math.round(S.kunden.reduce((a,k)=>a+(k.vertrauen||70),0)/S.kunden.length):0}%"></i></span>
+      <b>${S.kunden.length?Math.round(S.kunden.reduce((a,k)=>a+(k.vertrauen||70),0)/S.kunden.length):0} %</b></div>
+    </div>
+   </div>
+   <div class="dash-k"><h4>Ihre Karte</h4>
+    <div class="dash-karte">${amexSvg(false)}
+     <div class="neben"><div class="dash-liste">
+      ${(S.karte.umsaetze.slice(0,5).map(u=>
+        `<div class="dash-z"><span class="name">${sicher(u.zweck)}</span><b>${euro(u.betrag)}</b></div>`).join(''))
+       ||'<p style="font-size:13px;color:var(--muted)">Noch nichts gekauft.</p>'}
+     </div></div>
+    </div>
+   </div>
+  </div>
+
+  <div class="dash-reihe">
+   <div class="dash-k"><h4>Besitz</h4>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:11px">
+     Marmorgarage · ${autos.length?autos.length+(autos.length===1?' Fahrzeug':' Fahrzeuge'):'noch kein Fahrzeug'}
+     · Auftreten ${S.auftreten||0} Punkte</p>
+    <div class="abz">${LUXUS.map(l=>
+     `<span class="${S.luxus.includes(l.id)?'hat':''}">${sicher(l.name)}</span>`).join('')}</div>
+    <h4 style="margin-top:16px">Büro</h4>
+    <div class="abz">${AUSBAUTEN.map(a=>
+     `<span class="${S.ausbauten.includes(a.id)?'hat':''}">${sicher(a.name)}</span>`).join('')}</div>
+   </div>
+   <div class="dash-k"><h4>Erfolge ${S.erfolge.length} von ${ERFOLGE.length}</h4>
+    <div class="abz">${ERFOLGE.map(e=>
+     `<span class="${S.erfolge.includes(e.id)?'hat':''}" title="${sicher(e.info)}">${sicher(e.name)}</span>`).join('')}</div>
+    <h4 style="margin-top:16px">Fähigkeiten</h4>
+    <div class="dash-liste">${FAEHIGKEITEN.map(f=>
+     `<div class="dash-z"><span class="name">${sicher(f.name)}</span>
+      <span class="bar"><i style="width:${S.koennen[f.id]/5*100}%"></i></span><b>${S.koennen[f.id]} / 5</b></div>`).join('')}</div>
+   </div>
+  </div>
+ </div>`;
+}
 
 /* ═══════════════════════════════════════════════════════════════
    OBERFLÄCHE UND TAGESABLAUF
@@ -2320,6 +2747,7 @@ function reiterZu(r){
  $('#r-'+r).hidden=false;
  if(r==='karte')karteZeichnen();
  if(r==='trainer')trainerZeigen();
+ if(r==='dash')dashZeichnen();
  $('#r-'+r).scrollIntoView({block:'start',behavior:'smooth'});
 }
 const HOTSPOTS={
@@ -2486,10 +2914,12 @@ function ausbautenZeichnen(){
 function kaufen(id){
  const a=AUSBAUTEN.find(x=>x.id===id);
  if(S.geld<a.preis){melde('Dafür reicht das Geld nicht.');return;}
- S.geld-=a.preis;S.ausbauten.push(id);
- if(a.wirk)a.wirk(S);
- pruefeErfolg('ausbau');notiz(a.name+' angeschafft für '+euro(a.preis));
- melde(a.name+' steht jetzt im Büro.');konfetti(30);sichern();zeichnen();
+ bezahlen(a.name,a.preis,()=>{
+  S.geld-=a.preis;S.ausbauten.push(id);
+  if(a.wirk)a.wirk(S);
+  pruefeErfolg('ausbau');notiz(a.name+' angeschafft für '+euro(a.preis));
+  melde(a.name+' steht jetzt im Büro.');konfetti(30);sichern();zeichnen();
+ });
 }
 
 /* ── Tag und Woche ── */
@@ -2564,6 +2994,7 @@ function zeichnen(){
  werteZeichnen();szeneZeichnen();aktionenZeichnen();logZeichnen();
  kundenZeichnen();crmZeichnen();postfachZeichnen();teamZeichnen();
  koennenZeichnen();zahlenZeichnen();ausbautenZeichnen();luxusZeichnen();importZeigen();
+ dashZeichnen();
 }
 function werteZeichnen(){
  $('#werte').innerHTML=[
@@ -2770,7 +3201,10 @@ $('#btnStart').onclick=()=>{
  fenster('So läuft es',
   'Der Weg ist derselbe wie in echt: Gewerbe anmelden, auf der Karte Maklerbüros finden, sie am Telefon gewinnen. '
  +'Danach fordern Sie beim Kunden per E-Mail seine Kontakte an. Die landen in Ihrem CRM, dort rufen Sie sie an und qualifizieren sie. '
- +'Zum Schluss schicken Sie das Protokoll per E-Mail an den Makler — erst mit dieser Meldung wird abgerechnet.');
+ +'Zum Schluss schicken Sie das Protokoll per E-Mail an den Makler — erst mit dieser Meldung wird abgerechnet. '
+ +'Ihr Arbeitsplatz ist ein Schreibtisch in einer Marmorgarage — der Stellplatz daneben ist noch leer. '
+ +'Bezahlt wird alles mit Ihrer American Express: Karte ins Lesegerät stecken, PIN 1904 eingeben, Freigabe abwarten. '
+ +'Unter „Dashboard" sehen Sie jederzeit alles, was Sie bisher erreicht haben.');
 };
 $$('#reiter .rbtn').forEach(b=>b.onclick=()=>reiterZu(b.dataset.r));
 $('#btnThema').onclick=()=>themaSetzen(S.thema==='dark'?'light':'dark');
@@ -2784,7 +3218,12 @@ $('#ueberlage').onclick=e=>{if(e.target===$('#ueberlage'))$('#ueberlage').classL
 addEventListener('keydown',e=>{if(e.key==='Escape')$('#ueberlage').classList.remove('auf');});
 
 const alt=laden();
-if(alt&&alt.name){S=alt;themaSetzen(S.thema||'light');
+if(alt&&alt.name){S=alt;
+ /* Aeltere Spielstaende kannten weder Karte noch Marmorgarage. */
+ karteSichern();
+ S.luxus=S.luxus||[];
+ if(!S.luxus.includes('garage'))S.luxus.push('garage');
+ themaSetzen(S.thema||'light');
  if(S.ende)endeZeigen(); else {ansicht('spiel');zeichnen();}}
 else{document.documentElement.dataset.theme='light';
  $('#icoThema').innerHTML='<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
