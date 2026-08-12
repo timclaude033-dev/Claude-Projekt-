@@ -430,6 +430,26 @@ button{background:none;border:none;cursor:pointer}
 .pers-tipp{font-size:12.5px;color:var(--muted);margin-top:8px;padding:9px 12px;border-radius:9px;
   background:var(--flaeche-2);border-left:3px solid var(--gold)}
 
+/* ═══════ Lead-Prüfung ═══════ */
+.scanbalken{height:6px;background:var(--bg);border-radius:20px;overflow:hidden;margin-top:11px}
+.scanbalken i{display:block;height:100%;width:0;border-radius:20px;
+  background:linear-gradient(90deg,var(--grad-1),var(--gold));animation:scannen 1.4s var(--ez) forwards}
+@keyframes scannen{to{width:100%}}
+.mangel{display:inline-block;margin-top:5px;margin-right:5px;padding:2px 9px;border-radius:20px;
+  font-size:11.5px;font-weight:600;background:rgba(176,122,34,.15);color:var(--warn);cursor:help}
+.mangel.schwer{background:rgba(180,72,60,.15);color:var(--schlecht)}
+.mangel.ok{background:rgba(46,125,91,.13);color:var(--gut)}
+.crm-z.gewaehlt{border-color:var(--gut);background:rgba(46,125,91,.06)}
+.crm-z.raus{opacity:.5;border-style:dashed}
+
+/* ═══════ Garage ═══════ */
+.garagenfeld{border-radius:14px;overflow:hidden;border:1px solid var(--rand);
+  box-shadow:var(--schatten);margin-bottom:14px}
+.garagenfeld svg{display:block;width:100%;height:auto}
+
+/* Nachtmodus der Büroszene */
+.szene.nacht{box-shadow:0 0 0 2px rgba(185,138,46,.25),var(--schatten)}
+
 </style>
 </head>
 <body>
@@ -481,7 +501,9 @@ button{background:none;border:none;cursor:pointer}
     <button class="rbtn" data-r="kunden">Kunden</button>
     <button class="rbtn" data-r="crm">CRM</button>
     <button class="rbtn" data-r="post">Postfach <span class="zaehler" id="mailZahl" style="display:none">0</span></button>
+    <button class="rbtn" data-r="import">Lead-Prüfung</button>
     <button class="rbtn" data-r="ausbau">Büro ausbauen</button>
+    <button class="rbtn" data-r="privat">Anschaffungen</button>
     <button class="rbtn" data-r="team">Team</button>
     <button class="rbtn" data-r="koennen">Können</button>
     <button class="rbtn" data-r="trainer">Trainer</button>
@@ -527,6 +549,19 @@ button{background:none;border:none;cursor:pointer}
     <div class="karte karte-p">
       <h3 style="font-size:.95rem;margin-bottom:11px">Gesendet</h3>
       <div class="postfach" id="ausgang"></div></div>
+  </div>
+
+  <div id="r-import" class="rteil" hidden>
+    <div id="importInhalt"></div>
+  </div>
+
+  <div id="r-privat" class="rteil" hidden>
+    <div class="karte karte-p" style="margin-bottom:13px">
+      <h3 style="font-size:.95rem;margin-bottom:4px">Ihre Garage</h3>
+      <p style="font-size:13px;color:var(--muted)">Was Sie kaufen, steht hier. Auftreten wirkt auf Makler — der Rest ist Freude.</p>
+    </div>
+    <div class="garagenfeld" id="garage"></div>
+    <div class="karte karte-p"><div id="luxus"></div></div>
   </div>
 
   <div id="r-ausbau" class="rteil" hidden>
@@ -1060,6 +1095,9 @@ const ERFOLGE=[
  {id:'ausbau',name:'Eingerichtet',info:'Das Büro erweitert.'},
  {id:'halbzeit',name:'Halbzeit',info:'Die Hälfte des Ziels erreicht.'},
  {id:'ziel',name:'Angekommen',info:'190.000 € Umsatz erreicht.'},
+ {id:'luxus',name:'Etwas gegönnt',info:'Die erste private Anschaffung.'},
+ {id:'sauber',name:'Saubere Liste',info:'Eine Lieferung ohne einen einzigen Fehlgriff geprüft.'},
+ {id:'nachtarbeit',name:'Nachtschicht',info:'Nach Feierabend weitergearbeitet.'},
 ];
 const EREIGNISSE=[
  {t:'Ein zufriedener Makler empfiehlt Sie weiter.',w:0.1,wirk:S=>{neuerLead(S,true);return'Ein warmer Kontakt liegt im Radar.';}},
@@ -1092,7 +1130,8 @@ function neuerStand(name,grad){
   koennen:{eroeffnung:1,einwand:1,qualifizierung:1,abschluss:1},punkte:2,
   stat:{anrufeMakler:0,anrufeEig:0,kunden:0,termine:0,gemeldet:0,geplatzt:0,absagen:0,
         summePunkte:0,summeMax:0,perfekt:0,frei:0},
-  notizen:[],erfolge:[],log:[],thema:'light',ende:null,bonusAbschluss:0,kaffeeHeute:false};
+  notizen:[],erfolge:[],log:[],thema:'light',ende:null,bonusAbschluss:0,kaffeeHeute:false,
+  luxus:[],auftreten:0,nacht:false,uebermuedet:0,plaetze:2,importListe:null,crmFilter:'alle'};
 }
 function laden(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
 function sichern(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
@@ -1241,6 +1280,251 @@ function eigenBewerten(text,stufeId,d,persoenlichkeit){
 
  punkte=Math.max(-3,Math.min(4,Math.round(punkte/Math.max(1,moeglich)*4+(punkte<0?-1:0))));
  return {punkte,kriterien:ergebnis,abzuege,stil,moeglich};
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LEAD-PRÜFUNG BEIM IMPORT
+   Eine gelieferte Liste ist nie sauber. Wer alles ungeprueft ins CRM
+   schiebt, ruft Leute an, die nie eingewilligt haben -- und genau
+   daraus entstehen Beschwerden. Deshalb wird jeder Eintrag geprueft
+   und einzeln entschieden.
+   ═══════════════════════════════════════════════════════════════ */
+const MAENGEL=[
+ {id:'einwilligung',t:'Keine Einwilligung vermerkt',schwer:true,
+  erklaerung:'Ohne dokumentierte Einwilligung darf dieser Mensch nicht angerufen werden. § 7 UWG, bis 300.000 € Bußgeld.'},
+ {id:'gewerbe',t:'Gewerbeobjekt statt Privateigentümer',schwer:false,
+  erklaerung:'Passt nicht ins Angebot — hier geht es um Wohnimmobilien von Privatleuten.'},
+ {id:'dublette',t:'Dublette — steht schon im CRM',schwer:false,
+  erklaerung:'Doppelt anrufen wirkt unprofessionell und verbrennt den Kontakt.'},
+ {id:'nummer',t:'Telefonnummer unvollständig',schwer:false,
+  erklaerung:'Ohne vollständige Nummer ist der Kontakt wertlos. Beim Makler nachfordern.'},
+ {id:'alt',t:'Anfrage älter als zwei Jahre',schwer:false,
+  erklaerung:'Sehr alte Anfragen sind meist erledigt. Die Einwilligung ist ohnehin fraglich.'},
+ {id:'widerruf',t:'Kontakt hat Werbung widersprochen',schwer:true,
+  erklaerung:'Ein Widerspruch ist bindend. Ein Anruf hier ist ein klarer Rechtsverstoß.'},
+];
+
+function importVorbereiten(kunde,anzahl,guete){
+ const roh=[];
+ for(let i=0;i<anzahl;i++){
+  const l=neuerEigLead(kunde,guete);
+  /* Je schlechter die Anforderungsmail, desto mehr Maengel */
+  const fehlerWahrscheinlich=0.45-(guete||0.5)*0.3;
+  l.maengel=[];
+  MAENGEL.forEach(m=>{
+   const w=m.schwer?fehlerWahrscheinlich*0.45:fehlerWahrscheinlich*0.5;
+   if(Math.random()<w)l.maengel.push(m.id);
+  });
+  if(l.maengel.length>2)l.maengel=l.maengel.slice(0,2);
+  roh.push(l);
+ }
+ S.importListe={kundeId:kunde.id,leads:roh,geprueft:false,entscheidungen:{}};
+ sichern();
+}
+function importZeigen(){
+ const imp=S.importListe;
+ if(!imp||!imp.leads.length){
+  $('#importInhalt').innerHTML='<div class="karte karte-p"><p style="color:var(--muted)">Keine Liste zum Prüfen. Fordern Sie bei einem Kunden Kontakte an.</p></div>';
+  return;
+ }
+ const k=S.kunden.find(x=>x.id===imp.kundeId);
+ $('#importInhalt').innerHTML=`
+  <div class="karte karte-p" style="margin-bottom:13px">
+   <div class="kopfzeile" style="margin-bottom:6px"><h3>Liste von ${sicher(k?k.name:'')}</h3>
+    <span class="hin">${imp.leads.length} Einträge</span>
+    <div class="rechts">${imp.geprueft?'':'<button class="knopf knopf-voll knopf-klein" id="btnScan">Liste prüfen</button>'}</div></div>
+   <p style="font-size:13px;color:var(--muted)">${imp.geprueft
+     ?'Geprüft. Entscheiden Sie jetzt für jeden Eintrag: übernehmen oder aussortieren. Was Sie übernehmen, dürfen Sie anrufen — dafür stehen Sie gerade.'
+     :'Noch ungeprüft. Erst die Prüfung zeigt, welche Kontakte brauchbar sind.'}</p>
+   <div class="scanbalken" id="scanbalken" hidden><i></i></div>
+  </div>
+  <div class="liste" id="importListe"></div>
+  ${imp.geprueft?`<div class="massen" style="position:sticky;bottom:12px">
+    <span id="importStand"></span>
+    <button class="knopf knopf-linie knopf-klein" id="btnAlleGut">Alle sauberen übernehmen</button>
+    <button class="knopf knopf-voll knopf-klein" id="btnImportFertig">Übernahme abschließen</button></div>`:''}`;
+ importListeZeichnen();
+ if($('#btnScan'))$('#btnScan').onclick=importScannen;
+ if($('#btnAlleGut'))$('#btnAlleGut').onclick=()=>{
+  imp.leads.forEach(l=>{if(!l.maengel.length)imp.entscheidungen[l.id]='ja';});
+  sichern();importListeZeichnen();};
+ if($('#btnImportFertig'))$('#btnImportFertig').onclick=importAbschliessen;
+}
+function importListeZeichnen(){
+ const imp=S.importListe; if(!imp)return;
+ const el=$('#importListe'); if(!el)return;
+ el.innerHTML=imp.leads.map(l=>{
+  const e=imp.entscheidungen[l.id];
+  const maengel=imp.geprueft?l.maengel.map(id=>MAENGEL.find(m=>m.id===id)):[];
+  const schwer=maengel.some(m=>m.schwer);
+  return `<div class="crm-z ${e==='ja'?'gewaehlt':''} ${e==='nein'?'raus':''}">
+   <span class="haupt"><b>${sicher(l.name)}</b>
+    <span>${sicher(l.objekt)} · ${sicher(l.strasse)}, ${sicher(l.ort)} · Anfrage vom ${sicher(l.datum)}</span>
+    ${imp.geprueft?maengel.map(m=>`<span class="mangel ${m.schwer?'schwer':''}" title="${sicher(m.erklaerung)}">${sicher(m.t)}</span>`).join(''):''}
+    ${imp.geprueft&&!maengel.length?'<span class="mangel ok">keine Beanstandung</span>':''}
+   </span>
+   ${imp.geprueft?`<span style="display:flex;gap:6px">
+     <button class="knopf ${e==='ja'?'knopf-voll':'knopf-linie'} knopf-klein" data-ja="${l.id}">Übernehmen</button>
+     <button class="knopf ${e==='nein'?'knopf-weg':'knopf-linie'} knopf-klein" data-nein="${l.id}">Aussortieren</button>
+    </span>`:'<span class="pille p-grau">ungeprüft</span>'}
+  </div>`;}).join('');
+ $$('[data-ja]').forEach(b=>b.onclick=()=>{imp.entscheidungen[b.dataset.ja]='ja';sichern();importListeZeichnen();});
+ $$('[data-nein]').forEach(b=>b.onclick=()=>{imp.entscheidungen[b.dataset.nein]='nein';sichern();importListeZeichnen();});
+ const ja=Object.values(imp.entscheidungen).filter(x=>x==='ja').length;
+ const nein=Object.values(imp.entscheidungen).filter(x=>x==='nein').length;
+ if($('#importStand'))$('#importStand').textContent=ja+' übernehmen · '+nein+' aussortieren · '
+   +(imp.leads.length-ja-nein)+' offen';
+}
+function importScannen(){
+ const b=$('#scanbalken'); b.hidden=false;
+ $('#btnScan').disabled=true;
+ setTimeout(()=>{
+  S.importListe.geprueft=true; sichern(); importZeigen();
+  const schlecht=S.importListe.leads.filter(l=>l.maengel.length).length;
+  melde(schlecht?schlecht+' Einträge mit Beanstandung':'Liste ist sauber');
+ },1400);
+}
+function importAbschliessen(){
+ const imp=S.importListe;
+ const offen=imp.leads.filter(l=>!imp.entscheidungen[l.id]);
+ if(offen.length){melde('Noch '+offen.length+' Einträge ohne Entscheidung.');return;}
+ let uebernommen=0, fehler=0;
+ imp.leads.forEach(l=>{
+  if(imp.entscheidungen[l.id]!=='ja')return;
+  const schwer=l.maengel.some(id=>MAENGEL.find(m=>m.id===id).schwer);
+  if(schwer)fehler++;
+  delete l.maengel;
+  S.crm.push(l); uebernommen++;
+ });
+ const k=S.kunden.find(x=>x.id===imp.kundeId);
+ S.importListe=null;
+ pruefeErfolg('ersteliste');
+ if(fehler){
+  S.ruf=Math.max(0,S.ruf-fehler*7);
+  if(k)k.vertrauen=Math.max(0,(k.vertrauen||70)-fehler*5);
+  notiz(fehler+' Kontakte ohne Einwilligung übernommen — das rächt sich','schlecht');
+  fenster('Riskant übernommen',
+   'Sie haben '+fehler+' Kontakte ins CRM geholt, bei denen die Einwilligung fehlt oder widerrufen wurde. '
+  +'Wer diese Menschen anruft, riskiert eine Beschwerde und ein Bußgeld nach § 7 UWG — und der Makler haftet mit. '
+  +'Ihr Ruf hat gelitten.');
+ }else{
+  notiz(uebernommen+' Kontakte sauber ins CRM übernommen','gut');
+  S.ruf=Math.min(100,S.ruf+2);
+  melde(uebernommen+' Kontakte im CRM.');
+  konfetti(35);
+ }
+ sichern(); zeichnen(); reiterZu('crm');
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NACHTSCHICHT
+   Nachts erreicht man keine Privatleute -- und darf sie auch nicht
+   anrufen. Buerokram geht aber, und genau darum ist die Nacht im
+   Spiel fuer Recherche, Mails und Listenpflege da.
+   ═══════════════════════════════════════════════════════════════ */
+const NACHT_VERBOTEN=['maklerAnruf','crm'];
+function nachtschicht(){
+ if(S.nacht){melde('Sie sind bereits in der Nachtschicht.');return;}
+ if(S.energie>2){melde('Erst wenn der Tag aufgebraucht ist. Nachtschicht ist kein Ersatz für den Tag.');return;}
+ S.nacht=true;
+ S.energie=4;
+ S.uebermuedet=(S.uebermuedet||0)+1;
+ notiz('Nachtschicht eingelegt','');
+ fenster('Nachtschicht',
+  'Vier zusätzliche Energiepunkte. Telefonieren geht jetzt nicht: Privatleute erreichen Sie abends nicht mehr, '
+ +'und Werbeanrufe zur Unzeit sind ohnehin heikel. Was nachts geht, ist alles andere — Recherche auf der Karte, '
+ +'Listen prüfen, E-Mails schreiben, das Büro planen. Morgen fehlen Ihnen dafür zwei Energiepunkte.');
+ sichern(); zeichnen();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANSCHAFFUNGEN FÜRS LEBEN
+   Kein Selbstzweck: Auftreten wirkt auf Makler, und die Garage ist
+   die sichtbare Belohnung fuer eine Firma, die laeuft.
+   ═══════════════════════════════════════════════════════════════ */
+const LUXUS=[
+ {id:'uhr1',name:'Solide Automatikuhr',preis:900,art:'uhr',stufe:1,
+  info:'Unauffällig, aber gepflegt. Kleiner Zuschlag auf Ihr Auftreten.',wirk:S=>{S.auftreten=(S.auftreten||0)+2;}},
+ {id:'uhr2',name:'Chronograph',preis:4200,art:'uhr',stufe:2,
+  info:'Fällt auf, ohne aufzufallen.',wirk:S=>{S.auftreten=(S.auftreten||0)+4;}},
+ {id:'uhr3',name:'Sammlerstück',preis:16000,art:'uhr',stufe:3,
+  info:'Ein Gesprächsanlass für sich.',wirk:S=>{S.auftreten=(S.auftreten||0)+7;}},
+ {id:'auto1',name:'Gepflegter Kombi',preis:8500,art:'auto',stufe:1,
+  info:'Zuverlässig und unauffällig. Sie kommen überall pünktlich an.',wirk:S=>{S.auftreten=(S.auftreten||0)+3;}},
+ {id:'auto2',name:'Deutsche Limousine',preis:38000,art:'auto',stufe:2,
+  info:'Wer damit vorfährt, wird anders empfangen.',wirk:S=>{S.auftreten=(S.auftreten||0)+6;}},
+ {id:'auto3',name:'Sportwagen',preis:95000,art:'auto',stufe:3,
+  info:'Beeindruckt — und schreckt manche ab. Wirkt nicht bei jedem gleich.',wirk:S=>{S.auftreten=(S.auftreten||0)+8;}},
+ {id:'garage',name:'Marmorgarage',preis:26000,art:'garage',stufe:1,
+  info:'Der richtige Rahmen für die Sammlung. Reine Freude, kein Vorteil.'},
+ {id:'buero2',name:'Eigene Büroetage',preis:52000,art:'buero',stufe:1,
+  info:'Platz für vier Arbeitsplätze statt zwei.',wirk:S=>{S.plaetze=4;}},
+];
+function luxusZeichnen(){
+ const gruppen=[['uhr','Uhren'],['auto','Fahrzeuge'],['garage','Garage'],['buero','Räume']];
+ $('#luxus').innerHTML=gruppen.map(([art,titel])=>{
+  const stuecke=LUXUS.filter(l=>l.art===art);
+  return `<h4 style="font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px">${titel}</h4>
+   <div class="ausbauten">${stuecke.map(l=>{
+    const hat=S.luxus.includes(l.id);
+    return `<div class="ausbau ${hat?'hat':''}"><b>${sicher(l.name)}</b><p>${sicher(l.info)}</p>
+     ${hat?'<span class="pille p-gut">gekauft</span>'
+      :`<button class="knopf knopf-linie knopf-klein" data-lx="${l.id}" ${S.geld<l.preis?'disabled':''}>${euro(l.preis)}</button>`}</div>`;
+   }).join('')}</div>`;}).join('');
+ $$('[data-lx]').forEach(b=>b.onclick=()=>luxusKaufen(b.dataset.lx));
+ garageZeichnen();
+}
+function luxusKaufen(id){
+ const l=LUXUS.find(x=>x.id===id);
+ if(S.geld<l.preis){melde('Dafür reicht das Geld nicht.');return;}
+ if(!confirm(l.name+' für '+euro(l.preis)+' kaufen? Das Geld fehlt Ihnen dann für den Betrieb.'))return;
+ S.geld-=l.preis; S.luxus.push(id);
+ if(l.wirk)l.wirk(S);
+ pruefeErfolg('luxus');
+ notiz(l.name+' gekauft für '+euro(l.preis),'');
+ melde(l.name+' gehört Ihnen.'); konfetti(45); sichern(); zeichnen();
+}
+function garageZeichnen(){
+ const autos=LUXUS.filter(l=>l.art==='auto'&&S.luxus.includes(l.id));
+ const marmor=S.luxus.includes('garage');
+ $('#garage').innerHTML=`<svg viewBox="0 0 800 300" role="img" aria-label="Ihre Garage">
+  <defs><linearGradient id="marm" x1="0" y1="0" x2="1" y2="1">
+   <stop offset="0" stop-color="#eceff3"/><stop offset=".5" stop-color="#dfe4ea"/><stop offset="1" stop-color="#f4f6f9"/></linearGradient></defs>
+  <rect width="800" height="300" fill="${marmor?'#e7ebf0':'#1b2430'}"/>
+  <rect y="210" width="800" height="90" fill="${marmor?'url(#marm)':'#141c26'}"/>
+  ${marmor?'<g stroke="#cfd6df" stroke-width="1.2" opacity=".8"><path d="M0 240 Q200 228 420 246 T800 236"/><path d="M0 268 Q260 256 520 272 T800 262"/><path d="M120 210 L150 300"/><path d="M470 210 L510 300"/></g>':''}
+  <rect y="0" width="800" height="212" fill="${marmor?'#f2f4f7':'#202b39'}"/>
+  ${marmor?'<g stroke="#e2e7ee" stroke-width="1"><path d="M0 60 H800"/><path d="M0 130 H800"/><path d="M266 0 V212"/><path d="M533 0 V212"/></g>':''}
+  ${autos.length?autos.map((a,i)=>autoSvg(a.stufe,90+i*230,180)).join('')
+   :`<text x="400" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="14"
+      fill="${marmor?'#8792a3':'#4a5a70'}">Noch keine Fahrzeuge. Erst das Geschäft, dann die Garage.</text>`}
+  ${!marmor?'<text x="400" y="286" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" fill="#4a5a70">Einfache Garage — eine Marmorgarage gibt es unter Anschaffungen.</text>':''}
+ </svg>`;
+}
+function autoSvg(stufe,x,y){
+ const farben=['#4a6484','#1f2b3d','#8c2f2f'];
+ const f=farben[stufe-1];
+ if(stufe===3)return `<g transform="translate(${x},${y})">
+   <ellipse cx="90" cy="72" rx="96" ry="12" fill="#000" opacity=".25"/>
+   <path d="M8 58 Q26 26 78 22 L118 22 Q158 26 176 58 Z" fill="${f}"/>
+   <path d="M40 40 Q62 30 92 30 L112 30 Q132 34 146 46 L40 46 Z" fill="#cfe0f0" opacity=".85"/>
+   <rect x="6" y="52" width="176" height="16" rx="7" fill="${f}"/>
+   <circle cx="46" cy="68" r="15" fill="#141a22"/><circle cx="46" cy="68" r="6" fill="#93a2b5"/>
+   <circle cx="140" cy="68" r="15" fill="#141a22"/><circle cx="140" cy="68" r="6" fill="#93a2b5"/></g>`;
+ if(stufe===2)return `<g transform="translate(${x},${y})">
+   <ellipse cx="90" cy="74" rx="92" ry="11" fill="#000" opacity=".25"/>
+   <path d="M12 56 Q22 22 66 18 L120 18 Q160 22 172 56 Z" fill="${f}"/>
+   <path d="M38 36 Q52 26 74 26 L116 26 Q138 30 150 44 L38 44 Z" fill="#c7d9ec" opacity=".85"/>
+   <rect x="10" y="50" width="164" height="18" rx="6" fill="${f}"/>
+   <circle cx="48" cy="70" r="15" fill="#141a22"/><circle cx="48" cy="70" r="6" fill="#9aa8ba"/>
+   <circle cx="136" cy="70" r="15" fill="#141a22"/><circle cx="136" cy="70" r="6" fill="#9aa8ba"/></g>`;
+ return `<g transform="translate(${x},${y})">
+   <ellipse cx="88" cy="74" rx="88" ry="11" fill="#000" opacity=".22"/>
+   <path d="M16 52 Q24 18 62 14 L124 14 Q158 18 166 52 Z" fill="${f}"/>
+   <path d="M40 32 Q50 24 70 24 L118 24 Q136 28 146 40 L40 40 Z" fill="#cbdbe9" opacity=".85"/>
+   <rect x="14" y="48" width="156" height="18" rx="5" fill="${f}"/>
+   <circle cx="50" cy="70" r="14" fill="#141a22"/><circle cx="50" cy="70" r="6" fill="#9aa8ba"/>
+   <circle cx="134" cy="70" r="14" fill="#141a22"/><circle cx="134" cy="70" r="6" fill="#9aa8ba"/></g>`;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1419,11 +1703,12 @@ function lieferungenPruefen(){
   if(k.angefordert&&k.lieferAm&&k.lieferAm<=heute&&!k.geliefert){
    k.geliefert=true;
    const n=k.lieferMenge;
-   for(let i=0;i<n;i++)S.crm.push(neuerEigLead(k,k.lieferGuete));
+   /* Die Liste geht nicht ungeprueft ins CRM -- erst durch die Pruefung */
+   importVorbereiten(k,n,k.lieferGuete);
    mailAnlegen({von:k.nach+' · '+k.name,betreff:'Ihre Liste',
-    text:'Anbei '+n+' Kontakte. Alle haben bei uns angefragt und einem Rückruf zugestimmt.',
+    text:'Anbei '+n+' Kontakte aus unserem Bestand. Bitte prüfen Sie sie vor der Kontaktaufnahme.',
     art:'lieferung',anzahl:n});
-   notiz(n+' Kontakte von '+k.name+' erhalten','gut');
+   notiz(n+' Kontakte von '+k.name+' erhalten — bitte prüfen','gut');
   }
  });
 }
@@ -1449,10 +1734,12 @@ function neuerEigLead(kunde,guete){
    ═══════════════════════════════════════════════════════════════ */
 const HIMMEL=[['#7FA8D4','#CBDCEF'],['#8FB4DA','#D6E4F2'],['#A8C4E0','#E2ECF6'],
               ['#D9A87C','#F0D5BA'],['#3E5578','#8A6E8C']];
+const NACHTHIMMEL=['#0b1424','#16233b'];
 function hat(id){return S.ausbauten&&S.ausbauten.includes(id);}
 
 function bueroSvg(){
- const h=HIMMEL[Math.min(4,S.tag-1)];
+ const nacht=!!S.nacht;
+ const h=nacht?NACHTHIMMEL:HIMMEL[Math.min(4,S.tag-1)];
  const leadsDa=S.leads.length>0&&S.gewerbe;
  const team=S.team.length;
  return `<svg viewBox="0 0 800 380" role="img" aria-label="Ihr Büro">
@@ -1478,8 +1765,12 @@ function bueroSvg(){
     <rect x="146" y="140" width="22" height="50"/><rect x="176" y="116" width="38" height="74"/>
     <rect x="222" y="134" width="28" height="56"/><rect x="256" y="120" width="26" height="70"/>
    </g>
-   ${S.tag>=5?'<circle cx="245" cy="72" r="13" fill="#F3E3B0" opacity=".9"/>':
-     '<circle cx="245" cy="72" r="15" fill="#FFF3C4" opacity=".8"/>'}
+   ${nacht?`<circle cx="240" cy="70" r="11" fill="#EDF2FA" opacity=".85"/>
+     <circle cx="234" cy="66" r="9" fill="${h[0]}"/>
+     <g fill="#fff" opacity=".8"><circle cx="95" cy="62" r="1.4"/><circle cx="132" cy="88" r="1.1"/>
+      <circle cx="168" cy="58" r="1.3"/><circle cx="206" cy="96" r="1"/><circle cx="272" cy="74" r="1.2"/></g>`
+    :(S.tag>=5?'<circle cx="245" cy="72" r="13" fill="#F3E3B0" opacity=".9"/>'
+     :'<circle cx="245" cy="72" r="15" fill="#FFF3C4" opacity=".8"/>')}
    <rect x="60" y="40" width="230" height="150" rx="5" fill="none" stroke="#2c3d55" stroke-width="6"/>
    <line x1="175" y1="40" x2="175" y2="190" stroke="#2c3d55" stroke-width="5"/>
    <line x1="60" y1="115" x2="290" y2="115" stroke="#2c3d55" stroke-width="5"/>
@@ -1543,7 +1834,14 @@ function bueroSvg(){
    <ellipse cx="724" cy="234" rx="14" ry="10" fill="#357049"/>
    <ellipse cx="706" cy="222" rx="12" ry="14" fill="#3f8a5b"/></g>`:''}
 
-  <!-- Sie am Schreibtisch -->
+  ${nacht?`<g>
+   <path d="M596 232 L612 232 L610 176 L598 176 Z" fill="#26344a"/>
+   <path d="M580 172 L628 172 L618 150 L590 150 Z" fill="#2f4059"/>
+   <ellipse cx="604" cy="176" rx="9" ry="4" fill="#FFE9A8"/>
+   <path d="M540 236 L668 236 L700 300 L508 300 Z" fill="#FFE9A8" opacity=".10"/>
+  </g>`:''}
+
+ <!-- Sie am Schreibtisch -->
   <g>
    <ellipse cx="470" cy="330" rx="42" ry="14" fill="#0a1018" opacity=".5"/>
    <rect x="450" y="286" width="40" height="34" rx="12" fill="#35577D"/>
@@ -1724,6 +2022,15 @@ function formularPruefen(){
    GESPRÄCHSSTEUERUNG mit Varianten, Persönlichkeit und Freitext
    ═══════════════════════════════════════════════════════════════ */
 let uhrLauf=null;
+
+/* Antwortmoeglichkeiten mischen. Ohne das steht die beste Antwort
+   immer an derselben Stelle -- dann trainiert man Klickpositionen
+   statt Formulierungen. Fisher-Yates auf einer Kopie. */
+function mischen(liste){
+ const a=liste.slice();
+ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+ return a;
+}
 function fuelle(text,d){
  return String(text)
   .replace(/\{ich\}/g,S.name).replace(/\{name\}/g,d.name||'')
@@ -1805,6 +2112,7 @@ function stufeZeigen(){
  if(st.einwand){const e=zufall(EINWAENDE);wahlen=e.wahl;sagt=e.text;frageText='Wie antworten Sie?';}
  else if(st.einwandEig){const e=zufall(EINWAENDE_EIG);wahlen=e.wahl;sagt=e.text;frageText='Wie antworten Sie?';}
  else {wahlen=st.v.wahl;sagt=st.v.sagt;frageText=st.v.frage;}
+ wahlen=mischen(wahlen);
  G.aktWahlen=wahlen;
  G.max+=Math.max(...wahlen.map(w=>w.p));
  if(sagt)blase(G.art==='makler'?G.d.name:G.d.eigname,fuelle(sagt,G.d));
@@ -2024,6 +2332,7 @@ const HOTSPOTS={
  feierabend:()=>tagBeenden(),
 };
 function szeneZeichnen(){
+ $('#szene').classList.toggle('nacht',!!S.nacht);
  $('#szene').innerHTML=bueroSvg();
  $$('#szene .hotspot').forEach(h=>{h.onclick=()=>{const f=HOTSPOTS[h.dataset.hs];if(f)f();};});
 }
@@ -2036,8 +2345,13 @@ function aktionenZeichnen(){
  a.push({id:'maklerAnruf',n:'Makler anrufen',i:S.leads.length+' Büros im Radar.',e:2,aus:!S.gewerbe||!S.leads.length});
  a.push({id:'crm',n:'Lead vorqualifizieren',i:offen+' Kontakte warten im CRM.',e:2,aus:offen===0});
  if(zuMelden)a.push({id:'melden',n:'Termine melden',i:zuMelden+' Protokolle noch nicht verschickt.',e:0});
+ if(S.importListe)a.push({id:'import',n:'Gelieferte Liste prüfen',
+   i:S.importListe.leads.length+' Kontakte warten auf Ihre Prüfung.',e:1});
  a.push({id:'weiterbildung',n:'Trainieren',i:'Gibt einen Fähigkeitspunkt.',e:3});
- a.push({id:'__tag',n:'Feierabend',i:'Tag beenden. Ihr Team arbeitet weiter.',e:0});
+ if(!S.nacht&&S.energie<=2)a.push({id:'nacht',n:'Nachtschicht einlegen',
+   i:'Vier Energiepunkte extra — aber telefonieren geht nachts nicht.',e:0});
+ a.push({id:'__tag',n:S.nacht?'Endlich Feierabend':'Feierabend',
+   i:'Tag beenden. Ihr Team arbeitet weiter.',e:0});
  $('#aktionen').innerHTML=a.map(x=>{
   const aus=x.aus||S.energie<x.e;
   return `<button class="aktion" data-a="${x.id}" ${aus?'disabled':''}>
@@ -2045,7 +2359,13 @@ function aktionenZeichnen(){
  $$('#aktionen [data-a]').forEach(b=>b.onclick=()=>aktion(b.dataset.a));
 }
 function aktion(id){
+ /* Nachts wird nicht telefoniert -- Privatleute erreicht man nicht,
+    und Werbeanrufe zur Unzeit sind ohnehin heikel. */
+ if(S.nacht&&NACHT_VERBOTEN.includes(id)){
+  melde('Nachts wird nicht telefoniert. Recherche, Listen und E-Mails gehen aber.');return;}
  if(id==='__tag')return tagBeenden();
+ if(id==='nacht')return nachtschicht();
+ if(id==='import')return reiterZu('import');
  if(id==='gewerbe')return formularZeigen();
  if(id==='karte')return reiterZu('karte');
  if(id==='crm')return reiterZu('crm');
@@ -2064,6 +2384,7 @@ function aktion(id){
  }
 }
 function leadAnrufen(id){
+ if(S.nacht){melde('Nachts rufen Sie keine Privatleute an.');return;}
  const l=S.crm.find(x=>x.id===id);
  if(!l||l.status!=='neu')return;
  if(S.energie<2){melde('Zu wenig Energie für ein Gespräch.');return;}
@@ -2188,7 +2509,11 @@ function tagBeenden(){
  });
  S.tag++;S.kaffeeHeute=false;
  if(S.tag>5){S.tag=1;S.woche++;wocheAbschliessen();}
- S.energie=Math.max(3,S.maxEnergie-(S.energieMalus||0));
+ /* Nachtschicht rächt sich am Folgetag */
+ const muede=S.nacht?2:0;
+ S.nacht=false;
+ S.energie=Math.max(3,S.maxEnergie-(S.energieMalus||0)-muede);
+ if(muede)notiz('Übermüdet vom Vortag — zwei Energiepunkte weniger','schlecht');
  lieferungenPruefen();
  if(S.woche>WOCHEN&&!S.ende)S.ende='zeit';
  sichern();
@@ -2238,7 +2563,7 @@ function koennenSteigern(id){
 function zeichnen(){
  werteZeichnen();szeneZeichnen();aktionenZeichnen();logZeichnen();
  kundenZeichnen();crmZeichnen();postfachZeichnen();teamZeichnen();
- koennenZeichnen();zahlenZeichnen();ausbautenZeichnen();
+ koennenZeichnen();zahlenZeichnen();ausbautenZeichnen();luxusZeichnen();importZeigen();
 }
 function werteZeichnen(){
  $('#werte').innerHTML=[
@@ -2246,6 +2571,8 @@ function werteZeichnen(){
   ['Energie',S.energie+' / '+S.maxEnergie],
   ['Konto',euro(S.geld),S.geld<400?'warnung':'geld'],
   ['Umsatz',euro(S.umsatz)],['Ruf',S.ruf+' %',S.ruf<50?'warnung':''],
+  ['Auftreten',(S.auftreten||0)+' Pkt'],
+  [S.nacht?'Tageszeit':'Tageszeit',S.nacht?'Nacht':'Tag',S.nacht?'warnung':''],
  ].map(([t,w,k])=>`<div class="wert ${k||''}"><div class="t">${t}</div>
    <div class="w tab-zahl">${sicher(w)}</div></div>`).join('');
  const anteil=Math.min(100,S.umsatz/ZIEL*100);
@@ -2364,7 +2691,7 @@ function bezirkScannen(id){
 let T=null;
 function trainerZeigen(){
  if(!T){$('#trainerBereich').innerHTML='<button class="knopf knopf-voll" id="tStart">Zehn Einwände starten</button>';
-  $('#tStart').onclick=()=>{T={i:0,punkte:0,max:0,liste:Array.from({length:10},()=>zufall(EINWAENDE.concat(EINWAENDE_EIG)))};trainerZeigen();};return;}
+  $('#tStart').onclick=()=>{T={i:0,punkte:0,max:0,liste:Array.from({length:10},()=>({...zufall(EINWAENDE.concat(EINWAENDE_EIG))}))};trainerZeigen();};return;}
  if(T.i>=T.liste.length){
   const q=Math.round(T.punkte/T.max*100);
   $('#trainerBereich').innerHTML=`<div class="auswert"><div class="note">${q} %</div>
@@ -2374,14 +2701,15 @@ function trainerZeigen(){
    <button class="knopf knopf-voll" id="tNeu" style="margin-top:16px">Nochmal</button></div>`;
   $('#tNeu').onclick=()=>{T=null;trainerZeigen();};return;}
  const e=T.liste[T.i];
- const beste=Math.max(...e.wahl.map(w=>w.p));T.max+=beste;
+ if(!e.gemischt)e.gemischt=mischen(e.wahl);   /* auch hier mischen */
+ const beste=Math.max(...e.gemischt.map(w=>w.p));T.max+=beste;
  const d={maklername:'Berger',buero:'Muster Immobilien',datum:'12.3.'};
  $('#trainerBereich').innerHTML=`<p style="font-size:12px;color:var(--muted)">Einwand ${T.i+1} von 10</p>
   <div class="blase" style="margin-top:9px">${sicher(fuelle(e.text,d))}</div>
-  <div class="wahlen" style="margin-top:12px">${e.wahl.map((w,i)=>
+  <div class="wahlen" style="margin-top:12px">${e.gemischt.map((w,i)=>
    `<button class="wahl" data-t="${i}">${sicher(fuelle(w.t,d))}</button>`).join('')}</div><div id="tRueck"></div>`;
  $$('[data-t]').forEach(b=>b.onclick=()=>{
-  const w=e.wahl[Number(b.dataset.t)];
+  const w=e.gemischt[Number(b.dataset.t)];
   T.punkte+=Math.max(0,w.p);
   $$('[data-t]').forEach((x,k)=>{x.disabled=true;if(k===Number(b.dataset.t))x.classList.add(w.p>0?'gut':'schlecht');});
   $('#tRueck').innerHTML=`<div class="rueck ${w.p>=beste?'gut':(w.p<=0?'schlecht':'')}">
