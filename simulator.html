@@ -584,6 +584,73 @@ button{background:none;border:none;cursor:pointer}
 @media(max-width:560px){.gutschrift{right:10px;left:10px;bottom:10px;width:auto}
   .gs-karte{display:none}}
 
+/* ═══════ Mitarbeiter und Tagesabrechnung ═══════ */
+.crm-z.anklickbar{cursor:pointer}
+.crm-z .ohne{color:var(--warn);font-weight:600}
+
+.ma{text-align:left}
+.ma-kopf{display:flex;align-items:center;gap:13px;padding-bottom:14px;margin-bottom:14px;
+  border-bottom:1px solid var(--rand)}
+.ma-av{width:46px;height:46px;flex:none;border-radius:13px;display:flex;align-items:center;
+  justify-content:center;font-family:var(--head);font-weight:700;color:#fff;font-size:15px;
+  background:linear-gradient(150deg,var(--grad-1),var(--grad-2))}
+.ma-kopf b{display:block;font-family:var(--head);font-size:1.05rem;color:var(--ink)}
+.ma-kopf span{display:block;font-size:12.5px;color:var(--muted)}
+.ma-werte{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px;margin-bottom:14px}
+.ma-werte div{background:var(--flaeche-2);border-radius:10px;padding:10px 12px;min-width:0}
+.ma-werte span{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.ma-werte b{display:block;font-family:var(--head);font-size:1.1rem;color:var(--ink);margin-top:3px;
+  font-variant-numeric:tabular-nums}
+.ma-werte b.warn{color:var(--warn)}
+.ma-bilanz{padding:12px 14px;border-radius:11px;border:1px dashed var(--rand);margin-bottom:16px}
+.ma-h{font-size:.92rem;font-family:var(--head);color:var(--ink);margin-bottom:5px}
+.ma-p{font-size:13px;color:var(--muted);margin-bottom:11px}
+.ma-liste{display:grid;gap:7px;max-height:230px;overflow-y:auto}
+.ma-k{text-align:left;padding:11px 13px;border:1.4px solid var(--rand);border-radius:11px;
+  background:var(--flaeche);transition:border-color .16s,background .16s}
+.ma-k:hover{border-color:var(--grad-1)}
+.ma-k.on{border-color:var(--gut);background:rgba(46,125,91,.07)}
+.ma-k b{display:block;font-size:14px;color:var(--ink)}
+.ma-k span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.ma-fuss{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+
+.abr{text-align:left}
+.abr-kopf{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;
+  padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--rand)}
+.abr-kopf b{font-family:var(--head);font-size:1.15rem;color:var(--ink)}
+.abr-kopf span{display:block;font-size:12.5px;color:var(--muted)}
+.abr-summe{margin-left:auto;text-align:right}
+.abr-summe span{font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.abr-summe b{font-size:1.4rem;color:var(--gut)}
+.abr-t{width:100%;border-collapse:collapse;font-size:13px}
+.abr-t th{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;text-align:left;padding:0 8px 8px;border-bottom:1px solid var(--rand)}
+.abr-t td{padding:9px 8px;border-bottom:1px solid var(--rand);vertical-align:top;color:var(--muted)}
+.abr-t td b{color:var(--ink)}
+.abr-t td small{display:block;font-size:11.5px;color:var(--muted)}
+.abr-t .r{text-align:right}
+.abr-t tfoot td{border-bottom:none;border-top:2px solid var(--rand);color:var(--ink);font-weight:600}
+.abr-offen{margin-top:14px;padding:13px 15px;border-radius:11px;background:var(--flaeche-2)}
+.abr-z{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:3px 0;font-size:13.5px}
+.abr-z span{color:var(--muted)}
+.abr-z b{color:var(--ink);font-variant-numeric:tabular-nums}
+.abr-z.klein{font-size:12.5px}
+.abr-hin{font-size:12.5px;color:var(--muted);margin-top:9px;padding-top:9px;border-top:1px solid var(--rand)}
+.abr-fuss{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+@media(max-width:560px){
+ .abr-t thead{display:none}
+ .abr-t tr{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 0;
+   border-bottom:1px solid var(--rand)}
+ .abr-t td{border:none;padding:1px 0}
+ .abr-t td.r{text-align:right}
+ .abr-t tfoot td{border:none}
+}
+
+/* Lange Fenster (Abrechnung, Mitarbeiterkarte) muessen scrollen
+   koennen, sonst steht der Knopf unten ausserhalb des Bildschirms. */
+.fenster{max-height:calc(100vh - 34px);max-height:calc(100dvh - 34px);overflow-y:auto}
+.fenster:has(.abr){max-width:660px}
+
 </style>
 </head>
 <body>
@@ -2677,6 +2744,227 @@ function gespraechEnde(){
  sichern();
 }
 /* ═══════════════════════════════════════════════════════════════
+   MITARBEITER, ZUWEISUNG UND TAGESABRECHNUNG
+   Ein Mitarbeiter arbeitet nicht ins Blaue: Sie weisen ihm einen
+   Makler zu, und er telefoniert dessen Kontakte ab. Was dabei
+   herauskommt, geht als Umsatz auf Ihr Konto -- er bekommt 10 € je
+   gemeldetem Termin. Diese Provision steht am Abend offen und wird
+   mit der Karte ausgezahlt. Wer sie liegen laesst, merkt das an der
+   Laune und damit an der Trefferquote.
+   ═══════════════════════════════════════════════════════════════ */
+const PROVISION_MA=10;
+
+function maTrefferquote(m){
+ const laune=m.laune==null?100:m.laune;
+ /* Unter 100 Laune sinkt die Quote spuerbar, aber nie unter ein Drittel. */
+ return Math.max(0.10,(0.26+m.koennen*0.09)*(0.5+laune/200));
+}
+function maKapazitaet(m){return 2+m.koennen;}
+function maSichern(m){
+ if(m.laune==null)m.laune=100;
+ if(m.offen==null)m.offen=0;
+ if(!m.gesamt)m.gesamt={termine:0,umsatz:0,provision:0};
+ if(m.maklerId===undefined)m.maklerId=null;
+ return m;
+}
+
+/* ── Ein Arbeitstag eines Mitarbeiters ── */
+function mitarbeiterTag(m){
+ maSichern(m);
+ m.heute={termine:0,umsatz:0,provision:0,versuche:0};
+ if(!m.maklerId){
+  notiz(m.name+' hatte nichts zu tun — kein Makler zugewiesen','schlecht');
+  return;
+ }
+ const k=S.kunden.find(x=>x.id===m.maklerId);
+ if(!k){
+  m.maklerId=null;
+  notiz(m.name+' hat keinen Kunden mehr — bitte neu zuweisen','schlecht');
+  return;
+ }
+ const offen=S.crm.filter(l=>l.maklerId===k.id&&l.status==='neu');
+ if(!offen.length){
+  notiz(m.name+' hat bei '+k.name+' keine offenen Kontakte mehr','');
+  return;
+ }
+ const quote=maTrefferquote(m);
+ offen.slice(0,maKapazitaet(m)).forEach(l=>{
+  m.heute.versuche++;
+  S.stat.anrufeEig++;
+  if(Math.random()>=quote){l.status='abgelehnt';S.stat.geplatzt++;return;}
+  /* Termin steht — und wird sofort gemeldet, samt Abrechnung. */
+  l.status='gemeldet'; l.meldeWoche=S.woche;
+  l.termin='Mittwoch, 15:00 Uhr';
+  l.einschaetzung=zufall(EINSCHAETZUNGEN);
+  l.durch=m.name;
+  S.stat.termine++; S.stat.gemeldet++;
+  let ein=0;
+  if(k.gratis<GRATIS_JE_KUNDE){k.gratis++;}
+  else{
+   const honorar=l.art==='verkauf'?PREIS_VERK:PREIS_KAUF;
+   einnahme(S,honorar,'Termin für '+k.name+' (durch '+m.name+')');
+   ein+=honorar;
+  }
+  const bet=erfolgsbeteiligung(l);
+  if(bet>0){einnahme(S,bet,'5 % Beteiligung · '+l.objekt);ein+=bet;}
+  m.heute.umsatz+=ein;
+  m.heute.termine++;
+  m.heute.provision+=PROVISION_MA;
+  m.offen+=PROVISION_MA;
+  m.gesamt.termine++; m.gesamt.umsatz+=ein; m.gesamt.provision+=PROVISION_MA;
+  S.mails.ausgang.unshift({an:k.name,betreff:'Qualifizierter Termin: '+l.name,
+   woche:S.woche,tag:S.tag});
+  k.vertrauen=Math.min(100,(k.vertrauen||70)+2);
+ });
+ if(m.heute.termine){
+  notiz(m.name+' hat '+m.heute.termine+' Termin'+(m.heute.termine>1?'e':'')
+   +' bei '+k.name+' gemeldet — '+euro(m.heute.umsatz)+' Umsatz','gut');
+ }else{
+  notiz(m.name+' hat bei '+k.name+' keinen Termin bekommen','');
+ }
+}
+
+/* ── Tagesabrechnung ── */
+function abrechnungOffen(){
+ return S.team.filter(m=>(m.offen||0)>0);
+}
+function abrechnungZeigen(){
+ const offen=abrechnungOffen();
+ const heute=S.team.filter(m=>m.heute&&m.heute.versuche);
+ if(!offen.length&&!heute.length)return false;
+ const summe=offen.reduce((a,m)=>a+m.offen,0);
+ const umsatzHeute=heute.reduce((a,m)=>a+m.heute.umsatz,0);
+ const termineHeute=heute.reduce((a,m)=>a+m.heute.termine,0);
+ $('#fenster').innerHTML=`<div class="abr">
+  <div class="abr-kopf">
+   <div><b>Tagesabrechnung</b><span>Woche ${S.woche} · Tag ${S.tag}</span></div>
+   <div class="abr-summe"><span>Ihr Umsatz durch das Team</span>
+    <b class="tab-zahl">${euro(umsatzHeute)}</b></div>
+  </div>
+  <table class="abr-t">
+   <thead><tr><th>Mitarbeiter</th><th>Makler</th><th class="r">Termine</th>
+    <th class="r">Umsatz für Sie</th><th class="r">Provision</th></tr></thead>
+   <tbody>${S.team.map(m=>{
+    const k=S.kunden.find(x=>x.id===m.maklerId);
+    const h=m.heute||{termine:0,umsatz:0,provision:0};
+    return `<tr><td><b>${sicher(m.name)}</b><small>Laune ${Math.round(m.laune==null?100:m.laune)} %</small></td>
+     <td>${k?sicher(k.name):'<i>nicht zugewiesen</i>'}</td>
+     <td class="r tab-zahl">${h.termine}</td>
+     <td class="r tab-zahl">${euro(h.umsatz)}</td>
+     <td class="r tab-zahl">${h.termine} × ${euro(PROVISION_MA)} = <b>${euro(h.provision)}</b></td></tr>`;
+   }).join('')}</tbody>
+   <tfoot><tr><td colspan="2">Summe</td><td class="r tab-zahl">${termineHeute}</td>
+    <td class="r tab-zahl">${euro(umsatzHeute)}</td>
+    <td class="r tab-zahl">${euro(heute.reduce((a,m)=>a+m.heute.provision,0))}</td></tr></tfoot>
+  </table>
+  ${offen.length?`<div class="abr-offen">
+    <div class="abr-z"><span>Offene Provision insgesamt</span><b class="tab-zahl">${euro(summe)}</b></div>
+    ${offen.filter(m=>m.offen>(m.heute?m.heute.provision:0)).map(m=>
+      `<div class="abr-z klein"><span>${sicher(m.name)} — davon aus Vortagen</span>
+       <b class="tab-zahl">${euro(m.offen-(m.heute?m.heute.provision:0))}</b></div>`).join('')}
+    <p class="abr-hin">Ausgezahlt wird mit Ihrer Karte. Wer auf sein Geld wartet, arbeitet schlechter —
+      jeder Tag ohne Auszahlung kostet Laune und damit Trefferquote.</p>
+   </div>
+   <div class="abr-fuss">
+    <button class="knopf knopf-linie" id="abrSpaeter">Später</button>
+    <button class="knopf knopf-voll" id="abrZahlen" style="flex:1"${S.geld<summe?' disabled':''}>
+     ${S.geld<summe?'Zu wenig auf dem Konto':'Mit Karte auszahlen · '+euro(summe)}</button>
+   </div>`
+  :`<div class="abr-fuss"><button class="knopf knopf-voll" id="abrSpaeter" style="flex:1">Schließen</button></div>`}
+ </div>`;
+ $('#ueberlage').classList.add('auf');
+ if($('#abrSpaeter'))$('#abrSpaeter').onclick=()=>$('#ueberlage').classList.remove('auf');
+ if($('#abrZahlen'))$('#abrZahlen').onclick=()=>provisionAuszahlen();
+ return true;
+}
+function provisionAuszahlen(){
+ const offen=abrechnungOffen();
+ const summe=offen.reduce((a,m)=>a+m.offen,0);
+ if(!summe){melde('Nichts offen.');return;}
+ if(S.geld<summe){melde('Dafür reicht das Konto nicht.');return;}
+ bezahlen('Provisionen '+offen.length+' Mitarbeiter',summe,()=>{
+  S.geld-=summe;
+  offen.forEach(m=>{
+   m.offen=0; m.unbezahlt=0;
+   m.laune=Math.min(100,(m.laune==null?100:m.laune)+6);
+  });
+  notiz('Provisionen ausgezahlt: '+euro(summe),'geld');
+  melde('Team ist bezahlt.');
+  sichern(); zeichnen();
+ });
+}
+/* Am Morgen: was gestern offen blieb, druecken wir nicht weg. */
+function provisionNachhalten(){
+ S.team.forEach(m=>{
+  maSichern(m);
+  if(m.offen>0){
+   m.unbezahlt=(m.unbezahlt||0)+1;
+   m.laune=Math.max(20,m.laune-10);
+   if(m.unbezahlt===1)notiz(m.name+' wartet auf seine Provision','schlecht');
+   else notiz(m.name+' wartet seit '+m.unbezahlt+' Tagen auf sein Geld — die Laune sinkt','schlecht');
+  }
+ });
+}
+
+/* ── Mitarbeiterkarte ── */
+function mitarbeiterZeigen(id){
+ const m=maSichern(S.team.find(x=>x.id===id)); if(!m)return;
+ const k=S.kunden.find(x=>x.id===m.maklerId);
+ const g=m.gesamt;
+ $('#fenster').innerHTML=`<div class="ma">
+  <div class="ma-kopf">
+   <div class="ma-av">${sicher(m.name.split(' ').map(t=>t[0]).join('').slice(0,2))}</div>
+   <div><b>${sicher(m.name)}</b><span>Stufe ${m.koennen} von 3 · ${euro(m.gehalt)} im Monat</span></div>
+  </div>
+  <div class="ma-werte">
+   <div><span>Trefferquote</span><b>${Math.round(maTrefferquote(m)*100)} %</b></div>
+   <div><span>Kontakte je Tag</span><b>${maKapazitaet(m)}</b></div>
+   <div><span>Laune</span><b>${Math.round(m.laune)} %</b></div>
+   <div><span>Offene Provision</span><b class="${m.offen>0?'warn':''}">${euro(m.offen)}</b></div>
+  </div>
+  <div class="ma-bilanz">
+   <div class="abr-z"><span>Termine insgesamt</span><b>${g.termine}</b></div>
+   <div class="abr-z"><span>Umsatz für Sie</span><b>${euro(g.umsatz)}</b></div>
+   <div class="abr-z"><span>Provision insgesamt</span><b>${euro(g.provision)}</b></div>
+  </div>
+  <h4 class="ma-h">Makler zuweisen</h4>
+  <p class="ma-p">Er telefoniert jeden Arbeitstag bis zu ${maKapazitaet(m)} Kontakte dieses Maklers ab,
+   meldet die Termine selbst und bekommt ${euro(PROVISION_MA)} je gemeldetem Termin.
+   Der Umsatz geht auf Ihr Konto.</p>
+  <div class="ma-liste">${S.kunden.map(x=>{
+    const frei=S.crm.filter(l=>l.maklerId===x.id&&l.status==='neu').length;
+    const belegt=S.team.find(t=>t.id!==m.id&&t.maklerId===x.id);
+    return `<button class="ma-k ${x.id===m.maklerId?'on':''}" data-zu="${x.id}">
+     <b>${sicher(x.name)}</b>
+     <span>${frei===1?'1 offener Kontakt':frei+' offene Kontakte'}${
+       belegt?' · betreut von '+sicher(belegt.name):''}</span></button>`;
+   }).join('')||'<p class="ma-p">Noch keine Kunden. Gewinnen Sie erst einen Makler.</p>'}</div>
+  <div class="ma-fuss">
+   ${m.maklerId?'<button class="knopf knopf-linie knopf-klein" id="maLos">Zuweisung aufheben</button>':''}
+   ${m.offen>0?`<button class="knopf knopf-linie knopf-klein" id="maZahlen">${euro(m.offen)} auszahlen</button>`:''}
+   <button class="knopf knopf-voll" id="maZu" style="flex:1">Schließen</button>
+  </div>
+ </div>`;
+ $('#ueberlage').classList.add('auf');
+ $$('[data-zu]').forEach(b=>b.onclick=()=>{
+  const ziel=b.dataset.zu;
+  m.maklerId=m.maklerId===ziel?null:ziel;
+  const kn=S.kunden.find(x=>x.id===m.maklerId);
+  notiz(kn?m.name+' übernimmt '+kn.name:m.name+' hat jetzt keinen Makler','');
+  sichern(); zeichnen(); mitarbeiterZeigen(id);
+ });
+ if($('#maLos'))$('#maLos').onclick=()=>{m.maklerId=null;sichern();zeichnen();mitarbeiterZeigen(id);};
+ if($('#maZahlen'))$('#maZahlen').onclick=()=>{
+  const betrag=m.offen;
+  if(S.geld<betrag){melde('Dafür reicht das Konto nicht.');return;}
+  bezahlen('Provision '+m.name,betrag,()=>{
+   m.offen=0;m.unbezahlt=0;m.laune=Math.min(100,m.laune+6);
+   notiz('Provision an '+m.name+': '+euro(betrag),'geld');
+   sichern();zeichnen();});
+ };
+ $('#maZu').onclick=()=>$('#ueberlage').classList.remove('auf');
+}
+/* ═══════════════════════════════════════════════════════════════
    DASHBOARD
    Eine Seite, auf der alles steht, was bisher erreicht wurde.
    Alle Zahlen kommen aus dem laufenden Spielstand -- nichts davon
@@ -2729,6 +3017,12 @@ function dashZeichnen(){
   ['Termine',st.termine],['Gemeldet',st.gemeldet]];
  const maxT=Math.max(1,...trichter.map(x=>x[1]));
 
+ S.team.forEach(maSichern);
+ const zugewiesen=S.team.filter(m=>m.maklerId).length;
+ const offenGesamt=S.team.reduce((a,m)=>a+(m.offen||0),0);
+ const teamUmsatz=S.team.reduce((a,m)=>a+(m.gesamt?m.gesamt.umsatz:0),0);
+ const teamProvision=S.team.reduce((a,m)=>a+(m.gesamt?m.gesamt.provision:0),0);
+
  const besitz=LUXUS.filter(l=>S.luxus.includes(l.id));
  const autos=besitz.filter(l=>l.art==='auto');
 
@@ -2750,6 +3044,8 @@ function dashZeichnen(){
    ${kachel('Ruf',S.ruf+' %',S.ruf<50?'leidet':'stabil',S.ruf<50?'schlecht':'gut')}
    ${kachel('Auf die Karte',euro(z.gutgeschrieben),'Honorare und Beteiligungen','gut')}
    ${kachel('Privat ausgegeben',euro(z.ausgaben),z.zahlungen+' Kartenzahlungen')}
+   ${kachel('Team',S.team.length,S.team.length?zugewiesen+' mit Makler · '+euro(offenGesamt)+' offen'
+      :'Sie arbeiten allein',offenGesamt>0?'schlecht':'')}
   </div>
 
   <div class="dash-reihe">
@@ -2790,6 +3086,38 @@ function dashZeichnen(){
     </div>
    </div>
   </div>
+
+  ${S.team.length?`<div class="dash-reihe">
+   <div class="dash-k"><h4>Team</h4>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:11px">
+     ${teamUmsatz>0?'Ihre Mitarbeiter haben '+euro(teamUmsatz)+' erwirtschaftet und dafür '
+       +euro(teamProvision)+' Provision bekommen.'
+      :'Noch kein Umsatz durch das Team. Weisen Sie jedem einen Makler zu.'}</p>
+    <table class="abr-t"><thead><tr><th>Mitarbeiter</th><th>Makler</th>
+     <th class="r">Termine</th><th class="r">Umsatz</th><th class="r">offen</th></tr></thead>
+     <tbody>${S.team.map(m=>{
+      const k=S.kunden.find(x=>x.id===m.maklerId);
+      return `<tr><td><b>${sicher(m.name)}</b><small>Laune ${Math.round(m.laune)} %</small></td>
+       <td>${k?sicher(k.name):'<i>nicht zugewiesen</i>'}</td>
+       <td class="r tab-zahl">${m.gesamt.termine}</td>
+       <td class="r tab-zahl">${euro(m.gesamt.umsatz)}</td>
+       <td class="r tab-zahl">${euro(m.offen)}</td></tr>`;}).join('')}</tbody></table>
+   </div>
+   <div class="dash-k"><h4>Was das Team kostet</h4>
+    <div class="dash-liste">
+     <div class="dash-z"><span class="name">Gehälter je Monat</span>
+      <b>${euro(S.team.length*GEHALT_MONAT)}</b></div>
+     <div class="dash-z"><span class="name">Provision je Termin</span>
+      <b>${euro(PROVISION_MA)}</b></div>
+     <div class="dash-z"><span class="name">Provision insgesamt gezahlt</span>
+      <b>${euro(teamProvision-offenGesamt)}</b></div>
+     <div class="dash-z"><span class="name">Noch offen</span>
+      <b style="${offenGesamt>0?'color:var(--warn)':''}">${euro(offenGesamt)}</b></div>
+     <div class="dash-z"><span class="name">Umsatz je Provisionseuro</span>
+      <b>${teamProvision?euro(teamUmsatz/teamProvision):'—'}</b></div>
+    </div>
+   </div>
+  </div>`:''}
 
   <div class="dash-reihe">
    <div class="dash-k"><h4>Besitz</h4>
@@ -3012,19 +3340,16 @@ function kaufen(id){
 
 /* ── Tag und Woche ── */
 function tagBeenden(){
+ /* Erst nachhalten, was gestern offen blieb -- so hat der Abend
+    davor die Chance zu zahlen, bevor die Laune sinkt. */
+ provisionNachhalten();
  S.team.forEach(m=>{
-  const chance=0.26+m.koennen*0.09;
-  for(let i=0;i<2;i++){
-   const l=S.crm.filter(x=>x.status==='neu')[0]; if(!l)break;
-   if(Math.random()<chance){
-    l.status='qualifiziert';l.protokoll={Eigentum:'geklärt',Verkaufsabsicht:'geklärt','Fester Termin':'geklärt'};
-    l.termin='Mittwoch, 15:00 Uhr';l.einschaetzung=zufall(EINSCHAETZUNGEN);
-    S.stat.termine++;notiz(m.name+' hat einen Termin qualifiziert','gut');
-   }else{l.status='abgelehnt';S.stat.geplatzt++;}
-  }
+  mitarbeiterTag(m);
   m.erfahrung++;
   if(m.erfahrung>=12&&m.koennen<3){m.koennen++;m.erfahrung=0;notiz(m.name+' ist besser geworden','gut');}
  });
+ const abrechnungFaellig=S.team.some(m=>(m.heute&&m.heute.versuche)||(m.offen||0)>0);
+ if(abrechnungFaellig)abrechnungZeigen();
  S.tag++;S.kaffeeHeute=false;
  if(S.tag>5){S.tag=1;S.woche++;wocheAbschliessen();}
  /* Nachtschicht rächt sich am Folgetag */
@@ -3068,7 +3393,10 @@ function einstellen(id){
  if(S.geld<b.gehalt){melde('Ein Monatsgehalt sollten Sie auf der Seite haben.');return;}
  S.team.push({...b,erfahrung:0});S.bewerber=S.bewerber.filter(x=>x.id!==id);
  pruefeErfolg('team');notiz(b.name+' eingestellt','');
- fenster('Eingestellt',b.name+' qualifiziert ab jetzt jeden Arbeitstag Kontakte aus dem CRM. Das Gehalt läuft jeden Monat, unabhängig vom Ergebnis.');
+ fenster('Eingestellt',b.name+' arbeitet erst, wenn Sie ihm einen Makler zuweisen — tippen Sie ihn dazu in der Liste an. '
+  +'Er telefoniert dann täglich dessen Kontakte ab und meldet die Termine selbst. Der Umsatz geht auf Ihr Konto, '
+  +'er bekommt '+euro(PROVISION_MA)+' je gemeldetem Termin, abends abgerechnet und mit der Karte ausgezahlt. '
+  +'Das Gehalt von '+euro(b.gehalt)+' läuft jeden Monat, unabhängig vom Ergebnis.');
  sichern();zeichnen();
 }
 function koennenSteigern(id){
@@ -3105,13 +3433,19 @@ function logZeichnen(){
 }
 function teamZeichnen(){
  $('#teamHin').textContent=S.team.length
-  ?S.team.length+' Mitarbeiter · '+euro(S.team.length*GEHALT_MONAT)+' im Monat'
-  :'Sie telefonieren allein. Ein Mitarbeiter kostet '+euro(GEHALT_MONAT)+' im Monat.';
- $('#teamListe').innerHTML=S.team.map(m=>
-  `<div class="crm-z"><span class="haupt"><b>${sicher(m.name)}</b>
-    <span>Stufe ${m.koennen} von 3 · ${euro(m.gehalt)} im Monat</span></span>
-   <span class="pille p-info">${(26+m.koennen*9)} % Trefferquote</span></div>`).join('')
+  ?S.team.length+' Mitarbeiter · '+euro(S.team.length*GEHALT_MONAT)+' im Monat · antippen zum Zuweisen'
+  :'Sie telefonieren allein. Ein Mitarbeiter kostet '+euro(GEHALT_MONAT)+' im Monat plus '
+   +euro(PROVISION_MA)+' je Termin.';
+ $('#teamListe').innerHTML=S.team.map(m=>{
+  maSichern(m);
+  const k=S.kunden.find(x=>x.id===m.maklerId);
+  return `<div class="crm-z anklickbar" data-ma="${m.id}"><span class="haupt"><b>${sicher(m.name)}</b>
+    <span>Stufe ${m.koennen} von 3 · ${euro(m.gehalt)} im Monat · ${
+      k?'telefoniert für '+sicher(k.name):'<b class="ohne">kein Makler zugewiesen</b>'}</span></span>
+   ${m.offen>0?`<span class="pille p-warn">${euro(m.offen)} offen</span>`:''}
+   <span class="pille p-info">${Math.round(maTrefferquote(m)*100)} % Trefferquote</span></div>`;}).join('')
   ||'<p style="font-size:13px;color:var(--muted)">Kein Team.</p>';
+ $$('[data-ma]').forEach(b=>b.onclick=()=>mitarbeiterZeigen(b.dataset.ma));
  $('#bewerbungen').innerHTML=S.bewerber.map(b=>
   `<div class="crm-z"><span class="haupt"><b>${sicher(b.name)}</b>
     <span>Stufe ${b.koennen} von 3 · ${euro(b.gehalt)}</span></span>
