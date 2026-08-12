@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vertriebler-Simulator — Walter Setting</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="walter-setting-icon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   VERTRIEBLER-SIMULATOR
+   Trainingsspiel fuer die Terminierungsagentur Walter Setting.
+   Eine Datei, keine Fremdquellen. Spielstand im localStorage.
+   ═══════════════════════════════════════════════════════════════ */
+:root{
+  --ink:#16233B; --grad-1:#35577D; --grad-2:#152234;
+  --text:#1C2A3F; --muted:#6E7F95; --bg:#EFF3F8; --flaeche:#FFFFFF; --flaeche-2:#F6F9FC;
+  --rand:#DFE6EF; --gut:#2E7D5B; --warn:#B07A22; --schlecht:#B4483C; --info:#35577D; --gold:#B98A2E;
+  --head:'Montserrat',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+  --ez:cubic-bezier(.22,1,.36,1); --federn:cubic-bezier(.34,1.56,.64,1); --r:13px;
+  --schatten:0 1px 2px rgba(22,35,59,.05),0 8px 24px -12px rgba(22,35,59,.16);
+  --schatten-hoch:0 4px 12px rgba(22,35,59,.08),0 26px 54px -24px rgba(22,35,59,.4);
+}
+[data-theme="dark"]{
+  --ink:#E9EFF7; --text:#DDE7F2; --muted:#8DA2BB; --bg:#0A1018; --flaeche:#131C29;
+  --flaeche-2:#192333; --rand:#25324699;
+  --gut:#5FBF92; --warn:#E0A94A; --schlecht:#E1786B; --info:#7FA0C4; --gold:#E3B858;
+  --schatten:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.7);
+  --schatten-hoch:0 4px 12px rgba(0,0,0,.45),0 26px 54px -24px rgba(0,0,0,.85);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--body);font-size:15px;line-height:1.6;background:var(--bg);color:var(--text);
+  -webkit-font-smoothing:antialiased;min-height:100vh}
+h1,h2,h3,h4{font-family:var(--head);font-weight:700;color:var(--ink);line-height:1.18;text-wrap:balance}
+button,input,select{font:inherit;color:inherit}
+button{background:none;border:none;cursor:pointer}
+:focus-visible{outline:2px solid var(--grad-1);outline-offset:2px;border-radius:6px}
+.tab-zahl{font-variant-numeric:tabular-nums}
+
+/* ── Kopfleiste ────────────────────────────────────────────── */
+.kopf{position:sticky;top:0;z-index:60;background:var(--flaeche);border-bottom:1px solid var(--rand)}
+.kopf-in{max-width:1080px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.marke{display:flex;align-items:center;gap:9px;flex:none}
+.marke svg{width:25px;height:25px}
+.marke b{font-family:var(--head);font-size:12px;letter-spacing:.09em;color:var(--ink);display:block}
+.marke small{display:block;font-size:8px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+.werte{display:flex;gap:7px;flex-wrap:wrap;flex:1}
+.wert{background:var(--bg);border-radius:9px;padding:5px 11px;min-width:76px}
+.wert .t{font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.wert .w{font-family:var(--head);font-weight:700;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums}
+.wert.geld .w{color:var(--gut)}
+.wert.warnung .w{color:var(--schlecht)}
+.ik{width:32px;height:32px;border:1px solid var(--rand);border-radius:8px;display:flex;flex:none;
+  align-items:center;justify-content:center;transition:background .15s,border-color .15s}
+.ik:hover{background:var(--bg);border-color:var(--grad-1)}
+.ik svg{width:15px;height:15px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Zielbalken */
+.zielbalken{max-width:1080px;margin:0 auto;padding:0 18px 9px}
+.zb{height:6px;background:var(--bg);border-radius:20px;overflow:hidden;position:relative}
+.zb i{display:block;height:100%;border-radius:20px;transition:width .8s var(--ez);
+  background:linear-gradient(90deg,var(--grad-1),var(--gold))}
+.zb-txt{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:3px}
+
+.huelle{max-width:1080px;margin:0 auto;padding:18px 18px 90px}
+.ansicht{display:none}
+.ansicht.an{display:block;animation:rein .3s var(--ez)}
+@keyframes rein{from{opacity:0;transform:translateY(8px)}}
+
+.karte{background:var(--flaeche);border:1px solid var(--rand);border-radius:var(--r);box-shadow:var(--schatten)}
+.karte-p{padding:17px}
+.knopf{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;
+  border-radius:9px;font-size:14px;font-weight:600;border:1px solid transparent;
+  transition:background .15s,border-color .15s,transform .12s,opacity .15s}
+.knopf-voll{background:var(--ink);color:var(--flaeche)}
+[data-theme="dark"] .knopf-voll{color:#0A1018}
+.knopf-voll:hover{transform:translateY(-1px)}
+.knopf-linie{border-color:var(--rand);color:var(--ink);background:var(--flaeche)}
+.knopf-linie:hover{border-color:var(--grad-1);background:var(--bg)}
+.knopf:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.knopf-klein{padding:6px 12px;font-size:13px}
+.pille{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;
+  font-size:11px;font-weight:600}
+.p-gut{background:rgba(46,125,91,.14);color:var(--gut)}
+.p-warn{background:rgba(176,122,34,.15);color:var(--warn)}
+.p-schlecht{background:rgba(180,72,60,.14);color:var(--schlecht)}
+.p-info{background:rgba(53,87,125,.14);color:var(--info)}
+.p-grau{background:var(--bg);color:var(--muted)}
+
+/* ── Reiter ────────────────────────────────────────────────── */
+.reiter{display:flex;gap:4px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
+.reiter::-webkit-scrollbar{display:none}
+.rbtn{padding:8px 14px;border-radius:9px;font-size:13.5px;font-weight:500;color:var(--muted);white-space:nowrap}
+.rbtn:hover{background:var(--flaeche);color:var(--ink)}
+.rbtn.on{background:var(--ink);color:var(--flaeche);font-weight:600}
+[data-theme="dark"] .rbtn.on{color:#0A1018}
+.rbtn .pkt{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-left:5px}
+
+/* ── Aktionen ──────────────────────────────────────────────── */
+.aktionen{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:11px;margin-bottom:18px}
+.aktion{background:var(--flaeche);border:1px solid var(--rand);border-radius:11px;padding:14px 15px;
+  text-align:left;transition:border-color .18s,box-shadow .18s,transform .18s var(--ez);position:relative}
+.aktion:hover:not(:disabled){border-color:var(--grad-1);box-shadow:var(--schatten);transform:translateY(-2px)}
+.aktion:disabled{opacity:.45;cursor:not-allowed}
+.aktion b{display:block;font-family:var(--head);font-size:14.5px;color:var(--ink);margin-bottom:3px}
+.aktion span{display:block;font-size:12.5px;color:var(--muted)}
+.aktion .kosten{position:absolute;top:12px;right:13px;font-size:11px;font-weight:700;color:var(--info);
+  background:rgba(53,87,125,.12);padding:2px 7px;border-radius:20px}
+
+/* ── Gespräch ──────────────────────────────────────────────── */
+.gespraech{max-width:760px;margin:0 auto}
+.partner{display:flex;align-items:center;gap:13px;margin-bottom:15px;padding:14px 16px;
+  background:var(--flaeche);border:1px solid var(--rand);border-radius:var(--r)}
+.avatar{width:44px;height:44px;flex:none;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--head);font-weight:700;font-size:16px;color:#fff;
+  background:linear-gradient(150deg,var(--grad-1),var(--grad-2))}
+.partner .nm{flex:1;min-width:0}
+.partner .nm b{display:block;font-family:var(--head);font-size:15px;color:var(--ink)}
+.partner .nm span{display:block;font-size:12.5px;color:var(--muted)}
+.stimmung{display:flex;gap:3px;flex:none}
+.stimmung i{width:8px;height:20px;border-radius:3px;background:var(--rand)}
+.stimmung i.an{background:var(--gut)}
+.stimmung i.mies{background:var(--schlecht)}
+
+.blase{padding:14px 16px;border-radius:14px;margin-bottom:13px;font-size:15px;line-height:1.55;
+  background:var(--flaeche);border:1px solid var(--rand);border-top-left-radius:4px;
+  animation:blasenein .3s var(--ez)}
+@keyframes blasenein{from{opacity:0;transform:translateY(6px)}}
+.blase.ich{background:var(--ink);color:var(--flaeche);border:none;
+  border-radius:14px;border-top-right-radius:4px;margin-left:auto;max-width:88%}
+[data-theme="dark"] .blase.ich{color:#0A1018}
+.blase .wer{display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  opacity:.6;margin-bottom:4px}
+.tippt{display:flex;gap:4px;padding:16px}
+.tippt i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:tip 1.2s infinite}
+.tippt i:nth-child(2){animation-delay:.15s} .tippt i:nth-child(3){animation-delay:.3s}
+@keyframes tip{0%,60%,100%{opacity:.25}30%{opacity:1}}
+
+.frage{font-family:var(--head);font-weight:600;font-size:14px;color:var(--muted);margin:18px 0 10px}
+.wahlen{display:grid;gap:9px}
+.wahl{text-align:left;padding:13px 15px;background:var(--flaeche);border:1.5px solid var(--rand);
+  border-radius:11px;font-size:14.5px;line-height:1.5;transition:border-color .15s,background .15s,transform .12s}
+.wahl:hover{border-color:var(--grad-1);background:var(--flaeche-2);transform:translateX(3px)}
+.wahl.gut{border-color:var(--gut);background:rgba(46,125,91,.07)}
+.wahl.schlecht{border-color:var(--schlecht);background:rgba(180,72,60,.07)}
+.wahl:disabled{cursor:default;transform:none}
+.rueck{margin-top:13px;padding:14px 16px;border-radius:11px;font-size:14px;line-height:1.6;
+  background:var(--flaeche-2);border-left:3px solid var(--info);animation:rein .3s var(--ez)}
+.rueck b{color:var(--ink)}
+.rueck.gut{border-left-color:var(--gut)}
+.rueck.schlecht{border-left-color:var(--schlecht)}
+.rueck .pkt{font-family:var(--head);font-weight:700;font-size:13px;margin-right:6px}
+
+/* ── Auswertung ────────────────────────────────────────────── */
+.auswert{text-align:center;padding:26px 22px}
+.auswert .note{font-family:var(--head);font-size:3.6rem;font-weight:700;line-height:1;
+  background:linear-gradient(150deg,var(--grad-1),var(--gold));-webkit-background-clip:text;
+  background-clip:text;color:transparent}
+.zeilen{display:grid;gap:7px;margin:18px 0;text-align:left}
+.zeile{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;padding:9px 12px;
+  background:var(--flaeche-2);border-radius:9px}
+.zeile .p{font-family:var(--head);font-weight:700;flex:none;min-width:30px;font-variant-numeric:tabular-nums}
+.zeile.gut .p{color:var(--gut)} .zeile.schlecht .p{color:var(--schlecht)} .zeile.neutral .p{color:var(--muted)}
+
+/* ── Listen ────────────────────────────────────────────────── */
+.liste{display:grid;gap:9px}
+.eintrag{background:var(--flaeche);border:1px solid var(--rand);border-radius:11px;padding:13px 15px;
+  display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.eintrag .haupt{flex:1;min-width:150px}
+.eintrag b{display:block;font-size:14.5px;color:var(--ink)}
+.eintrag span{display:block;font-size:12.5px;color:var(--muted)}
+.balkenmini{height:5px;background:var(--bg);border-radius:20px;overflow:hidden;margin-top:6px;width:100%}
+.balkenmini i{display:block;height:100%;background:var(--grad-1);border-radius:20px;transition:width .5s var(--ez)}
+
+/* ── Fähigkeiten ───────────────────────────────────────────── */
+.faehig{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:11px}
+.fk{background:var(--flaeche);border:1px solid var(--rand);border-radius:11px;padding:14px 15px}
+.fk .kopfz{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.fk .stern{font-size:15px;color:var(--gold)}
+.fk b{font-family:var(--head);font-size:14px;color:var(--ink);flex:1}
+.fk p{font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.punkte-frei{background:rgba(185,138,46,.14);color:var(--gold);padding:3px 10px;border-radius:20px;
+  font-size:12px;font-weight:700}
+
+/* ── Meldungen ─────────────────────────────────────────────── */
+.log{display:grid;gap:6px;max-height:260px;overflow-y:auto}
+.log-z{display:flex;gap:9px;font-size:13px;padding:7px 10px;border-radius:8px;background:var(--flaeche-2)}
+.log-z .zt{color:var(--muted);flex:none;font-size:11.5px;padding-top:1px;min-width:52px}
+.log-z.gut{background:rgba(46,125,91,.09)}
+.log-z.schlecht{background:rgba(180,72,60,.09)}
+.log-z.geld{background:rgba(185,138,46,.10)}
+
+.ueberlage{position:fixed;inset:0;z-index:200;background:rgba(8,13,20,.66);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.ueberlage.auf{display:flex}
+.fenster{background:var(--flaeche);border-radius:17px;max-width:520px;width:100%;
+  box-shadow:var(--schatten-hoch);animation:hoch .35s var(--federn);padding:26px}
+@keyframes hoch{from{opacity:0;transform:translateY(20px) scale(.96)}}
+.fenster h2{font-size:1.3rem;margin-bottom:8px}
+.fenster p{color:var(--muted);font-size:14.5px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(160%);z-index:300;
+  background:var(--ink);color:var(--flaeche);padding:11px 19px;border-radius:10px;font-size:13.5px;
+  font-weight:500;box-shadow:var(--schatten-hoch);transition:transform .35s var(--federn);max-width:90vw}
+[data-theme="dark"] .toast{color:#0A1018}
+.toast.auf{transform:translateX(-50%) translateY(0)}
+
+/* ── Start ─────────────────────────────────────────────────── */
+.start{max-width:620px;margin:26px auto;text-align:center}
+.start .gross{font-family:var(--head);font-size:2.3rem;font-weight:700;margin-bottom:10px}
+.start p{color:var(--muted);margin-bottom:18px}
+.grade{display:grid;gap:9px;margin:18px 0;text-align:left}
+.grad{padding:14px 16px;border:1.5px solid var(--rand);border-radius:11px;background:var(--flaeche);
+  text-align:left;transition:border-color .15s}
+.grad:hover{border-color:var(--grad-1)}
+.grad.on{border-color:var(--ink);background:var(--flaeche-2)}
+.grad b{display:block;font-family:var(--head);font-size:14.5px;color:var(--ink)}
+.grad span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+
+.zert{border:2px solid var(--ink);border-radius:14px;padding:28px;text-align:center;background:var(--flaeche)}
+.zert .kl{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.zert h2{font-size:1.6rem;margin:9px 0}
+.zert .nm{font-family:var(--head);font-size:1.4rem;color:var(--info);margin:14px 0}
+
+@media(max-width:720px){
+  .huelle{padding:14px 13px 80px}
+  .aktionen{grid-template-columns:1fr}
+  .wert{min-width:66px}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
+@media print{.kopf,.reiter,.zielbalken{display:none}}
+
+</style>
+</head>
+<body>
+<header class="kopf" id="kopf" hidden>
+  <div class="kopf-in">
+    <div class="marke">
+      <svg viewBox="60 40 430 400" aria-hidden="true"><polyline points="95,80 195,400 278,210 360,400 455,80"
+        fill="none" stroke="#35577D" stroke-width="80" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span><b>VERTRIEBLER</b><small>Simulator</small></span>
+    </div>
+    <div class="werte" id="werte"></div>
+    <button class="ik" id="btnThema" title="Hell / Dunkel" aria-label="Darstellung wechseln"><svg id="icoThema" viewBox="0 0 24 24"></svg></button>
+    <button class="ik" id="btnHilfe" title="Spielregeln" aria-label="Spielregeln"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.7"/><path d="M12 17h.01"/></svg></button>
+    <button class="ik" id="btnNeu" title="Neues Spiel" aria-label="Neues Spiel"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></button>
+  </div>
+  <div class="zielbalken">
+    <div class="zb"><i id="zbBalken" style="width:0%"></i></div>
+    <div class="zb-txt"><span id="zbLinks">0 €</span><span id="zbRechts">Ziel 190.000 €</span></div>
+  </div>
+</header>
+
+<div class="huelle">
+
+<!-- ═══ START ═══ -->
+<section class="ansicht an" id="a-start">
+  <div class="start">
+    <div class="gross">Vertriebler-Simulator</div>
+    <p>Sie starten mit einer Idee und 500 € auf dem Konto: Sie übernehmen für Maklerbüros die
+      Telefonarbeit und vereinbaren qualifizierte Termine. In 18 Monaten sollen daraus 190.000 €
+      Umsatz werden. Jedes Gespräch wird ausgewertet — es geht ums Üben, nicht ums Glück.</p>
+    <div class="karte karte-p" style="text-align:left">
+      <div style="margin-bottom:14px">
+        <label for="sName" style="display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px">Ihr Name</label>
+        <input type="text" id="sName" placeholder="Tim Walter" style="width:100%;padding:10px 12px;border:1px solid var(--rand);border-radius:9px;background:var(--flaeche)">
+      </div>
+      <div class="grade" id="grade"></div>
+      <button class="knopf knopf-voll" id="btnStart" style="width:100%">Firma gründen</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SPIEL ═══ -->
+<section class="ansicht" id="a-spiel">
+  <div class="reiter" id="reiter">
+    <button class="rbtn on" data-r="buero">Büro</button>
+    <button class="rbtn" data-r="kunden">Kunden</button>
+    <button class="rbtn" data-r="team">Team</button>
+    <button class="rbtn" data-r="koennen">Können</button>
+    <button class="rbtn" data-r="trainer">Trainer</button>
+    <button class="rbtn" data-r="zahlen">Zahlen</button>
+  </div>
+
+  <div id="r-buero" class="rteil">
+    <div class="aktionen" id="aktionen"></div>
+    <div class="karte karte-p">
+      <h3 style="font-size:.95rem;margin-bottom:11px">Was heute passiert ist</h3>
+      <div class="log" id="log"></div>
+    </div>
+  </div>
+
+  <div id="r-kunden" class="rteil" hidden>
+    <div class="karte karte-p" style="margin-bottom:13px">
+      <h3 style="font-size:.95rem;margin-bottom:4px">Kunden</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:11px" id="kundenHin"></p>
+      <div class="liste" id="kundenListe"></div>
+    </div>
+    <div class="karte karte-p">
+      <h3 style="font-size:.95rem;margin-bottom:4px">Recherchierte Büros</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:11px" id="leadHin"></p>
+      <div class="liste" id="leadListe"></div>
+    </div>
+  </div>
+
+  <div id="r-team" class="rteil" hidden>
+    <div class="karte karte-p" style="margin-bottom:13px">
+      <h3 style="font-size:.95rem;margin-bottom:4px">Ihr Team</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:11px" id="teamHin"></p>
+      <div class="liste" id="teamListe"></div>
+    </div>
+    <div class="karte karte-p">
+      <h3 style="font-size:.95rem;margin-bottom:11px">Bewerbungen</h3>
+      <div class="liste" id="bewerbungen"></div>
+    </div>
+  </div>
+
+  <div id="r-koennen" class="rteil" hidden>
+    <div class="karte karte-p" style="margin-bottom:13px;display:flex;align-items:center;gap:11px;flex-wrap:wrap">
+      <h3 style="font-size:.95rem;flex:1">Fähigkeiten</h3>
+      <span class="punkte-frei" id="freiePunkte">0 Punkte frei</span>
+    </div>
+    <div class="faehig" id="faehigkeiten"></div>
+    <div class="karte karte-p" style="margin-top:13px">
+      <h3 style="font-size:.95rem;margin-bottom:4px">Notizbuch</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:11px">Formulierungen, die bei Ihnen funktioniert haben. Jede Antwort mit voller Punktzahl landet hier.</p>
+      <div class="liste" id="notizbuch"></div>
+    </div>
+  </div>
+
+  <div id="r-trainer" class="rteil" hidden>
+    <div class="karte karte-p">
+      <h3 style="font-size:.95rem;margin-bottom:4px">Einwand-Trainer</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:13px">Zehn Einwände am Stück, ohne Spielstand und ohne Folgen. Reines Drillen — die Antworten sind dieselben wie im echten Gespräch.</p>
+      <div id="trainerBereich"></div>
+    </div>
+  </div>
+
+  <div id="r-zahlen" class="rteil" hidden>
+    <div class="karte karte-p" style="margin-bottom:13px">
+      <h3 style="font-size:.95rem;margin-bottom:12px">Trichter</h3>
+      <div id="trichter"></div>
+    </div>
+    <div class="karte karte-p" style="margin-bottom:13px">
+      <h3 style="font-size:.95rem;margin-bottom:12px">Gesprächsqualität</h3>
+      <div id="qualitaet"></div>
+    </div>
+    <div class="karte karte-p">
+      <h3 style="font-size:.95rem;margin-bottom:12px">Erfolge</h3>
+      <div class="liste" id="erfolge"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ GESPRÄCH ═══ -->
+<section class="ansicht" id="a-gespraech">
+  <div class="gespraech">
+    <div class="partner" id="partner"></div>
+    <div id="verlauf"></div>
+    <div id="frageBereich"></div>
+  </div>
+</section>
+
+<!-- ═══ ENDE ═══ -->
+<section class="ansicht" id="a-ende">
+  <div class="start" id="endeInhalt"></div>
+</section>
+
+</div>
+
+<div class="ueberlage" id="ueberlage"><div class="fenster" id="fenster"></div></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   VERTRIEBLER-SIMULATOR — Spielinhalte
+   Jede Antwortmoeglichkeit traegt Punkte und eine Begruendung.
+   Die Begruendung ist der eigentliche Lernwert: Es soll nicht nur
+   klar sein, dass eine Antwort besser war, sondern warum.
+   ═══════════════════════════════════════════════════════════════ */
+
+const VORNAMEN=['Andrea','Bernd','Claudia','Dirk','Elke','Frank','Gudrun','Holger',
+ 'Ines','Jürgen','Katrin','Lars','Martina','Norbert','Petra','Ralf','Sabine','Thomas'];
+const NACHNAMEN=['Berger','Kaiser','Lehmann','Sauer','Vogel','Brandt','Hoffmann','Krüger',
+ 'Neumann','Schuster','Wagner','Zimmer','Bauer','Ritter','Falk','Möller'];
+const ORTE=['Koblenz','Neuwied','Andernach','Mayen','Bendorf','Lahnstein','Vallendar','Höhr-Grenzhausen'];
+const OBJEKTE=['Reihenhaus','Eigentumswohnung','Doppelhaushälfte','Einfamilienhaus','Mehrfamilienhaus','Bungalow'];
+
+/* ── Maklertypen: bestimmen Schwierigkeit und Verhalten ── */
+const MAKLERTYPEN=[
+ {id:'jung',name:'Jungmakler',beschreibung:'Erst seit Kurzem selbstständig, wenig Objekte, aber offen für Neues.',
+  wid:0.9,budget:0.8,mitarbeiter:1,objekte:6},
+ {id:'solo',name:'Einzelkämpfer',beschreibung:'Führt das Büro allein, hat zu viele Anfragen und zu wenig Zeit.',
+  wid:1.0,budget:1.0,mitarbeiter:1,objekte:12},
+ {id:'klein',name:'Kleines Büro',beschreibung:'Drei Mitarbeiter, gutes Objektvolumen, prüft genau.',
+  wid:1.15,budget:1.2,mitarbeiter:3,objekte:18},
+ {id:'skeptiker',name:'Der Gebrannte',beschreibung:'Hatte schon einmal ein Callcenter — und schlechte Erfahrungen.',
+  wid:1.45,budget:1.1,mitarbeiter:2,objekte:14},
+ {id:'vielbeschaeftigt',name:'Der Getriebene',beschreibung:'Ständig unterwegs, nimmt zwischen zwei Terminen ab.',
+  wid:1.3,budget:1.1,mitarbeiter:4,objekte:22},
+];
+
+/* ═══════ GESPRÄCH 1: Makler gewinnen ═══════ */
+const MAKLER_STUFEN=[
+{ id:'eroeffnung', frage:'Er nimmt ab: „Ja, {name}?" — Wie steigen Sie ein?', wahl:[
+ {t:'„Guten Tag Herr {nachname}, mein Name ist {ich}. Ich rufe an, weil ich für Maklerbüros die Telefonarbeit übernehme. Haben Sie zwei Minuten?"',
+  p:3, f:'Gut. Name, Grund, Zeitrahmen — in einem Satz. Die Frage nach zwei Minuten gibt ihm die Kontrolle zurück, das senkt den Widerstand.'},
+ {t:'„Guten Tag, spreche ich mit dem Inhaber?"',
+  p:1, f:'Nicht falsch, aber Sie verschenken den ersten Satz. Er weiß nach zehn Sekunden immer noch nicht, worum es geht — und genau dann fällt die Entscheidung, ob er zuhört.'},
+ {t:'„Hallo Herr {nachname}, wie geht es Ihnen heute?"',
+  p:-2, f:'Die Floskel verrät den Verkaufsanruf sofort. Sie kennen ihn nicht, also klingt es unehrlich. Viele legen genau hier auf.'},
+ {t:'„Guten Tag, ich hätte da ein interessantes Angebot für Sie."',
+  p:-3, f:'„Interessantes Angebot" ist das Signalwort für Werbung. Sie haben sich selbst als das eingeordnet, was er wegdrücken will.'},
+]},
+{ id:'aufhaenger', frage:'Er sagt: „Worum geht es denn?" — Ihr Aufhänger:', wahl:[
+ {t:'„Ich habe gesehen, Sie haben gerade ein {objekt} in {ort} im Angebot. Wie viele Anfragen kommen dazu rein — und wie viele davon rufen Sie zurück?"',
+  p:4, f:'Stark. Konkreter Bezug beweist Vorbereitung, und die Frage führt ihn selbst zu seinem Engpass. Wer die Lücke selbst ausspricht, verteidigt sie nicht.'},
+ {t:'„Ich rufe Ihre vorhandenen Kontakte an und prüfe am Telefon, wer wirklich verkaufen will. Sie bekommen nur die fertigen Termine."',
+  p:3, f:'Klar und verständlich. Es fehlt nur der persönliche Bezug — damit klingt es wie bei jedem anderen Büro auch.'},
+ {t:'„Wir sind ein junges Unternehmen, das sich auf Terminierung spezialisiert hat."',
+  p:-2, f:'Über sich selbst reden. Ihn interessiert nicht, wer Sie sind, sondern was er davon hat. „Wir sind" ist fast immer der falsche Satzanfang.'},
+ {t:'„Ich möchte Ihnen unser Dienstleistungspaket vorstellen."',
+  p:-3, f:'„Paket vorstellen" heißt für ihn: langer Vortrag. Sie kündigen genau das an, wofür er keine Zeit hat.'},
+]},
+{ id:'einwand', frage:'Jetzt kommt sein Einwand.', einwand:true },
+{ id:'bedarf', frage:'Er ist noch dran. Was fragen Sie jetzt?', wahl:[
+ {t:'„Wenn Sie ehrlich sind: Wie viele von den Anfragen der letzten drei Monate haben Sie nie zurückgerufen?"',
+  p:4, f:'Die beste Frage im ganzen Gespräch. Sie ist konkret, unangenehm und ehrlich — und die Antwort ist Ihr Verkaufsargument, aus seinem Mund.'},
+ {t:'„Was wäre Ihnen ein Termin mit einem echten Verkäufer wert?"',
+  p:2, f:'Führt zum Preis, bevor er den Wert kennt. Besser, wenn er zuerst den Engpass ausspricht — dann ist der Preis nur noch eine Zahl.'},
+ {t:'„Wären Sie grundsätzlich offen für so etwas?"',
+  p:0, f:'Zu vage. Auf eine unverbindliche Frage kommt eine unverbindliche Antwort, und Sie sind keinen Schritt weiter.'},
+ {t:'„Darf ich Ihnen kurz erklären, wie wir arbeiten?"',
+  p:-1, f:'Sie bitten um Erlaubnis für einen Monolog. Fragen bringen Sie weiter als Erklärungen.'},
+]},
+{ id:'abschluss', frage:'Der Moment für den Terminvorschlag.', wahl:[
+ {t:'„Machen wir es so: Die ersten drei Termine kosten Sie nichts. Passt Ihnen Dienstag oder eher Donnerstag für ein 20-Minuten-Gespräch?"',
+  p:4, f:'Risikoumkehr plus Alternativfrage. Er entscheidet nicht mehr ob, sondern wann — und verlieren kann er ohnehin nichts.'},
+ {t:'„Die ersten drei Termine sind kostenlos. Soll ich Ihnen Unterlagen schicken?"',
+  p:0, f:'„Unterlagen schicken" ist das höfliche Nein. Die Mail wird nicht gelesen, und Sie haben keinen Grund mehr, nochmal anzurufen.'},
+ {t:'„Wollen Sie es vielleicht mal ausprobieren?"',
+  p:1, f:'„Vielleicht mal" macht es unverbindlich für beide. Wer selbst zögert, bekommt Zögern zurück.'},
+ {t:'„Ich melde mich in ein paar Wochen nochmal, wenn es gerade schlecht passt."',
+  p:-2, f:'Sie geben auf, bevor er abgelehnt hat. Ein konkreter Vorschlag hätte nichts gekostet.'},
+]},
+];
+
+/* ── Einwände: werden zufällig gezogen ── */
+const EINWAENDE=[
+{ text:'„Kein Interesse."', wahl:[
+ {t:'„Das verstehe ich — Sie wissen ja noch nicht, worum es geht. Eine Frage nur: Rufen Sie jede Anfrage am selben Tag zurück?"',
+  p:4, f:'Einwand annehmen, nicht bekämpfen, und mit einer Frage weitermachen. „Kein Interesse" ist meist ein Reflex, keine Entscheidung.'},
+ {t:'„Warum denn nicht?"',
+  p:0, f:'Setzt ihn unter Rechtfertigungsdruck. Er verteidigt sein Nein dann erst recht.'},
+ {t:'„Darf ich Ihnen trotzdem kurz erklären, worum es geht?"',
+  p:1, f:'Ehrlich, aber schwach. Sie bitten um einen Gefallen, statt ihm einen Grund zu geben.'},
+ {t:'„Kein Problem, dann störe ich nicht weiter."',
+  p:-2, f:'Zu früh aufgegeben. Der erste Einwand ist fast nie das letzte Wort.'},
+]},
+{ text:'„Die Kontakte haben wir doch alle schon."', wahl:[
+ {t:'„Genau darum geht es. Nicht um neue Adressen, sondern darum, aus Ihrem Bestand die herauszufiltern, die wirklich verkaufen wollen."',
+  p:4, f:'Perfekt. Sie drehen den Einwand zum Argument — er hat gerade selbst beschrieben, was Sie tun.'},
+ {t:'„Wir besorgen Ihnen auch neue Kontakte."',
+  p:-3, f:'Falsch und gefährlich. Sie generieren keine Leads, und ein Versprechen, das Sie nicht halten, fliegt spätestens im Vertrag auf.'},
+ {t:'„Aber bearbeiten Sie die auch alle?"',
+  p:2, f:'Richtige Richtung, aber das „aber" macht daraus einen Widerspruch. Ohne „aber" wäre es eine gute Frage.'},
+ {t:'„Dann haben Sie ja schon alles."',
+  p:-2, f:'Sie bestätigen sein Nein. Das Gespräch ist damit vorbei.'},
+]},
+{ text:'„Was kostet das denn?"', wahl:[
+ {t:'„100 € je Termin, der auch stattgefunden hat. Die ersten drei sind kostenlos — Sie zahlen also erst, wenn Sie wissen, was Sie bekommen."',
+  p:4, f:'Preis nennen, ohne zu zögern, und sofort das Risiko nehmen. Wer beim Preis herumdruckst, macht ihn dadurch größer.'},
+ {t:'„Das kommt ganz auf den Umfang an, das müssten wir besprechen."',
+  p:-2, f:'Ausweichen beim Preis erzeugt Misstrauen. Er denkt sofort: teuer, und ich soll es nicht merken.'},
+ {t:'„Günstiger als ein Mitarbeiter, der das machen würde."',
+  p:1, f:'Der Vergleich stimmt, beantwortet aber die Frage nicht. Erst antworten, dann einordnen.'},
+ {t:'„Nur 100 € — das ist doch nichts."',
+  p:0, f:'Bewerten Sie den Preis nicht für ihn. „Das ist doch nichts" klingt, als müssten Sie ihn kleinreden.'},
+]},
+{ text:'„Ich hatte schon mal ein Callcenter. Nie wieder."', wahl:[
+ {t:'„Das höre ich oft, und meistens zu Recht. Was genau ist damals schiefgelaufen?"',
+  p:4, f:'Sie nehmen ihn ernst und lassen ihn erzählen. Danach wissen Sie genau, wogegen Sie sich abgrenzen müssen — er hat Ihnen den Bauplan geliefert.'},
+ {t:'„Wir sind aber kein Callcenter."',
+  p:1, f:'Stimmt, überzeugt aber niemanden. Das behauptet jedes Callcenter von sich.'},
+ {t:'„Bei uns telefoniere ich selbst, jedes Gespräch."',
+  p:3, f:'Guter Unterschied, konkret und überprüfbar. Noch besser nach einer Rückfrage, weil Sie dann genau seinen wunden Punkt treffen.'},
+ {t:'„Dann sind Sie an die Falschen geraten."',
+  p:0, f:'Sie werten seine Entscheidung von damals ab. Niemand hört gern, dass er sich hat reinlegen lassen.'},
+]},
+{ text:'„Ich habe gerade wirklich keine Zeit."', wahl:[
+ {t:'„Verstanden. Wann passt es besser — heute Nachmittag oder morgen früh?"',
+  p:4, f:'Einwand akzeptieren und sofort in einen Termin verwandeln. Alternativfrage statt offener Frage.'},
+ {t:'„Es dauert wirklich nur zwei Minuten."',
+  p:1, f:'Funktioniert manchmal, klingt aber nach Drücker. Und wenn es dann fünf Minuten werden, haben Sie Ihr erstes Versprechen gebrochen.'},
+ {t:'„Kein Problem, ich rufe irgendwann nochmal an."',
+  p:-1, f:'„Irgendwann" heißt nie. Ohne konkreten Zeitpunkt ist der Kontakt verloren.'},
+ {t:'„Dann schicke ich Ihnen eine E-Mail."',
+  p:0, f:'Die Mail landet ungelesen im Papierkorb. Sie tauschen ein Gespräch gegen nichts.'},
+]},
+{ text:'„Schicken Sie mir mal was per Mail."', wahl:[
+ {t:'„Mache ich gern. Damit ich nicht am Thema vorbeischreibe: Woran hakt es bei Ihnen gerade am meisten — Anfragen oder alte Listen?"',
+  p:4, f:'Sie sagen zu und bleiben trotzdem im Gespräch. Die Rückfrage rettet die eigentliche Chance und macht die Mail relevant.'},
+ {t:'„Klar, wie ist Ihre Adresse?"',
+  p:0, f:'Höflich, aber das Gespräch ist damit beendet. „Schicken Sie was" ist in neun von zehn Fällen ein freundliches Nein.'},
+ {t:'„Eine Mail bringt hier wenig, das erkläre ich lieber kurz."',
+  p:1, f:'Inhaltlich richtig, aber Sie widersprechen ihm direkt. Zustimmen und trotzdem weiterfragen wirkt besser.'},
+ {t:'„Unterlagen habe ich keine."',
+  p:-2, f:'Wirkt unprofessionell und lässt ihn ohne nächsten Schritt zurück.'},
+]},
+];
+
+/* ═══════ GESPRÄCH 2: Eigentümer vorqualifizieren ═══════ */
+const EIGENTUEMER_STUFEN=[
+{ id:'eroeffnung', frage:'{eigname} nimmt ab. Sie rufen im Auftrag von {buero} an.', wahl:[
+ {t:'„Guten Tag Frau {eignach}, mein Name ist {ich}, ich rufe im Auftrag von {buero} an. Sie hatten sich dort nach dem Wert Ihrer Immobilie erkundigt — passt es gerade kurz?"',
+  p:4, f:'Auftraggeber sofort nennen, Anlass benennen, Zeit erfragen. Sie machen transparent, woher der Kontakt kommt — das ist rechtlich sauber und schafft Vertrauen.'},
+ {t:'„Guten Tag, ich rufe wegen Ihrer Immobilie an."',
+  p:0, f:'Klingt nach Kaltakquise. Ohne den Auftraggeber fehlt der Grund, warum Sie überhaupt anrufen dürfen.'},
+ {t:'„Hallo, hätten Sie Interesse, Ihre Immobilie zu verkaufen?"',
+  p:-3, f:'Direkte Verkaufsfrage am Anfang. Die Antwort ist fast immer nein — und rechtlich ist es der heikelste Einstieg von allen.'},
+ {t:'„Guten Tag, mein Name ist {ich} von {buero}."',
+  p:2, f:'Solide, aber Sie sind nicht von dem Büro, Sie arbeiten in dessen Auftrag. Der Unterschied ist wichtig, wenn später Fragen kommen.'},
+]},
+{ id:'eigentum', frage:'Sie muss die drei Kriterien erfüllen. Womit fangen Sie an?', wahl:[
+ {t:'„Damit ich nichts durcheinanderbringe: Gehört Ihnen die Immobilie allein, oder gibt es weitere Eigentümer?"',
+  p:4, f:'Kriterium eins, freundlich verpackt. Erbengemeinschaften sind der häufigste Grund, warum ein Termin später platzt.'},
+ {t:'„Wann wollen Sie denn verkaufen?"',
+  p:1, f:'Springt zu Kriterium drei. Ohne geklärtes Eigentum ist der Zeitrahmen wertlos.'},
+ {t:'„Was ist die Immobilie denn wert?"',
+  p:-1, f:'Das ist die Frage des Maklers, nicht Ihre. Und sie führt ins Preisgespräch, das Sie gar nicht führen sollen.'},
+ {t:'„Sie sind doch die Eigentümerin, oder?"',
+  p:2, f:'Suggestivfrage. Sie bekommen ein Ja, das nichts wert ist — Miteigentümer werden so nicht sichtbar.'},
+]},
+{ id:'absicht', frage:'Jetzt zur Verkaufsabsicht.', wahl:[
+ {t:'„Und wie ist der Stand — denken Sie über einen Verkauf nach, oder ging es Ihnen erstmal nur um den Wert?"',
+  p:4, f:'Die entscheidende Frage, und sie gibt ihr ausdrücklich die Erlaubnis, „nur der Wert" zu sagen. Genau diese Ehrlichkeit brauchen Sie — sonst produzieren Sie Termine, die nichts wert sind.'},
+ {t:'„Sie wollen also verkaufen?"',
+  p:1, f:'Geschlossene Frage mit eingebauter Erwartung. Viele sagen aus Höflichkeit ja und sagen den Termin später ab.'},
+ {t:'„Ein Verkauf wäre aktuell sehr günstig für Sie."',
+  p:-2, f:'Sie beraten zum Markt. Das ist Aufgabe des Maklers, und Sie können es nicht belegen.'},
+ {t:'„Wollen Sie einen Termin mit dem Makler?"',
+  p:0, f:'Zu früh. Ohne geklärte Absicht ist der Termin ein Blindflug.'},
+]},
+{ id:'einwand_eig', frage:'Sie zögert.', einwandEig:true },
+{ id:'entscheider', frage:'Vor dem Termin fehlt noch etwas Wichtiges.', wahl:[
+ {t:'„Eine letzte Frage: Entscheiden Sie das allein, oder ist noch jemand mit im Boot, der beim Termin dabei sein sollte?"',
+  p:4, f:'Der Punkt, den fast alle vergessen. Ein Termin ohne den Mitentscheider ist ein zweiter Termin, den der Makler nochmal fahren muss.'},
+ {t:'„Dann trage ich Sie mal ein."',
+  p:0, f:'Termin ohne geklärte Entscheidungslage. Genau daraus entstehen die Absagen, für die Sie nicht bezahlt werden.'},
+ {t:'„Kommt Ihr Mann auch dazu?"',
+  p:1, f:'Unterstellt eine Konstellation, die es vielleicht gar nicht gibt. Offen fragen ist sicherer.'},
+ {t:'„Haben Sie sonst noch Fragen?"',
+  p:1, f:'Höflich, bringt aber die Qualifizierung nicht weiter. Der Entscheider bleibt ungeklärt.'},
+]},
+{ id:'termin', frage:'Termin vereinbaren.', wahl:[
+ {t:'„Herr {maklername} hätte Dienstag um 17 Uhr Zeit oder Donnerstag um 10 Uhr — was passt Ihnen besser?"',
+  p:4, f:'Zwei konkrete Zeiten. Eine offene Frage nach „wann passt es" führt zu „melden Sie sich nochmal".'},
+ {t:'„Wann hätten Sie denn Zeit?"',
+  p:1, f:'Offene Frage am Schluss. Sie verlieren die Führung genau im wichtigsten Moment.'},
+ {t:'„Soll ich einen Termin machen?"',
+  p:0, f:'Fragt nach Erlaubnis statt nach dem Zeitpunkt. Lädt zum Nein ein.'},
+ {t:'„Ich sage dem Makler Bescheid, er meldet sich."',
+  p:-1, f:'Kein fester Termin, also kein qualifizierter Termin. Dafür bekommen Sie kein Geld.'},
+]},
+];
+
+const EINWAENDE_EIG=[
+{ text:'„Ich schaue mich erstmal nur um."', wahl:[
+ {t:'„Völlig in Ordnung — genau dafür ist das Gespräch da. Wenn Sie sich in einem Jahr entscheiden würden: Was müsste bis dahin passieren?"',
+  p:4, f:'Druck rausnehmen und trotzdem qualifizieren. Die Antwort zeigt Ihnen, ob echte Absicht dahintersteckt.'},
+ {t:'„Aber der Markt ist gerade gut."',
+  p:-2, f:'Marktberatung ist nicht Ihre Rolle, und „aber" macht aus dem Gespräch eine Diskussion.'},
+ {t:'„Dann melde ich mich in einem halben Jahr nochmal."',
+  p:2, f:'Ehrlich und sauber. Nur: Sie haben nicht geprüft, ob es vielleicht doch schneller geht.'},
+ {t:'„Ein Gespräch kostet Sie doch nichts."',
+  p:1, f:'Stimmt, wirkt aber drängend. Und ein Termin ohne Absicht kostet den Makler seinen Nachmittag.'},
+]},
+{ text:'„Was kostet mich das denn?"', wahl:[
+ {t:'„Sie zahlen für das Gespräch nichts. Was eine Vermittlung später kostet, bespricht Herr {maklername} beim Termin mit Ihnen."',
+  p:4, f:'Klar und ehrlich, und Sie bleiben in Ihrer Rolle. Provisionsfragen gehören dem Makler, nicht Ihnen.'},
+ {t:'„Die Provision liegt bei etwa 3,5 Prozent."',
+  p:-2, f:'Sie nennen Konditionen, die Sie nicht verantworten. Wenn der Makler andere Zahlen hat, stehen beide schlecht da.'},
+ {t:'„Das kann ich Ihnen nicht sagen."',
+  p:0, f:'Ehrlich, aber hilflos. Ohne Verweis auf den Termin bleibt Unsicherheit zurück.'},
+ {t:'„Gar nichts, das ist alles kostenlos."',
+  p:-3, f:'Schlicht falsch. Eine Vermittlung kostet Provision, und diese Aussage fliegt beim Termin auf.'},
+]},
+{ text:'„Woher haben Sie meine Nummer?"', wahl:[
+ {t:'„Von {buero} — Sie hatten dort am {datum} eine Anfrage gestellt und einen Rückruf gewünscht. Deshalb melde ich mich."',
+  p:4, f:'Die einzig richtige Antwort: Herkunft konkret benennen. Wer das nicht sauber beantworten kann, hätte gar nicht anrufen dürfen.'},
+ {t:'„Die habe ich aus einer Liste."',
+  p:-3, f:'Alarmsignal. Klingt nach gekauften Daten und ist genau der Satz, nach dem eine Beschwerde kommt.'},
+ {t:'„Das weiß ich ehrlich gesagt nicht."',
+  p:-3, f:'Wenn Sie die Herkunft nicht kennen, dürfen Sie nicht anrufen. Der Anruf war dann schon der Fehler.'},
+ {t:'„Sie sind doch öffentlich eingetragen."',
+  p:-2, f:'Öffentlich auffindbar heißt nicht einwilligt. Werbeanrufe bei Privatpersonen brauchen die ausdrückliche Zustimmung.'},
+]},
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   SPIELREGELN
+   Alle Zahlen folgen dem echten Angebot: 100 € je Verkäufer-Termin,
+   50 € je Käufer-Termin, 5 % der Maklerprovision bei Abschluss, die
+   ersten drei Termine je Kunde kostenlos.
+   ═══════════════════════════════════════════════════════════════ */
+const ZIEL=190000, WOCHEN=78;           /* 18 Monate */
+const PREIS_VERK=100, PREIS_KAUF=50, PROVISION=700;
+const GRATIS_JE_KUNDE=3;
+const FIXKOSTEN_MONAT=20, GEHALT_MONAT=2200;
+const GEWERBE_KOSTEN=50;
+
+const GRADE=[
+ {id:'lehrling',name:'Lehrjahr',info:'Mehr Energie, gnädigere Kunden. Zum Kennenlernen.',
+  energie:12,wid:0.8,start:800},
+ {id:'echt',name:'Wie im echten Leben',info:'Die Zahlen aus dem echten Angebot, ungeschönt.',
+  energie:10,wid:1.0,start:500},
+ {id:'hart',name:'Schwerer Markt',info:'Weniger Zeit, härtere Einwände, knappes Geld.',
+  energie:8,wid:1.25,start:300},
+];
+
+const FAEHIGKEITEN=[
+ {id:'eroeffnung',name:'Einstieg',info:'Wie sicher Sie durch die ersten zehn Sekunden kommen.'},
+ {id:'einwand',name:'Einwandbehandlung',info:'Ob ein Nein das Gespräch beendet oder öffnet.'},
+ {id:'qualifizierung',name:'Qualifizierung',info:'Die richtigen Fragen in der richtigen Reihenfolge.'},
+ {id:'abschluss',name:'Abschluss',info:'Aus Interesse einen festen Termin machen.'},
+];
+
+const ERFOLGE=[
+ {id:'gewerbe',name:'Angemeldet',info:'Gewerbe angemeldet.'},
+ {id:'ersterkunde',name:'Der Erste',info:'Den ersten Makler gewonnen.'},
+ {id:'ersterumsatz',name:'Erstes Geld',info:'Die erste Rechnung geschrieben.'},
+ {id:'perfekt',name:'Fehlerfrei',info:'Ein Gespräch ohne eine einzige schwache Antwort.'},
+ {id:'fuenfkunden',name:'Ausgelastet',info:'Fünf Makler gleichzeitig betreut.'},
+ {id:'team',name:'Nicht mehr allein',info:'Den ersten Mitarbeiter eingestellt.'},
+ {id:'zehntermine',name:'Im Fluss',info:'Zehn qualifizierte Termine geliefert.'},
+ {id:'halbzeit',name:'Halbzeit',info:'Die Hälfte des Ziels erreicht.'},
+ {id:'ziel',name:'Angekommen',info:'190.000 € Umsatz erreicht.'},
+];
+
+const EREIGNISSE=[
+ {t:'Ein zufriedener Makler empfiehlt Sie weiter.',w:0.1,wirk:S=>{neuerLead(S,true);return'Ein Empfehlungskontakt liegt im Radar.';}},
+ {t:'Grippewelle. Diese Woche geht weniger.',w:0.08,wirk:S=>{S.energieMalus=3;return'Drei Energiepunkte weniger diese Woche.';}},
+ {t:'Ein Eigentümer beschwert sich über einen Anruf.',w:0.07,wirk:S=>{S.ruf=Math.max(0,S.ruf-8);return'Ihr Ruf leidet. Prüfen Sie die Herkunft der Kontakte.';}},
+ {t:'Ein Termin führte zum Abschluss.',w:0.12,bedingung:S=>S.stat.termine>=3,
+  wirk:S=>{einnahme(S,PROVISION,'Erfolgsbeteiligung aus einem Abschluss');return null;}},
+ {t:'Ein Makler kündigt die Zusammenarbeit.',w:0.06,bedingung:S=>S.kunden.length>0&&S.ruf<60,
+  wirk:S=>{const k=S.kunden.pop();return k.name+' steigt aus.';}},
+ {t:'Eine Fachzeitschrift erwähnt Ihr Angebot.',w:0.05,wirk:S=>{S.ruf=Math.min(100,S.ruf+10);neuerLead(S);return'Ihr Ruf verbessert sich.';}},
+];
+
+/* ═══════ Zustand ═══════ */
+const KEY='wsSim';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function sicher(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+ .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+const zufall=a=>a[Math.floor(Math.random()*a.length)];
+const zahl=n=>Math.round(n).toLocaleString('de-DE');
+const euro=n=>zahl(n)+' €';
+
+let S=null, G=null;   /* S = Spielstand, G = laufendes Gespräch */
+
+function neuerStand(name,grad){
+ const g=GRADE.find(x=>x.id===grad)||GRADE[1];
+ return {name:name||'Chef',grad:g.id,woche:1,tag:1,
+  energie:g.energie,maxEnergie:g.energie,energieMalus:0,
+  geld:g.start,umsatz:0,ruf:70,
+  gewerbe:false,leads:[],kunden:[],team:[],bewerber:[],
+  koennen:{eroeffnung:1,einwand:1,qualifizierung:1,abschluss:1},punkte:2,
+  stat:{anrufeMakler:0,anrufeEig:0,kunden:0,termine:0,geplatzt:0,absagen:0,
+        summePunkte:0,summeMax:0,perfekt:0},
+  notizen:[],erfolge:[],log:[],thema:'light',ende:null};
+}
+function laden(){try{const r=localStorage.getItem(KEY);return r?JSON.parse(r):null;}catch(e){return null;}}
+function sichern(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+let toastZeit;
+function melde(t){const el=$('#toast');el.textContent=t;el.classList.add('auf');
+ clearTimeout(toastZeit);toastZeit=setTimeout(()=>el.classList.remove('auf'),2600);}
+function notiz(text,art){
+ S.log.unshift({w:S.woche,t:S.tag,text,art:art||''});
+ if(S.log.length>60)S.log.length=60;
+}
+function einnahme(S,betrag,grund){
+ S.geld+=betrag;S.umsatz+=betrag;
+ notiz(grund+': '+euro(betrag),'geld');
+ pruefeErfolg('ersterumsatz');
+ if(S.umsatz>=ZIEL/2)pruefeErfolg('halbzeit');
+ if(S.umsatz>=ZIEL){pruefeErfolg('ziel');S.ende='gewonnen';}
+}
+function pruefeErfolg(id){
+ if(S.erfolge.includes(id))return;
+ S.erfolge.push(id);
+ const e=ERFOLGE.find(x=>x.id===id);
+ if(e)melde('Erfolg freigeschaltet: '+e.name);
+}
+
+/* ═══════ Makler und Eigentümer erzeugen ═══════ */
+function neuerLead(S,empfehlung){
+ const typ=zufall(MAKLERTYPEN);
+ const l={id:'m'+Date.now()+Math.floor(Math.random()*9999),
+  vor:zufall(VORNAMEN),nach:zufall(NACHNAMEN),ort:zufall(ORTE),
+  typ:typ.id,typName:typ.name,info:typ.beschreibung,
+  mitarbeiter:typ.mitarbeiter,objekte:typ.objekte,
+  waerme:empfehlung?45:0,versuche:0,gratis:0,kontakte:0,stufe:'neu'};
+ l.name=l.nach+' Immobilien';
+ S.leads.unshift(l);
+ return l;
+}
+function neuerEigentuemer(kunde){
+ return {vor:zufall(VORNAMEN),nach:zufall(NACHNAMEN),ort:kunde.ort,
+  objekt:zufall(OBJEKTE),art:Math.random()<0.72?'verkauf':'kauf',
+  datum:'12.'+(1+Math.floor(Math.random()*9))+'.'};
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GESPRÄCHE
+   Ein Gespräch besteht aus Stufen. Jede Stufe zeigt vier Antworten
+   mit Punkten von -3 bis +4. Nach der Wahl folgt sofort die
+   Begruendung -- ohne sie waere es Raten statt Ueben.
+   ═══════════════════════════════════════════════════════════════ */
+function fuelle(text,d){
+ return text.replace(/\{ich\}/g,S.name).replace(/\{name\}/g,d.name||'')
+  .replace(/\{nachname\}/g,d.nach||'').replace(/\{ort\}/g,d.ort||'')
+  .replace(/\{objekt\}/g,d.objekt||'Objekt').replace(/\{buero\}/g,d.buero||'')
+  .replace(/\{eigname\}/g,d.eigname||'').replace(/\{eignach\}/g,d.eignach||'')
+  .replace(/\{maklername\}/g,d.maklername||'').replace(/\{datum\}/g,d.datum||'');
+}
+function gespraechStarten(art,ziel){
+ const d={};
+ if(art==='makler'){
+  d.name=ziel.vor+' '+ziel.nach; d.nach=ziel.nach; d.ort=ziel.ort;
+  d.objekt=zufall(OBJEKTE); d.buero=ziel.name;
+  G={art,ziel,stufen:MAKLER_STUFEN.slice(),i:0,punkte:0,max:0,d,protokoll:[],schlecht:0};
+ }else{
+  const eig=neuerEigentuemer(ziel);
+  d.eigname=eig.vor+' '+eig.nach; d.eignach=eig.nach; d.ort=eig.ort;
+  d.objekt=eig.objekt; d.buero=ziel.name; d.maklername=ziel.nach; d.datum=eig.datum;
+  G={art,ziel,eig,stufen:EIGENTUEMER_STUFEN.slice(),i:0,punkte:0,max:0,d,protokoll:[],schlecht:0};
+ }
+ ansicht('gespraech');
+ partnerZeigen();
+ $('#verlauf').innerHTML='';
+ stufeZeigen();
+}
+function partnerZeigen(){
+ const d=G.d;
+ const nm=G.art==='makler'?d.name:d.eigname;
+ const unter=G.art==='makler'
+  ? G.ziel.typName+' · '+G.ziel.name+' · '+G.ziel.ort
+  : 'Eigentümer · Kontakt von '+G.ziel.name;
+ const kuerzel=nm.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase();
+ $('#partner').innerHTML=`<span class="avatar">${sicher(kuerzel)}</span>
+  <span class="nm"><b>${sicher(nm)}</b><span>${sicher(unter)}</span></span>
+  <span class="stimmung" id="stimmung"></span>`;
+ stimmungZeigen();
+}
+function stimmungZeigen(){
+ const s=Math.max(-3,Math.min(5,G.punkte));
+ $('#stimmung').innerHTML=[0,1,2,3,4].map(i=>
+  `<i class="${s>i?'an':(s<0&&i<Math.abs(s)?'mies':'')}"></i>`).join('');
+}
+function blase(wer,text,ich){
+ const el=document.createElement('div');
+ el.className='blase'+(ich?' ich':'');
+ el.innerHTML='<span class="wer">'+sicher(wer)+'</span>'+sicher(text);
+ $('#verlauf').appendChild(el);
+ el.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function stufeZeigen(){
+ if(G.i>=G.stufen.length){gespraechEnde();return;}
+ const st=G.stufen[G.i];
+ let wahlen, frageText=st.frage;
+ if(st.einwand){
+  const e=zufall(EINWAENDE); G.aktEinwand=e; wahlen=e.wahl;
+  blase(G.d.name,e.text);
+  frageText='Wie antworten Sie?';
+ }else if(st.einwandEig){
+  const e=zufall(EINWAENDE_EIG); G.aktEinwand=e; wahlen=e.wahl;
+  blase(G.d.eigname,fuelle(e.text,G.d));
+  frageText='Wie antworten Sie?';
+ }else{
+  wahlen=st.wahl;
+ }
+ G.aktWahlen=wahlen;
+ const beste=Math.max(...wahlen.map(w=>w.p));
+ G.max+=beste;
+ $('#frageBereich').innerHTML=`<div class="frage">${sicher(fuelle(frageText,G.d))}</div>
+  <div class="wahlen">${wahlen.map((w,i)=>
+   `<button class="wahl" data-w="${i}">${sicher(fuelle(w.t,G.d))}</button>`).join('')}</div>`;
+ $$('.wahl').forEach(b=>b.onclick=()=>waehlen(Number(b.dataset.w)));
+}
+function waehlen(i){
+ const w=G.aktWahlen[i];
+ const beste=Math.max(...G.aktWahlen.map(x=>x.p));
+ /* Können hilft: ab Stufe 3 zählt eine mittelmäßige Antwort etwas mehr */
+ const st=G.stufen[G.i];
+ const bereich=st.einwand||st.einwandEig?'einwand':
+   (st.id==='eroeffnung'?'eroeffnung':(st.id==='abschluss'||st.id==='termin'?'abschluss':'qualifizierung'));
+ const bonus=(S.koennen[bereich]-1)*0.25;
+ const punkte=w.p+(w.p>0?bonus:0);
+ G.punkte+=punkte;
+ if(w.p<=0)G.schlecht++;
+ G.protokoll.push({frage:st.id,gewaehlt:w,beste,punkte});
+ if(w.p===beste&&w.p>0)notizSammeln(fuelle(w.t,G.d),w.f);
+
+ $$('.wahl').forEach((b,k)=>{
+  b.disabled=true;
+  if(k===i)b.classList.add(w.p>0?'gut':'schlecht');
+ });
+ blase('Sie',fuelle(w.t,G.d),true);
+ const art=w.p>=beste?'gut':(w.p<=0?'schlecht':'');
+ const zeichen=w.p>0?'+'+w.p:String(w.p);
+ $('#frageBereich').insertAdjacentHTML('beforeend',
+  `<div class="rueck ${art}"><span class="pkt">${zeichen}</span>${sicher(w.f)}
+   ${w.p<beste?'<div style="margin-top:9px;font-size:13.5px;color:var(--muted)"><b style="color:var(--ink)">Besser wäre gewesen:</b> „'
+     +sicher(fuelle(G.aktWahlen.find(x=>x.p===beste).t,G.d))+'"</div>':''}
+   <button class="knopf knopf-voll knopf-klein" id="weiter" style="margin-top:12px">Weiter</button></div>`);
+ stimmungZeigen();
+ $('#weiter').onclick=()=>{G.i++;$('#frageBereich').innerHTML='';stufeZeigen();};
+ $('#weiter').scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function notizSammeln(text,warum){
+ if(S.notizen.some(n=>n.t===text))return;
+ S.notizen.unshift({t:text,f:warum});
+ if(S.notizen.length>40)S.notizen.length=40;
+}
+
+/* ═══════ Ergebnis eines Gesprächs ═══════ */
+function gespraechEnde(){
+ const anteil=G.max>0?G.punkte/G.max:0;
+ S.stat.summePunkte+=G.punkte; S.stat.summeMax+=G.max;
+ if(G.schlecht===0){S.stat.perfekt++;pruefeErfolg('perfekt');}
+ const g=GRADE.find(x=>x.id===S.grad);
+ const typ=MAKLERTYPEN.find(t=>t.id===(G.ziel.typ||'solo'))||MAKLERTYPEN[1];
+ const huerde=0.55*typ.wid*g.wid*(G.art==='makler'?1:0.92);
+ const erfolg=anteil>=huerde;
+ let zeilen=G.protokoll.map(p=>{
+  const art=p.gewaehlt.p>=p.beste?'gut':(p.gewaehlt.p<=0?'schlecht':'neutral');
+  return `<div class="zeile ${art}"><span class="p">${p.gewaehlt.p>0?'+':''}${p.gewaehlt.p}</span>
+   <span>${sicher(p.gewaehlt.f)}</span></div>`;}).join('');
+ let kopf,text;
+ if(G.art==='makler'){
+  G.ziel.versuche++;
+  if(erfolg){
+   G.ziel.stufe='kunde'; G.ziel.kontakte=6+Math.floor(Math.random()*10);
+   S.kunden.push(G.ziel); S.leads=S.leads.filter(l=>l.id!==G.ziel.id);
+   S.stat.kunden++; pruefeErfolg('ersterkunde');
+   if(S.kunden.length>=5)pruefeErfolg('fuenfkunden');
+   kopf='Zusage'; text=G.ziel.name+' testet Sie mit drei kostenlosen Terminen.';
+   notiz(G.ziel.name+' als Kunde gewonnen','gut');
+  }else{
+   G.ziel.waerme+=Math.round(anteil*40);
+   if(G.ziel.versuche>=3){S.leads=S.leads.filter(l=>l.id!==G.ziel.id);
+    kopf='Endgültig abgesagt'; text='Nach drei Versuchen ist hier nichts mehr zu holen.';
+    S.stat.absagen++; notiz(G.ziel.name+' endgültig abgesagt','schlecht');}
+   else{kopf='Noch kein Ja'; text='Aber die Tür ist offen — beim nächsten Anruf sind Sie weiter.';
+    notiz(G.ziel.name+': kein Abschluss','schlecht');}
+  }
+ }else{
+  const k=G.ziel; k.kontakte--;
+  if(erfolg){
+   S.stat.termine++;
+   if(S.stat.termine>=10)pruefeErfolg('zehntermine');
+   const verkauf=G.eig.art==='verkauf';
+   if(k.gratis<GRATIS_JE_KUNDE){
+    k.gratis++;
+    kopf='Termin steht'; text='Kostenloser Testtermin '+k.gratis+' von '+GRATIS_JE_KUNDE+' — noch kein Geld, aber Vertrauen.';
+    notiz('Qualifizierter Termin für '+k.name+' (gratis)','gut');
+   }else{
+    const betrag=verkauf?PREIS_VERK:PREIS_KAUF;
+    einnahme(S,betrag,'Termin für '+k.name);
+    kopf='Termin steht'; text=(verkauf?'Verkäufer-Termin':'Käufer-Termin')+' — '+euro(betrag)+' verdient.';
+   }
+   S.ruf=Math.min(100,S.ruf+2);
+  }else{
+   S.stat.geplatzt++; S.ruf=Math.max(0,S.ruf-1);
+   kopf='Kein Termin'; text='Die Qualifizierung hat nicht gereicht. Kein Termin heißt: kein Geld — aber auch kein verbrannter Nachmittag für den Makler.';
+   notiz('Qualifizierung ohne Termin','schlecht');
+  }
+ }
+ const note=Math.max(1,Math.min(6,7-Math.round(anteil*6)));
+ $('#frageBereich').innerHTML=`<div class="karte auswert">
+   <div class="note">${erfolg?'✓':'✕'}</div>
+   <h2 style="margin-top:10px">${sicher(kopf)}</h2>
+   <p style="color:var(--muted);margin-top:6px">${sicher(text)}</p>
+   <div style="margin-top:14px"><span class="pille ${anteil>=huerde?'p-gut':'p-warn'}">
+     ${Math.round(anteil*100)} % der möglichen Punkte · Schulnote ${note}</span></div>
+   <div class="zeilen">${zeilen}</div>
+   <button class="knopf knopf-voll" id="zurueck">Zurück ins Büro</button></div>`;
+ $('#zurueck').onclick=()=>{sichern();ansicht('spiel');zeichnen();};
+ sichern();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TAGESABLAUF UND WIRTSCHAFT
+   ═══════════════════════════════════════════════════════════════ */
+const AKTIONEN=[
+ {id:'gewerbe',name:'Gewerbe anmelden',info:'Ohne Anmeldung dürfen Sie nicht abrechnen. Kostet '+GEWERBE_KOSTEN+' € und einen halben Tag.',
+  energie:3,sichtbar:S=>!S.gewerbe,
+  tun:S=>{ if(S.geld<GEWERBE_KOSTEN){melde('Dafür reicht das Geld nicht.');return false;}
+   S.geld-=GEWERBE_KOSTEN; S.gewerbe=true; pruefeErfolg('gewerbe');
+   notiz('Gewerbe angemeldet — Sie dürfen jetzt Rechnungen schreiben','gut');
+   fenster('Angemeldet','Als Tätigkeit steht dort: „Telefonische Terminvereinbarung und Vertriebsunterstützung für Immobilienunternehmen“. Bewusst nichts mit Vermittlung — das wäre erlaubnispflichtig nach § 34c GewO.');
+   return true;}},
+ {id:'recherche',name:'Maklerbüros recherchieren',info:'Portale und Karte durchgehen. Bringt zwei bis vier neue Büros.',
+  energie:1,
+  tun:S=>{const n=2+Math.floor(Math.random()*3);
+   for(let i=0;i<n;i++)neuerLead(S);
+   notiz(n+' neue Büros im Radar');melde(n+' Büros gefunden.');return true;}},
+ {id:'maklerAnruf',name:'Makler anrufen',info:'Ein Akquisegespräch führen. Der Kern Ihres Geschäfts.',
+  energie:2,sichtbar:()=>true,
+  moeglich:S=>S.leads.length>0,
+  warum:'Erst Büros recherchieren.',
+  tun:S=>{const sortiert=S.leads.slice().sort((a,b)=>b.waerme-a.waerme);
+   S.stat.anrufeMakler++; gespraechStarten('makler',sortiert[0]); return 'gespraech';}},
+ {id:'eigAnruf',name:'Eigentümer vorqualifizieren',info:'Für einen Ihrer Kunden telefonieren. Nur so entsteht Umsatz.',
+  energie:2,
+  moeglich:S=>S.kunden.some(k=>k.kontakte>0),
+  warum:'Sie brauchen erst einen Maklerkunden mit Kontakten.',
+  tun:S=>{const k=S.kunden.filter(x=>x.kontakte>0).sort((a,b)=>b.kontakte-a.kontakte)[0];
+   S.stat.anrufeEig++; gespraechStarten('eigentuemer',k); return 'gespraech';}},
+ {id:'weiterbildung',name:'Trainieren',info:'Aufzeichnungen durchgehen, Formulierungen üben. Gibt einen Fähigkeitspunkt.',
+  energie:3,
+  tun:S=>{S.punkte++; notiz('Einen Fähigkeitspunkt erarbeitet','gut');
+   melde('Fähigkeitspunkt erhalten — unter „Können" einsetzen.'); return true;}},
+];
+
+function aktionMoeglich(a){
+ if(a.sichtbar&&!a.sichtbar(S))return null;
+ if(a.moeglich&&!a.moeglich(S))return{aus:true,grund:a.warum};
+ if(S.energie<a.energie)return{aus:true,grund:'Zu wenig Energie für heute.'};
+ return{aus:false};
+}
+function aktionAusfuehren(id){
+ const a=AKTIONEN.find(x=>x.id===id);
+ const m=aktionMoeglich(a);
+ if(!m||m.aus){if(m)melde(m.grund);return;}
+ S.energie-=a.energie;
+ const r=a.tun(S);
+ if(r===false){S.energie+=a.energie;return;}
+ sichern();
+ if(r!=='gespraech'){zeichnen();}
+}
+
+/* ═══════ Tag und Woche ═══════ */
+function tagBeenden(){
+ /* Mitarbeiter arbeiten selbstständig */
+ S.team.forEach(m=>{
+  const chance=0.28+m.koennen*0.09+(S.koennen.qualifizierung-1)*0.03;
+  const versuche=2;
+  for(let i=0;i<versuche;i++){
+   const k=S.kunden.filter(x=>x.kontakte>0)[0];
+   if(!k)break;
+   k.kontakte--;
+   if(Math.random()<chance){
+    S.stat.termine++;
+    if(k.gratis<GRATIS_JE_KUNDE){k.gratis++;notiz(m.name+' hat einen Testtermin gemacht','gut');}
+    else einnahme(S,Math.random()<0.72?PREIS_VERK:PREIS_KAUF,'Termin von '+m.name);
+   }else{S.stat.geplatzt++;}
+  }
+  m.erfahrung++;
+  if(m.erfahrung>=12&&m.koennen<3){m.koennen++;m.erfahrung=0;
+   notiz(m.name+' ist besser geworden (Stufe '+m.koennen+')','gut');}
+ });
+
+ S.tag++;
+ if(S.tag>5){S.tag=1;S.woche++;wocheAbschliessen();}
+ S.energie=Math.max(3,S.maxEnergie-(S.energieMalus||0));
+ if(S.woche>WOCHEN&&!S.ende)S.ende='zeit';
+ sichern();
+ if(S.ende)endeZeigen(); else zeichnen();
+}
+function wocheAbschliessen(){
+ S.energieMalus=0;
+ /* Kunden liefern neue Kontakte nach */
+ S.kunden.forEach(k=>{ k.kontakte+=2+Math.floor(Math.random()*4); });
+ /* Kosten alle vier Wochen */
+ if(S.woche%4===1&&S.woche>1){
+  const kosten=FIXKOSTEN_MONAT+S.team.length*GEHALT_MONAT;
+  S.geld-=kosten;
+  notiz('Monatliche Kosten: '+euro(kosten),kosten>0?'schlecht':'');
+  if(S.geld<0){S.ende='pleite';return;}
+ }
+ /* Bewerbungen */
+ if(S.team.length<3&&S.bewerber.length<2&&Math.random()<0.45){
+  S.bewerber.push({id:'b'+Date.now()+Math.floor(Math.random()*999),
+   name:zufall(VORNAMEN)+' '+zufall(NACHNAMEN),
+   koennen:1+Math.floor(Math.random()*3),erfahrung:0,
+   gehalt:GEHALT_MONAT});
+ }
+ /* Ereignis */
+ const moeglich=EREIGNISSE.filter(e=>!e.bedingung||e.bedingung(S));
+ moeglich.forEach(e=>{
+  if(Math.random()<e.w){
+   const zusatz=e.wirk(S);
+   notiz(e.t+(zusatz?' '+zusatz:''),'');
+  }
+ });
+ notiz('Woche '+(S.woche-1)+' abgeschlossen — Umsatz bisher '+euro(S.umsatz),'geld');
+}
+
+function einstellen(id){
+ const b=S.bewerber.find(x=>x.id===id); if(!b)return;
+ if(S.geld<b.gehalt){melde('Ein Monatsgehalt sollten Sie auf der Seite haben.');return;}
+ S.team.push({...b,erfahrung:0});
+ S.bewerber=S.bewerber.filter(x=>x.id!==id);
+ pruefeErfolg('team');
+ notiz(b.name+' eingestellt — '+euro(b.gehalt)+' im Monat','');
+ fenster('Eingestellt','Ab jetzt läuft je Arbeitstag ein Teil der Anrufe ohne Sie. Das Gehalt wird jeden Monat abgebucht, egal wie viele Termine zustande kommen — genau das ist das Risiko beim Einstellen.');
+ sichern(); zeichnen();
+}
+function koennenSteigern(id){
+ if(S.punkte<1){melde('Kein Fähigkeitspunkt frei.');return;}
+ if(S.koennen[id]>=5){melde('Bereits auf der höchsten Stufe.');return;}
+ S.koennen[id]++; S.punkte--;
+ melde(FAEHIGKEITEN.find(f=>f.id===id).name+' auf Stufe '+S.koennen[id]);
+ sichern(); zeichnen();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DARSTELLUNG
+   ═══════════════════════════════════════════════════════════════ */
+function ansicht(n){
+ $$('.ansicht').forEach(a=>a.classList.remove('an'));
+ $('#a-'+n).classList.add('an');
+ $('#kopf').hidden=(n==='start');
+ scrollTo({top:0,behavior:'instant'});
+}
+function fenster(titel,text,knopf){
+ $('#fenster').innerHTML=`<h2>${sicher(titel)}</h2><p>${sicher(text)}</p>
+  <button class="knopf knopf-voll" id="fZu" style="margin-top:18px;width:100%">${sicher(knopf||'Verstanden')}</button>`;
+ $('#ueberlage').classList.add('auf');
+ $('#fZu').onclick=()=>$('#ueberlage').classList.remove('auf');
+}
+function zeichnen(){
+ werteZeichnen(); aktionenZeichnen(); logZeichnen();
+ kundenZeichnen(); teamZeichnen(); koennenZeichnen(); zahlenZeichnen();
+}
+function werteZeichnen(){
+ const monat=Math.ceil(S.woche/4.33);
+ $('#werte').innerHTML=[
+  ['Woche',S.woche+' / '+WOCHEN,'Monat '+monat],
+  ['Tag','Tag '+S.tag+' / 5',''],
+  ['Energie',S.energie+' / '+S.maxEnergie,''],
+  ['Konto',euro(S.geld),'',S.geld<500?'warnung':'geld'],
+  ['Umsatz',euro(S.umsatz),''],
+  ['Ruf',S.ruf+' %','',S.ruf<50?'warnung':''],
+ ].map(([t,w,u,k])=>`<div class="wert ${k||''}"><div class="t">${t}</div>
+   <div class="w tab-zahl">${sicher(w)}</div></div>`).join('');
+ const anteil=Math.min(100,S.umsatz/ZIEL*100);
+ $('#zbBalken').style.width=anteil+'%';
+ $('#zbLinks').textContent=euro(S.umsatz)+' ('+Math.round(anteil)+' %)';
+}
+function aktionenZeichnen(){
+ const knoepfe=AKTIONEN.map(a=>{
+  const m=aktionMoeglich(a); if(!m)return '';
+  return `<button class="aktion" data-a="${a.id}" ${m.aus?'disabled title="'+sicher(m.grund)+'"':''}>
+   <span class="kosten">${a.energie} E</span><b>${sicher(a.name)}</b>
+   <span>${sicher(m.aus?m.grund:a.info)}</span></button>`;
+ }).join('');
+ $('#aktionen').innerHTML=knoepfe+
+  `<button class="aktion" data-a="__tag" style="border-color:var(--ink)">
+    <b>Feierabend</b><span>Tag beenden. Ihr Team arbeitet weiter, dann beginnt der nächste Tag.</span></button>`;
+ $$('[data-a]').forEach(b=>b.onclick=()=>{
+  if(b.dataset.a==='__tag')tagBeenden(); else aktionAusfuehren(b.dataset.a);});
+}
+function logZeichnen(){
+ $('#log').innerHTML=S.log.length?S.log.map(l=>
+  `<div class="log-z ${l.art}"><span class="zt">W${l.w}·T${l.t}</span><span>${sicher(l.text)}</span></div>`).join('')
+  :'<p style="font-size:13px;color:var(--muted)">Noch nichts passiert.</p>';
+}
+function kundenZeichnen(){
+ $('#kundenHin').textContent=S.kunden.length
+  ? S.kunden.length+' Kunden · '+S.kunden.reduce((s,k)=>s+k.kontakte,0)+' offene Kontakte'
+  : 'Noch keine Kunden. Rufen Sie Maklerbüros an.';
+ $('#kundenListe').innerHTML=S.kunden.map(k=>
+  `<div class="eintrag"><span class="haupt"><b>${sicher(k.name)}</b>
+    <span>${sicher(k.typName)} · ${sicher(k.ort)} · ${k.kontakte} Kontakte offen</span>
+    <span class="balkenmini"><i style="width:${Math.min(100,k.gratis/GRATIS_JE_KUNDE*100)}%"></i></span></span>
+   <span class="pille ${k.gratis>=GRATIS_JE_KUNDE?'p-gut':'p-warn'}">
+     ${k.gratis>=GRATIS_JE_KUNDE?'zahlt':'Test '+k.gratis+'/'+GRATIS_JE_KUNDE}</span></div>`).join('')
+  ||'<p style="font-size:13px;color:var(--muted)">Leer.</p>';
+ $('#leadHin').textContent=S.leads.length+' Büros im Radar';
+ $('#leadListe').innerHTML=S.leads.slice(0,14).map(l=>
+  `<div class="eintrag"><span class="haupt"><b>${sicher(l.name)}</b>
+    <span>${sicher(l.typName)} · ${sicher(l.ort)} · ${l.mitarbeiter} MA · ${l.objekte} Objekte</span>
+    <span style="font-size:12px;color:var(--muted);margin-top:3px">${sicher(l.info)}</span></span>
+   <span class="pille ${l.waerme>40?'p-gut':(l.waerme>0?'p-warn':'p-grau')}">
+     ${l.waerme>40?'warm':(l.waerme>0?'angetaut':'kalt')}</span></div>`).join('')
+  ||'<p style="font-size:13px;color:var(--muted)">Leer — recherchieren Sie.</p>';
+}
+function teamZeichnen(){
+ $('#teamHin').textContent=S.team.length
+  ? S.team.length+' Mitarbeiter · '+euro(S.team.length*GEHALT_MONAT)+' Gehalt im Monat'
+  : 'Sie telefonieren noch allein. Ein Mitarbeiter kostet '+euro(GEHALT_MONAT)+' im Monat — unabhängig vom Ergebnis.';
+ $('#teamListe').innerHTML=S.team.map(m=>
+  `<div class="eintrag"><span class="haupt"><b>${sicher(m.name)}</b>
+    <span>Können Stufe ${m.koennen} von 3 · ${euro(m.gehalt)} im Monat</span>
+    <span class="balkenmini"><i style="width:${Math.round(m.erfahrung/12*100)}%"></i></span></span>
+   <span class="pille p-info">${(28+m.koennen*9)} % Trefferquote</span></div>`).join('')
+  ||'<p style="font-size:13px;color:var(--muted)">Kein Team.</p>';
+ $('#bewerbungen').innerHTML=S.bewerber.map(b=>
+  `<div class="eintrag"><span class="haupt"><b>${sicher(b.name)}</b>
+    <span>Können Stufe ${b.koennen} von 3 · Wunschgehalt ${euro(b.gehalt)}</span></span>
+   <button class="knopf knopf-linie knopf-klein" data-ein="${b.id}">Einstellen</button></div>`).join('')
+  ||'<p style="font-size:13px;color:var(--muted)">Zurzeit keine Bewerbungen.</p>';
+ $$('[data-ein]').forEach(b=>b.onclick=()=>einstellen(b.dataset.ein));
+}
+function koennenZeichnen(){
+ $('#freiePunkte').textContent=S.punkte+(S.punkte===1?' Punkt frei':' Punkte frei');
+ $('#faehigkeiten').innerHTML=FAEHIGKEITEN.map(f=>{
+  const st=S.koennen[f.id];
+  return `<div class="fk"><div class="kopfz"><b>${sicher(f.name)}</b>
+    <span class="stern">${'★'.repeat(st)}${'☆'.repeat(5-st)}</span></div>
+   <p>${sicher(f.info)}</p>
+   <button class="knopf knopf-linie knopf-klein" data-k="${f.id}" ${S.punkte<1||st>=5?'disabled':''}>
+     ${st>=5?'Höchststufe':'Verbessern'}</button></div>`;}).join('');
+ $$('[data-k]').forEach(b=>b.onclick=()=>koennenSteigern(b.dataset.k));
+ $('#notizbuch').innerHTML=S.notizen.length?S.notizen.map(n=>
+  `<div class="eintrag" style="align-items:flex-start"><span class="haupt">
+    <b style="font-weight:500">„${sicher(n.t)}"</b>
+    <span style="margin-top:4px">${sicher(n.f)}</span></span></div>`).join('')
+  :'<p style="font-size:13px;color:var(--muted)">Noch leer. Wählen Sie im Gespräch die beste Antwort, dann landet sie hier.</p>';
+}
+function zahlenZeichnen(){
+ const st=S.stat;
+ const stufen=[['Büros recherchiert',S.leads.length+S.kunden.length+st.absagen],
+  ['Makler angerufen',st.anrufeMakler],['Kunden gewonnen',st.kunden],
+  ['Eigentümer angerufen',st.anrufeEig],['Termine qualifiziert',st.termine]];
+ const max=Math.max(1,...stufen.map(s=>s[1]));
+ $('#trichter').innerHTML=stufen.map(([t,w])=>
+  `<div style="display:flex;align-items:center;gap:11px;margin-bottom:8px">
+   <span style="width:150px;flex:none;font-size:13px;color:var(--muted)">${t}</span>
+   <span style="flex:1;height:22px;background:var(--bg);border-radius:6px;overflow:hidden">
+     <i style="display:block;height:100%;width:${Math.round(w/max*100)}%;border-radius:6px;
+       background:linear-gradient(90deg,var(--grad-1),var(--ink))"></i></span>
+   <span class="tab-zahl" style="width:52px;text-align:right;font-weight:600;font-size:13px">${w}</span></div>`).join('');
+ const quote=st.summeMax>0?Math.round(st.summePunkte/st.summeMax*100):0;
+ const abschluss=st.anrufeMakler>0?Math.round(st.kunden/st.anrufeMakler*100):0;
+ const termin=st.anrufeEig>0?Math.round(st.termine/(st.termine+st.geplatzt||1)*100):0;
+ $('#qualitaet').innerHTML=[
+  ['Antwortgüte',quote+' %','Anteil der erreichten an den möglichen Punkten'],
+  ['Abschlussquote Makler',abschluss+' %','Kunden je Akquiseanruf'],
+  ['Terminquote',termin+' %','qualifizierte Termine je Eigentümergespräch'],
+  ['Fehlerfreie Gespräche',st.perfekt,'ohne eine einzige schwache Antwort'],
+ ].map(([t,w,u])=>`<div class="eintrag"><span class="haupt"><b>${t}</b><span>${u}</span></span>
+   <span class="pille p-info tab-zahl">${w}</span></div>`).join('');
+ $('#erfolge').innerHTML=ERFOLGE.map(e=>{
+  const hat=S.erfolge.includes(e.id);
+  return `<div class="eintrag" style="${hat?'':'opacity:.45'}"><span class="haupt">
+    <b>${hat?'✓ ':''}${sicher(e.name)}</b><span>${sicher(e.info)}</span></span></div>`;}).join('');
+}
+
+/* ═══════ Einwand-Trainer ═══════ */
+let T=null;
+function trainerStart(){
+ const pool=EINWAENDE.concat(EINWAENDE_EIG);
+ T={i:0,punkte:0,max:0,liste:Array.from({length:10},()=>zufall(pool))};
+ trainerZeigen();
+}
+function trainerZeigen(){
+ if(!T){$('#trainerBereich').innerHTML=
+  '<button class="knopf knopf-voll" id="tStart">Zehn Einwände starten</button>';
+  $('#tStart').onclick=trainerStart;return;}
+ if(T.i>=T.liste.length){
+  const q=Math.round(T.punkte/T.max*100);
+  $('#trainerBereich').innerHTML=`<div class="auswert">
+   <div class="note">${q} %</div>
+   <p style="color:var(--muted);margin-top:8px">${q>=85?'Sehr sicher. Diese Einwände halten Sie nicht mehr auf.'
+    :q>=65?'Solide. Die Hälfte sitzt, der Rest kommt mit Wiederholung.'
+    :'Noch wacklig. Gehen Sie die Begründungen in Ruhe durch — dafür ist der Trainer da.'}</p>
+   <button class="knopf knopf-voll" id="tNeu" style="margin-top:16px">Nochmal</button></div>`;
+  $('#tNeu').onclick=trainerStart; T=null; return;}
+ const e=T.liste[T.i];
+ const beste=Math.max(...e.wahl.map(w=>w.p)); T.max+=beste;
+ $('#trainerBereich').innerHTML=`<p style="font-size:12px;color:var(--muted)">Einwand ${T.i+1} von 10</p>
+  <div class="blase" style="margin-top:9px">${sicher(fuelle(e.text,{maklername:'Berger',buero:'Muster Immobilien'}))}</div>
+  <div class="wahlen" style="margin-top:12px">${e.wahl.map((w,i)=>
+   `<button class="wahl" data-t="${i}">${sicher(fuelle(w.t,{maklername:'Berger',buero:'Muster Immobilien',datum:'12.3.'}))}</button>`).join('')}</div>
+  <div id="tRueck"></div>`;
+ $$('[data-t]').forEach(b=>b.onclick=()=>{
+  const w=e.wahl[Number(b.dataset.t)];
+  T.punkte+=Math.max(0,w.p);
+  $$('[data-t]').forEach((x,k)=>{x.disabled=true;
+   if(k===Number(b.dataset.t))x.classList.add(w.p>0?'gut':'schlecht');});
+  $('#tRueck').innerHTML=`<div class="rueck ${w.p>=beste?'gut':(w.p<=0?'schlecht':'')}">
+    <span class="pkt">${w.p>0?'+':''}${w.p}</span>${sicher(w.f)}
+    <button class="knopf knopf-voll knopf-klein" id="tW" style="margin-top:11px">Weiter</button></div>`;
+  $('#tW').onclick=()=>{T.i++;trainerZeigen();};});
+}
+
+/* ═══════ Ende ═══════ */
+function endeZeigen(){
+ const gewonnen=S.ende==='gewonnen';
+ const titel=gewonnen?'Ziel erreicht':(S.ende==='pleite'?'Zahlungsunfähig':'Zeit abgelaufen');
+ const text=gewonnen
+  ?'Sie haben in '+S.woche+' Wochen '+euro(S.umsatz)+' Umsatz gemacht.'
+  :(S.ende==='pleite'
+   ?'Das Konto ist ins Minus gerutscht. Meist liegt es an einem Mitarbeiter, der eingestellt wurde, bevor genug zahlende Kunden da waren.'
+   :'Nach 18 Monaten stehen '+euro(S.umsatz)+' auf der Uhr — das Ziel waren '+euro(ZIEL)+'.');
+ const q=S.stat.summeMax>0?Math.round(S.stat.summePunkte/S.stat.summeMax*100):0;
+ $('#endeInhalt').innerHTML=`<div class="zert">
+   <div class="kl">Vertriebler-Simulator</div>
+   <h2>${sicher(titel)}</h2>
+   <div class="nm">${sicher(S.name)}</div>
+   <p style="color:var(--muted)">${sicher(text)}</p>
+   <div class="zeilen" style="margin-top:18px">
+    <div class="zeile neutral"><span class="p">${S.stat.anrufeMakler}</span><span>Akquisegespräche geführt</span></div>
+    <div class="zeile neutral"><span class="p">${S.stat.kunden}</span><span>Maklerbüros gewonnen</span></div>
+    <div class="zeile neutral"><span class="p">${S.stat.termine}</span><span>qualifizierte Termine geliefert</span></div>
+    <div class="zeile ${q>=70?'gut':'neutral'}"><span class="p">${q}%</span><span>Antwortgüte über alle Gespräche</span></div>
+    <div class="zeile ${S.stat.perfekt>0?'gut':'neutral'}"><span class="p">${S.stat.perfekt}</span><span>fehlerfreie Gespräche</span></div>
+   </div>
+   <button class="knopf knopf-voll" id="eNeu" style="margin-top:8px">Neues Spiel</button>
+   <button class="knopf knopf-linie" id="eDruck" style="margin-top:8px">Als Nachweis drucken</button>
+  </div>`;
+ $('#eNeu').onclick=neuStarten;
+ $('#eDruck').onclick=()=>print();
+ ansicht('ende');
+}
+
+/* ═══════ Bedienung ═══════ */
+function themaSetzen(t){
+ S.thema=t; document.documentElement.dataset.theme=t;
+ $('#icoThema').innerHTML=t==='dark'
+  ?'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'
+  :'<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+ sichern();
+}
+function neuStarten(){
+ if(S&&!S.ende&&!confirm('Laufendes Spiel verwerfen?'))return;
+ localStorage.removeItem(KEY); S=null; T=null;
+ gradeZeichnen(); ansicht('start');
+}
+let gewaehlterGrad='echt';
+function gradeZeichnen(){
+ $('#grade').innerHTML=GRADE.map(g=>
+  `<button class="grad ${g.id===gewaehlterGrad?'on':''}" data-g="${g.id}">
+   <b>${sicher(g.name)}</b><span>${sicher(g.info)}</span></button>`).join('');
+ $$('[data-g]').forEach(b=>b.onclick=()=>{gewaehlterGrad=b.dataset.g;gradeZeichnen();});
+}
+$('#btnStart').onclick=()=>{
+ S=neuerStand($('#sName').value.trim(),gewaehlterGrad);
+ for(let i=0;i<3;i++)neuerLead(S);
+ notiz('Firma gegründet. Erst das Gewerbe anmelden, dann Büros anrufen.','gut');
+ themaSetzen(S.thema); sichern(); ansicht('spiel'); zeichnen();
+ fenster('Los geht es','Sie haben fünf Arbeitstage je Woche und jeden Tag begrenzte Energie. Erst das Gewerbe anmelden — ohne Anmeldung dürfen Sie nicht abrechnen. Danach Büros recherchieren und anrufen. Jedes Gespräch wird Antwort für Antwort ausgewertet.');
+};
+$$('#reiter .rbtn').forEach(b=>b.onclick=()=>{
+ $$('#reiter .rbtn').forEach(x=>x.classList.remove('on'));
+ b.classList.add('on');
+ $$('.rteil').forEach(t=>t.hidden=true);
+ $('#r-'+b.dataset.r).hidden=false;
+ if(b.dataset.r==='trainer')trainerZeigen();
+});
+$('#btnThema').onclick=()=>themaSetzen(S.thema==='dark'?'light':'dark');
+$('#btnNeu').onclick=neuStarten;
+$('#btnHilfe').onclick=()=>fenster('Spielregeln',
+ 'Fünf Arbeitstage je Woche, jeder Tag hat begrenzte Energie. Jede Aktion kostet Energie. '
+ +'Ein Maklerkunde testet Sie mit drei kostenlosen Terminen — erst ab dem vierten fließt Geld: '
+ +'100 € je Verkäufer-Termin, 50 € je Käufer-Termin. Zusätzlich 5 % der Maklerprovision bei Abschluss. '
+ +'Mitarbeiter telefonieren selbstständig, kosten aber jeden Monat Gehalt, ob es läuft oder nicht. '
+ +'Ziel sind 190.000 € Umsatz in 18 Monaten.');
+$('#ueberlage').onclick=e=>{if(e.target===$('#ueberlage'))$('#ueberlage').classList.remove('auf');};
+addEventListener('keydown',e=>{if(e.key==='Escape')$('#ueberlage').classList.remove('auf');});
+
+/* Start */
+const alt=laden();
+if(alt&&alt.name){
+ S=alt; themaSetzen(S.thema||'light');
+ if(S.ende)endeZeigen(); else {ansicht('spiel');zeichnen();}
+}else{
+ document.documentElement.dataset.theme='light';
+ $('#icoThema').innerHTML='<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+ gradeZeichnen(); ansicht('start');
+}
+
+</script>
+</body>
+</html>
