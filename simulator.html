@@ -568,6 +568,9 @@ button{background:none;border:none;cursor:pointer}
   transform:translateY(24px) scale(.96);opacity:0;pointer-events:none;
   transition:transform .45s var(--federn),opacity .35s var(--ez)}
 .gutschrift.auf{transform:none;opacity:1}
+/* display:grid schlaegt das UA-[hidden] -- ohne diese Zeile bleibt der
+   Beleg als unsichtbarer Kasten stehen, statt wirklich weg zu sein. */
+.gutschrift[hidden]{display:none}
 .gs-karte{border-radius:11px;overflow:hidden;background:linear-gradient(160deg,#243244,#141d29);padding:12px}
 .gs-karte svg{display:block;width:100%;height:auto;animation:gsKarte .6s var(--federn) both}
 @keyframes gsKarte{from{transform:translateX(-26%) rotate(-4deg);opacity:0}to{transform:none;opacity:1}}
@@ -1491,13 +1494,16 @@ function pinPruefen(){
    sonst stuende er jedes Mal im Weg.
    ═══════════════════════════════════════════════════════════════ */
 let gutschriftZeit;
-function gutschrift(posten,grund){
+function gutschrift(posten,grund,still){
  karteSichern();
  const summe=posten.reduce((a,p)=>a+p.betrag,0);
  if(summe<=0)return;
  S.karte.umsaetze.unshift({zweck:grund,betrag:summe,art:'gutschrift',
   posten:posten.map(p=>({t:p.t,betrag:p.betrag})),woche:S.woche,tag:S.tag});
  if(S.karte.umsaetze.length>40)S.karte.umsaetze.length=40;
+ /* still: nur verbuchen, nichts einblenden -- fuer Termine, die im
+    Hintergrund laufen und sonst alle paar Sekunden im Weg staenden. */
+ if(still)return;
  const el=$('#gutschrift');
  el.innerHTML=`<div class="gs-karte">${amexSvg(false)}</div>
   <div class="gs-inhalt">
@@ -2439,16 +2445,20 @@ function bueroSvg(){
     <rect x="676" y="228" width="34" height="34" rx="11" fill="#2E7D5B"/>
     <circle cx="693" cy="216" r="13" fill="#e0bd9c"/>
     <path d="M680 211 q13 -12 26 0 q-5 -10 -13 -10 q-8 0 -13 10Z" fill="#4a3528"/>
-    ${S.team[0].maklerId?'':'<circle cx="712" cy="212" r="7" fill="#B07A22" class="blinkt ma-warn"/><text x="712" y="216" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">!</text>'}
+    ${S.team[0].maklerId
+      ?(maArbeitet(S.team[0])?'<circle cx="712" cy="212" r="6" fill="#2E7D5B" class="blinkt ma-live"/>':'')
+      :'<circle cx="712" cy="212" r="7" fill="#B07A22" class="blinkt ma-warn"/><text x="712" y="216" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">!</text>'}
     <rect class="glanz" x="668" y="200" width="52" height="66" rx="7" fill="#7FA0C4"/></g>`:''}
    ${S.team[1]?`<g class="hotspot" data-hs="ma:${S.team[1].id}">
     <rect x="716" y="232" width="30" height="30" rx="10" fill="#B98A2E"/>
     <circle cx="731" cy="222" r="11" fill="#d8b28f"/>
     <path d="M720 218 q11 -10 22 0 q-4 -9 -11 -9 q-7 0 -11 9Z" fill="#2f2119"/>
-    ${S.team[1].maklerId?'':'<circle cx="748" cy="218" r="7" fill="#B07A22" class="blinkt ma-warn"/><text x="748" y="222" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">!</text>'}
+    ${S.team[1].maklerId
+      ?(maArbeitet(S.team[1])?'<circle cx="748" cy="218" r="6" fill="#2E7D5B" class="blinkt ma-live"/>':'')
+      :'<circle cx="748" cy="218" r="7" fill="#B07A22" class="blinkt ma-warn"/><text x="748" y="222" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">!</text>'}
     <rect class="glanz" x="710" y="206" width="46" height="60" rx="7" fill="#7FA0C4"/></g>`:''}
    ${team>0?`<text x="695" y="322" text-anchor="middle" font-family="Inter,sans-serif" font-size="10"
-     fill="${nacht?'#5a6b83':'#8792a3'}">${team===1?'Mitarbeiter antippen':'Mitarbeiter antippen'}</text>`:''}
+     fill="${nacht?'#5a6b83':'#8792a3'}">${S.nacht?'Feierabend im Team':'Mitarbeiter antippen'}</text>`:''}
    </g>`
   :'<g class="hotspot" data-hs="team" opacity=".45"><rect x="620" y="262" width="150" height="12" rx="3" fill="none" stroke="#39485f" stroke-width="3" stroke-dasharray="7 7"/><text x="695" y="292" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#5a6b83">Platz für einen zweiten Arbeitsplatz</text><rect class="glanz" x="612" y="254" width="166" height="46" rx="6" fill="#7FA0C4"/></g>'}
 
@@ -2961,60 +2971,103 @@ function maSichern(m){
  return m;
 }
 
-/* ── Ein Arbeitstag eines Mitarbeiters ── */
+/* ── Der Mitarbeiter arbeitet im Hintergrund ──
+   Nicht mehr gebuendelt beim Feierabend: er telefoniert waehrend des
+   Tages weiter, auch wenn Sie gerade nichts tun. Das Tagespensum
+   bleibt gedeckelt -- was er tagsueber schon geschafft hat, macht er
+   am Abend nicht noch einmal. */
+function maTagSchluessel(){return S.woche*5+S.tag;}
+function maTagPruefen(m){
+ const heute=maTagSchluessel();
+ if(m.heuteTag!==heute){m.heuteTag=heute;m.heute={termine:0,umsatz:0,provision:0,versuche:0};}
+ return m.heute;
+}
+/* Ein einzelner Kontakt. Gibt zurueck, was daraus wurde. */
+function mitarbeiterSchritt(m){
+ maSichern(m); maTagPruefen(m);
+ if(!m.maklerId)return 'ohne';
+ if(m.heute.versuche>=maKapazitaet(m))return 'fertig';
+ const k=S.kunden.find(x=>x.id===m.maklerId);
+ if(!k){m.maklerId=null;notiz(m.name+' hat keinen Kunden mehr — bitte neu zuweisen','schlecht');return 'ohne';}
+ const l=S.crm.find(x=>x.maklerId===k.id&&x.status==='neu');
+ if(!l)return 'leer';
+ m.heute.versuche++;
+ S.stat.anrufeEig++;
+ if(Math.random()>=maTrefferquote(m)){l.status='abgelehnt';S.stat.geplatzt++;return 'nein';}
+ l.status='gemeldet'; l.meldeWoche=S.woche;
+ l.termin='Mittwoch, 15:00 Uhr';
+ l.einschaetzung=zufall(EINSCHAETZUNGEN);
+ l.durch=m.name;
+ S.stat.termine++; S.stat.gemeldet++;
+ const posten=[];
+ if(k.gratis<GRATIS_JE_KUNDE){k.gratis++;}
+ else{
+  const honorar=l.art==='verkauf'?PREIS_VERK:PREIS_KAUF;
+  einnahme(S,honorar,'Termin für '+k.name+' (durch '+m.name+')');
+  posten.push({t:(l.art==='verkauf'?'Verkäufer-Termin':'Käufer-Termin')+' · '+k.name,betrag:honorar});
+ }
+ const bet=erfolgsbeteiligung(l);
+ if(bet>0){einnahme(S,bet,'5 % Beteiligung · '+l.objekt);
+  posten.push({t:'5 % Maklerprovision · '+l.objekt,betrag:bet});}
+ const ein=posten.reduce((a,pp)=>a+pp.betrag,0);
+ m.heute.umsatz+=ein; m.heute.termine++; m.heute.provision+=PROVISION_MA;
+ m.offen+=PROVISION_MA;
+ m.gesamt.termine++; m.gesamt.umsatz+=ein; m.gesamt.provision+=PROVISION_MA;
+ S.mails.ausgang.unshift({an:k.name,betreff:'Qualifizierter Termin: '+l.name,woche:S.woche,tag:S.tag});
+ k.vertrauen=Math.min(100,(k.vertrauen||70)+2);
+ notiz(m.name+' hat einen Termin bei '+k.name+' gemeldet'+(ein?' — '+euro(ein):''),'gut');
+ /* Im Hintergrund ohne Beleg-Fenster: sonst steht alle paar Sekunden
+    etwas im Weg. Auf der Karte steht es trotzdem. */
+ if(ein>0)gutschrift(posten,'Termin '+l.name+' (durch '+m.name+')',true);
+ return 'termin';
+}
+/* Rest des Tagespensums auf einen Schlag -- beim Feierabend. */
 function mitarbeiterTag(m){
- maSichern(m);
- m.heute={termine:0,umsatz:0,provision:0,versuche:0};
+ maSichern(m); maTagPruefen(m);
  if(!m.maklerId){
-  notiz(m.name+' hatte nichts zu tun — kein Makler zugewiesen','schlecht');
+  if(!m.heute.versuche)notiz(m.name+' hatte nichts zu tun — kein Makler zugewiesen','schlecht');
   return;
+ }
+ let schutz=0;
+ while(schutz++<20){
+  const r=mitarbeiterSchritt(m);
+  if(r!=='termin'&&r!=='nein')break;
  }
  const k=S.kunden.find(x=>x.id===m.maklerId);
- if(!k){
-  m.maklerId=null;
-  notiz(m.name+' hat keinen Kunden mehr — bitte neu zuweisen','schlecht');
-  return;
- }
- const offen=S.crm.filter(l=>l.maklerId===k.id&&l.status==='neu');
- if(!offen.length){
-  notiz(m.name+' hat bei '+k.name+' keine offenen Kontakte mehr','');
-  return;
- }
- const quote=maTrefferquote(m);
- offen.slice(0,maKapazitaet(m)).forEach(l=>{
-  m.heute.versuche++;
-  S.stat.anrufeEig++;
-  if(Math.random()>=quote){l.status='abgelehnt';S.stat.geplatzt++;return;}
-  /* Termin steht — und wird sofort gemeldet, samt Abrechnung. */
-  l.status='gemeldet'; l.meldeWoche=S.woche;
-  l.termin='Mittwoch, 15:00 Uhr';
-  l.einschaetzung=zufall(EINSCHAETZUNGEN);
-  l.durch=m.name;
-  S.stat.termine++; S.stat.gemeldet++;
-  let ein=0;
-  if(k.gratis<GRATIS_JE_KUNDE){k.gratis++;}
-  else{
-   const honorar=l.art==='verkauf'?PREIS_VERK:PREIS_KAUF;
-   einnahme(S,honorar,'Termin für '+k.name+' (durch '+m.name+')');
-   ein+=honorar;
-  }
-  const bet=erfolgsbeteiligung(l);
-  if(bet>0){einnahme(S,bet,'5 % Beteiligung · '+l.objekt);ein+=bet;}
-  m.heute.umsatz+=ein;
-  m.heute.termine++;
-  m.heute.provision+=PROVISION_MA;
-  m.offen+=PROVISION_MA;
-  m.gesamt.termine++; m.gesamt.umsatz+=ein; m.gesamt.provision+=PROVISION_MA;
-  S.mails.ausgang.unshift({an:k.name,betreff:'Qualifizierter Termin: '+l.name,
-   woche:S.woche,tag:S.tag});
-  k.vertrauen=Math.min(100,(k.vertrauen||70)+2);
+ if(k&&!m.heute.termine&&m.heute.versuche)notiz(m.name+' hat bei '+k.name+' heute keinen Termin bekommen','');
+}
+
+/* Der Takt im Hintergrund. Laeuft, solange das Buero offen ist. */
+const TEAM_TAKT=9000;
+let teamUhr=null;
+function teamTaktStarten(){
+ clearInterval(teamUhr);
+ teamUhr=setInterval(teamTakt,TEAM_TAKT);
+}
+function teamTakt(){
+ if(!S||S.ende||!S.team.length)return;
+ if(S.nacht)return;          /* nachts telefoniert niemand */
+ let etwas=false;
+ S.team.forEach(m=>{
+  const r=mitarbeiterSchritt(m);
+  if(r==='termin'){etwas=true;melde(m.name+' hat einen Termin gemeldet.');}
+  else if(r==='nein')etwas=true;
  });
- if(m.heute.termine){
-  notiz(m.name+' hat '+m.heute.termine+' Termin'+(m.heute.termine>1?'e':'')
-   +' bei '+k.name+' gemeldet — '+euro(m.heute.umsatz)+' Umsatz','gut');
- }else{
-  notiz(m.name+' hat bei '+k.name+' keinen Termin bekommen','');
+ if(etwas){
+  sichern();
+  /* Das Ziel kann auch im Hintergrund fallen -- dann endet das Spiel
+     hier und nicht erst beim naechsten Feierabend. */
+  if(S.ende){clearInterval(teamUhr);endeZeigen();return;}
+  zeichnen();
  }
+}
+/* Wer gerade telefoniert, bekommt im Buero einen gruenen Punkt. */
+function maArbeitet(m){
+ maSichern(m);
+ if(!m.maklerId||S.nacht)return false;
+ if(!m.heute||m.heuteTag!==maTagSchluessel())return true;
+ return m.heute.versuche<maKapazitaet(m)
+  &&S.crm.some(l=>l.maklerId===m.maklerId&&l.status==='neu');
 }
 
 /* ── Tagesabrechnung ── */
@@ -3406,7 +3459,16 @@ function aktionenZeichnen(){
    ${x.e?`<span class="kosten">${x.e} E</span>`:''}<b>${sicher(x.n)}</b><span>${sicher(x.i)}</span></button>`;}).join('');
  $$('#aktionen [data-a]').forEach(b=>b.onclick=()=>aktion(b.dataset.a));
 }
+/* Nach jeder Handlung ist das Team auch wieder einen Schritt weiter --
+   es arbeitet parallel, nicht erst am Abend. */
 function aktion(id){
+ const r=aktionAusfuehren(id);
+ /* Nach dem Feierabend nicht: sonst faengt der naechste Tag an,
+    waehrend die Abrechnung des alten noch auf dem Schirm steht. */
+ if(id!=='__tag'&&id!=='nacht')teamTakt();
+ return r;
+}
+function aktionAusfuehren(id){
  /* Nachts wird nicht telefoniert -- Privatleute erreicht man nicht,
     und Werbeanrufe zur Unzeit sind ohnehin heikel. */
  if(S.nacht&&NACHT_VERBOTEN.includes(id)){
@@ -3828,7 +3890,7 @@ function gradeZeichnen(){
 $('#btnStart').onclick=()=>{
  S=neuerStand($('#sName').value.trim(),gewaehlterGrad);
  notiz('Firma gegründet. Erst das Gewerbe anmelden.','gut');
- themaSetzen(S.thema);sichern();ansicht('spiel');zeichnen();
+ themaSetzen(S.thema);sichern();ansicht('spiel');zeichnen();teamTaktStarten();
  fenster('So läuft es',
   'Der Weg ist derselbe wie in echt: Gewerbe anmelden, auf der Karte Maklerbüros finden, sie am Telefon gewinnen. '
  +'Danach fordern Sie beim Kunden per E-Mail seine Kontakte an. Die landen in Ihrem CRM, dort rufen Sie sie an und qualifizieren sie. '
@@ -3857,7 +3919,7 @@ if(alt&&alt.name){S=alt;
  S.luxus=S.luxus||[];
  if(!S.luxus.includes('garage'))S.luxus.push('garage');
  themaSetzen(S.thema||'light');
- if(S.ende)endeZeigen(); else {ansicht('spiel');zeichnen();}}
+ if(S.ende)endeZeigen(); else {ansicht('spiel');zeichnen();teamTaktStarten();}}
 else{document.documentElement.dataset.theme='light';
  $('#icoThema').innerHTML='<circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
  gradeZeichnen();ansicht('start');}
