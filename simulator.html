@@ -651,6 +651,76 @@ button{background:none;border:none;cursor:pointer}
 .fenster{max-height:calc(100vh - 34px);max-height:calc(100dvh - 34px);overflow-y:auto}
 .fenster:has(.abr){max-width:660px}
 
+/* ═══════ Gespräch: Tipps oben, Skript daneben ═══════ */
+.gespraech-raum{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;
+  max-width:1120px;margin:0 auto;align-items:start}
+.gespraech-raum .gespraech{max-width:none}
+
+.tipps{background:var(--flaeche);border:1px solid var(--rand);border-left:4px solid var(--gold);
+  border-radius:12px;padding:14px 16px;margin-bottom:14px;animation:rein .3s var(--ez)}
+.tipp-kopf{display:grid;gap:3px;margin-bottom:10px}
+.tipp-stufe{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tipp-ziel{font-size:14.5px;color:var(--ink);font-weight:500}
+.tipp-punkte{display:flex;flex-wrap:wrap;gap:6px}
+.tipp-p{font-size:12.5px;padding:4px 10px;border-radius:20px;background:var(--flaeche-2);
+  border:1px solid var(--rand);color:var(--muted)}
+.tipp-p b{color:var(--gut);margin-left:3px}
+.tipp-pers{font-size:12.5px;color:var(--muted);margin-top:10px;padding-top:9px;
+  border-top:1px solid var(--rand)}
+
+.skript{background:var(--flaeche);border:1px solid var(--rand);border-radius:13px;
+  padding:15px;position:sticky;top:96px;max-height:calc(100vh - 118px);overflow-y:auto}
+.skript-kopf{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.skript-kopf svg{width:19px;height:19px;fill:none;stroke:var(--grad-1);stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;flex:none}
+.skript-kopf b{font-family:var(--head);font-size:.98rem;color:var(--ink)}
+.skript-hin{font-size:12px;color:var(--muted);margin-bottom:13px}
+.skript-a{padding:11px 12px;border-radius:10px;border:1px solid var(--rand);margin-bottom:8px;
+  background:var(--flaeche-2);transition:border-color .2s,background .2s}
+.skript-a.on{border-color:var(--gold);background:rgba(185,138,46,.07)}
+.skript-a.warnung{border-color:rgba(180,72,60,.3);background:rgba(180,72,60,.05)}
+.skript-a h5{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:6px;font-weight:700}
+.skript-a.on h5{color:var(--gold)}
+.skript-a .rahmen{font-size:13px;line-height:1.5;color:var(--ink);margin-bottom:8px}
+.skript-a ul{list-style:none;display:grid;gap:4px}
+.skript-a li{font-size:12.5px;color:var(--muted);padding-left:13px;position:relative}
+.skript-a li::before{content:"–";position:absolute;left:0}
+
+/* Schmale Schirme: das Skript rutscht nach oben und darf dort auf
+   keinen Fall kleben -- ein klebendes Skript legt sich sonst ueber
+   das Eingabefeld und man kommt an den Knopf nicht mehr heran. */
+@media(max-width:900px){
+ .gespraech-raum{grid-template-columns:1fr}
+ .skript{order:-1;position:static;max-height:240px}}
+
+.freitext.selbst{border-style:solid;border-color:var(--grad-1);background:var(--flaeche)}
+/* Ohne font-family erbt ein textarea die Monospace-Vorgabe des
+   Browsers -- am Telefon spricht aber niemand in Schreibmaschine. */
+.freitext.selbst textarea{min-height:104px;font-size:15px;font-family:inherit;line-height:1.55}
+.freitext.selbst .unten .knopf{min-width:120px}
+
+/* ═══════ Uhrenkasten ═══════ */
+.box{text-align:left}
+.box-kopf{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:13px}
+.box-kopf b{font-family:var(--head);font-size:1.1rem;color:var(--ink)}
+.box-kopf span{font-size:12.5px;color:var(--muted);margin-left:auto}
+.box-holz{border-radius:13px;padding:14px;background:linear-gradient(160deg,#6b4a30,#4a3120);
+  box-shadow:inset 0 2px 10px rgba(0,0,0,.45)}
+.box-faecher{display:grid;grid-template-columns:repeat(auto-fit,minmax(68px,1fr));gap:8px}
+.fach{background:linear-gradient(180deg,#2b2119,#1d160f);border-radius:9px;padding:10px 6px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;min-height:118px;
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.6)}
+.fach svg{width:44px;height:auto;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5))}
+.fach .leer{font-size:11px;color:#6b5a48;margin:auto 0}
+.fach-n{font-size:10.5px;color:#c9b898;text-align:center;line-height:1.3}
+.box-liste{display:grid;gap:9px;margin-top:14px}
+.box-liste .abr-z span small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.box-liste .abr-z span{color:var(--ink);font-size:13.5px}
+.box-liste .da{color:var(--gut);font-size:12.5px;white-space:nowrap}
+.box-liste .knopf{white-space:nowrap}
+.box-hin{font-size:12.5px;color:var(--muted);margin-top:12px}
+
 </style>
 </head>
 <body>
@@ -818,11 +888,15 @@ button{background:none;border:none;cursor:pointer}
 <section class="ansicht" id="a-mail"><div id="mailInhalt"></div></section>
 
 <section class="ansicht" id="a-gespraech">
-  <div class="gespraech">
-    <div class="anruf-kopf" id="anrufKopf"></div>
-    <div class="block" id="notizblock" hidden></div>
-    <div id="verlauf"></div>
-    <div id="frageBereich"></div>
+  <div class="gespraech-raum">
+    <div class="gespraech">
+      <div class="anruf-kopf" id="anrufKopf"></div>
+      <div class="tipps" id="tipps" hidden></div>
+      <div class="block" id="notizblock" hidden></div>
+      <div id="verlauf"></div>
+      <div id="frageBereich"></div>
+    </div>
+    <aside class="skript" id="skript" hidden></aside>
   </div>
 </section>
 
@@ -1852,6 +1926,12 @@ const LUXUS=[
   info:'Unauffällig, aber gepflegt. Kleiner Zuschlag auf Ihr Auftreten.',wirk:S=>{S.auftreten=(S.auftreten||0)+2;}},
  {id:'uhr2',name:'Chronograph',preis:4200,art:'uhr',stufe:2,
   info:'Fällt auf, ohne aufzufallen.',wirk:S=>{S.auftreten=(S.auftreten||0)+4;}},
+ {id:'oyster',name:'Rolex Oyster Perpetual',preis:4000,art:'uhr',stufe:2,
+  info:'Schlicht, ohne Datum, in jedem Termin richtig. Die vernünftigste Wahl der Sammlung.',
+  wirk:S=>{S.auftreten=(S.auftreten||0)+4;}},
+ {id:'datejust',name:'Rolex Datejust',preis:10000,art:'uhr',stufe:3,
+  info:'Der Klassiker mit Datumslupe. Wird erkannt, ohne dass Sie ein Wort sagen.',
+  wirk:S=>{S.auftreten=(S.auftreten||0)+6;}},
  {id:'uhr3',name:'Sammlerstück',preis:16000,art:'uhr',stufe:3,
   info:'Ein Gesprächsanlass für sich.',wirk:S=>{S.auftreten=(S.auftreten||0)+7;}},
  {id:'auto1',name:'Gepflegter Kombi',preis:8500,art:'auto',stufe:1,
@@ -1889,6 +1969,50 @@ function luxusKaufen(id){
   notiz(l.name+' gekauft für '+euro(l.preis),'');
   melde(l.name+' gehört Ihnen.'); konfetti(45); sichern(); zeichnen();
  });
+}
+/* Die Uhrenbox auf dem Schreibtisch: was gekauft ist, liegt drin. */
+function uhrenBoxZeigen(){
+ const uhren=LUXUS.filter(l=>l.art==='uhr');
+ const meine=uhren.filter(l=>S.luxus.includes(l.id));
+ $('#fenster').innerHTML=`<div class="box">
+  <div class="box-kopf"><b>Ihre Uhrensammlung</b>
+   <span>${meine.length} von ${uhren.length} Plätzen belegt</span></div>
+  <div class="box-holz">
+   <div class="box-faecher">${uhren.map(l=>{
+     const hat=S.luxus.includes(l.id);
+     return `<div class="fach ${hat?'voll':''}">
+      ${hat?uhrSvg(l.id):'<span class="leer">frei</span>'}
+      <span class="fach-n">${hat?sicher(l.name):''}</span></div>`;}).join('')}</div>
+  </div>
+  <div class="box-liste">${uhren.map(l=>{
+    const hat=S.luxus.includes(l.id);
+    return `<div class="abr-z"><span>${sicher(l.name)}<small>${sicher(l.info)}</small></span>
+     ${hat?'<b class="da">im Kasten</b>'
+      :`<button class="knopf knopf-linie knopf-klein" data-uhr="${l.id}"${S.geld<l.preis?' disabled':''}>${euro(l.preis)}</button>`}</div>`;
+   }).join('')}</div>
+  <p class="box-hin">Auftreten wirkt auf Makler: ${S.auftreten||0} Punkte. Bezahlt wird mit Karte.</p>
+  <button class="knopf knopf-voll" id="boxZu" style="width:100%;margin-top:14px">Kasten schließen</button>
+ </div>`;
+ $('#ueberlage').classList.add('auf');
+ $$('[data-uhr]').forEach(b=>b.onclick=()=>luxusKaufen(b.dataset.uhr));
+ $('#boxZu').onclick=()=>$('#ueberlage').classList.remove('auf');
+}
+function uhrSvg(id){
+ const stil={uhr1:['#c9ced6','#1d2836','#8c96a4'],
+  oyster:['#dfe4ea','#2b4f74','#aab4c1'],
+  datejust:['#e6d5a8','#243347','#c9b47a'],
+  uhr2:['#cfd5dd','#101a29','#9aa4b2'],
+  uhr3:['#e8d9ae','#3a2f1c','#cbb87f']}[id]||['#cfd5dd','#1d2836','#9aa4b2'];
+ return `<svg viewBox="0 0 60 74" aria-hidden="true">
+  <rect x="22" y="2" width="16" height="24" rx="6" fill="${stil[2]}"/>
+  <rect x="22" y="48" width="16" height="24" rx="6" fill="${stil[2]}"/>
+  <circle cx="30" cy="37" r="19" fill="${stil[0]}"/>
+  <circle cx="30" cy="37" r="15" fill="${stil[1]}"/>
+  <circle cx="30" cy="37" r="1.8" fill="${stil[0]}"/>
+  <path d="M30 37 V27" stroke="${stil[0]}" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M30 37 h8" stroke="${stil[0]}" stroke-width="1.4" stroke-linecap="round"/>
+  ${id==='datejust'?`<rect x="41" y="34" width="7" height="6" rx="1.5" fill="${stil[0]}"/>`:''}
+ </svg>`;
 }
 function garageZeichnen(){
  const autos=LUXUS.filter(l=>l.art==='auto'&&S.luxus.includes(l.id));
@@ -2255,6 +2379,16 @@ function bueroSvg(){
    <rect x="460" y="244" width="20" height="8" fill="#2c3d55"/>
    <rect class="glanz" x="426" y="178" width="92" height="66" rx="5" fill="#7FA0C4"/></g>`:''}
 
+  <!-- Uhrenkasten auf dem Schreibtisch -->
+  <g class="hotspot" data-hs="uhren">
+   <rect x="258" y="214" width="34" height="18" rx="3" fill="#5b3f2a"/>
+   <rect x="258" y="214" width="34" height="18" rx="3" fill="#6b4a30" stroke="#3d2a1c" stroke-width="1.5"/>
+   <rect x="262" y="206" width="26" height="10" rx="2" fill="#7a5638" stroke="#3d2a1c" stroke-width="1.2"/>
+   ${(S.luxus||[]).some(id=>['uhr1','uhr2','uhr3','oyster','datejust'].includes(id))
+     ?'<circle cx="271" cy="211" r="3.1" fill="#e8d9ae"/><circle cx="280" cy="211" r="3.1" fill="#cfd5dd"/>'
+     :'<line x1="266" y1="211" x2="284" y2="211" stroke="#4b3524" stroke-width="1.2"/>'}
+   <rect class="glanz" x="252" y="200" width="46" height="36" rx="5" fill="#7FA0C4"/></g>
+
   <!-- Telefon -->
   <g class="hotspot ${leadsDa?'klingelt':''}" data-hs="anruf">
    <rect x="530" y="214" width="52" height="20" rx="5" fill="#1d2a3d" stroke="#39485f" stroke-width="2"/>
@@ -2557,26 +2691,31 @@ function stufeZeigen(){
  if(st.einwand){const e=zufall(EINWAENDE);wahlen=e.wahl;sagt=e.text;frageText='Wie antworten Sie?';}
  else if(st.einwandEig){const e=zufall(EINWAENDE_EIG);wahlen=e.wahl;sagt=e.text;frageText='Wie antworten Sie?';}
  else {wahlen=st.v.wahl;sagt=st.v.sagt;frageText=st.v.frage;}
- wahlen=mischen(wahlen);
+ /* Die Vorgaben werden nicht mehr angeboten -- gesprochen wird selbst.
+    Sie bleiben als Massstab: die beste Variante bestimmt die erreichbare
+    Punktzahl und wird nach der Antwort als Vergleich gezeigt. */
  G.aktWahlen=wahlen;
  G.max+=Math.max(...wahlen.map(w=>w.p));
  if(sagt)blase(G.art==='makler'?G.d.name:G.d.eigname,fuelle(sagt,G.d));
  const stoer=STOERUNGEN.find(s=>Math.random()<s.w);
  $('#frageBereich').innerHTML=(stoer?`<p class="stoerung">${sicher(stoer.t)}</p>`:'')+
   `<div class="frage">${sicher(fuelle(frageText,G.d))}</div>
-   <div class="wahlen">${wahlen.map((w,i)=>
-    `<button class="wahl" data-w="${i}">${sicher(fuelle(w.t,G.d))}</button>`).join('')}</div>
-   <div class="freitext">
-     <textarea id="eigen" placeholder="Oder formulieren Sie selbst, wie Sie es am Telefon sagen würden …"></textarea>
+   <div class="freitext selbst">
+     <textarea id="eigen" placeholder="Schreiben Sie, was Sie jetzt sagen würden — wörtlich, so wie am Telefon."></textarea>
      <div class="unten">
-       <button class="knopf knopf-linie knopf-klein" id="eigenSenden">Selbst sagen</button>
+       <button class="knopf knopf-voll" id="eigenSenden">Sagen</button>
        <span class="zaehler" id="zaehler">0 Zeichen</span>
      </div>
    </div>`;
- $$('.wahl').forEach(b=>b.onclick=()=>waehlen(Number(b.dataset.w)));
- $('#eigen').addEventListener('input',e=>{
+ const feld=$('#eigen');
+ feld.addEventListener('input',e=>{
   $('#zaehler').textContent=e.target.value.length+' Zeichen';});
+ /* Strg+Enter schickt ab -- beim Tippen will niemand zur Maus greifen. */
+ feld.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();eigenSenden();}});
+ feld.focus();
  $('#eigenSenden').onclick=eigenSenden;
+ tippsZeichnen(); skriptZeichnen();
  launeZeigen();
 }
 function eigenSenden(){
@@ -2587,6 +2726,7 @@ function eigenSenden(){
  G.frei++;
  G.punkte+=e.punkte;
  if(e.punkte<=0){G.schlecht++;G.kombo=0;} else {G.kombo++;G.maxKombo=Math.max(G.maxKombo,G.kombo);}
+ if(e.punkte>=3)notizSammeln(text,'Eigene Formulierung mit voller Punktzahl');
  const notiz=st.notiz;
  if(notiz&&e.punkte>=2&&!G.notizen.includes(notiz)){
   G.notizen.push(notiz);
@@ -2605,39 +2745,6 @@ function eigenSenden(){
    <div style="margin-top:11px;font-size:13.5px;color:var(--muted)">
      <b style="color:var(--ink)">Eine sehr gute Variante wäre:</b> „${sicher(fuelle(beste.t,G.d))}"</div>
    <p class="hin" style="margin-top:9px;font-size:12px">Hinweis: Das Spiel prüft eine Checkliste, es versteht Ihren Satz nicht. Es zeigt Ihnen, welche Bausteine gefehlt haben — nicht, ob der Satz insgesamt gut klang.</p>
-   <button class="knopf knopf-voll knopf-klein" id="weiter" style="margin-top:12px">Weiter</button></div>`;
- $('#weiter').onclick=()=>{G.i++;$('#frageBereich').innerHTML='';stufeZeigen();};
- $('#weiter').scrollIntoView({block:'nearest',behavior:'smooth'});
-}
-function waehlen(i){
- const w=G.aktWahlen[i];
- const beste=Math.max(...G.aktWahlen.map(x=>x.p));
- const st=G.stufen[G.i];
- const bereich=st.einwand||st.einwandEig?'einwand':
-   (st.id==='eroeffnung'?'eroeffnung':(st.id==='abschluss'||st.id==='termin'?'abschluss':'qualifizierung'));
- let punkte=w.p+(w.p>0?(S.koennen[bereich]-1)*0.25:0);
- /* Persoenlichkeit belohnt oder bestraft den Stil */
- let stilHinweis='';
- if(w.art===G.pers.mag){punkte+=1.5;stilHinweis='Das trifft seinen Typ genau — '+G.pers.tipp;}
- if(w.art===G.pers.nichtMag){punkte-=1.5;stilHinweis='Bei diesem Typ kommt das schlecht an — '+G.pers.tipp;}
- G.punkte+=punkte;
- if(w.p<=0){G.schlecht++;G.kombo=0;} else {G.kombo++;G.maxKombo=Math.max(G.maxKombo,G.kombo);}
- const notiz=st.notiz;
- if(notiz&&w.p>=2&&!G.notizen.includes(notiz)){
-  G.notizen.push(notiz);
-  const el=document.querySelector('[data-n="'+notiz+'"]'); if(el)el.classList.add('ab');
- }
- G.protokoll.push({frage:st.id,gewaehlt:w,beste});
- if(w.p===beste&&w.p>0)notizSammeln(fuelle(w.t,G.d),w.f);
- $$('.wahl').forEach((b,k)=>{b.disabled=true;if(k===i)b.classList.add(w.p>0?'gut':'schlecht');});
- blase('Sie',fuelle(w.t,G.d),true);
- launeZeigen(); komboZeigen();
- $('#frageBereich').innerHTML=
-  `<div class="rueck ${w.p>=beste?'gut':(w.p<=0?'schlecht':'')}">
-   <span class="pkt">${w.p>0?'+':''}${w.p}</span>${sicher(w.f)}
-   ${stilHinweis?`<div class="pers-tipp" style="margin-top:9px">${sicher(stilHinweis)}</div>`:''}
-   ${w.p<beste?'<div style="margin-top:9px;font-size:13.5px;color:var(--muted)"><b style="color:var(--ink)">Besser wäre gewesen:</b> „'
-     +sicher(fuelle(G.aktWahlen.find(x=>x.p===beste).t,G.d))+'"</div>':''}
    <button class="knopf knopf-voll knopf-klein" id="weiter" style="margin-top:12px">Weiter</button></div>`;
  $('#weiter').onclick=()=>{G.i++;$('#frageBereich').innerHTML='';stufeZeigen();};
  $('#weiter').scrollIntoView({block:'nearest',behavior:'smooth'});
@@ -2726,7 +2833,7 @@ function gespraechEnde(){
   }
  }
  const min=Math.floor(G.sek/60), sek=String(G.sek%60).padStart(2,'0');
- $('#notizblock').hidden=true;
+ $('#notizblock').hidden=true; $('#tipps').hidden=true; $('#skript').hidden=true;
  $('#frageBereich').innerHTML=`<div class="karte auswert">
    <div class="note">${erfolg?'✓':'✕'}</div>
    <h2 style="margin-top:10px">${sicher(kopf)}</h2>
@@ -2742,6 +2849,82 @@ function gespraechEnde(){
    <button class="knopf knopf-voll" id="zurueck">Zurück ins Büro</button></div>`;
  $('#zurueck').onclick=()=>{sichern();ansicht('spiel');zeichnen();};
  sichern();
+}
+/* ═══════════════════════════════════════════════════════════════
+   TIPPS UND SKRIPT IM GESPRÄCH
+   Es wird nicht mehr ausgewählt, sondern getippt. Damit das kein
+   Ratespiel ist, steht ueber dem Gespraech, worauf es bei dieser
+   Stufe ankommt -- und zwar genau die Punkte, nach denen auch
+   bewertet wird. Daneben liegt das Skript: Satzrahmen zum Ausfuellen,
+   nicht die fertige Antwort. Wer abschreibt, lernt nichts.
+   ═══════════════════════════════════════════════════════════════ */
+const SKRIPT={
+ eroeffnung:{titel:'Einstieg',ziel:'In einem Satz: wer Sie sind, warum Sie anrufen, und die Kontrolle zurückgeben.',
+  rahmen:'„Guten Tag Herr {nachname}, mein Name ist {ich}. Ich rufe an, weil … — haben Sie zwei Minuten?"',
+  bausteine:['Name zuerst, nicht die Firma','Grund in einem Halbsatz','Mit einer Frage enden','Unter zwei Sätzen bleiben']},
+ aufhaenger:{titel:'Aufhänger',ziel:'Den Bezug zu seinem Geschäft herstellen und den Nutzen für ihn benennen.',
+  rahmen:'„Sie haben … Objekte im Angebot. Was davon bleibt liegen, weil die Zeit fehlt?"',
+  bausteine:['Über ihn reden, nicht über sich','Konkret werden: Objekte, Anfragen, Inserate','Nutzen benennen: Zeit, Termine, Entlastung','Mit einer Frage enden']},
+ einwand:{titel:'Einwand',ziel:'Den Einwand annehmen und mit einer Rückfrage weitermachen — nicht dagegenhalten.',
+  rahmen:'„Das verstehe ich. Darf ich fragen: …?"',
+  bausteine:['Erst annehmen: „verstehe ich", „kann ich nachvollziehen"','Kein „aber" — das löscht alles davor','Mit einer Rückfrage weitermachen','Kurz bleiben']},
+ bedarf:{titel:'Bedarf',ziel:'Ihn selbst sagen lassen, wo es klemmt. Offene Frage nach einer Größenordnung.',
+  rahmen:'„Wie viele Anfragen der letzten Monate haben Sie nie zurückgerufen?"',
+  bausteine:['Offen fragen: wie viele, wie oft, was','Nach einer Zahl fragen','Die Antwort ist Ihr Argument — aus seinem Mund']},
+ abschluss:{titel:'Abschluss',ziel:'Einen konkreten nächsten Schritt vorschlagen und das Risiko nehmen.',
+  rahmen:'„Die ersten drei Termine kosten Sie nichts. Passt Ihnen Dienstag oder eher Donnerstag?"',
+  bausteine:['Konkreten Termin nennen, kein „melde mich mal"','Zwei Möglichkeiten zur Auswahl','Risiko nehmen: kostenlos, unverbindlich']},
+ eig_eroeffnung:{titel:'Einstieg beim Eigentümer',ziel:'Auftraggeber und Anlass nennen — sonst ist der Anruf rechtlich heikel.',
+  rahmen:'„Guten Tag Frau {eignach}, mein Name ist {ich}, ich rufe im Auftrag von {buero} an. Sie hatten sich dort nach … erkundigt — passt es gerade kurz?"',
+  bausteine:['Auftraggeber sofort nennen','Anlass benennen: Anfrage, Erkundigung, Rückruf','Nach der Zeit fragen','Eigenen Namen nicht vergessen']},
+ eig_frage:{titel:'Qualifizieren',ziel:'Offen fragen, begründen wozu — und keine eigene Wertaussage treffen.',
+  rahmen:'„Damit Herr {maklername} sich vorbereiten kann: Wie …?"',
+  bausteine:['Offen fragen: wie, was, welche, wann','Begründen, wozu Sie fragen','Keine Preise oder Werte selbst nennen','Mit einem Fragezeichen enden']},
+};
+/* Welche Stufe welchen Skriptabschnitt und welche Checkliste nutzt --
+   dieselbe Zuordnung wie in eigenBewerten(), damit Tipp und Bewertung
+   nicht auseinanderlaufen. */
+function skriptSchluessel(stufeId,d){
+ if(['eigentum','absicht','objekt','zeitrahmen','preis','entscheider','termin'].includes(stufeId))return 'eig_frage';
+ if(stufeId==='eroeffnung'&&d&&d.eigname)return 'eig_eroeffnung';
+ if(stufeId==='einwand_eig')return 'einwand';
+ return SKRIPT[stufeId]?stufeId:'bedarf';
+}
+function tippsZeichnen(){
+ const st=G.stufen[G.i]; if(!st)return;
+ const k=skriptSchluessel(st.id,G.d);
+ const s=SKRIPT[k];
+ const liste=KRITERIEN[k]||KRITERIEN.bedarf;
+ $('#tipps').innerHTML=`<div class="tipp-kopf">
+   <span class="tipp-stufe">Stufe ${G.i+1} von ${G.stufen.length} · ${sicher(s.titel)}</span>
+   <span class="tipp-ziel">${sicher(s.ziel)}</span></div>
+  <div class="tipp-punkte">${liste.map(kr=>
+    `<span class="tipp-p">${sicher(kr.t)} <b>+${kr.p}</b></span>`).join('')}</div>
+  <p class="tipp-pers">${sicher(G.pers.hinweis)} ${sicher(G.pers.tipp)}</p>`;
+ $('#tipps').hidden=false;
+}
+function skriptZeichnen(){
+ const st=G.stufen[G.i];
+ const aktiv=st?skriptSchluessel(st.id,G.d):null;
+ const reihe=G.art==='makler'?['eroeffnung','aufhaenger','einwand','bedarf','abschluss']
+   :['eig_eroeffnung','eig_frage','einwand'];
+ $('#skript').innerHTML=`<div class="skript-kopf">
+   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>
+    <path d="M15 3v5h5"/><path d="M9 12h7M9 16h7"/></svg>
+   <b>Ihr Skript</b></div>
+  <p class="skript-hin">Satzrahmen zum Ausfüllen — abschreiben bringt Ihnen nichts,
+   die eigene Formulierung ist die Übung.</p>
+  ${reihe.map(id=>{const s=SKRIPT[id];
+   return `<div class="skript-a ${id===aktiv?'on':''}">
+    <h5>${sicher(s.titel)}</h5>
+    <p class="rahmen">${sicher(fuelle(s.rahmen,G.d))}</p>
+    <ul>${s.bausteine.map(b=>`<li>${sicher(b)}</li>`).join('')}</ul>
+   </div>`;}).join('')}
+  <div class="skript-a warnung"><h5>Nie sagen</h5>
+   <ul><li>„Wie geht es Ihnen?" — verrät den Verkaufsanruf</li>
+    <li>„Sie müssen …" — Druck erzeugt Widerstand</li>
+    <li>Eigene Preis- oder Wertaussagen</li></ul></div>`;
+ $('#skript').hidden=false;
 }
 /* ═══════════════════════════════════════════════════════════════
    MITARBEITER, ZUWEISUNG UND TAGESABRECHNUNG
@@ -3174,6 +3357,7 @@ const HOTSPOTS={
   S.kaffeeHeute=true;S.energie=Math.min(S.maxEnergie,S.energie+2);
   melde('Zwei Energiepunkte zurück.');sichern();zeichnen();},
  feierabend:()=>tagBeenden(),
+ uhren:()=>uhrenBoxZeigen(),
 };
 function szeneZeichnen(){
  $('#szene').classList.toggle('nacht',!!S.nacht);
