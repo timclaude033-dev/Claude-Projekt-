@@ -2433,14 +2433,24 @@ function bueroSvg(){
    <rect x="620" y="262" width="150" height="12" rx="3" fill="url(#tisch)"/>
    <rect x="632" y="274" width="10" height="30" fill="#5b3f2a"/>
    <rect x="748" y="274" width="10" height="30" fill="#5b3f2a"/>
-   ${team>0?`<g><rect x="676" y="228" width="34" height="34" rx="11" fill="#2E7D5B"/>
+   ${/* Wer im Buero sitzt, ist auch dort anklickbar -- im Reiter Team
+        zu suchen ist der Umweg. */''}
+   ${S.team[0]?`<g class="hotspot" data-hs="ma:${S.team[0].id}">
+    <rect x="676" y="228" width="34" height="34" rx="11" fill="#2E7D5B"/>
     <circle cx="693" cy="216" r="13" fill="#e0bd9c"/>
-    <path d="M680 211 q13 -12 26 0 q-5 -10 -13 -10 q-8 0 -13 10Z" fill="#4a3528"/></g>`:''}
-   ${team>1?`<g><rect x="716" y="232" width="30" height="30" rx="10" fill="#B98A2E"/>
+    <path d="M680 211 q13 -12 26 0 q-5 -10 -13 -10 q-8 0 -13 10Z" fill="#4a3528"/>
+    ${S.team[0].maklerId?'':'<circle cx="712" cy="212" r="7" fill="#B07A22" class="blinkt ma-warn"/><text x="712" y="216" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">!</text>'}
+    <rect class="glanz" x="668" y="200" width="52" height="66" rx="7" fill="#7FA0C4"/></g>`:''}
+   ${S.team[1]?`<g class="hotspot" data-hs="ma:${S.team[1].id}">
+    <rect x="716" y="232" width="30" height="30" rx="10" fill="#B98A2E"/>
     <circle cx="731" cy="222" r="11" fill="#d8b28f"/>
-    <path d="M720 218 q11 -10 22 0 q-4 -9 -11 -9 q-7 0 -11 9Z" fill="#2f2119"/></g>`:''}
+    <path d="M720 218 q11 -10 22 0 q-4 -9 -11 -9 q-7 0 -11 9Z" fill="#2f2119"/>
+    ${S.team[1].maklerId?'':'<circle cx="748" cy="218" r="7" fill="#B07A22" class="blinkt ma-warn"/><text x="748" y="222" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">!</text>'}
+    <rect class="glanz" x="710" y="206" width="46" height="60" rx="7" fill="#7FA0C4"/></g>`:''}
+   ${team>0?`<text x="695" y="322" text-anchor="middle" font-family="Inter,sans-serif" font-size="10"
+     fill="${nacht?'#5a6b83':'#8792a3'}">${team===1?'Mitarbeiter antippen':'Mitarbeiter antippen'}</text>`:''}
    </g>`
-  :'<g opacity=".28"><rect x="620" y="262" width="150" height="12" rx="3" fill="none" stroke="#39485f" stroke-width="3" stroke-dasharray="7 7"/><text x="695" y="292" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#5a6b83">Platz für einen zweiten Arbeitsplatz</text></g>'}
+  :'<g class="hotspot" data-hs="team" opacity=".45"><rect x="620" y="262" width="150" height="12" rx="3" fill="none" stroke="#39485f" stroke-width="3" stroke-dasharray="7 7"/><text x="695" y="292" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#5a6b83">Platz für einen zweiten Arbeitsplatz</text><rect class="glanz" x="612" y="254" width="166" height="46" rx="6" fill="#7FA0C4"/></g>'}
 
   <!-- Tür -->
   <g class="hotspot" data-hs="feierabend">
@@ -3358,11 +3368,16 @@ const HOTSPOTS={
   melde('Zwei Energiepunkte zurück.');sichern();zeichnen();},
  feierabend:()=>tagBeenden(),
  uhren:()=>uhrenBoxZeigen(),
+ team:()=>reiterZu('team'),
 };
 function szeneZeichnen(){
  $('#szene').classList.toggle('nacht',!!S.nacht);
  $('#szene').innerHTML=bueroSvg();
- $$('#szene .hotspot').forEach(h=>{h.onclick=()=>{const f=HOTSPOTS[h.dataset.hs];if(f)f();};});
+ $$('#szene .hotspot').forEach(h=>{h.onclick=()=>{
+  const hs=h.dataset.hs;
+  /* „ma:<id>" oeffnet direkt die Karte des Mitarbeiters, der da sitzt. */
+  if(hs.startsWith('ma:'))return mitarbeiterZeigen(hs.slice(3));
+  const f=HOTSPOTS[hs]; if(f)f();};});
 }
 function aktionenZeichnen(){
  const offen=S.crm.filter(l=>l.status==='neu').length;
@@ -3375,6 +3390,11 @@ function aktionenZeichnen(){
  if(zuMelden)a.push({id:'melden',n:'Termine melden',i:zuMelden+' Protokolle noch nicht verschickt.',e:0});
  if(S.importListe)a.push({id:'import',n:'Gelieferte Liste prüfen',
    i:S.importListe.leads.length+' Kontakte warten auf Ihre Prüfung.',e:1});
+ /* Ein Mitarbeiter ohne Makler kostet Gehalt und bringt nichts --
+    das gehoert nach vorn, nicht in einen Reiter versteckt. */
+ const ohneMakler=S.team.filter(m=>!m.maklerId).length;
+ if(ohneMakler)a.push({id:'zuteilen',n:'Mitarbeiter einteilen',
+   i:ohneMakler+(ohneMakler===1?' Mitarbeiter wartet':' Mitarbeiter warten')+' auf einen Makler.',e:0});
  a.push({id:'weiterbildung',n:'Trainieren',i:'Gibt einen Fähigkeitspunkt.',e:3});
  if(!S.nacht&&S.energie<=2)a.push({id:'nacht',n:'Nachtschicht einlegen',
    i:'Vier Energiepunkte extra — aber telefonieren geht nachts nicht.',e:0});
@@ -3398,6 +3418,11 @@ function aktion(id){
  if(id==='karte')return reiterZu('karte');
  if(id==='crm')return reiterZu('crm');
  if(id==='melden')return reiterZu('crm');
+ if(id==='zuteilen'){
+  const m=S.team.find(x=>!x.maklerId);
+  reiterZu('team'); if(m)mitarbeiterZeigen(m.id);
+  return;
+ }
  if(id==='maklerAnruf'){
   if(!S.gewerbe){melde('Erst das Gewerbe anmelden.');return;}
   if(!S.leads.length){melde('Keine Büros im Radar.');reiterZu('karte');return;}
