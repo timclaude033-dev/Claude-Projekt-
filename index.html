@@ -126,22 +126,73 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
 .burger span::before,.burger span::after{content:"";position:absolute;left:0;width:17px;height:1.5px;background:var(--ink);transition:transform .3s var(--ez)}
 .burger span::before{top:-6px}.burger span::after{top:6px}
 
+/* Solange nicht gescrollt ist, steht die Leiste auf dem dunklen Hero --
+   dort muessen Logo, Links und Burger hell sein, sonst verschwinden sie. */
+.nav:not(.scr) .logo .mark{filter:brightness(0) invert(1)}
+.nav:not(.scr) .logo .wort b{color:#FFFFFF}
+.nav:not(.scr) .logo .wort small{color:#A8BDD4}
+.nav:not(.scr) .nl a{color:#CFD9E5}
+.nav:not(.scr) .nl a:hover{color:#FFFFFF}
+.nav:not(.scr) .nl a::after{background:#FFFFFF}
+.nav:not(.scr) .nl a.knopf{color:#FFFFFF}
+.nav:not(.scr) .burger{border-color:rgba(255,255,255,.4);background:transparent}
+.nav:not(.scr) .burger span,
+.nav:not(.scr) .burger span::before,
+.nav:not(.scr) .burger span::after{background:#FFFFFF}
+
 /* ── Hero ──────────────────────────────────────────────────── */
-.hero{position:relative;padding:var(--s7) 0 var(--abschnitt);overflow:hidden}
-.hero::before{
-  content:"";position:absolute;top:-420px;right:-300px;width:960px;height:960px;z-index:0;
-  background:radial-gradient(circle,rgba(53,87,125,.09) 0%,rgba(53,87,125,0) 62%);pointer-events:none;
+/* Der Hero reicht unter die Navigationsleiste hindurch bis ganz nach
+   oben -- sonst stuende ueber dem Foto ein weisser Streifen. Die Leiste
+   ist sticky mit z-index 100 und bleibt darueber liegen. */
+.hero{position:relative;padding:calc(var(--s7) + 80px) 0 var(--abschnitt);
+  margin-top:-80px;overflow:hidden;background:var(--w-grad-2)}
+/* Das Foto liegt als eigene Ebene dahinter. Bewusst als CSS-Hintergrund
+   und nicht als <img>: fehlt die Datei, bleibt einfach der dunkle
+   Markenverlauf stehen -- kein kaputtes Bildsymbol, kein Layoutsprung. */
+.hero-foto{
+  position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:image-set(url("bilder/hero.webp") type("image/webp"),
+                             url("bilder/hero.jpg") type("image/jpeg"));
+  background-size:cover;background-position:center 42%;
 }
-.hero-in{position:relative;z-index:1;display:grid;grid-template-columns:1.08fr .82fr;gap:var(--s6);align-items:center}
+/* Der Verlauf haelt die Schrift lesbar, egal wie hell das Foto links
+   ist. Rechts bleibt er duenn, damit vom Bild etwas zu sehen ist. */
+.hero-foto::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(100deg,rgba(21,34,52,.94) 0%,rgba(21,34,52,.88) 38%,
+    rgba(21,34,52,.55) 68%,rgba(21,34,52,.42) 100%);
+}
+.hero::before{
+  content:"";position:absolute;top:-420px;right:-300px;width:960px;height:960px;z-index:1;
+  background:radial-gradient(circle,rgba(127,160,196,.16) 0%,rgba(127,160,196,0) 62%);pointer-events:none;
+}
+/* Uebergang in den hellen Abschnitt darunter */
+.hero::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:120px;z-index:1;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(245,247,250,0),var(--bg-alt));
+}
+.hero-in{position:relative;z-index:2;display:grid;grid-template-columns:1.08fr .82fr;gap:var(--s6);align-items:center}
 /* ohne min-width:0 waechst eine Spalte auf die Mindestbreite ihres
    breitesten Kindes -- die Terminzeile bricht wegen nowrap nicht um */
 .hero-in>*{min-width:0}
 .kal,.kal-liste,.termin,.termin .wer{min-width:0}
-.hero h1{font-size:clamp(2.3rem,4.2vw,3.25rem);line-height:1.12;margin:var(--s3) 0 0;letter-spacing:-.028em;max-width:18ch}
-.hero p.sub{color:var(--text-muted);font-size:18.5px;line-height:1.62;margin-top:var(--s3);max-width:52ch}
+.hero h1{font-size:clamp(2.3rem,4.2vw,3.25rem);line-height:1.12;margin:var(--s3) 0 0;
+  letter-spacing:-.028em;max-width:18ch;color:#FFFFFF}
+.hero p.sub{color:#CFD9E5;font-size:18.5px;line-height:1.62;margin-top:var(--s3);max-width:52ch}
 .hero-knoepfe{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s5)}
-.hero-hinweis{margin-top:var(--s3);font-size:14.5px;color:var(--text-muted);display:flex;align-items:center;gap:9px}
-.hero-hinweis svg{width:16px;height:16px;flex:none;stroke:var(--w-grad-1);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.hero-hinweis{margin-top:var(--s3);font-size:14.5px;color:#CFD9E5;display:flex;align-items:center;gap:9px}
+.hero-hinweis svg{width:16px;height:16px;flex:none;stroke:#8FB3D8;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+/* Auf dunklem Grund braucht die Auszeichnung eigene Farben */
+.hero .label{color:#8FB3D8}
+.hero .knopf-linie{border-color:rgba(255,255,255,.42);color:#FFFFFF;background:transparent}
+.hero .knopf-linie:hover{border-color:#FFFFFF;background:rgba(255,255,255,.12)}
+/* Der dunkle Vollknopf verschwindet auf dunklem Grund fast -- auf dem
+   Hero und in der Leiste darueber wird er deshalb hell. */
+.hero .knopf-voll,
+.nav:not(.scr) .nl a.knopf{background:#FFFFFF;color:var(--ink);border-color:#FFFFFF}
+.hero .knopf-voll:hover,
+.nav:not(.scr) .nl a.knopf:hover{background:#E7EDF4;color:var(--ink)}
+.hero .knopf-voll svg{stroke:var(--ink)}
 
 /* ── Signature: der Kalender ───────────────────────────────── */
 .kal{
@@ -544,6 +595,7 @@ body.intro-an #intro{display:flex}
 
 <!-- ══════════════════ HERO ══════════════════ -->
 <section class="hero">
+  <div class="hero-foto" aria-hidden="true"></div>
   <div class="wrap hero-in">
     <div class="rv">
       <span class="label">Qualifizierte Termine für Makler</span>
