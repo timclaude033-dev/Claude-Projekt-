@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de-CH">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Walter Setting — Qualifizierte Termine für Makler</title>
-<meta name="description" content="Wir rufen Ihre Interessenten an, qualifizieren sie am Telefon und legen Ihnen nur die ernsthaften Verkäufer als feste Termine in den Kalender. Die ersten drei Termine sind kostenlos.">
+<title>Walter Setting — Qualifizierte Termine für Schweizer Makler</title>
+<meta name="description" content="Terminvereinbarung für Immobilienmakler in der Schweiz. Wir rufen Ihre Kontakte an, qualifizieren sie am Telefon und legen Ihnen nur die ernsthaften Verkäufer als feste Termine in den Kalender. Die ersten drei Termine sind kostenlos.">
 <meta name="theme-color" content="#16233B">
-<meta property="og:title" content="Walter Setting — Qualifizierte Termine für Makler">
-<meta property="og:description" content="Aus Ihren Anfragen werden Termine im Kalender. Sie zahlen nur für echte Termine.">
+<meta property="og:title" content="Walter Setting — Qualifizierte Termine für Schweizer Makler">
+<meta property="og:description" content="Für Immobilienmakler in der Schweiz: Aus Ihren Anfragen werden Termine im Kalender. Sie zahlen nur für Termine, die stattgefunden haben.">
 <meta property="og:type" content="website">
 <link rel="icon" href="walter-setting-icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════════════
-   WALTER SETTING — Qualifizierte Termine für Makler
+   WALTER SETTING — Qualifizierte Termine für Schweizer Makler
    Eine Datei. Kein Build. Kein Framework.
    ═══════════════════════════════════════════════════════════════ */
 
@@ -25,7 +25,7 @@
   --ink-soft:   #21395A;  /* etwas helleres Blau */
   --w-grad-1:   #35577D;  /* Farbverlauf hell */
   --w-grad-2:   #152234;  /* Farbverlauf dunkel */
-  --text:       #1C2A3F;  /* Fließtext */
+  --text:       #1C2A3F;  /* Fliesstext */
   --text-muted: #6E7F95;  /* Nebentext, Untertitel */
   --bg:         #FFFFFF;  /* Hintergrund */
   --bg-alt:     #F5F7FA;  /* abwechselnder Abschnitts-Hintergrund */
@@ -171,13 +171,16 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
   content:"";position:absolute;left:0;right:0;bottom:0;height:120px;z-index:1;pointer-events:none;
   background:linear-gradient(to bottom,rgba(245,247,250,0),var(--bg-alt));
 }
-.hero-in{position:relative;z-index:2;display:grid;grid-template-columns:1.08fr .82fr;gap:var(--s6);align-items:center}
+/* Einspaltig, seit der Kalenderkasten weg ist. Die Breite kommt
+   weiterhin von .wrap, damit der Text buendig unter dem Logo steht --
+   ein eigenes max-width wuerde den Block mittig einruecken. */
+.hero-in{position:relative;z-index:2}
+.hero-in>*{max-width:760px}
 /* ohne min-width:0 waechst eine Spalte auf die Mindestbreite ihres
    breitesten Kindes -- die Terminzeile bricht wegen nowrap nicht um */
 .hero-in>*{min-width:0}
-.kal,.kal-liste,.termin,.termin .wer{min-width:0}
-.hero h1{font-size:clamp(2.3rem,4.2vw,3.25rem);line-height:1.12;margin:var(--s3) 0 0;
-  letter-spacing:-.028em;max-width:18ch;color:#FFFFFF}
+.hero h1{font-size:clamp(2.4rem,5vw,3.6rem);line-height:1.1;margin:var(--s3) 0 0;
+  letter-spacing:-.028em;max-width:16ch;color:#FFFFFF}
 .hero p.sub{color:#CFD9E5;font-size:18.5px;line-height:1.62;margin-top:var(--s3);max-width:52ch}
 .hero-knoepfe{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s5)}
 .hero-hinweis{margin-top:var(--s3);font-size:14.5px;color:#CFD9E5;display:flex;align-items:center;gap:9px}
@@ -194,55 +197,6 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
 .nav:not(.scr) .nl a.knopf:hover{background:#E7EDF4;color:var(--ink)}
 .hero .knopf-voll svg{stroke:var(--ink)}
 
-/* ── Signature: der Kalender ───────────────────────────────── */
-.kal{
-  background:var(--bg);border:1px solid var(--border);border-radius:18px;
-  box-shadow:var(--schatten-hoch);overflow:hidden;
-}
-.kal-kopf{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
-.kal-titel b{display:block;font-family:var(--head);font-weight:600;font-size:15px;color:var(--ink)}
-.kal-titel small{display:block;font-size:11px;color:var(--text-muted);margin-top:2px}
-.kal-tag i{display:block;width:4px;height:4px;border-radius:50%;background:var(--w-grad-1);
-  margin:5px auto 0}
-.termin .wer b{display:block;font-family:var(--head);font-size:13px;font-weight:700;
-  letter-spacing:.03em;color:var(--w-grad-1);text-transform:uppercase}
-.termin .wer span{display:block;font-size:14px;color:var(--text);margin-top:2px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.termin{transition:border-color .25s var(--ez),box-shadow .25s var(--ez)}
-.termin.rein:hover{border-color:var(--w-grad-1);box-shadow:var(--schatten)}
-.kal-live{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-muted)}
-.kal-punkt{width:7px;height:7px;border-radius:50%;background:var(--w-grad-1);
-  box-shadow:0 0 0 0 rgba(53,87,125,.55);animation:puls 2.6s infinite}
-@keyframes puls{0%{box-shadow:0 0 0 0 rgba(53,87,125,.5)}70%{box-shadow:0 0 0 10px rgba(53,87,125,0)}100%{box-shadow:0 0 0 0 rgba(53,87,125,0)}}
-
-.kal-woche{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
-.kal-tag{background:var(--bg-alt);padding:11px 6px;text-align:center}
-.kal-tag span{display:block;font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted)}
-.kal-tag b{display:block;font-family:var(--head);font-weight:600;font-size:16px;color:var(--ink);margin-top:3px}
-.kal-tag.aktiv{background:var(--bg)}
-.kal-tag.aktiv b{color:var(--w-grad-1)}
-
-.kal-liste{padding:16px 18px 20px;display:flex;flex-direction:column;gap:10px}
-.termin{
-  display:flex;align-items:center;gap:13px;padding:13px 15px;
-  border:1px solid var(--border);border-radius:12px;background:var(--bg);
-  opacity:0;transform:translateY(10px) scale(.98);
-}
-.termin.rein{animation:reinschieben .55s var(--ez) forwards}
-@keyframes reinschieben{to{opacity:1;transform:none}}
-.termin .zeit{font-family:var(--head);font-weight:600;font-size:14px;color:var(--ink);flex:none;width:46px}
-.termin .wer{flex:1;min-width:0}
-.termin .wer b{display:block;font-size:14.5px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.termin .wer span{display:block;font-size:12.5px;color:var(--text-muted);margin-top:1px}
-.haken{width:24px;height:24px;flex:none;border-radius:50%;background:rgba(53,87,125,.10);display:flex;align-items:center;justify-content:center}
-.haken svg{width:13px;height:13px;stroke:var(--w-grad-1);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;
-  stroke-dasharray:22;stroke-dashoffset:22}
-.termin.rein .haken svg{animation:hakenzeichnen .45s var(--ez) .35s forwards}
-@keyframes hakenzeichnen{to{stroke-dashoffset:0}}
-
-.kal-fuss{padding:14px 20px;border-top:1px solid var(--border);background:var(--bg-alt);
-  font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:9px}
-.kal-fuss svg{width:15px;height:15px;flex:none;stroke:var(--text-muted);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 
 /* ── Problem ───────────────────────────────────────────────── */
 .problem{display:grid;grid-template-columns:1fr 1fr;gap:var(--s7);align-items:start}
@@ -480,7 +434,6 @@ body.intro-an #intro{display:flex}
 /* Der weiche Lichtschein im Hero wandert beim Scrollen langsamer mit */
 .hero::before{transform:translate3d(0,var(--py,0px),0);will-change:transform}
 /* Die Kalenderkarte schwebt dabei minimal gegenlaeufig */
-.kal{transform:translate3d(0,var(--ky,0px),0)}
 
 /* Preiskarte: das Raster wandert langsam, solange sie sichtbar ist */
 @keyframes rasterWandern{to{background-position:38px 38px}}
@@ -534,9 +487,6 @@ body.intro-an #intro{display:flex}
 }
 @media(max-width:480px){
   .logo .wort small{display:none}
-  .kal-liste{padding:13px 13px 16px}
-  .termin{padding:11px 12px;gap:10px}
-  .termin .zeit{width:42px;font-size:13px}
   .frage button{font-size:16.5px}
   .frage .antwort p{padding-right:var(--s3)}
 }
@@ -548,11 +498,9 @@ body.intro-an #intro{display:flex}
   .rv{opacity:1;transform:none}
   .staffel>*{opacity:1;transform:none}
   .maske>span{transform:none}
-  .hero::before,.kal{transform:none}
+.hero::before{transform:none}
   #intro{display:none!important}
   body.intro-an{overflow:auto}
-  .termin{opacity:1;transform:none}
-  .termin .haken svg{stroke-dashoffset:0}
   .ablauf .linie i{transform:scaleX(1)}
 }
 </style>
@@ -576,7 +524,7 @@ body.intro-an #intro{display:flex}
     <!-- LOGO HIER: walter-setting-logo.svg -->
     <a href="#top" class="logo" aria-label="Walter Setting — Startseite">
       <img class="mark" src="walter-setting-icon.svg" alt="" width="38" height="38" aria-hidden="true">
-      <span class="wort"><b>WALTER SETTING</b><small>Qualifizierte Termine für Makler</small></span>
+      <span class="wort"><b>WALTER SETTING</b><small>Qualifizierte Termine für Schweizer Makler</small></span>
     </a>
 
     <button class="burger" id="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nl"><span></span></button>
@@ -598,9 +546,9 @@ body.intro-an #intro{display:flex}
   <div class="hero-foto" aria-hidden="true"></div>
   <div class="wrap hero-in">
     <div class="rv">
-      <span class="label">Qualifizierte Termine für Makler</span>
+      <span class="label">Für Immobilienmakler in der Schweiz</span>
       <h1 class="maske rv"><span>Aus Ihren Kontakten werden Termine im Kalender.</span></h1>
-      <p class="sub">Wir übernehmen die Telefonarbeit auf beiden Seiten: Bei Eigentümern prüfen wir die Verkaufsabsicht, bei Kaufinteressenten Budget und Finanzierung. Sie erhalten ausschließlich verbindlich zugesagte Termine — mit vollständigem Gesprächsprotokoll.</p>
+      <p class="sub">Wir übernehmen die Telefonarbeit für Maklerbüros in der ganzen Schweiz: Bei Eigentümern prüfen wir die Verkaufsabsicht, bei Kaufinteressenten Budget und Finanzierung. Sie erhalten ausschliesslich verbindlich zugesagte Termine — mit vollständigem Gesprächsprotokoll.</p>
       <div class="hero-knoepfe">
         <a href="#kontakt" class="knopf knopf-voll">Kostenloses Erstgespräch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a href="#angebot" class="knopf knopf-linie">Angebote ansehen</a>
@@ -611,56 +559,6 @@ body.intro-an #intro{display:flex}
       </p>
     </div>
 
-    <!-- Kalender: bewusst ohne erfundene Personennamen, gezeigt wird
-         die Art des Termins und was daran geprueft wurde. -->
-    <div class="rv rv-r" style="transition-delay:.14s">
-      <div class="kal" role="img" aria-label="Beispielhafte Darstellung einer Kalenderwoche mit drei geprueften Terminen.">
-        <div class="kal-kopf">
-          <span class="kal-titel"><b>Ihr Kalender</b><small>Beispielhafte Darstellung</small></span>
-          <span class="kal-live"><i class="kal-punkt" aria-hidden="true"></i>Diese Woche</span>
-        </div>
-
-        <div class="kal-woche" aria-hidden="true">
-          <div class="kal-tag"><span>Mo</span><b>14</b></div>
-          <div class="kal-tag aktiv"><span>Di</span><b>15</b><i></i></div>
-          <div class="kal-tag aktiv"><span>Mi</span><b>16</b><i></i></div>
-          <div class="kal-tag"><span>Do</span><b>17</b></div>
-          <div class="kal-tag aktiv"><span>Fr</span><b>18</b><i></i></div>
-        </div>
-
-        <div class="kal-liste" id="kalListe">
-          <div class="termin" data-verz="0">
-            <span class="zeit">09:30</span>
-            <span class="wer">
-              <b>Verkäufer-Termin</b>
-              <span>Reihenhaus · Verkauf im dritten Quartal</span>
-            </span>
-            <span class="haken"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
-          </div>
-          <div class="termin" data-verz="1">
-            <span class="zeit">11:00</span>
-            <span class="wer">
-              <b>Verkäufer-Termin</b>
-              <span>Eigentumswohnung · Erbengemeinschaft</span>
-            </span>
-            <span class="haken"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
-          </div>
-          <div class="termin" data-verz="2">
-            <span class="zeit">15:30</span>
-            <span class="wer">
-              <b>Käufer-Termin</b>
-              <span>Besichtigung · Finanzierung bestätigt</span>
-            </span>
-            <span class="haken"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
-          </div>
-        </div>
-
-        <div class="kal-fuss">
-          <svg viewBox="0 0 24 24"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4L12 14.1l-3-3"/></svg>
-          Jeder Termin telefonisch geprüft — auf der Verkäufer- wie auf der Käuferseite.
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -673,7 +571,7 @@ body.intro-an #intro{display:flex}
     </div>
     <div class="p-liste rv staffel" style="transition-delay:.1s">
       <div class="p-punkt"><b>01</b><p>Anfragen aus Portalen und Formularen bleiben im Tagesgeschäft liegen. <em>Wer erst Tage später zurückruft, spricht mit jemandem, der bereits anderweitig im Gespräch ist.</em></p></div>
-      <div class="p-punkt"><b>02</b><p>Ein großer Teil der Anfragen zielt allein auf eine Wertauskunft. <em>Diese Kontakte von echten Verkaufsabsichten zu trennen, kostet genau die Stunden, die im Kalender fehlen.</em></p></div>
+      <div class="p-punkt"><b>02</b><p>Ein grosser Teil der Anfragen zielt allein auf eine Wertauskunft. <em>Diese Kontakte von echten Verkaufsabsichten zu trennen, kostet genau die Stunden, die im Kalender fehlen.</em></p></div>
       <div class="p-punkt"><b>03</b><p>Besichtigungen finden mit Interessenten statt, deren Finanzierung nie geprüft wurde. <em>Ein halber Samstag für jemanden, der das Objekt gar nicht erwerben kann.</em></p></div>
       <div class="p-punkt"><b>04</b><p>Bestandslisten werden nicht mehr nachgefasst, <em>obwohl sich die Lebenssituation vieler Eigentümer seit dem Erstkontakt verändert hat.</em></p></div>
     </div>
@@ -758,7 +656,7 @@ body.intro-an #intro{display:flex}
     <div class="kopf-block rv">
       <span class="label">Angebote und Preise</span>
       <h2 class="h2 maske rv" style="margin-top:var(--s2)"><span>Zwei Angebote, ein Prinzip.</span></h2>
-      <p class="lead">Vergütet wird ausschließlich, was tatsächlich stattfindet. Beide Angebote sind einzeln buchbar — Sie können mit einer Seite beginnen und die andere später ergänzen.</p>
+      <p class="lead">Vergütet wird ausschliesslich, was tatsächlich stattfindet. Beide Angebote sind einzeln buchbar — Sie können mit einer Seite beginnen und die andere später ergänzen. Alle Preise in Schweizer Franken, ohne Mehrwertsteuer.</p>
     </div>
 
     <!-- Der Testlauf gilt fuer beide Angebote und steht deshalb
@@ -777,7 +675,7 @@ body.intro-an #intro{display:flex}
         <h3 class="ak-titel">Verkäufer-Termine</h3>
         <p class="ak-was">Sie möchten neue Objekte gewinnen. Wir prüfen Ihre Eigentümerkontakte am Telefon und übergeben nur Termine mit belegter Verkaufsabsicht.</p>
         <div class="ak-preisblock">
-          <div class="ak-preis"><span class="betrag">100 €</span><span class="je">je Termin, der stattgefunden hat</span></div>
+          <div class="ak-preis"><span class="betrag">CHF 100</span><span class="je">je Termin, der stattgefunden hat</span></div>
           <div class="ak-preis"><span class="betrag">5 %</span><span class="je">der Maklerprovision bei Abschluss</span></div>
         </div>
         <ul class="ak-punkte">
@@ -794,7 +692,7 @@ body.intro-an #intro{display:flex}
         <h3 class="ak-titel">Käufer-Vorqualifizierung</h3>
         <p class="ak-was">Sie haben ein Objekt im Verkauf. Wir prüfen die Interessenten, bevor Sie zur Besichtigung fahren.</p>
         <div class="ak-preisblock">
-          <div class="ak-preis"><span class="betrag">50 €</span><span class="je">je Termin, der stattgefunden hat</span></div>
+          <div class="ak-preis"><span class="betrag">CHF 50</span><span class="je">je Termin, der stattgefunden hat</span></div>
           <div class="ak-preis"><span class="betrag">5 %</span><span class="je">der Maklerprovision bei Abschluss</span></div>
         </div>
         <ul class="ak-punkte">
@@ -863,7 +761,7 @@ body.intro-an #intro{display:flex}
       </div>
       <div class="frage">
         <button aria-expanded="false" aria-controls="a2"><span>Woher stammen die Interessenten?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a2" role="region"><p>Ausschließlich aus Ihrem eigenen Bestand — eingehenden Anfragen, Portalkontakten und bestehenden Listen. Wir schalten keine Werbung und generieren keine eigenen Leads. Die Datenhoheit bleibt vollständig bei Ihnen.</p></div>
+        <div class="antwort" id="a2" role="region"><p>Ausschliesslich aus Ihrem eigenen Bestand — eingehenden Anfragen, Portalkontakten und bestehenden Listen. Wir schalten keine Werbung und generieren keine eigenen Leads. Die Datenhoheit bleibt vollständig bei Ihnen.</p></div>
       </div>
       <div class="frage">
         <button aria-expanded="false" aria-controls="a3"><span>Wie wird nachgewiesen, dass ein Termin stattgefunden hat?</span><span class="sym" aria-hidden="true"></span></button>
@@ -871,23 +769,31 @@ body.intro-an #intro{display:flex}
       </div>
       <div class="frage">
         <button aria-expanded="false" aria-controls="a9"><span>Was prüfen Sie bei einem Kaufinteressenten?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a9" role="region"><p>Finanzierungsstand und verfügbares Eigenkapital, eine belastbare Preisobergrenze, die konkreten Objekt- und Lagevorstellungen, den Zeitrahmen, ob eigengenutzt oder als Kapitalanlage gekauft werden soll und ob zuvor eine eigene Immobilie verkauft werden muss. Erst danach vereinbaren wir die Besichtigung. Angaben zur Finanzierung erheben wir ausschließlich in dem Umfang, den Sie für die Vorauswahl benötigen — eine Bonitätsprüfung führen wir nicht durch.</p></div>
+        <div class="antwort" id="a9" role="region"><p>Finanzierungsstand und verfügbares Eigenkapital, eine belastbare Preisobergrenze, die konkreten Objekt- und Lagevorstellungen, den Zeitrahmen, ob eigengenutzt oder als Kapitalanlage gekauft werden soll und ob zuvor eine eigene Immobilie verkauft werden muss. Erst danach vereinbaren wir die Besichtigung. Angaben zur Finanzierung erheben wir ausschliesslich in dem Umfang, den Sie für die Vorauswahl benötigen — eine Bonitätsprüfung führen wir nicht durch.</p></div>
       </div>
       <div class="frage">
         <button aria-expanded="false" aria-controls="a10"><span>Wodurch unterscheiden sich die beiden Angebote?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a10" role="region"><p>Auf der Verkäuferseite gewinnen Sie ein neues Mandat: Wir prüfen Eigentümerkontakte auf ihre Verkaufsabsicht, der Termin kostet 100 €. Auf der Käuferseite haben Sie ein Objekt bereits im Verkauf, und wir qualifizieren die Interessenten vor der Besichtigung; hier kostet der Termin 50 €. Die Erfolgsbeteiligung von 5 % der Maklerprovision gilt in beiden Fällen und ausschließlich bei einem unterschriebenen Kaufvertrag.</p></div>
+        <div class="antwort" id="a10" role="region"><p>Auf der Verkäuferseite gewinnen Sie ein neues Mandat: Wir prüfen Eigentümerkontakte auf ihre Verkaufsabsicht, der Termin kostet CHF 100. Auf der Käuferseite haben Sie ein Objekt bereits im Verkauf, und wir qualifizieren die Interessenten vor der Besichtigung; hier kostet der Termin CHF 50. Die Erfolgsbeteiligung von 5 % der Maklerprovision gilt in beiden Fällen und ausschliesslich bei einem öffentlich beurkundeten Kaufvertrag.</p></div>
       </div>
       <div class="frage">
         <button aria-expanded="false" aria-controls="a4"><span>Wie wird die Erfolgsbeteiligung berechnet und fällig?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a4" role="region"><p>Die Beteiligung beträgt 5 % der Provision, die Sie an dem betreffenden Objekt tatsächlich vereinnahmen, und wird ausschließlich bei einem unterschriebenen Kaufvertrag fällig. Grundlage ist Ihre vereinnahmte Provision, nicht der Kaufpreis. Abgerechnet wird nach Ihrem Zahlungseingang.</p></div>
+        <div class="antwort" id="a4" role="region"><p>Die Beteiligung beträgt 5 % der Provision, die Sie an dem betreffenden Objekt tatsächlich vereinnahmen, und wird ausschliesslich bei einem öffentlich beurkundeten Kaufvertrag fällig. Grundlage ist Ihre vereinnahmte Provision, nicht der Kaufpreis. Abgerechnet wird nach Ihrem Zahlungseingang.</p></div>
       </div>
       <div class="frage">
         <button aria-expanded="false" aria-controls="a5"><span>Gibt es eine Mindestlaufzeit oder monatliche Kosten?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a5" role="region"><p>Nein. Es gibt keine Grundgebühr, kein Abonnement und keine Mindestabnahme. Abgerechnet werden ausschließlich stattgefundene Termine sowie eine etwaige Erfolgsbeteiligung. Die Zusammenarbeit können Sie jederzeit ohne Frist beenden.</p></div>
+        <div class="antwort" id="a5" role="region"><p>Nein. Es gibt keine Grundgebühr, kein Abonnement und keine Mindestabnahme. Abgerechnet werden ausschliesslich stattgefundene Termine sowie eine etwaige Erfolgsbeteiligung. Die Zusammenarbeit können Sie jederzeit ohne Frist beenden.</p></div>
       </div>
       <div class="frage">
         <button aria-expanded="false" aria-controls="a6"><span>Wie werden die Daten meiner Interessenten verarbeitet?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a6" role="region"><p>Wir verarbeiten die Daten ausschließlich in Ihrem Auftrag und nach Ihrer Weisung. Vor Beginn schließen wir dazu einen Vertrag zur Auftragsverarbeitung nach Artikel 28 DSGVO. Die Daten werden weder für eigene Zwecke genutzt noch an Dritte weitergegeben.</p></div>
+        <div class="antwort" id="a6" role="region"><p>Wir bearbeiten die Daten ausschliesslich in Ihrem Auftrag und nach Ihrer Weisung. Vor Beginn schliessen wir einen Vertrag zur Auftragsbearbeitung, der beide Rechtsordnungen abdeckt: das revidierte Schweizer Datenschutzgesetz (Art. 9 revDSG) für Sie als Auftraggeber und die DSGVO (Art. 28), weil mein Sitz in Deutschland liegt. Die Schweiz gilt nach EU-Recht als Land mit angemessenem Datenschutzniveau, ein zusätzlicher Übermittlungsvertrag ist deshalb nicht nötig. Die Daten werden weder für eigene Zwecke genutzt noch an Dritte weitergegeben.</p></div>
+      </div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a11"><span>Wie stellen Sie sicher, dass die Anrufe in der Schweiz zulässig sind?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a11" role="region"><p>Wir rufen ausschliesslich Personen an, die von sich aus mit Ihnen Kontakt aufgenommen haben — eine Anfrage, ein Formular, eine Erkundigung. Vor jeder Übergabe halten wir schriftlich fest, woher der Kontakt stammt. Kontakte mit Sterneintrag im Telefonbuch werden aussortiert: Werbeanrufe an diese Personen sind nach Art. 3 Abs. 1 lit. u UWG unlauter. Wo uns die Herkunft eines Kontakts unklar ist, rufen wir nicht an, sondern fragen bei Ihnen nach.</p></div>
+      </div>
+      <div class="frage">
+        <button aria-expanded="false" aria-controls="a12"><span>Sie sitzen in München — wie funktioniert das für ein Schweizer Büro?</span><span class="sym" aria-hidden="true"></span></button>
+        <div class="antwort" id="a12" role="region"><p>Für Sie ändert das im Alltag nichts: gleiche Zeitzone, gleiche Sprache, Anrufe zu Schweizer Bürozeiten. Abgerechnet wird in Franken. Da meine Leistung aus dem Ausland kommt, versteuern Sie sie als Bezug einer Dienstleistung aus dem Ausland selbst (Bezugsteuer nach Art. 45 MWSTG) — meine Rechnungen weisen deshalb keine Mehrwertsteuer aus. Sind Sie mehrwertsteuerpflichtig, ist das ein durchlaufender Posten. Klären Sie das im Zweifel kurz mit Ihrer Treuhand.</p></div>
       </div>
       <div class="frage">
         <button aria-expanded="false" aria-controls="a7"><span>Wie viele Maklerbüros betreuen Sie gleichzeitig?</span><span class="sym" aria-hidden="true"></span></button>
@@ -895,7 +801,7 @@ body.intro-an #intro{display:flex}
       </div>
       <div class="frage">
         <button aria-expanded="false" aria-controls="a8"><span>Für welche Art von Kontakten eignet sich die Zusammenarbeit?</span><span class="sym" aria-hidden="true"></span></button>
-        <div class="antwort" id="a8" role="region"><p>Für Verkäuferkontakte: Eigentümer, die einen Verkauf erwägen. Dazu zählen ausdrücklich auch ältere Listen, die seit Monaten nicht mehr bearbeitet wurden — dort stecken erfahrungsgemäß die Kontakte, die im Tagesgeschäft untergehen.</p></div>
+        <div class="antwort" id="a8" role="region"><p>Für Verkäuferkontakte: Eigentümer, die einen Verkauf erwägen. Dazu zählen ausdrücklich auch ältere Listen, die seit Monaten nicht mehr bearbeitet wurden — dort stecken erfahrungsgemäss die Kontakte, die im Tagesgeschäft untergehen.</p></div>
       </div>
     </div>
   </div>
@@ -920,6 +826,10 @@ body.intro-an #intro{display:flex}
         <div>
           <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
           <div><b>Umfang</b><span>Etwa 20 Minuten, ohne Verpflichtung.</span></div>
+        </div>
+        <div>
+          <svg viewBox="0 0 24 24"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <div><b>Sitz</b><span>München — tätig für Maklerbüros in der ganzen Schweiz.</span></div>
         </div>
       </div>
       <p style="margin-top:var(--s4)">
@@ -946,13 +856,13 @@ body.intro-an #intro{display:flex}
       </div>
       <div class="feld">
         <label for="f-msg">Nachricht</label>
-        <textarea id="f-msg" name="nachricht" required placeholder="Wie viele Anfragen liegen bei Ihnen? Wie groß ist Ihre Liste?"></textarea>
+        <textarea id="f-msg" name="nachricht" required placeholder="Wie viele Anfragen liegen bei Ihnen? Wie gross ist Ihre Liste?"></textarea>
         <p class="fehler" id="e-msg">Bitte beschreiben Sie kurz Ihr Anliegen.</p>
       </div>
       <button type="submit" class="knopf knopf-voll">Erstgespräch anfragen
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       <p class="ok" id="ok" role="status">Danke. Ihre Anfrage ist bereit — wir melden uns zeitnah.</p>
-      <p class="form-hinweis">Ihre Angaben werden ausschließlich zur Beantwortung Ihrer Anfrage verwendet.</p>
+      <p class="form-hinweis">Ihre Angaben werden ausschliesslich zur Beantwortung Ihrer Anfrage verwendet.</p>
     </form>
   </div>
 </section>
@@ -984,7 +894,7 @@ body.intro-an #intro{display:flex}
                   letter-spacing="6" fill="#FFFFFF">SETTING</text>
           </svg>
         </a>
-        <p class="ft-slogan">Qualifizierte Termine für Makler.</p>
+        <p class="ft-slogan">Qualifizierte Termine für Schweizer Makler.</p>
       </div>
       <nav class="ft-links" aria-label="Weitere Seiten">
         <a href="#vorteile">Vorteile</a>
@@ -997,7 +907,7 @@ body.intro-an #intro{display:flex}
       </nav>
     </div>
     <div class="ft-unten">
-      <span>© <span id="jahr">2026</span> Walter Setting · Tim Walter</span>
+      <span>© <span id="jahr">2026</span> Walter Setting · Tim Walter · München</span>
       <span data-kontakt="email">kontakt@walter-setting.de</span>
     </div>
   </div>
@@ -1089,11 +999,11 @@ function starteEinblenden() {
   }, 1550);
 })();
 
-/* ── Lichtschein und Kalender wandern beim Scrollen mit ────────
-   Zwei Geschwindigkeiten, damit der Hero Tiefe bekommt. Gerechnet
+/* ── Der Lichtschein wandert beim Scrollen mit ────────────────
+   Gibt dem Hero etwas Tiefe. Gerechnet
    wird nur in requestAnimationFrame, sonst ruckelt das Scrollen. */
 (function () {
-  const hero = document.querySelector('.hero'), kal = document.querySelector('.kal');
+  const hero = document.querySelector('.hero');
   if (!hero || WENIGER) return;
   let offen = false;
   addEventListener('scroll', () => {
@@ -1103,29 +1013,10 @@ function starteEinblenden() {
       const y = scrollY;
       if (y < innerHeight * 1.4) {
         hero.style.setProperty('--py', (y * 0.22).toFixed(1) + 'px');
-        if (kal) kal.style.setProperty('--ky', (y * -0.045).toFixed(1) + 'px');
       }
       offen = false;
     });
   }, { passive: true });
-})();
-
-/* ── Die Termine schieben sich nacheinander in den Kalender ── */
-(function () {
-  const liste = document.getElementById('kalListe');
-  if (!liste) return;
-  const termine = liste.querySelectorAll('.termin');
-  if (WENIGER) { termine.forEach(t => t.classList.add('rein')); return; }
-  const kio = new IntersectionObserver(es => {
-    es.forEach(e => {
-      if (!e.isIntersecting) return;
-      kio.unobserve(e.target);
-      termine.forEach(t => {
-        setTimeout(() => t.classList.add('rein'), 350 + Number(t.dataset.verz) * 480);
-      });
-    });
-  }, { threshold: .35 });
-  wennBereit(() => kio.observe(liste));
 })();
 
 /* ── Die 5 zählt hoch ──────────────────────────────────────── */
