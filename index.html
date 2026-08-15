@@ -151,16 +151,22 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
    Markenverlauf stehen -- kein kaputtes Bildsymbol, kein Layoutsprung. */
 .hero-foto{
   position:absolute;inset:0;z-index:0;pointer-events:none;
-  background-image:image-set(url("bilder/hero.webp") type("image/webp"),
-                             url("bilder/hero.jpg") type("image/jpeg"));
-  background-size:cover;background-position:center 42%;
+  /* Nur das JPG. Vorher stand hier ein image-set mit einer webp-Variante
+     zuerst -- Chrome waehlt die dann, und weil es die Datei nicht gab,
+     lud es gar kein Bild: image-set faellt bei 404 nicht zurueck. Eine
+     webp-Fassung kann spaeter dazu, dann aber nur mit beiden Dateien. */
+  background-image:url("bilder/hero.jpg");
+  background-size:cover;background-position:62% 46%;
 }
-/* Der Verlauf haelt die Schrift lesbar, egal wie hell das Foto links
-   ist. Rechts bleibt er duenn, damit vom Bild etwas zu sehen ist. */
+/* Der Verlauf deckt nur die linke Haelfte kraeftig ab -- dort steht der
+   Text. Nach rechts duennt er schnell aus, sonst bleibt vom Foto nichts
+   uebrig ausser einer blauen Flaeche. */
 .hero-foto::after{
   content:"";position:absolute;inset:0;
-  background:linear-gradient(100deg,rgba(21,34,52,.94) 0%,rgba(21,34,52,.88) 38%,
-    rgba(21,34,52,.55) 68%,rgba(21,34,52,.42) 100%);
+  background:
+    linear-gradient(100deg,rgba(21,34,52,.93) 0%,rgba(21,34,52,.80) 30%,
+      rgba(21,34,52,.42) 60%,rgba(21,34,52,.14) 100%),
+    linear-gradient(to bottom,rgba(21,34,52,.35) 0%,rgba(21,34,52,0) 34%);
 }
 .hero::before{
   content:"";position:absolute;top:-420px;right:-300px;width:960px;height:960px;z-index:1;
@@ -180,15 +186,21 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
    breitesten Kindes -- die Terminzeile bricht wegen nowrap nicht um */
 .hero-in>*{min-width:0}
 .hero h1{font-size:clamp(2.4rem,5vw,3.6rem);line-height:1.1;margin:var(--s3) 0 0;
-  letter-spacing:-.028em;max-width:16ch;color:#FFFFFF}
-.hero p.sub{color:#CFD9E5;font-size:18.5px;line-height:1.62;margin-top:var(--s3);max-width:52ch}
+  letter-spacing:-.028em;max-width:16ch;color:#FFFFFF;
+  text-shadow:0 2px 18px rgba(10,18,30,.45)}
+.hero p.sub{color:#DCE5EF;font-size:18.5px;line-height:1.62;margin-top:var(--s3);max-width:52ch;
+  text-shadow:0 1px 12px rgba(10,18,30,.55)}
 .hero-knoepfe{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s5)}
-.hero-hinweis{margin-top:var(--s3);font-size:14.5px;color:#CFD9E5;display:flex;align-items:center;gap:9px}
+.hero-hinweis{margin-top:var(--s3);font-size:14.5px;color:#DCE5EF;display:flex;align-items:center;gap:9px;
+  text-shadow:0 1px 10px rgba(10,18,30,.6)}
 .hero-hinweis svg{width:16px;height:16px;flex:none;stroke:#8FB3D8;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 /* Auf dunklem Grund braucht die Auszeichnung eigene Farben */
 .hero .label{color:#8FB3D8}
-.hero .knopf-linie{border-color:rgba(255,255,255,.42);color:#FFFFFF;background:transparent}
-.hero .knopf-linie:hover{border-color:#FFFFFF;background:rgba(255,255,255,.12)}
+/* Der Umrissknopf steht auf dem Foto teilweise ueber hellen Stellen.
+   Ein leicht abgedunkelter Grund haelt ihn ueberall lesbar. */
+.hero .knopf-linie{border-color:rgba(255,255,255,.55);color:#FFFFFF;
+  background:rgba(16,27,43,.42);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+.hero .knopf-linie:hover{border-color:#FFFFFF;background:rgba(16,27,43,.62)}
 /* Der dunkle Vollknopf verschwindet auf dunklem Grund fast -- auf dem
    Hero und in der Leiste darueber wird er deshalb hell. */
 .hero .knopf-voll,
@@ -452,8 +464,10 @@ body.intro-an #intro{display:flex}
   .rv-l,.rv-r{transform:translateY(24px)}
   .rv-sc{transform:translateY(24px)}
   .wrap{padding:0 var(--s3)}
-  .hero-in{grid-template-columns:1fr;gap:var(--s6)}
-  .hero{padding:var(--s6) 0 var(--s7)}
+  /* Der Zuschlag von 80px muss bleiben -- ohne ihn rutscht die erste
+     Zeile unter die Navigationsleiste, weil der Hero mit -80px
+     Aussenabstand unter sie gezogen wird. */
+  .hero{padding:calc(var(--s6) + 80px) 0 var(--s7)}
   .problem,.kontakt{grid-template-columns:1fr;gap:var(--s5)}
   .angebote{grid-template-columns:1fr;gap:var(--s4)}
   .bd-liste{grid-template-columns:1fr;gap:0}
@@ -474,7 +488,10 @@ body.intro-an #intro{display:flex}
   .nl a::after{display:none}
   .nl a.knopf{margin-top:var(--s3);border-bottom:none;justify-content:center}
   .burger{display:flex}
-  .nav{background:rgba(255,255,255,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  /* Nur die gescrollte Leiste wird weiss. Vorher galt das hier fuer
+     jeden Zustand -- dann stand das helle Logo auf weissem Grund und
+     war unsichtbar, sobald der Hero ein Foto trug. */
+  .nav.scr{background:rgba(255,255,255,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 }
 @media(max-width:768px){
   :root{--abschnitt:64px;--wrap:100%}
