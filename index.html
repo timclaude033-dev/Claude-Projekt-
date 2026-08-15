@@ -156,7 +156,10 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
      lud es gar kein Bild: image-set faellt bei 404 nicht zurueck. Eine
      webp-Fassung kann spaeter dazu, dann aber nur mit beiden Dateien. */
   background-image:url("bilder/hero.jpg");
-  background-size:cover;background-position:62% 46%;
+  /* Der Turm steht in der Bildmitte, unten liegt viel Wasser -- deshalb
+     der Ausschnitt weiter oben. Mittig, damit auf schmalen Schirmen der
+     Turm im sichtbaren Streifen bleibt. */
+  background-size:cover;background-position:50% 32%;
 }
 /* Der Verlauf deckt nur die linke Haelfte kraeftig ab -- dort steht der
    Text. Nach rechts duennt er schnell aus, sonst bleibt vom Foto nichts
@@ -172,6 +175,12 @@ h2.h2{font-size:clamp(1.9rem,3.4vw,2.3rem);max-width:20ch}
   content:"";position:absolute;top:-420px;right:-300px;width:960px;height:960px;z-index:1;
   background:radial-gradient(circle,rgba(127,160,196,.16) 0%,rgba(127,160,196,0) 62%);pointer-events:none;
 }
+/* Auf schmalen Schirmen die kleinere Fassung: 140 statt 437 KB. Mehr
+   Bildpunkte als das Geraet darstellen kann braucht dort niemand. */
+@media(max-width:900px){
+  .hero-foto{background-image:url("bilder/hero-klein.jpg")}
+}
+
 /* Uebergang in den hellen Abschnitt darunter */
 .hero::after{
   content:"";position:absolute;left:0;right:0;bottom:0;height:120px;z-index:1;pointer-events:none;
