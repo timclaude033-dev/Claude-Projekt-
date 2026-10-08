@@ -273,6 +273,12 @@ select.input{-webkit-appearance:none;appearance:none}
 .toast:not(.has-action){padding-right:20px}
 
 .hidden{display:none!important}
+.boot{margin:auto;max-width:520px;text-align:center;padding:40px 16px}
+.boot-title{font-family:var(--serif);font-size:30px;line-height:1.15;margin:10px 0 8px}
+.boot-text{color:var(--muted);margin:0}
+.err-bar{position:fixed;left:16px;right:16px;top:12px;z-index:400;background:#F6E9E1;color:#5A3A28;border:1px solid #E2C9B8;border-radius:var(--radius);padding:10px 14px;font-size:13.5px;display:flex;gap:12px;align-items:flex-start}
+.err-bar button{margin-left:auto;text-decoration:underline;font-size:13px;color:inherit}
+@media (pointer:coarse){input,select,textarea{font-size:16px!important}}
 
 @media (max-width:1180px){
   .stats{display:none}
@@ -312,17 +318,23 @@ select.input{-webkit-appearance:none;appearance:none}
     <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
     <input id="search" type="search" placeholder="Suchen – Name, Firma, Ort …" autocomplete="off">
   </label>
-  <button class="btn btn-quiet" id="openSettings" title="Einstellungen">
+  <button type="button" class="btn btn-quiet" id="openSettings" title="Einstellungen">
     <svg class="i" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
     Einstellungen
   </button>
-  <button class="btn btn-primary" id="openImport">
+  <button type="button" class="btn btn-primary" id="openImport">
     <svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
     Leads einfügen
   </button>
 </header>
 
-<main class="board" id="board"></main>
+<main class="board" id="board">
+  <div class="boot" id="boot">
+    <span class="label">raumwerk / Leads</span>
+    <p class="boot-title">Das Board wird geladen …</p>
+    <p class="boot-text">Bleibt diese Meldung stehen, wird die Seite in einer Vorschau ohne JavaScript angezeigt. Bitte den Link direkt in Safari oder Chrome öffnen.</p>
+  </div>
+</main>
 
 <!-- Lead-Detail -->
 <div class="overlay" id="detailOverlay">
@@ -331,7 +343,7 @@ select.input{-webkit-appearance:none;appearance:none}
       <aside class="detail-side">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
           <span class="label" id="dSince"></span>
-          <button class="close" data-close aria-label="Schließen"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+          <button type="button" class="close" data-close aria-label="Schließen"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
         </div>
         <h1 class="detail-name" id="dName"></h1>
         <div class="detail-firm" id="dFirm"></div>
@@ -345,7 +357,7 @@ select.input{-webkit-appearance:none;appearance:none}
         <div class="fields" id="dFields"></div>
 
         <div class="side-foot">
-          <button class="danger" id="dDelete">Lead löschen</button>
+          <button type="button" class="danger" id="dDelete">Lead löschen</button>
           <span class="saved" id="dSaved">Änderungen werden gespeichert</span>
         </div>
       </aside>
@@ -360,7 +372,7 @@ select.input{-webkit-appearance:none;appearance:none}
           <textarea id="dNote" placeholder="Notiz schreiben – z. B. „Rückruf Donnerstag, interessiert an Roomtour für Neubauprojekt.“"></textarea>
           <div class="compose-foot">
             <span>⌘ / Strg + Enter zum Speichern</span>
-            <button class="btn btn-primary btn-sm" id="dAddNote">Notiz speichern</button>
+            <button type="button" class="btn btn-primary btn-sm" id="dAddNote">Notiz speichern</button>
           </div>
         </div>
         <ul class="timeline" id="dTimeline"></ul>
@@ -374,12 +386,12 @@ select.input{-webkit-appearance:none;appearance:none}
   <section class="panel sheet" role="dialog" aria-modal="true" aria-label="Leads einfügen">
     <div class="panel-head">
       <span class="label">Leads einfügen</span>
-      <button class="close" data-close aria-label="Schließen"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <button type="button" class="close" data-close aria-label="Schließen"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="sheet-body">
       <div class="tabs">
-        <button class="tab on" data-tab="paste">Liste einfügen</button>
-        <button class="tab" data-tab="single">Einzeln anlegen</button>
+        <button type="button" class="tab on" data-tab="paste">Liste einfügen</button>
+        <button type="button" class="tab" data-tab="single">Einzeln anlegen</button>
       </div>
 
       <div data-pane="paste">
@@ -417,7 +429,7 @@ E-Mail: weber@wohnbau.de"></textarea>
     </div>
     <div class="sheet-foot">
       <span class="hint" id="importHint" style="margin:0">Neue Leads landen in „Neuer Lead“.</span>
-      <button class="btn btn-primary" id="importGo" disabled>Leads übernehmen</button>
+      <button type="button" class="btn btn-primary" id="importGo" disabled>Leads übernehmen</button>
     </div>
   </section>
 </div>
@@ -427,7 +439,7 @@ E-Mail: weber@wohnbau.de"></textarea>
   <section class="panel sheet" role="dialog" aria-modal="true" aria-label="Einstellungen">
     <div class="panel-head">
       <span class="label">Einstellungen</span>
-      <button class="close" data-close aria-label="Schließen"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <button type="button" class="close" data-close aria-label="Schließen"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="sheet-body">
       <div class="section">
@@ -445,7 +457,7 @@ E-Mail: weber@wohnbau.de"></textarea>
           <div class="mail-preview" id="sPreview" style="margin-top:8px"></div>
         </div>
         <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-line btn-sm" id="sResetTpl">Testvorlage wiederherstellen</button>
+          <button type="button" class="btn btn-line btn-sm" id="sResetTpl">Testvorlage wiederherstellen</button>
         </div>
       </div>
 
@@ -475,23 +487,37 @@ E-Mail: weber@wohnbau.de"></textarea>
         <h2 class="h-serif">Ihre Leads. <span class="it">Sicher aufbewahrt.</span></h2>
         <p class="lead-text">Alle Daten liegen nur in diesem Browser auf diesem Gerät – ohne Server, ohne Kosten. Laden Sie regelmäßig eine Sicherung herunter. Damit lassen sich die Leads auch auf ein anderes Gerät übertragen.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-primary btn-sm" id="sExport">Sicherung herunterladen</button>
-          <button class="btn btn-line btn-sm" id="sImportBtn">Sicherung einspielen</button>
-          <button class="btn btn-line btn-sm" id="sCsv">Als Tabelle (CSV)</button>
-          <input type="file" id="sImportFile" accept=".json,application/json" class="hidden">
+          <button type="button" class="btn btn-primary btn-sm" id="sExport">Sicherung herunterladen</button>
+          <label class="btn btn-line btn-sm" for="sImportFile" style="cursor:pointer">Sicherung einspielen</label>
+          <button type="button" class="btn btn-line btn-sm" id="sCsv">Als Tabelle (CSV)</button>
+          <input type="file" id="sImportFile" accept=".json,application/json" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
         </div>
         <p class="hint" id="sLastBackup"></p>
         <div style="margin-top:22px">
-          <button class="danger" id="sWipe">Alle Leads löschen</button>
+          <button type="button" class="danger" id="sWipe">Alle Leads löschen</button>
         </div>
       </div>
     </div>
   </section>
 </div>
 
-<div class="toast" id="toast"><span id="toastText"></span><button id="toastAction" class="hidden"></button></div>
+<div class="toast" id="toast"><span id="toastText"></span><button type="button" id="toastAction" class="hidden"></button></div>
 
 <script>
+function rwShowError(msg){
+  try{
+    let bar = document.getElementById("errBar");
+    if(!bar){
+      bar = document.createElement("div"); bar.id = "errBar"; bar.className = "err-bar";
+      bar.innerHTML = '<span></span><button type="button">Ausblenden</button>';
+      bar.querySelector("button").onclick = function(){ bar.remove(); };
+      document.body.appendChild(bar);
+    }
+    bar.querySelector("span").textContent = "Fehler: " + msg + " – bitte Seite neu laden. Ihre Daten bleiben erhalten.";
+  }catch(e){}
+}
+window.addEventListener("error", function(e){ rwShowError(e.message || "Unbekannt"); });
+window.addEventListener("unhandledrejection", function(e){ rwShowError((e.reason && e.reason.message) || String(e.reason)); });
 (function(){
 "use strict";
 
@@ -572,7 +598,7 @@ let storageOk = true;
 function save(){
   try{ localStorage.setItem(KEY, JSON.stringify(db)); storageOk = true; }
   catch(e){
-    if(storageOk) toast("Speichern im Browser nicht möglich – bitte Sicherung herunterladen.");
+    if(storageOk) toast("Diese Ansicht kann nicht dauerhaft speichern – bitte die Seite direkt im Browser öffnen.");
     storageOk = false;
   }
 }
@@ -667,8 +693,9 @@ function openMail(l){
     location.href = "mailto:" + e(l.email) + "?subject=" + e(subject) + "&body=" + e(body);
   }else{
     const url = "https://mail.google.com/mail/u/" + e(s.account||"0") + "/?view=cm&fs=1&tf=1&to=" + e(l.email) + "&su=" + e(subject) + "&body=" + e(body);
-    const w = window.open(url, "_blank", "noopener");
-    if(!w) location.href = url;
+    const w = window.open(url, "_blank");
+    if(w){ try{ w.opener = null; }catch(_){} }
+    else location.href = url;
   }
   l.lastMail = now();
   addHistory(l, "E-Mail in Gmail vorbereitet: „" + subject + "“");
@@ -696,9 +723,9 @@ function cardHtml(l){
   let mail = "";
   if(l.stage === "email"){
     mail = l.email
-      ? `<button class="card-mail" data-act="mail">In Gmail öffnen ${ICON.arrow}</button>` +
+      ? `<button type="button" class="card-mail" data-act="mail">In Gmail öffnen ${ICON.arrow}</button>` +
         (l.lastMail ? `<div class="card-sent">Zuletzt vorbereitet ${esc(rel(l.lastMail))}</div>` : "")
-      : `<button class="card-mail" disabled>Keine E-Mail hinterlegt</button>`;
+      : `<button type="button" class="card-mail" disabled>Keine E-Mail hinterlegt</button>`;
   }
   return `<article class="card" data-id="${esc(l.id)}">
     <div class="card-top"><span class="card-name">${esc(displayName(l))}</span><span class="card-age">${esc(rel(l.updated||l.created))}</span></div>
@@ -867,8 +894,16 @@ function endDrag(cancelled){
         addHistory(l, "Verschoben: " + STAGE_NAME[l.stage] + " → " + STAGE_NAME[stage]);
         l.stage = stage; touch(l);
       }
-      // Reihenfolge aus der sichtbaren Spalte übernehmen
-      $$(".card", $(".col-list", col)).forEach((c, i) => { const x = byId(c.dataset.id); if(x) x.order = i; });
+      if(query){
+        // Bei aktiver Suche sind nicht alle Karten sichtbar: nur oben einsortieren
+        if(stage !== d.fromStage){
+          const others = db.leads.filter(x => x.stage === stage && x !== l);
+          l.order = others.length ? Math.min(...others.map(x => x.order || 0)) - 1 : 0;
+        }
+      }else{
+        // Reihenfolge aus der sichtbaren Spalte übernehmen
+        $$(".card", $(".col-list", col)).forEach((c, i) => { const x = byId(c.dataset.id); if(x) x.order = i; });
+      }
       save();
       if(stage !== d.fromStage) toast(esc(displayName(l)) + " → " + STAGE_NAME[stage]);
     }
@@ -934,7 +969,7 @@ function renderDetail(full){
         : `<input data-k="${f.k}" type="${f.type||"text"}" value="${esc(v)}" placeholder="${esc(f.ph||"–")}" ${f.type==="email"||f.act==="web"?'autocapitalize="off" autocorrect="off"':""}>`;
       let act = "";
       if(f.act === "tel") act = `<a class="fact" data-fact="tel" title="Anrufen">${ICON.phone}</a>`;
-      if(f.act === "mail") act = `<button class="fact" data-fact="mail" title="In Gmail öffnen">${ICON.mail}</button>`;
+      if(f.act === "mail") act = `<button type="button" class="fact" data-fact="mail" title="In Gmail öffnen">${ICON.mail}</button>`;
       if(f.act === "web") act = `<a class="fact" data-fact="web" target="_blank" rel="noopener" title="Website öffnen">${ICON.web}</a>`;
       return `<label class="field"><span class="label">${esc(f.label)}</span>${input}${act}</label>`;
     }).join("");
@@ -943,10 +978,10 @@ function renderDetail(full){
   updateFieldActions(l);
 
   const q = [];
-  q.push(`<button class="btn btn-line btn-sm" data-q="noreach">${ICON.retry} Nicht erreicht${l.attempts ? " · " + l.attempts + "×" : ""}</button>`);
-  q.push(`<button class="btn btn-line btn-sm" data-q="mail" ${l.email ? "" : "disabled style='opacity:.45'"}>${ICON.mail} In Gmail öffnen</button>`);
-  if(l.stage !== "termin" && l.stage !== "closed") q.push(`<button class="btn btn-line btn-sm" data-q="termin">${ICON.cal} Ersttermin gebucht</button>`);
-  if(l.stage !== "closed") q.push(`<button class="btn btn-line btn-sm" data-q="closed">${ICON.check} Geclosed</button>`);
+  q.push(`<button type="button" class="btn btn-line btn-sm" data-q="noreach">${ICON.retry} Nicht erreicht${l.attempts ? " · " + l.attempts + "×" : ""}</button>`);
+  q.push(`<button type="button" class="btn btn-line btn-sm" data-q="mail" ${l.email ? "" : "disabled style='opacity:.45'"}>${ICON.mail} In Gmail öffnen</button>`);
+  if(l.stage !== "termin" && l.stage !== "closed") q.push(`<button type="button" class="btn btn-line btn-sm" data-q="termin">${ICON.cal} Ersttermin gebucht</button>`);
+  if(l.stage !== "closed") q.push(`<button type="button" class="btn btn-line btn-sm" data-q="closed">${ICON.check} Geclosed</button>`);
   $("#dQuick").innerHTML = q.join("");
 
   const notes = l.notes || [];
@@ -954,7 +989,7 @@ function renderDetail(full){
     <li class="tl ${n.sys ? "sys" : ""}">
       <span class="tl-date">${esc(fmtDate(n.ts))}</span>
       <div class="tl-text">${esc(n.text)}</div>
-      <button class="tl-del" data-del="${esc(n.id)}" title="Eintrag entfernen">${ICON.x}</button>
+      <button type="button" class="tl-del" data-del="${esc(n.id)}" title="Eintrag entfernen">${ICON.x}</button>
     </li>`).join("") : `<li class="tl-empty">Noch keine Notizen. Der erste Eintrag steht oben.</li>`;
 }
 
@@ -1002,6 +1037,8 @@ $("#dNote").addEventListener("keydown", e => { if(e.key === "Enter" && (e.metaKe
 $("#dTimeline").addEventListener("click", e => {
   const b = e.target.closest("[data-del]"); if(!b) return;
   const l = byId(openId); if(!l) return;
+  const n = (l.notes||[]).find(x => x.id === b.dataset.del);
+  if(n && !n.sys && !confirm("Diese Notiz löschen?")) return;
   l.notes = (l.notes||[]).filter(n => n.id !== b.dataset.del);
   save(); renderDetail(); render();
 });
@@ -1316,7 +1353,7 @@ function fillSettings(){
   $$("#sMode input").forEach(r => r.checked = r.value === s.mode);
   $("#sSender").value = s.sender || "";
   $("#sAccount").value = s.account || "0";
-  $("#sChips").innerHTML = PLACEHOLDERS.map(p => `<button class="chip" data-ph="${p}">{{${p}}}</button>`).join("");
+  $("#sChips").innerHTML = PLACEHOLDERS.map(p => `<button type="button" class="chip" data-ph="${p}">{{${p}}}</button>`).join("");
   $("#sLastBackup").textContent = s.lastBackup ? "Letzte Sicherung: " + fmtDate(s.lastBackup) : "Noch keine Sicherung heruntergeladen.";
   renderMailPreview();
 }
@@ -1361,7 +1398,6 @@ $("#sCsv").addEventListener("click", () => {
     l.wiedervorlage, l.attempts||0, fmtDate(l.created,false), ((l.notes||[]).find(n=>!n.sys)||{}).text || ""].map(q).join(";"));
   download("raumwerk-leads-" + todayStr() + ".csv", "﻿" + [cols.map(q).join(";"), ...rows].join("\n"), "text/csv");
 });
-$("#sImportBtn").addEventListener("click", () => $("#sImportFile").click());
 $("#sImportFile").addEventListener("change", async e => {
   const f = e.target.files[0]; e.target.value = ""; if(!f) return;
   try{
