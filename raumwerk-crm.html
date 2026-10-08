@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="raumwerk">
+<meta name="theme-color" content="#F4F1EA">
+<title>raumwerk · Leads</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2323332A'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-style='italic' font-size='40' text-anchor='middle' fill='%23F4F1EA'%3Er%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F1EA;
+  --bg-alt:#ECEBE3;
+  --surface:#FBFAF6;
+  --ink:#23332A;
+  --ink-soft:#3A4A3F;
+  --sage:#6E7A5E;
+  --sage-soft:#A7AE96;
+  --muted:#6B6F68;
+  --faint:#9A9C94;
+  --line:#DCD8CC;
+  --line-sage:#C8CCBA;
+  --accent-warm:#9A6B4F;
+  --serif:"Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --sans:"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius:4px;
+  --shadow:0 1px 0 rgba(35,51,42,.04), 0 1px 2px rgba(35,51,42,.05);
+  --shadow-lift:0 18px 40px -12px rgba(35,51,42,.28), 0 2px 6px rgba(35,51,42,.10);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+a{color:inherit}
+.label{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.serif{font-family:var(--serif)}
+.it{font-style:italic;color:var(--sage)}
+svg.i{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- Kopfzeile ---------- */
+.top{
+  display:flex;align-items:center;gap:28px;
+  padding:18px max(24px, env(safe-area-inset-right)) 16px max(24px, env(safe-area-inset-left));
+  border-bottom:1px solid var(--line);background:var(--bg);flex:none;
+}
+.brand{display:flex;align-items:baseline;gap:14px;white-space:nowrap}
+.brand .word{font-family:var(--serif);font-size:30px;line-height:1;font-weight:500;letter-spacing:-.01em}
+.brand .word i{color:var(--sage);font-weight:400}
+.brand .label{transform:translateY(-3px)}
+.stats{display:flex;gap:22px;color:var(--muted);font-size:13.5px;white-space:nowrap}
+.stats b{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
+.stats .due b{color:var(--accent-warm)}
+.top .spacer{flex:1}
+.search{
+  display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line-sage);
+  padding:6px 2px;min-width:200px;color:var(--muted);
+}
+.search input{border:0;background:transparent;outline:0;width:100%;color:var(--ink)}
+.search input::placeholder{color:var(--faint)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;white-space:nowrap;
+  padding:10px 18px;border-radius:999px;font-size:14px;font-weight:500;
+  transition:background .15s, color .15s, border-color .15s;
+}
+.btn-primary{background:var(--ink);color:var(--bg)}
+.btn-primary:hover{background:#1A2820}
+.btn-line{border:1px solid var(--line-sage);color:var(--ink)}
+.btn-line:hover{border-color:var(--ink)}
+.btn-quiet{color:var(--muted);padding:10px 10px}
+.btn-quiet:hover{color:var(--ink)}
+.btn-sm{padding:7px 14px;font-size:13px}
+.link-arrow{display:inline-flex;align-items:center;gap:8px;font-weight:500;color:var(--ink);font-size:14px}
+.link-arrow:hover .arr{transform:translate(2px,-2px)}
+.arr{transition:transform .15s}
+
+/* ---------- Board ---------- */
+.board{
+  flex:1;min-height:0;display:flex;gap:18px;overflow-x:auto;overflow-y:hidden;
+  padding:22px max(24px, env(safe-area-inset-right)) 18px max(24px, env(safe-area-inset-left));
+  -webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;scroll-padding:0 24px;
+}
+.col{
+  flex:0 0 288px;display:flex;flex-direction:column;min-height:0;
+  scroll-snap-align:start;
+}
+.col-head{padding:0 2px 12px;border-bottom:1px solid var(--line);margin-bottom:12px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+.col-head h2{margin:6px 0 0;font-family:var(--serif);font-weight:500;font-size:24px;line-height:1.1;letter-spacing:-.005em}
+.col-head h2 i{color:var(--sage);font-weight:400}
+.col-count{font-family:var(--serif);font-size:24px;line-height:1.1;color:var(--faint);font-variant-numeric:lining-nums tabular-nums}
+.col[data-stage="closed"] .col-head{border-bottom-color:var(--sage-soft)}
+.col-list{
+  flex:1;min-height:80px;overflow-y:auto;overflow-x:hidden;padding:2px 2px 40px;
+  display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch;
+  border-radius:var(--radius);transition:background .15s;
+}
+.col.is-target .col-list{background:rgba(110,122,94,.07)}
+.col-empty{
+  border:1px dashed var(--line-sage);border-radius:var(--radius);padding:22px 14px;
+  text-align:center;color:var(--faint);font-size:13px;
+}
+.col.is-target .col-empty{display:none}
+
+/* ---------- Karte ---------- */
+.card{
+  position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 14px 13px;box-shadow:var(--shadow);cursor:grab;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;
+  transition:border-color .15s, box-shadow .15s;
+}
+.card:hover{border-color:var(--line-sage)}
+.card-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.card-name{font-weight:500;font-size:15px;line-height:1.35;overflow-wrap:anywhere}
+.card-age{font-size:12px;color:var(--faint);white-space:nowrap}
+.card-firm{color:var(--muted);font-size:13.5px;margin-top:1px;overflow-wrap:anywhere}
+.card-meta{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:9px;font-size:12.5px;color:var(--muted)}
+.card-meta span{display:inline-flex;align-items:center;gap:6px}
+.card-meta svg.i{width:13px;height:13px}
+.card-note{
+  margin:10px 0 0;padding-top:9px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-soft);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;letter-spacing:.06em;color:var(--muted)}
+.badge::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.badge.warm{color:var(--accent-warm)}
+.card-badges{display:flex;gap:12px;margin-top:9px}
+.card-mail{
+  margin-top:12px;width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:13px;font-weight:500;
+}
+.card-mail:hover{background:#1A2820}
+.card-mail[disabled]{background:var(--bg-alt);color:var(--faint);cursor:default}
+.card-sent{font-size:12px;color:var(--faint);margin-top:7px;text-align:center}
+.card.is-placeholder{opacity:.35;border-style:dashed;box-shadow:none}
+.ghost{
+  position:fixed;z-index:200;pointer-events:none;margin:0;
+  box-shadow:var(--shadow-lift);transform:rotate(1.2deg) scale(1.02);cursor:grabbing;
+  border-color:var(--line-sage);
+}
+body.dragging, body.dragging *{cursor:grabbing!important}
+.card.is-pressing{transform:scale(.985);transition:transform .2s}
+
+/* ---------- Overlays ---------- */
+.overlay{
+  position:fixed;inset:0;z-index:100;background:rgba(35,51,42,.32);
+  display:none;align-items:center;justify-content:center;padding:28px;
+  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);
+}
+.overlay.open{display:flex;animation:fade .18s ease-out}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.panel{
+  background:var(--bg);border-radius:6px;width:100%;max-width:1100px;max-height:100%;
+  display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px -20px rgba(35,51,42,.45);
+}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 26px;border-bottom:1px solid var(--line)}
+.close{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:var(--muted);border:1px solid var(--line)}
+.close:hover{color:var(--ink);border-color:var(--ink)}
+
+/* Detail */
+.detail{height:min(860px,100%)}
+.detail-body{flex:1;min-height:0;display:grid;grid-template-columns:360px 1fr}
+.detail-side > *{flex-shrink:0}
+.detail-side{background:var(--bg-alt);padding:28px 28px 22px;overflow-y:auto;border-right:1px solid var(--line);display:flex;flex-direction:column}
+.detail-name{font-family:var(--serif);font-size:38px;line-height:1.05;font-weight:500;margin:10px 0 2px;letter-spacing:-.01em;overflow-wrap:anywhere}
+.detail-firm{font-family:var(--serif);font-style:italic;font-size:23px;line-height:1.2;color:var(--sage);min-height:4px;overflow-wrap:anywhere}
+.stage-select{
+  margin-top:20px;display:flex;align-items:center;gap:10px;border:1px solid var(--line-sage);border-radius:999px;
+  padding:0 14px;background:var(--surface);
+}
+.stage-select select{flex:1;border:0;background:transparent;padding:10px 0;outline:0;font-weight:500;-webkit-appearance:none;appearance:none}
+.fields{margin-top:22px;border-top:1px solid var(--line-sage)}
+.field{display:grid;grid-template-columns:1fr auto;align-items:end;gap:8px;padding:10px 0 9px;border-bottom:1px solid var(--line-sage)}
+.field .label{grid-column:1/-1;font-size:10.5px;margin-bottom:-4px}
+.field input,.field select{
+  width:100%;border:0;background:transparent;outline:0;padding:3px 0;font-size:15px;color:var(--ink);
+  border-radius:0;-webkit-appearance:none;appearance:none;min-height:28px;
+}
+.field input::placeholder{color:var(--faint)}
+.field input:focus{box-shadow:0 1px 0 var(--ink)}
+.fact{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-sage);color:var(--ink);text-decoration:none;background:var(--surface)}
+.fact:hover{border-color:var(--ink)}
+.fact.off{opacity:.35;pointer-events:none}
+.side-foot{margin-top:auto;padding-top:22px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12.5px;color:var(--faint)}
+.danger{color:var(--accent-warm);font-size:13px}
+.danger:hover{text-decoration:underline}
+.saved{transition:opacity .3s}
+
+.detail-main{padding:28px 32px;overflow-y:auto;display:flex;flex-direction:column;gap:18px}
+.main-title{font-family:var(--serif);font-weight:500;font-size:30px;line-height:1.1;margin:8px 0 0}
+.quick{display:flex;flex-wrap:wrap;gap:10px}
+.compose{border:1px solid var(--line-sage);border-radius:var(--radius);background:var(--surface)}
+.compose textarea{
+  width:100%;min-height:110px;border:0;background:transparent;resize:vertical;outline:0;
+  padding:16px 18px;font-size:15px;line-height:1.6;display:block;
+}
+.compose textarea::placeholder{color:var(--faint)}
+.compose-foot{display:flex;justify-content:space-between;align-items:center;padding:10px 12px 10px 18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--faint)}
+.timeline{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.tl{padding:16px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:132px 1fr auto;gap:16px;align-items:start}
+.tl-date{font-size:12.5px;color:var(--faint);line-height:1.5;padding-top:2px}
+.tl-text{white-space:pre-wrap;overflow-wrap:anywhere}
+.tl.sys .tl-text{color:var(--muted);font-size:13.5px}
+.tl.sys .tl-text::before{content:"— ";color:var(--faint)}
+.tl-del{color:var(--faint);opacity:0;transition:opacity .15s;width:26px;height:26px;display:grid;place-items:center;border-radius:50%}
+.tl:hover .tl-del{opacity:1}
+.tl-del:hover{color:var(--accent-warm)}
+@media (hover:none){.tl-del{opacity:.6}}
+.tl-empty{padding:22px 0;color:var(--faint);font-size:14px}
+
+/* Import / Einstellungen */
+.sheet{max-width:980px;height:min(820px,100%)}
+.sheet-body{flex:1;min-height:0;overflow-y:auto;padding:26px 28px}
+.sheet-foot{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 26px;border-top:1px solid var(--line);flex-wrap:wrap}
+.tabs{display:flex;gap:24px;border-bottom:1px solid var(--line);margin-bottom:22px}
+.tab{padding:0 0 12px;margin-bottom:-1px;color:var(--muted);font-weight:500;border-bottom:1px solid transparent}
+.tab.on{color:var(--ink);border-bottom-color:var(--ink)}
+.h-serif{font-family:var(--serif);font-weight:500;font-size:34px;line-height:1.08;margin:6px 0 4px;letter-spacing:-.01em}
+.lead-text{color:var(--muted);max-width:640px;margin:0 0 18px}
+.paste{
+  width:100%;min-height:170px;border:1px solid var(--line-sage);border-radius:var(--radius);background:var(--surface);
+  padding:14px 16px;font-size:14px;line-height:1.6;outline:0;resize:vertical;
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+.paste:focus,.input:focus,.area:focus{border-color:var(--ink)}
+.hint{font-size:13px;color:var(--faint);margin-top:8px}
+.preview{width:100%;border-collapse:collapse;margin-top:22px;font-size:13.5px}
+.preview th{text-align:left;font-weight:500;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:0 10px 10px 0;border-bottom:1px solid var(--line-sage)}
+.preview td{padding:10px 10px 10px 0;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
+.preview tr.dup td{color:var(--faint)}
+.preview input[type=checkbox]{accent-color:var(--ink);width:16px;height:16px}
+.dup-tag{display:block;font-size:11px;color:var(--accent-warm);margin-top:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px 22px}
+.fl{display:flex;flex-direction:column;gap:6px}
+.fl .label{font-size:10.5px}
+.input,.area{
+  width:100%;border:1px solid var(--line-sage);border-radius:var(--radius);background:var(--surface);
+  padding:10px 12px;outline:0;font-size:15px;
+}
+.area{min-height:280px;resize:vertical;line-height:1.6}
+select.input{-webkit-appearance:none;appearance:none}
+.span2{grid-column:1/-1}
+.section{padding:0 0 28px;margin:0 0 28px;border-bottom:1px solid var(--line)}
+.section:last-child{border-bottom:0;margin-bottom:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{border:1px solid var(--line-sage);border-radius:999px;padding:4px 11px;font-size:12.5px;color:var(--ink-soft);background:var(--surface);font-family:ui-monospace,Menlo,monospace}
+.chip:hover{border-color:var(--ink)}
+.mail-preview{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:18px 20px;white-space:pre-wrap;font-size:14px;color:var(--ink-soft)}
+.mail-preview .subj{font-weight:600;color:var(--ink);display:block;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.radio-row{display:flex;flex-wrap:wrap;gap:10px}
+.radio-row label{display:flex;align-items:center;gap:8px;border:1px solid var(--line-sage);border-radius:999px;padding:8px 14px;cursor:pointer;font-size:14px;background:var(--surface)}
+.radio-row input{accent-color:var(--ink)}
+.radio-row label:has(input:checked){border-color:var(--ink)}
+
+/* Hinweis */
+.toast{
+  position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);
+  background:var(--ink);color:var(--bg);padding:11px 12px 11px 20px;border-radius:999px;font-size:14px;
+  display:flex;align-items:center;gap:14px;opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;z-index:300;
+  max-width:calc(100% - 32px);
+}
+.toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.toast button{color:var(--bg);text-decoration:underline;text-underline-offset:3px;padding:0 8px;font-size:14px}
+.toast:not(.has-action){padding-right:20px}
+
+.hidden{display:none!important}
+
+@media (max-width:1180px){
+  .stats{display:none}
+}
+@media (max-width:820px){
+  .top{flex-wrap:wrap;gap:12px 16px;padding:14px 16px}
+  .top .spacer{display:none}
+  .search{order:5;flex:1 1 100%}
+  .brand .label{display:none}
+  .board{padding:16px;gap:14px;scroll-padding:0 16px}
+  .col{flex-basis:82vw}
+  .overlay{padding:0}
+  .panel{border-radius:0;height:100%;max-height:none}
+  .detail-body{grid-template-columns:1fr;overflow-y:auto}
+  .detail-side,.detail-main{overflow:visible}
+  .detail-side{border-right:0;border-bottom:1px solid var(--line)}
+  .detail-main{padding:24px 20px}
+  .tl{grid-template-columns:1fr auto}
+  .tl-date{grid-column:1/-1;padding:0}
+  .grid2{grid-template-columns:1fr}
+  .sheet-body{padding:22px 16px}
+  .panel-head,.sheet-foot{padding:14px 16px}
+  .preview .opt{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <span class="word">raum<i>werk</i></span>
+    <span class="label">Leads</span>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="spacer"></div>
+  <label class="search">
+    <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+    <input id="search" type="search" placeholder="Suchen – Name, Firma, Ort …" autocomplete="off">
+  </label>
+  <button class="btn btn-quiet" id="openSettings" title="Einstellungen">
+    <svg class="i" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+    Einstellungen
+  </button>
+  <button class="btn btn-primary" id="openImport">
+    <svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    Leads einfügen
+  </button>
+</header>
+
+<main class="board" id="board"></main>
+
+<!-- Lead-Detail -->
+<div class="overlay" id="detailOverlay">
+  <section class="panel detail" role="dialog" aria-modal="true" aria-label="Lead">
+    <div class="detail-body">
+      <aside class="detail-side">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+          <span class="label" id="dSince"></span>
+          <button class="close" data-close aria-label="Schließen"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        </div>
+        <h1 class="detail-name" id="dName"></h1>
+        <div class="detail-firm" id="dFirm"></div>
+
+        <label class="stage-select">
+          <span class="label" style="font-size:10.5px">Phase</span>
+          <select id="dStage"></select>
+          <svg class="i" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
+        </label>
+
+        <div class="fields" id="dFields"></div>
+
+        <div class="side-foot">
+          <button class="danger" id="dDelete">Lead löschen</button>
+          <span class="saved" id="dSaved">Änderungen werden gespeichert</span>
+        </div>
+      </aside>
+
+      <div class="detail-main">
+        <div>
+          <span class="label">Verlauf &amp; Notizen</span>
+          <h2 class="main-title">Was ist passiert, <span class="it">was kommt als Nächstes.</span></h2>
+        </div>
+        <div class="quick" id="dQuick"></div>
+        <div class="compose">
+          <textarea id="dNote" placeholder="Notiz schreiben – z. B. „Rückruf Donnerstag, interessiert an Roomtour für Neubauprojekt.“"></textarea>
+          <div class="compose-foot">
+            <span>⌘ / Strg + Enter zum Speichern</span>
+            <button class="btn btn-primary btn-sm" id="dAddNote">Notiz speichern</button>
+          </div>
+        </div>
+        <ul class="timeline" id="dTimeline"></ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Leads einfügen -->
+<div class="overlay" id="importOverlay">
+  <section class="panel sheet" role="dialog" aria-modal="true" aria-label="Leads einfügen">
+    <div class="panel-head">
+      <span class="label">Leads einfügen</span>
+      <button class="close" data-close aria-label="Schließen"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <div class="tabs">
+        <button class="tab on" data-tab="paste">Liste einfügen</button>
+        <button class="tab" data-tab="single">Einzeln anlegen</button>
+      </div>
+
+      <div data-pane="paste">
+        <h2 class="h-serif">Neue Kontakte. <span class="it">Direkt übernehmen.</span></h2>
+        <p class="lead-text">Einfach hineinkopieren – aus Google Sheets, Excel, einer E-Mail oder WhatsApp. Eine Zeile pro Lead, oder Blöcke wie „Name: …“, „Telefon: …“ mit Leerzeile dazwischen. Name, Firma, Telefon und E-Mail werden automatisch erkannt.</p>
+        <textarea class="paste" id="pasteArea" placeholder="Max Muster	Muster Immobilien GmbH	+49 171 2345678	max@muster-immobilien.de	München
+Anna Beispiel; Beispiel &amp; Partner; 0151 9876543; a.beispiel@beispiel.de
+
+Name: Jonas Weber
+Firma: Weber Wohnbau
+Telefon: 089 123456
+E-Mail: weber@wohnbau.de"></textarea>
+        <div class="grid2" style="margin-top:16px">
+          <label class="fl"><span class="label">Quelle (optional)</span><input class="input" id="pasteSource" placeholder="z. B. Liste Oktober"></label>
+        </div>
+        <div id="previewWrap"></div>
+      </div>
+
+      <div data-pane="single" class="hidden">
+        <h2 class="h-serif">Ein Lead. <span class="it">Mit allen Angaben.</span></h2>
+        <p class="lead-text">Pflicht ist nur der Name oder die Firma. Alles Weitere lässt sich später im Lead ergänzen.</p>
+        <div class="grid2" id="singleForm">
+          <label class="fl"><span class="label">Anrede</span>
+            <select class="input" name="anrede"><option value="">–</option><option>Herr</option><option>Frau</option></select></label>
+          <label class="fl"><span class="label">Name</span><input class="input" name="name" placeholder="Vor- und Nachname"></label>
+          <label class="fl"><span class="label">Firma</span><input class="input" name="firma"></label>
+          <label class="fl"><span class="label">Ort</span><input class="input" name="ort"></label>
+          <label class="fl"><span class="label">Telefon</span><input class="input" name="telefon" type="tel"></label>
+          <label class="fl"><span class="label">E-Mail</span><input class="input" name="email" type="email" autocapitalize="off"></label>
+          <label class="fl"><span class="label">Website</span><input class="input" name="website" autocapitalize="off"></label>
+          <label class="fl"><span class="label">Quelle</span><input class="input" name="quelle"></label>
+          <label class="fl span2"><span class="label">Erste Notiz (optional)</span><textarea class="input" name="notiz" rows="3" style="resize:vertical"></textarea></label>
+        </div>
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <span class="hint" id="importHint" style="margin:0">Neue Leads landen in „Neuer Lead“.</span>
+      <button class="btn btn-primary" id="importGo" disabled>Leads übernehmen</button>
+    </div>
+  </section>
+</div>
+
+<!-- Einstellungen -->
+<div class="overlay" id="settingsOverlay">
+  <section class="panel sheet" role="dialog" aria-modal="true" aria-label="Einstellungen">
+    <div class="panel-head">
+      <span class="label">Einstellungen</span>
+      <button class="close" data-close aria-label="Schließen"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <div class="section">
+        <span class="label">01 / E-Mail-Vorlage</span>
+        <h2 class="h-serif">Die erste Nachricht. <span class="it">Persönlich vorbereitet.</span></h2>
+        <p class="lead-text">Diese Vorlage öffnet sich fertig ausgefüllt in Gmail. Platzhalter werden mit den Angaben des Leads ersetzt – vor dem Senden kann alles noch angepasst werden.</p>
+        <div class="grid2">
+          <label class="fl span2"><span class="label">Betreff</span><input class="input" id="sSubject"></label>
+          <label class="fl span2"><span class="label">Text</span><textarea class="area" id="sBody"></textarea></label>
+        </div>
+        <div class="chips" id="sChips"></div>
+        <p class="hint">Antippen fügt den Platzhalter an der Cursor-Position ein. <code>{{begruessung}}</code> wird zu „Guten Tag Herr Weber“, „Guten Tag Frau Weber“ oder „Guten Tag“, je nach Angaben.</p>
+        <div style="margin-top:18px">
+          <span class="label">Vorschau</span>
+          <div class="mail-preview" id="sPreview" style="margin-top:8px"></div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-line btn-sm" id="sResetTpl">Testvorlage wiederherstellen</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <span class="label">02 / Gmail</span>
+        <h2 class="h-serif">Wo soll die Mail <span class="it">aufgehen?</span></h2>
+        <p class="lead-text">Auf iPad und iPhone öffnet „Automatisch“ die Gmail-App, am Computer Gmail im Browser. Falls auf dem iPad nichts passiert, ist die Gmail-App nicht installiert – dann „Gmail im Browser“ wählen.</p>
+        <div class="radio-row" id="sMode">
+          <label><input type="radio" name="mode" value="auto"> Automatisch</label>
+          <label><input type="radio" name="mode" value="app"> Gmail-App</label>
+          <label><input type="radio" name="mode" value="web"> Gmail im Browser</label>
+          <label><input type="radio" name="mode" value="mailto"> Standard-Mailprogramm</label>
+        </div>
+        <div class="grid2" style="margin-top:18px">
+          <label class="fl"><span class="label">Ihr Name (für {{absender}})</span><input class="input" id="sSender" placeholder="Vor- und Nachname"></label>
+          <label class="fl"><span class="label">Gmail-Konto im Browser</span>
+            <select class="input" id="sAccount">
+              <option value="0">Erstes angemeldetes Konto</option>
+              <option value="1">Zweites Konto</option>
+              <option value="2">Drittes Konto</option>
+            </select></label>
+        </div>
+      </div>
+
+      <div class="section">
+        <span class="label">03 / Daten</span>
+        <h2 class="h-serif">Ihre Leads. <span class="it">Sicher aufbewahrt.</span></h2>
+        <p class="lead-text">Alle Daten liegen nur in diesem Browser auf diesem Gerät – ohne Server, ohne Kosten. Laden Sie regelmäßig eine Sicherung herunter. Damit lassen sich die Leads auch auf ein anderes Gerät übertragen.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" id="sExport">Sicherung herunterladen</button>
+          <button class="btn btn-line btn-sm" id="sImportBtn">Sicherung einspielen</button>
+          <button class="btn btn-line btn-sm" id="sCsv">Als Tabelle (CSV)</button>
+          <input type="file" id="sImportFile" accept=".json,application/json" class="hidden">
+        </div>
+        <p class="hint" id="sLastBackup"></p>
+        <div style="margin-top:22px">
+          <button class="danger" id="sWipe">Alle Leads löschen</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"><span id="toastText"></span><button id="toastAction" class="hidden"></button></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= Grundlagen ================= */
+const STAGES = [
+  {id:"neu",            no:"01", title:"Neuer",       it:"Lead."},
+  {id:"nicht_erreicht", no:"02", title:"Telefonisch", it:"nicht erreicht."},
+  {id:"nachhaken",      no:"03", title:"Nach",        it:"haken."},
+  {id:"email",          no:"04", title:"E-Mail",      it:"raus."},
+  {id:"termin",         no:"05", title:"Ersttermin",  it:"gebucht."},
+  {id:"closed",         no:"06", title:"Geclosed.",   it:""}
+];
+const STAGE_NAME = {
+  neu:"Neuer Lead", nicht_erreicht:"Telefonisch nicht erreicht", nachhaken:"Nachhaken",
+  email:"E-Mail raus", termin:"Ersttermin gebucht", closed:"Geclosed"
+};
+const KEY = "raumwerk-crm-v1";
+
+const DEFAULT_SUBJECT = "Ihre Immobilien – als ruhige Roomtour aus vorhandenen Fotos";
+const DEFAULT_BODY =
+`{{begruessung}},
+
+ich bin auf Ihre aktuellen Objekte aufmerksam geworden und möchte Ihnen kurz raumwerk vorstellen.
+
+Aus Ihren vorhandenen Fotos gestalten wir ruhige, stimmige Immobilienvideos – als geführte Roomtour für Ihre Website, das Exposé und Social Media. Auf Wunsch verfeinern wir zusätzlich Licht und Farben oder richten leere Räume virtuell ein. Ihre Immobilie bleibt dabei immer wiedererkennbar.
+
+Gern zeige ich Ihnen an einem Beispiel, wie das bei einem Ihrer Objekte aussehen könnte.
+
+Hätten Sie in den nächsten Tagen 15 Minuten Zeit für ein kurzes Gespräch?
+
+Herzliche Grüße
+{{absender}}
+
+raumwerk
+ws-strategy.de`;
+
+const PLACEHOLDERS = ["begruessung","vorname","nachname","name","firma","ort","absender"];
+
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+const now = () => new Date().toISOString();
+
+const ICON = {
+  phone:'<svg class="i" viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 6 6l1.5-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4.5 5.5a2 2 0 0 1 2-2z"/></svg>',
+  mail:'<svg class="i" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="M4 7l8 6 8-6"/></svg>',
+  pin:'<svg class="i" viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.2"/></svg>',
+  web:'<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.5 5.4 3.5 8.5s-1 5.9-3.5 8.5c-2.5-2.6-3.5-5.4-3.5-8.5s1-5.9 3.5-8.5z"/></svg>',
+  arrow:'<svg class="i arr" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>',
+  cal:'<svg class="i" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14" rx="1.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg>',
+  x:'<svg class="i" viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17"/></svg>',
+  retry:'<svg class="i" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3M4.5 4.5v4h4"/></svg>',
+  check:'<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+};
+
+/* ================= Speicher ================= */
+function defaultDb(){
+  return {version:1, leads:[], settings:{
+    subject:DEFAULT_SUBJECT, body:DEFAULT_BODY, mode:"auto", account:"0", sender:"", lastBackup:null
+  }};
+}
+let db = load();
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(raw){
+      const d = JSON.parse(raw);
+      const base = defaultDb();
+      d.settings = Object.assign(base.settings, d.settings || {});
+      d.leads = Array.isArray(d.leads) ? d.leads : [];
+      return d;
+    }
+  }catch(e){ console.warn(e); }
+  return defaultDb();
+}
+let storageOk = true;
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(db)); storageOk = true; }
+  catch(e){
+    if(storageOk) toast("Speichern im Browser nicht möglich – bitte Sicherung herunterladen.");
+    storageOk = false;
+  }
+}
+const byId = id => db.leads.find(l => l.id === id);
+
+/* ================= Hilfen ================= */
+function fmtDate(iso, withTime=true){
+  if(!iso) return "";
+  const d = new Date(iso);
+  const date = d.toLocaleDateString("de-DE",{day:"numeric",month:"short",year: d.getFullYear()!==new Date().getFullYear() ? "numeric" : undefined});
+  return withTime ? date + ", " + d.toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}) + " Uhr" : date;
+}
+function dayDiff(iso){
+  const a = new Date(iso); a.setHours(0,0,0,0);
+  const b = new Date(); b.setHours(0,0,0,0);
+  return Math.round((b - a) / 864e5);
+}
+function rel(iso){
+  const d = dayDiff(iso);
+  if(d <= 0) return "heute";
+  if(d === 1) return "gestern";
+  if(d < 7) return "vor " + d + " Tagen";
+  if(d < 14) return "vor 1 Woche";
+  if(d < 60) return "vor " + Math.floor(d/7) + " Wochen";
+  return fmtDate(iso, false);
+}
+function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function dueInfo(l){
+  if(!l.wiedervorlage || l.stage === "closed") return null;
+  const t = todayStr();
+  if(l.wiedervorlage < t) return {cls:"warm", text:"Wiedervorlage überfällig"};
+  if(l.wiedervorlage === t) return {cls:"warm", text:"Wiedervorlage heute"};
+  const d = new Date(l.wiedervorlage + "T00:00");
+  return {cls:"", text:"Wiedervorlage " + d.toLocaleDateString("de-DE",{day:"numeric",month:"short"})};
+}
+function splitName(n){
+  const parts = String(n||"").trim().split(/\s+/).filter(Boolean);
+  if(!parts.length) return {vor:"", nach:""};
+  if(parts.length === 1) return {vor:"", nach:parts[0]};
+  return {vor:parts[0], nach:parts.slice(1).join(" ")};
+}
+function telHref(t){ return "tel:" + String(t||"").replace(/[^\d+]/g,""); }
+function webHref(w){ w = String(w||"").trim(); return /^https?:\/\//i.test(w) ? w : "https://" + w; }
+function displayName(l){ return l.name || l.firma || "Ohne Namen"; }
+function normPhone(t){ return String(t||"").replace(/\D/g,"").replace(/^00/,"").replace(/^0/,"49"); }
+
+function addHistory(l, text, sys=true){
+  l.notes = l.notes || [];
+  l.notes.unshift({id:uid(), ts:now(), text, sys});
+}
+function touch(l){ l.updated = now(); }
+
+function setStage(l, stage, note=true){
+  if(l.stage === stage) return;
+  const from = l.stage;
+  l.stage = stage;
+  const col = db.leads.filter(x => x.stage === stage && x !== l);
+  l.order = col.length ? Math.min(...col.map(x => x.order || 0)) - 1 : 0;
+  if(note) addHistory(l, "Verschoben: " + STAGE_NAME[from] + " → " + STAGE_NAME[stage]);
+  touch(l);
+}
+
+/* ================= E-Mail ================= */
+function fillTemplate(tpl, l){
+  const {vor, nach} = splitName(l.name);
+  let gruss = "Guten Tag";
+  if(l.anrede && nach) gruss = "Guten Tag " + l.anrede + " " + nach;
+  else if(!l.anrede && vor && nach) gruss = "Guten Tag " + vor + " " + nach;
+  const map = {
+    begruessung:gruss, vorname:vor, nachname:nach, name:l.name||"", firma:l.firma||"",
+    ort:l.ort||"", absender:db.settings.sender||""
+  };
+  return String(tpl||"")
+    .replace(/\{\{\s*(\w+)\s*\}\}/g, (m,k) => k in map ? map[k] : m)
+    .replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim();
+}
+function isAppleTouch(){
+  const ua = navigator.userAgent;
+  return /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+}
+function openMail(l){
+  if(!l.email){ toast("Für diesen Lead ist keine E-Mail-Adresse hinterlegt."); return; }
+  const s = db.settings;
+  const subject = fillTemplate(s.subject, l);
+  const body = fillTemplate(s.body, l);
+  const e = encodeURIComponent;
+  let mode = s.mode;
+  if(mode === "auto") mode = isAppleTouch() ? "app" : "web";
+  if(mode === "app"){
+    location.href = "googlegmail:///co?to=" + e(l.email) + "&subject=" + e(subject) + "&body=" + e(body);
+  }else if(mode === "mailto"){
+    location.href = "mailto:" + e(l.email) + "?subject=" + e(subject) + "&body=" + e(body);
+  }else{
+    const url = "https://mail.google.com/mail/u/" + e(s.account||"0") + "/?view=cm&fs=1&tf=1&to=" + e(l.email) + "&su=" + e(subject) + "&body=" + e(body);
+    const w = window.open(url, "_blank", "noopener");
+    if(!w) location.href = url;
+  }
+  l.lastMail = now();
+  addHistory(l, "E-Mail in Gmail vorbereitet: „" + subject + "“");
+  touch(l); save(); render();
+  if(openId === l.id) renderDetail();
+}
+
+/* ================= Board ================= */
+const board = $("#board");
+let query = "";
+
+function matches(l){
+  if(!query) return true;
+  const hay = [l.name,l.firma,l.email,l.telefon,l.ort,l.quelle,l.website,...(l.notes||[]).map(n=>n.text)].join(" ").toLowerCase();
+  return query.split(/\s+/).every(q => hay.includes(q));
+}
+
+function cardHtml(l){
+  const lastNote = (l.notes||[]).find(n => !n.sys);
+  const due = dueInfo(l);
+  const meta = [];
+  if(l.telefon) meta.push(`<span>${ICON.phone}${esc(l.telefon)}</span>`);
+  if(l.attempts) meta.push(`<span>${ICON.retry}${l.attempts}× versucht</span>`);
+  const firm = [l.name ? l.firma : "", l.ort].filter(Boolean).join(" · ");
+  let mail = "";
+  if(l.stage === "email"){
+    mail = l.email
+      ? `<button class="card-mail" data-act="mail">In Gmail öffnen ${ICON.arrow}</button>` +
+        (l.lastMail ? `<div class="card-sent">Zuletzt vorbereitet ${esc(rel(l.lastMail))}</div>` : "")
+      : `<button class="card-mail" disabled>Keine E-Mail hinterlegt</button>`;
+  }
+  return `<article class="card" data-id="${esc(l.id)}">
+    <div class="card-top"><span class="card-name">${esc(displayName(l))}</span><span class="card-age">${esc(rel(l.updated||l.created))}</span></div>
+    ${firm ? `<div class="card-firm">${esc(firm)}</div>` : ""}
+    ${meta.length ? `<div class="card-meta">${meta.join("")}</div>` : ""}
+    ${due ? `<div class="card-badges"><span class="badge ${due.cls}">${esc(due.text)}</span></div>` : ""}
+    ${lastNote ? `<p class="card-note">${esc(lastNote.text)}</p>` : ""}
+    ${mail}
+  </article>`;
+}
+
+function render(){
+  const scrolls = {};
+  $$(".col", board).forEach(c => scrolls[c.dataset.stage] = $(".col-list", c).scrollTop);
+  const boardScroll = board.scrollLeft;
+
+  board.innerHTML = STAGES.map(s => {
+    const leads = db.leads.filter(l => l.stage === s.id && matches(l)).sort((a,b) => (a.order||0) - (b.order||0));
+    return `<section class="col" data-stage="${s.id}">
+      <header class="col-head">
+        <div><span class="label">${s.no} / ${esc(STAGE_NAME[s.id])}</span>
+        <h2>${esc(s.title)}${s.it ? " <i>" + esc(s.it) + "</i>" : ""}</h2></div>
+        <span class="col-count">${leads.length}</span>
+      </header>
+      <div class="col-list">${leads.map(cardHtml).join("") || `<div class="col-empty">${query ? "Keine Treffer" : "Leads hierher ziehen"}</div>`}</div>
+    </section>`;
+  }).join("");
+
+  $$(".col", board).forEach(c => { const v = scrolls[c.dataset.stage]; if(v) $(".col-list", c).scrollTop = v; });
+  board.scrollLeft = boardScroll;
+  renderStats();
+}
+
+function renderStats(){
+  const L = db.leads;
+  const open = L.filter(l => l.stage !== "closed").length;
+  const termine = L.filter(l => l.stage === "termin").length;
+  const closed = L.filter(l => l.stage === "closed").length;
+  const t = todayStr();
+  const due = L.filter(l => l.wiedervorlage && l.wiedervorlage <= t && l.stage !== "closed").length;
+  $("#stats").innerHTML =
+    `<span><b>${open}</b> offen</span><span><b>${termine}</b> Ersttermine</span><span><b>${closed}</b> geclosed</span>` +
+    (due ? `<span class="due"><b>${due}</b> Wiedervorlage fällig</span>` : "");
+}
+
+$("#search").addEventListener("input", e => { query = e.target.value.trim().toLowerCase(); render(); });
+
+/* ================= Ziehen & Ablegen (Maus + Touch) ================= */
+let press = null;   // gedrückt, aber noch nicht gezogen
+let drag = null;    // aktives Ziehen
+const HOLD_MS = 230, MOVE_TOL = 8;
+
+board.addEventListener("pointerdown", e => {
+  const card = e.target.closest(".card");
+  if(!card || e.target.closest("button,a,input")) return;
+  if(e.pointerType === "mouse" && e.button !== 0) return;
+  press = {id:card.dataset.id, card, x0:e.clientX, y0:e.clientY, x:e.clientX, y:e.clientY, type:e.pointerType, timer:null};
+  if(e.pointerType !== "mouse"){
+    card.classList.add("is-pressing");
+    press.timer = setTimeout(() => { if(press) startDrag(); }, HOLD_MS);
+  }
+});
+
+document.addEventListener("pointermove", e => {
+  if(drag){ drag.x = e.clientX; drag.y = e.clientY; moveDrag(); return; }
+  if(!press) return;
+  press.x = e.clientX; press.y = e.clientY;
+  const dist = Math.hypot(press.x - press.x0, press.y - press.y0);
+  if(dist > MOVE_TOL){
+    if(press.type === "mouse") startDrag();
+    else cancelPress(); // Finger wischt: normal scrollen
+  }
+});
+
+document.addEventListener("pointerup", e => {
+  if(drag){ endDrag(); return; }
+  if(!press) return;
+  const p = press; cancelPress();
+  if(Math.hypot(e.clientX - p.x0, e.clientY - p.y0) <= MOVE_TOL) openDetail(p.id);
+});
+document.addEventListener("pointercancel", () => { if(drag) endDrag(true); else cancelPress(); });
+document.addEventListener("touchmove", e => { if(drag) e.preventDefault(); }, {passive:false});
+board.addEventListener("contextmenu", e => { if(e.target.closest(".card")) e.preventDefault(); });
+
+function cancelPress(){
+  if(!press) return;
+  clearTimeout(press.timer);
+  press.card.classList.remove("is-pressing");
+  press = null;
+}
+
+function startDrag(){
+  const p = press; press = null;
+  clearTimeout(p.timer);
+  p.card.classList.remove("is-pressing");
+  const r = p.card.getBoundingClientRect();
+  const ghost = p.card.cloneNode(true);
+  ghost.classList.add("ghost");
+  ghost.style.width = r.width + "px";
+  document.body.appendChild(ghost);
+  p.card.classList.add("is-placeholder");
+  document.body.classList.add("dragging");
+  if(navigator.vibrate) try{ navigator.vibrate(12); }catch(_){}
+  drag = {id:p.id, card:p.card, ghost, offX:p.x - r.left, offY:p.y - r.top, x:p.x, y:p.y,
+          fromStage:byId(p.id).stage, raf:0};
+  moveDrag();
+  drag.raf = requestAnimationFrame(autoScroll);
+}
+
+function colAt(x, y){
+  const el = document.elementFromPoint(x, y);
+  return el ? el.closest(".col") : null;
+}
+
+function moveDrag(){
+  const d = drag;
+  d.ghost.style.left = (d.x - d.offX) + "px";
+  d.ghost.style.top  = (d.y - d.offY) + "px";
+  const col = colAt(d.x, d.y);
+  $$(".col.is-target").forEach(c => { if(c !== col) c.classList.remove("is-target"); });
+  if(!col) return;
+  col.classList.add("is-target");
+  const list = $(".col-list", col);
+  const cards = $$(".card", list).filter(c => c !== d.card);
+  let before = null;
+  for(const c of cards){
+    const r = c.getBoundingClientRect();
+    if(d.y < r.top + r.height/2){ before = c; break; }
+  }
+  if(before){ if(d.card.nextSibling !== before) list.insertBefore(d.card, before); }
+  else if(list.lastElementChild !== d.card || d.card.parentNode !== list){
+    const empty = $(".col-empty", list);
+    list.appendChild(d.card);
+    if(empty) list.appendChild(empty);
+  }
+}
+
+function autoScroll(){
+  if(!drag) return;
+  const edge = 70, max = 16;
+  const br = board.getBoundingClientRect();
+  if(drag.x < br.left + edge) board.scrollLeft -= Math.ceil(max * (1 - (drag.x - br.left)/edge));
+  else if(drag.x > br.right - edge) board.scrollLeft += Math.ceil(max * (1 - (br.right - drag.x)/edge));
+  const col = colAt(drag.x, drag.y);
+  if(col){
+    const list = $(".col-list", col), lr = list.getBoundingClientRect();
+    if(drag.y < lr.top + 50) list.scrollTop -= 10;
+    else if(drag.y > lr.bottom - 50) list.scrollTop += 10;
+  }
+  moveDrag();
+  drag.raf = requestAnimationFrame(autoScroll);
+}
+
+function endDrag(cancelled){
+  const d = drag; drag = null;
+  cancelAnimationFrame(d.raf);
+  d.ghost.remove();
+  document.body.classList.remove("dragging");
+  $$(".col.is-target").forEach(c => c.classList.remove("is-target"));
+  if(!cancelled){
+    const col = d.card.closest(".col");
+    const l = byId(d.id);
+    if(col && l){
+      const stage = col.dataset.stage;
+      if(stage !== l.stage){
+        addHistory(l, "Verschoben: " + STAGE_NAME[l.stage] + " → " + STAGE_NAME[stage]);
+        l.stage = stage; touch(l);
+      }
+      // Reihenfolge aus der sichtbaren Spalte übernehmen
+      $$(".card", $(".col-list", col)).forEach((c, i) => { const x = byId(c.dataset.id); if(x) x.order = i; });
+      save();
+      if(stage !== d.fromStage) toast(esc(displayName(l)) + " → " + STAGE_NAME[stage]);
+    }
+  }
+  render();
+}
+
+board.addEventListener("click", e => {
+  const btn = e.target.closest("[data-act='mail']");
+  if(!btn) return;
+  e.stopPropagation();
+  const l = byId(btn.closest(".card").dataset.id);
+  if(l) openMail(l);
+});
+
+/* ================= Overlays ================= */
+function openOverlay(el){ el.classList.add("open"); }
+function closeOverlay(el){
+  el.classList.remove("open");
+  if(el.id === "detailOverlay"){ flushDetail(); openId = null; render(); }
+}
+$$(".overlay").forEach(o => {
+  o.addEventListener("click", e => { if(e.target === o || e.target.closest("[data-close]")) closeOverlay(o); });
+});
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape"){ const o = $(".overlay.open"); if(o) closeOverlay(o); }
+});
+
+/* ================= Lead-Detail ================= */
+let openId = null;
+const FIELDS = [
+  {k:"anrede",  label:"Anrede", type:"select", opts:["","Herr","Frau"]},
+  {k:"name",    label:"Name", ph:"Vor- und Nachname"},
+  {k:"firma",   label:"Firma"},
+  {k:"telefon", label:"Telefon", type:"tel", act:"tel"},
+  {k:"email",   label:"E-Mail", type:"email", act:"mail"},
+  {k:"ort",     label:"Ort"},
+  {k:"website", label:"Website", act:"web"},
+  {k:"quelle",  label:"Quelle", ph:"z. B. Liste Oktober"},
+  {k:"wiedervorlage", label:"Wiedervorlage", type:"date"}
+];
+const stageSel = $("#dStage");
+stageSel.innerHTML = STAGES.map(s => `<option value="${s.id}">${esc(STAGE_NAME[s.id])}</option>`).join("");
+
+function openDetail(id){
+  openId = id;
+  renderDetail(true);
+  openOverlay($("#detailOverlay"));
+}
+
+function renderDetail(full){
+  const l = byId(openId); if(!l) return;
+  $("#dSince").textContent = "Lead seit " + fmtDate(l.created, false);
+  $("#dName").textContent = displayName(l);
+  $("#dFirm").textContent = l.name ? (l.firma || "") : "";
+  stageSel.value = l.stage;
+
+  if(full){
+    $("#dFields").innerHTML = FIELDS.map(f => {
+      const v = l[f.k] || "";
+      const input = f.type === "select"
+        ? `<select data-k="${f.k}">${f.opts.map(o => `<option value="${o}" ${o===v?"selected":""}>${o||"–"}</option>`).join("")}</select>`
+        : `<input data-k="${f.k}" type="${f.type||"text"}" value="${esc(v)}" placeholder="${esc(f.ph||"–")}" ${f.type==="email"||f.act==="web"?'autocapitalize="off" autocorrect="off"':""}>`;
+      let act = "";
+      if(f.act === "tel") act = `<a class="fact" data-fact="tel" title="Anrufen">${ICON.phone}</a>`;
+      if(f.act === "mail") act = `<button class="fact" data-fact="mail" title="In Gmail öffnen">${ICON.mail}</button>`;
+      if(f.act === "web") act = `<a class="fact" data-fact="web" target="_blank" rel="noopener" title="Website öffnen">${ICON.web}</a>`;
+      return `<label class="field"><span class="label">${esc(f.label)}</span>${input}${act}</label>`;
+    }).join("");
+    $("#dNote").value = "";
+  }
+  updateFieldActions(l);
+
+  const q = [];
+  q.push(`<button class="btn btn-line btn-sm" data-q="noreach">${ICON.retry} Nicht erreicht${l.attempts ? " · " + l.attempts + "×" : ""}</button>`);
+  q.push(`<button class="btn btn-line btn-sm" data-q="mail" ${l.email ? "" : "disabled style='opacity:.45'"}>${ICON.mail} In Gmail öffnen</button>`);
+  if(l.stage !== "termin" && l.stage !== "closed") q.push(`<button class="btn btn-line btn-sm" data-q="termin">${ICON.cal} Ersttermin gebucht</button>`);
+  if(l.stage !== "closed") q.push(`<button class="btn btn-line btn-sm" data-q="closed">${ICON.check} Geclosed</button>`);
+  $("#dQuick").innerHTML = q.join("");
+
+  const notes = l.notes || [];
+  $("#dTimeline").innerHTML = notes.length ? notes.map(n => `
+    <li class="tl ${n.sys ? "sys" : ""}">
+      <span class="tl-date">${esc(fmtDate(n.ts))}</span>
+      <div class="tl-text">${esc(n.text)}</div>
+      <button class="tl-del" data-del="${esc(n.id)}" title="Eintrag entfernen">${ICON.x}</button>
+    </li>`).join("") : `<li class="tl-empty">Noch keine Notizen. Der erste Eintrag steht oben.</li>`;
+}
+
+function updateFieldActions(l){
+  const tel = $("[data-fact='tel']"), mail = $("[data-fact='mail']"), web = $("[data-fact='web']");
+  if(tel){ tel.href = l.telefon ? telHref(l.telefon) : "#"; tel.classList.toggle("off", !l.telefon); }
+  if(mail) mail.classList.toggle("off", !l.email);
+  if(web){ web.href = l.website ? webHref(l.website) : "#"; web.classList.toggle("off", !l.website); }
+}
+
+let saveTimer = null;
+$("#dFields").addEventListener("input", e => {
+  const k = e.target.dataset.k; if(!k) return;
+  const l = byId(openId); if(!l) return;
+  l[k] = e.target.value.trim();
+  touch(l);
+  $("#dName").textContent = displayName(l);
+  $("#dFirm").textContent = l.name ? (l.firma || "") : "";
+  updateFieldActions(l);
+  $("#dSaved").textContent = "Wird gespeichert …";
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { save(); $("#dSaved").textContent = "Gespeichert"; }, 350);
+});
+$("#dFields").addEventListener("change", e => { if(e.target.dataset.k){ save(); $("#dSaved").textContent = "Gespeichert"; } });
+$("#dFields").addEventListener("click", e => {
+  const b = e.target.closest("[data-fact='mail']");
+  if(b){ e.preventDefault(); const l = byId(openId); if(l) openMail(l); }
+});
+function flushDetail(){ if(saveTimer){ clearTimeout(saveTimer); saveTimer = null; save(); } }
+
+stageSel.addEventListener("change", () => {
+  const l = byId(openId); if(!l) return;
+  setStage(l, stageSel.value); save(); renderDetail(); render();
+});
+
+function addNote(){
+  const ta = $("#dNote"); const text = ta.value.trim();
+  const l = byId(openId); if(!text || !l) return;
+  addHistory(l, text, false); touch(l); save();
+  ta.value = ""; renderDetail(); render();
+}
+$("#dAddNote").addEventListener("click", addNote);
+$("#dNote").addEventListener("keydown", e => { if(e.key === "Enter" && (e.metaKey || e.ctrlKey)){ e.preventDefault(); addNote(); } });
+
+$("#dTimeline").addEventListener("click", e => {
+  const b = e.target.closest("[data-del]"); if(!b) return;
+  const l = byId(openId); if(!l) return;
+  l.notes = (l.notes||[]).filter(n => n.id !== b.dataset.del);
+  save(); renderDetail(); render();
+});
+
+$("#dQuick").addEventListener("click", e => {
+  const b = e.target.closest("[data-q]"); if(!b) return;
+  const l = byId(openId); if(!l) return;
+  const q = b.dataset.q;
+  if(q === "mail"){ openMail(l); return; }
+  if(q === "noreach"){
+    l.attempts = (l.attempts||0) + 1;
+    addHistory(l, "Anrufversuch " + l.attempts + " – nicht erreicht");
+    if(l.stage === "neu") setStage(l, "nicht_erreicht");
+    touch(l);
+  }
+  if(q === "termin") setStage(l, "termin");
+  if(q === "closed") setStage(l, "closed");
+  save(); renderDetail(); render();
+});
+
+let lastDeleted = null;
+$("#dDelete").addEventListener("click", () => {
+  const l = byId(openId); if(!l) return;
+  if(!confirm("„" + displayName(l) + "“ wirklich löschen?")) return;
+  lastDeleted = {lead:l, index:db.leads.indexOf(l)};
+  db.leads = db.leads.filter(x => x !== l);
+  save();
+  closeOverlay($("#detailOverlay"));
+  toast("Lead gelöscht", "Rückgängig", () => {
+    if(!lastDeleted) return;
+    db.leads.splice(lastDeleted.index, 0, lastDeleted.lead);
+    lastDeleted = null; save(); render();
+  });
+});
+
+/* ================= Leads einfügen ================= */
+const KEYMAP = [
+  ["anrede", /^(anrede|salutation)$/],
+  ["name", /^(name|ansprechpartner(in)?|kontakt(person)?|person|vor-? ?und nachname|vollst.*name|contact)$/],
+  ["vorname", /^(vorname|first ?name)$/],
+  ["nachname", /^(nachname|last ?name|surname)$/],
+  ["firma", /^(firma|unternehmen|company|büro|buero|maklerbüro|maklerbuero|agentur|makler|firmenname)$/],
+  ["telefon", /^(telefon|tel\.?|telefonnummer|phone|handy|mobil|mobile|nummer|tel\.? ?nr\.?)$/],
+  ["email", /^(e-?mail|mail|email-?adresse|e-mail-adresse)$/],
+  ["ort", /^(ort|stadt|city|standort|plz ?\/? ?ort|region)$/],
+  ["website", /^(website|webseite|web|homepage|url|internet)$/],
+  ["quelle", /^(quelle|source|herkunft)$/],
+  ["notiz", /^(notiz|notizen|bemerkung|kommentar|info|hinweis|note|notes)$/]
+];
+const RX_MAIL = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
+const RX_PHONE = /^\+?[\d][\d\s\/().-]{5,}\d$/;
+const RX_WEB = /^(https?:\/\/|www\.)\S+$|^[a-z0-9-]+(\.[a-z0-9-]+)*\.(de|ch|at|com|net|org|eu|immobilien|info|io|biz)(\/\S*)?$/i;
+const RX_FIRM = /\b(gmbh|ag|kg|ohg|ug|e\.?\s?k\.?|immobilien|makler|realty|real estate|estate|partner|wohnbau|haus|verwaltung|properties|group|gruppe|&)\b/i;
+
+function keyOf(h){
+  const t = String(h||"").toLowerCase().replace(/[:*]/g,"").trim();
+  for(const [k, rx] of KEYMAP) if(rx.test(t)) return k;
+  return null;
+}
+function finalize(o){
+  if(!o.name && (o.vorname || o.nachname)) o.name = [o.vorname, o.nachname].filter(Boolean).join(" ");
+  delete o.vorname; delete o.nachname;
+  if(o.email){ const m = String(o.email).match(RX_MAIL); o.email = m ? m[0].toLowerCase() : ""; }
+  if(o.anrede){ o.anrede = /frau/i.test(o.anrede) ? "Frau" : /herr/i.test(o.anrede) ? "Herr" : ""; }
+  // „Herr Max Muster“ im Namen erkennen
+  if(o.name){
+    const m = o.name.match(/^(Herr|Frau)\s+(.+)$/i);
+    if(m){ o.anrede = o.anrede || (m[1][0].toUpperCase() + m[1].slice(1).toLowerCase()); o.name = m[2]; }
+  }
+  for(const k in o) if(typeof o[k] === "string") o[k] = o[k].trim();
+  return o;
+}
+function classifyCells(cells){
+  const o = {}, rest = [];
+  for(let c of cells){
+    c = c.trim().replace(/^"|"$/g,"").trim();
+    if(!c) continue;
+    const m = c.match(RX_MAIL);
+    if(m && !o.email && c.replace(m[0],"").replace(/[<>()\s,;:]|mailto/gi,"") === ""){ o.email = m[0]; continue; }
+    if(!o.telefon && RX_PHONE.test(c) && (c.replace(/\D/g,"").length >= 6)){ o.telefon = c; continue; }
+    if(!o.website && RX_WEB.test(c)){ o.website = c; continue; }
+    if(!o.anrede && /^(herr|frau)$/i.test(c)){ o.anrede = c; continue; }
+    rest.push(c);
+  }
+  for(const c of rest){
+    if(!o.firma && RX_FIRM.test(c)) { o.firma = c; continue; }
+    if(!o.name) { o.name = c; continue; }
+    if(!o.firma) { o.firma = c; continue; }
+    if(!o.ort && c.length < 40 && !/\d{6,}/.test(c)) { o.ort = c; continue; }
+    o.notiz = (o.notiz ? o.notiz + " · " : "") + c;
+  }
+  return o;
+}
+function splitLine(line, sep){
+  if(sep === "\t" || sep === ";" || sep === "|") return line.split(sep);
+  // Komma mit Anführungszeichen
+  const out = []; let cur = "", q = false;
+  for(const ch of line){
+    if(ch === '"'){ q = !q; continue; }
+    if(ch === "," && !q){ out.push(cur); cur = ""; continue; }
+    cur += ch;
+  }
+  out.push(cur);
+  return out;
+}
+const isKv = l => /^\s*[A-Za-zÄÖÜäöüß .\-\/]{2,30}\s*:\s*\S/.test(l) && !!keyOf(l.split(":")[0]);
+function sepOf(s){
+  return s.includes("\t") ? "\t" : s.includes(";") ? ";" : s.includes("|") ? "|" : s.includes(",") ? "," : null;
+}
+function parseBlock(lines){
+  const out = []; let cur = {};
+  const push = () => { if(Object.keys(cur).length){ out.push(finalize(cur)); cur = {}; } };
+  for(const line of lines){
+    const idx = line.indexOf(":");
+    const k = idx > 0 && isKv(line) ? keyOf(line.slice(0, idx)) : null;
+    if(k){
+      const v = line.slice(idx + 1).trim();
+      if(cur[k] && k !== "notiz") push();
+      cur[k] = k === "notiz" && cur.notiz ? cur.notiz + " " + v : v;
+    }else{
+      // Zeile ohne Schlüssel: E-Mail / Telefon erkennen, sonst Notiz
+      const c = classifyCells([line]);
+      if(c.email && !cur.email) cur.email = c.email;
+      else if(c.telefon && !cur.telefon) cur.telefon = c.telefon;
+      else if(c.website && !cur.website) cur.website = c.website;
+      else if(!Object.keys(cur).length) Object.assign(cur, c);
+      else cur.notiz = (cur.notiz ? cur.notiz + " " : "") + line;
+    }
+  }
+  push();
+  return out;
+}
+function parseFree(r){
+  // Freitext-Zeile: E-Mail & Telefon herausziehen, Rest an „ - “ trennen
+  let rest = r;
+  const o = {};
+  const m = rest.match(RX_MAIL); if(m){ o.email = m[0]; rest = rest.replace(m[0], " "); }
+  const p = rest.match(/\+?\d[\d\s\/().-]{5,}\d/); if(p && p[0].replace(/\D/g,"").length >= 6){ o.telefon = p[0].trim(); rest = rest.replace(p[0], " "); }
+  let parts = rest.split(/\s+[-–—]\s+|\s{2,}/).map(s => s.trim()).filter(s => s && !/^[-–—]+$/.test(s));
+  // „Lisa Sommer Sommer Immobilien“ → Name + Firma
+  if(parts.length === 1 && RX_FIRM.test(parts[0])){
+    const w = parts[0].split(/\s+/);
+    if(w.length >= 3 && /^[A-ZÄÖÜ]/.test(w[0]) && /^[A-ZÄÖÜ]/.test(w[1]) && !RX_FIRM.test(w[0] + " " + w[1]))
+      parts = [w.slice(0,2).join(" "), w.slice(2).join(" ")];
+  }
+  const c = classifyCells(parts);
+  return Object.assign(c, {email:o.email || c.email, telefon:o.telefon || c.telefon});
+}
+function parseRows(rows){
+  const out = [];
+  let header = null, hsep = null;
+  rows.forEach((r, i) => {
+    const sep = sepOf(r);
+    if(sep){
+      const keys = splitLine(r, sep).map(keyOf);
+      if(keys.filter(Boolean).length >= 2 && !RX_MAIL.test(r)){ header = keys; hsep = sep; return; }
+    }
+    if(header && sep === hsep){
+      const o = {}, extra = [];
+      splitLine(r, sep).forEach((c, j) => {
+        c = c.trim(); if(!c) return;
+        const k = header[j];
+        if(k) o[k] = o[k] ? o[k] + " " + c : c; else extra.push(c);
+      });
+      if(extra.length) o.notiz = [o.notiz, ...extra].filter(Boolean).join(" · ");
+      out.push(finalize(o));
+    }else if(sep){
+      out.push(finalize(classifyCells(splitLine(r, sep))));
+    }else{
+      out.push(finalize(parseFree(r)));
+    }
+  });
+  return out;
+}
+function parseLeads(text){
+  text = String(text||"").replace(/\r\n?/g,"\n").replace(/ /g," ");
+  if(!text.trim()) return [];
+  // In Abschnitte zerlegen (Leerzeilen). Abschnitte mit „Name: …“-Zeilen sind ein Block-Lead,
+  // alle anderen werden zeilenweise gelesen.
+  const out = [];
+  const segments = text.split(/\n\s*\n/).map(s => s.split("\n").map(l => l.trim()).filter(Boolean)).filter(s => s.length);
+  for(const seg of segments){
+    const kv = seg.filter(isKv).length;
+    if(kv >= 2 && kv >= seg.length * 0.5) out.push(...parseBlock(seg));
+    else out.push(...parseRows(seg));
+  }
+  return out.filter(o => o.name || o.firma || o.email || o.telefon);
+}
+function findDup(o){
+  const ph = o.telefon ? normPhone(o.telefon) : "";
+  return db.leads.find(l =>
+    (o.email && l.email && l.email.toLowerCase() === o.email.toLowerCase()) ||
+    (ph && ph.length >= 7 && l.telefon && normPhone(l.telefon) === ph)
+  );
+}
+function newLead(o, source){
+  const t = now();
+  const l = {
+    id:uid(), created:t, updated:t, stage:"neu", order:0, attempts:0,
+    anrede:o.anrede||"", name:o.name||"", firma:o.firma||"", telefon:o.telefon||"", email:o.email||"",
+    ort:o.ort||"", website:o.website||"", quelle:o.quelle || source || "", wiedervorlage:"", notes:[]
+  };
+  if(o.notiz) l.notes.push({id:uid(), ts:t, text:o.notiz, sys:false});
+  return l;
+}
+
+let parsed = [];
+let importTab = "paste";
+const pasteArea = $("#pasteArea");
+function renderPreview(){
+  parsed = parseLeads(pasteArea.value).map(o => ({o, dup:findDup(o), on:true}));
+  // Dubletten innerhalb der Liste
+  const seen = new Set();
+  parsed.forEach(p => {
+    const k = (p.o.email||"").toLowerCase() || normPhone(p.o.telefon);
+    if(k && seen.has(k)) p.dupList = true;
+    if(k) seen.add(k);
+    if(p.dup || p.dupList) p.on = false;
+  });
+  const wrap = $("#previewWrap");
+  if(!parsed.length){
+    wrap.innerHTML = pasteArea.value.trim() ? `<p class="hint">Noch kein Lead erkannt – bitte pro Zeile mindestens Name, Telefon oder E-Mail.</p>` : "";
+  }else{
+    wrap.innerHTML = `<table class="preview"><thead><tr>
+      <th style="width:28px"></th><th>Name</th><th>Firma</th><th>Telefon</th><th>E-Mail</th><th class="opt">Ort</th><th class="opt">Notiz</th></tr></thead><tbody>
+      ${parsed.map((p,i) => `<tr class="${p.dup||p.dupList ? "dup" : ""}">
+        <td><input type="checkbox" data-i="${i}" ${p.on ? "checked" : ""}></td>
+        <td>${esc((p.o.anrede ? p.o.anrede + " " : "") + (p.o.name||"–"))}${p.dup ? `<span class="dup-tag">schon vorhanden: ${esc(displayName(p.dup))}</span>` : p.dupList ? `<span class="dup-tag">doppelt in der Liste</span>` : ""}</td>
+        <td>${esc(p.o.firma||"–")}</td><td>${esc(p.o.telefon||"–")}</td><td>${esc(p.o.email||"–")}</td>
+        <td class="opt">${esc(p.o.ort||"–")}</td><td class="opt">${esc(p.o.notiz||"")}</td></tr>`).join("")}
+      </tbody></table>`;
+  }
+  updateImportBtn();
+}
+pasteArea.addEventListener("input", renderPreview);
+$("#previewWrap").addEventListener("change", e => {
+  const i = e.target.dataset.i; if(i == null) return;
+  parsed[+i].on = e.target.checked; updateImportBtn();
+});
+function singleData(){
+  const o = {};
+  $$("#singleForm [name]").forEach(el => o[el.name] = el.value.trim());
+  return o;
+}
+$("#singleForm").addEventListener("input", updateImportBtn);
+function updateImportBtn(){
+  const btn = $("#importGo");
+  if(importTab === "paste"){
+    const n = parsed.filter(p => p.on).length;
+    btn.disabled = !n;
+    btn.textContent = n === 1 ? "1 Lead übernehmen" : n ? n + " Leads übernehmen" : "Leads übernehmen";
+    const dups = parsed.filter(p => p.dup || p.dupList).length;
+    $("#importHint").textContent = dups ? dups + " mögliche Dublette" + (dups>1?"n":"") + " abgewählt – bei Bedarf anhaken." : "Neue Leads landen oben in „Neuer Lead“.";
+  }else{
+    const o = singleData();
+    btn.disabled = !(o.name || o.firma);
+    btn.textContent = "Lead anlegen";
+    const d = (o.email || o.telefon) ? findDup(o) : null;
+    $("#importHint").textContent = d ? "Achtung: ähnlicher Lead vorhanden – " + displayName(d) : "Landet oben in „Neuer Lead“.";
+  }
+}
+$$(".tab").forEach(t => t.addEventListener("click", () => {
+  importTab = t.dataset.tab;
+  $$(".tab").forEach(x => x.classList.toggle("on", x === t));
+  $$("[data-pane]").forEach(p => p.classList.toggle("hidden", p.dataset.pane !== importTab));
+  updateImportBtn();
+  setTimeout(() => (importTab === "paste" ? pasteArea : $("#singleForm [name=name]")).focus(), 30);
+}));
+$("#openImport").addEventListener("click", () => {
+  openOverlay($("#importOverlay"));
+  updateImportBtn();
+  setTimeout(() => (importTab === "paste" ? pasteArea : $("#singleForm [name=name]")).focus(), 60);
+});
+$("#importGo").addEventListener("click", () => {
+  let added = [];
+  if(importTab === "paste"){
+    const src = $("#pasteSource").value.trim();
+    added = parsed.filter(p => p.on).map(p => newLead(p.o, src));
+  }else{
+    const o = singleData();
+    if(!(o.name || o.firma)) return;
+    added = [newLead(o, o.quelle)];
+  }
+  if(!added.length) return;
+  // oben in „Neuer Lead“ einsortieren
+  const col = db.leads.filter(l => l.stage === "neu");
+  let top = col.length ? Math.min(...col.map(l => l.order||0)) : 0;
+  for(let i = added.length - 1; i >= 0; i--) added[i].order = --top;
+  db.leads.push(...added);
+  save(); render();
+  pasteArea.value = ""; $("#pasteSource").value = ""; parsed = []; $("#previewWrap").innerHTML = "";
+  $$("#singleForm [name]").forEach(el => el.value = "");
+  closeOverlay($("#importOverlay"));
+  toast(added.length === 1 ? "1 Lead übernommen" : added.length + " Leads übernommen");
+  board.scrollTo({left:0, behavior:"smooth"});
+});
+
+/* ================= Einstellungen ================= */
+const sSubject = $("#sSubject"), sBody = $("#sBody");
+let lastFocusTpl = sBody;
+function sampleLead(){
+  return db.leads.find(l => l.stage === "email" && l.email) || db.leads.find(l => l.name) ||
+    {anrede:"Herr", name:"Jonas Weber", firma:"Weber Wohnbau GmbH", ort:"München"};
+}
+function renderMailPreview(){
+  const l = sampleLead();
+  $("#sPreview").innerHTML = `<span class="subj">${esc(fillTemplate(db.settings.subject, l))}</span>${esc(fillTemplate(db.settings.body, l))}`;
+}
+function fillSettings(){
+  const s = db.settings;
+  sSubject.value = s.subject; sBody.value = s.body;
+  $$("#sMode input").forEach(r => r.checked = r.value === s.mode);
+  $("#sSender").value = s.sender || "";
+  $("#sAccount").value = s.account || "0";
+  $("#sChips").innerHTML = PLACEHOLDERS.map(p => `<button class="chip" data-ph="${p}">{{${p}}}</button>`).join("");
+  $("#sLastBackup").textContent = s.lastBackup ? "Letzte Sicherung: " + fmtDate(s.lastBackup) : "Noch keine Sicherung heruntergeladen.";
+  renderMailPreview();
+}
+$("#openSettings").addEventListener("click", () => { fillSettings(); openOverlay($("#settingsOverlay")); });
+[sSubject, sBody].forEach(el => {
+  el.addEventListener("focus", () => lastFocusTpl = el);
+  el.addEventListener("input", () => { db.settings.subject = sSubject.value; db.settings.body = sBody.value; save(); renderMailPreview(); });
+});
+$("#sChips").addEventListener("mousedown", e => { if(e.target.closest(".chip")) e.preventDefault(); });
+$("#sChips").addEventListener("click", e => {
+  const c = e.target.closest(".chip"); if(!c) return;
+  const el = lastFocusTpl, ins = "{{" + c.dataset.ph + "}}";
+  const a = el.selectionStart ?? el.value.length, b = el.selectionEnd ?? el.value.length;
+  el.value = el.value.slice(0, a) + ins + el.value.slice(b);
+  el.focus(); el.selectionStart = el.selectionEnd = a + ins.length;
+  el.dispatchEvent(new Event("input"));
+});
+$("#sResetTpl").addEventListener("click", () => {
+  if(!confirm("Aktuelle Vorlage durch die Testvorlage ersetzen?")) return;
+  db.settings.subject = DEFAULT_SUBJECT; db.settings.body = DEFAULT_BODY; save(); fillSettings();
+});
+$("#sMode").addEventListener("change", e => { db.settings.mode = e.target.value; save(); });
+$("#sSender").addEventListener("input", e => { db.settings.sender = e.target.value.trim(); save(); renderMailPreview(); });
+$("#sAccount").addEventListener("change", e => { db.settings.account = e.target.value; save(); });
+
+function download(name, content, type){
+  const blob = new Blob([content], {type});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+$("#sExport").addEventListener("click", () => {
+  db.settings.lastBackup = now(); save();
+  download("raumwerk-leads-" + todayStr() + ".json", JSON.stringify(db, null, 2), "application/json");
+  fillSettings();
+});
+$("#sCsv").addEventListener("click", () => {
+  const cols = ["Phase","Anrede","Name","Firma","Telefon","E-Mail","Ort","Website","Quelle","Wiedervorlage","Anrufversuche","Angelegt","Letzte Notiz"];
+  const q = v => '"' + String(v ?? "").replace(/"/g,'""') + '"';
+  const rows = db.leads.map(l => [STAGE_NAME[l.stage], l.anrede, l.name, l.firma, l.telefon, l.email, l.ort, l.website, l.quelle,
+    l.wiedervorlage, l.attempts||0, fmtDate(l.created,false), ((l.notes||[]).find(n=>!n.sys)||{}).text || ""].map(q).join(";"));
+  download("raumwerk-leads-" + todayStr() + ".csv", "﻿" + [cols.map(q).join(";"), ...rows].join("\n"), "text/csv");
+});
+$("#sImportBtn").addEventListener("click", () => $("#sImportFile").click());
+$("#sImportFile").addEventListener("change", async e => {
+  const f = e.target.files[0]; e.target.value = ""; if(!f) return;
+  try{
+    const d = JSON.parse(await f.text());
+    if(!d || !Array.isArray(d.leads)) throw new Error("format");
+    const merge = db.leads.length && confirm(
+      "Sicherung mit " + d.leads.length + " Leads gefunden.\n\nOK = mit den vorhandenen Leads zusammenführen\nAbbrechen = vorhandene Leads ersetzen");
+    if(merge){
+      const ids = new Set(db.leads.map(l => l.id));
+      d.leads.forEach(l => { if(!ids.has(l.id)) db.leads.push(l); });
+    }else{
+      if(db.leads.length && !confirm("Alle " + db.leads.length + " vorhandenen Leads werden ersetzt. Fortfahren?")) return;
+      db.leads = d.leads;
+      db.settings = Object.assign(defaultDb().settings, d.settings || {});
+    }
+    save(); render(); fillSettings();
+    toast("Sicherung eingespielt");
+  }catch(err){ toast("Diese Datei ist keine gültige raumwerk-Sicherung."); }
+});
+$("#sWipe").addEventListener("click", () => {
+  if(!db.leads.length) return;
+  if(!confirm("Wirklich alle " + db.leads.length + " Leads löschen? Das lässt sich nicht rückgängig machen.")) return;
+  if(!confirm("Letzte Bestätigung: alle Leads löschen?")) return;
+  db.leads = []; save(); render(); toast("Alle Leads gelöscht");
+});
+
+/* ================= Hinweis ================= */
+let toastTimer = null;
+function toast(html, actionLabel, action){
+  const t = $("#toast"), b = $("#toastAction");
+  $("#toastText").innerHTML = html;
+  if(actionLabel){
+    b.textContent = actionLabel; b.classList.remove("hidden"); t.classList.add("has-action");
+    b.onclick = () => { action(); t.classList.remove("show"); };
+  }else{ b.classList.add("hidden"); t.classList.remove("has-action"); }
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), actionLabel ? 6000 : 2600);
+}
+
+window.addEventListener("storage", e => { if(e.key === KEY){ db = load(); render(); } });
+
+render();
+})();
+</script>
+</body>
+</html>
