@@ -36,7 +36,7 @@ from datetime import date, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 APP_NAME = "raumwerk CRM"
-VERSION = "2026-10-12b"
+VERSION = "2026-10-12c"
 STANDARD_PORT = 8765
 MAX_SICHERUNGEN = 60
 MAX_GROESSE = 50 * 1024 * 1024  # 50 MB pro Speichervorgang
@@ -2014,6 +2014,32 @@ def laeuft_schon(port):
         return None
 
 
+def windows_prozess_beenden(port):
+    """Ältere Versionen kennen /api/beenden nicht: unter Windows den Prozess am Port beenden.
+    Wird nur aufgerufen, nachdem /api/ping bestätigt hat, dass dort das raumwerk CRM läuft."""
+    import subprocess
+    try:
+        ausgabe = subprocess.run(["netstat", "-ano", "-p", "TCP"], capture_output=True, text=True,
+                                 errors="replace", timeout=10).stdout
+    except Exception:
+        return False
+    pids = set()
+    for zeile in ausgabe.splitlines():
+        teile = zeile.split()
+        # TCP  127.0.0.1:8765  0.0.0.0:0  ABHÖREN/LISTENING  1234
+        if len(teile) >= 5 and teile[0].upper() == "TCP" and teile[1] == "127.0.0.1:{}".format(port) \
+                and teile[2] in ("0.0.0.0:0", "*:*") and teile[-1].isdigit():
+            pids.add(teile[-1])
+    pids.discard(str(os.getpid()))
+    for pid in pids:
+        subprocess.run(["taskkill", "/PID", pid, "/F"], capture_output=True, timeout=10)
+    for _ in range(30):
+        time.sleep(0.2)
+        if not laeuft_schon(port):
+            return True
+    return False
+
+
 def alten_beenden(port):
     try:
         req = urllib.request.Request("http://127.0.0.1:{}/api/beenden".format(port), data=b"{}", method="POST",
@@ -2067,7 +2093,10 @@ def main():
         return
     if laufend:
         # Eine andere (ältere) Version läuft noch und würde sonst weiter angezeigt.
-        if not (laufend.get("version") and alten_beenden(port)):
+        beendet = alten_beenden(port) if laufend.get("version") else False
+        if not beendet and os.name == "nt":
+            beendet = windows_prozess_beenden(port)
+        if not beendet:
             print()
             print("  ACHTUNG: Es läuft noch eine ältere Version des raumwerk CRM.")
             print("  Bitte alle schwarzen raumwerk-Fenster schließen")
