@@ -134,7 +134,9 @@ svg.i{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-widt
 .badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;letter-spacing:.06em;color:var(--muted)}
 .badge::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
 .badge.warm{color:var(--accent-warm)}
-.card-badges{display:flex;gap:12px;margin-top:9px}
+.card-badges{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:9px}
+.warnbar{border:1px solid #E2C9B8;background:#F6E9E1;color:#5A3A28;border-radius:var(--radius);padding:10px 14px;font-size:13.5px}
+.warnbar b{font-weight:600}
 .card-mail{
   margin-top:12px;width:100%;display:flex;align-items:center;justify-content:space-between;
   padding:9px 12px;border-radius:999px;background:var(--ink);color:var(--bg);font-size:13px;font-weight:500;
@@ -384,6 +386,7 @@ select.input{-webkit-appearance:none;appearance:none}
           <span class="label">Verlauf &amp; Notizen</span>
           <h2 class="main-title">Was ist passiert, <span class="it">was kommt als Nächstes.</span></h2>
         </div>
+        <div class="warnbar hidden" id="dWarn"></div>
         <section class="extra" id="dExtra"></section>
         <div class="quick" id="dQuick"></div>
         <div class="compose">
@@ -773,8 +776,25 @@ function isAppleTouch(){
   const ua = navigator.userAgent;
   return /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
 }
+// Sperrvermerke aus importierten Spalten (z. B. Sterneintrag, Werbewiderspruch)
+function warnings(l){
+  const w = [];
+  for(const [k, v] of Object.entries(l.extra || {})){
+    if(!/^\s*ja\b/i.test(v || "")) continue;
+    if(/werbesperre|sterneintrag|robinson/i.test(k)) w.push({type:"tel", text:"Keine Werbeanrufe (Sterneintrag)"});
+    else if(/werbewiderspruch|widerspruch/i.test(k)) w.push({type:"all", text:"Werbewiderspruch im Impressum"});
+  }
+  return w;
+}
+function okToContact(l, how){
+  const w = warnings(l).filter(x => x.type === "all" || x.type === how);
+  if(!w.length) return true;
+  return confirm(displayName(l) + ":\n" + w.map(x => "• " + x.text).join("\n") +
+    "\n\n" + (how === "tel" ? "Trotzdem anrufen?" : "Trotzdem E-Mail vorbereiten?"));
+}
 function openMail(l){
   if(!l.email){ toast("Für diesen Lead ist keine E-Mail-Adresse hinterlegt."); return; }
+  if(!okToContact(l, "mail")) return;
   const s = db.settings;
   const subject = fillTemplate(s.subject, l);
   const body = fillTemplate(s.body, l);
@@ -825,7 +845,7 @@ function cardHtml(l){
     <div class="card-top"><span class="card-name">${esc(displayName(l))}</span><span class="card-age">${esc(rel(l.updated||l.created))}</span></div>
     ${firm ? `<div class="card-firm">${esc(firm)}</div>` : ""}
     ${meta.length ? `<div class="card-meta">${meta.join("")}</div>` : ""}
-    ${due ? `<div class="card-badges"><span class="badge ${due.cls}">${esc(due.text)}</span></div>` : ""}
+    ${due || warnings(l).length ? `<div class="card-badges">${due ? `<span class="badge ${due.cls}">${esc(due.text)}</span>` : ""}${warnings(l).map(w => `<span class="badge warm">${esc(w.text)}</span>`).join("")}</div>` : ""}
     ${lastNote ? `<p class="card-note">${esc(lastNote.text)}</p>` : ""}
     ${mail}
   </article>`;
@@ -1071,6 +1091,9 @@ function renderDetail(full){
     $("#dNote").value = "";
   }
   updateFieldActions(l);
+  const w = warnings(l);
+  $("#dWarn").classList.toggle("hidden", !w.length);
+  $("#dWarn").innerHTML = w.map(x => "<b>Achtung:</b> " + esc(x.text) + (x.type === "tel" ? " – Werbeanrufe sind hier nicht erlaubt." : " – die Firma widerspricht Werbung.")).join("<br>");
 
   const q = [];
   q.push(`<button type="button" class="btn btn-line btn-sm" data-q="noreach">${ICON.retry} Nicht erreicht${l.attempts ? " · " + l.attempts + "×" : ""}</button>`);
@@ -1131,6 +1154,8 @@ let saveTimer = null;
 ["#dFields", "#dExtra"].forEach(sel => $(sel).addEventListener("click", e => {
   const b = e.target.closest("[data-fact='mail']");
   if(b){ e.preventDefault(); const l = byId(openId); if(l) openMail(l); return; }
+  const t = e.target.closest("[data-fact='tel']");
+  if(t){ const l = byId(openId); if(l && !okToContact(l, "tel")) e.preventDefault(); return; }
   const del = e.target.closest("[data-xdel]");
   if(del){
     e.preventDefault();
@@ -1226,7 +1251,7 @@ const KEYMAP = [
   ["ort", /^(ort|stadt|city|standort|plz ?\/? ?ort|region)$/],
   ["website", /^(website|webseite|web|homepage|url|internet)$/],
   ["quelle", /^(quelle|source|herkunft)$/],
-  ["notiz", /^(notiz|notizen|bemerkung|kommentar|info|hinweis|note|notes)$/]
+  ["notiz", /^(notiz|notizen|bemerkung|bemerkungen|kommentar|note|notes)$/]
 ];
 const RX_MAIL = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
 const RX_PHONE = /^\+?[\d][\d\s\/().-]{5,}\d$/;
@@ -1335,22 +1360,33 @@ function parseFree(r){
   const c = classifyCells(parts);
   return Object.assign(c, {email:o.email || c.email, telefon:o.telefon || c.telefon});
 }
-function parseRows(rows){
+function parseRows(rows, state){
   const out = [];
-  let header = null, headerRaw = null, hsep = null;
+  let {header, headerRaw, hsep} = state;
   rows.forEach((r, i) => {
     const sep = sepOf(r);
     if(sep){
       const raw = splitLine(r, sep).map(c => c.trim());
       const keys = raw.map(keyOf);
-      if(keys.filter(Boolean).length >= 2 && !RX_MAIL.test(r)){ header = keys; headerRaw = raw; hsep = sep; return; }
+      if(keys.filter(Boolean).length >= 2 && !RX_MAIL.test(r)){
+        header = keys; headerRaw = raw; hsep = sep;
+        Object.assign(state, {header, headerRaw, hsep});
+        // Zusatzfelder in Spaltenreihenfolge (auch Spalten, die eine zweite Telefonnummer o. Ä. enthalten)
+        const seen = new Set();
+        raw.forEach((h, j) => {
+          const k = keys[j];
+          if(h && (!k || seen.has(k))) lastFieldOrder.push(cleanLabel(h));
+          if(k) seen.add(k);
+        });
+        return;
+      }
     }
     if(header && sep === hsep){
       const o = {}, extra = [];
       splitLine(r, sep).forEach((c, j) => {
         c = c.trim(); if(!c) return;
         const k = header[j];
-        if(k) o[k] = o[k] ? o[k] + " " + c : c;
+        if(k && (!o[k] || k === "notiz")) o[k] = o[k] ? o[k] + " · " + c : c;
         else if(headerRaw[j]) { o.extra = o.extra || {}; o.extra[cleanLabel(headerRaw[j])] = c; }
         else extra.push(c);
       });
@@ -1364,17 +1400,42 @@ function parseRows(rows){
   });
   return out;
 }
+let lastFieldOrder = [];
+// CSV mit Anführungszeichen (Trennzeichen oder Zeilenumbrüche in Zellen) sauber in Tab-Zeilen umwandeln
+function csvToTsv(text, d){
+  const rows = []; let row = [], cell = "", q = false;
+  for(let i = 0; i < text.length; i++){
+    const ch = text[i];
+    if(q){
+      if(ch === '"'){ if(text[i+1] === '"'){ cell += '"'; i++; } else q = false; }
+      else cell += ch;
+    }else if(ch === '"' && cell.trim() === "") { q = true; cell = ""; }
+    else if(ch === d){ row.push(cell); cell = ""; }
+    else if(ch === "\n"){ row.push(cell); rows.push(row); row = []; cell = ""; }
+    else cell += ch;
+  }
+  row.push(cell); rows.push(row);
+  return rows.map(r => r.map(c => c.replace(/[\t\n]+/g, " ").trim()).join("\t")).join("\n");
+}
 function parseLeads(text){
-  text = String(text||"").replace(/\r\n?/g,"\n").replace(/ /g," ");
+  lastFieldOrder = [];
+  text = String(text||"").replace(/\r+\n|\r/g,"\n").replace(/ /g," ");
   if(!text.trim()) return [];
+  const firstLine = text.slice(0, text.indexOf("\n") >= 0 ? text.indexOf("\n") : undefined);
+  if(!firstLine.includes("\t") && text.includes('"')){
+    const d = firstLine.split(";").length >= firstLine.split(",").length ? ";" : ",";
+    if(firstLine.split(d).length >= 3) text = csvToTsv(text, d);
+  }
   // In Abschnitte zerlegen (Leerzeilen). Abschnitte mit „Name: …“-Zeilen sind ein Block-Lead,
   // alle anderen werden zeilenweise gelesen.
   const out = [];
-  const segments = text.split(/\n\s*\n/).map(s => s.split("\n").map(l => l.trim()).filter(Boolean)).filter(s => s.length);
+  // Nur Leerzeichen am Rand entfernen – führende Tabs stehen für leere Zellen
+  const segments = text.split(/\n[ \u00a0]*\n/).map(s => s.split("\n").map(l => l.replace(/^[ \u00a0]+|[ \u00a0]+$/g, "")).filter(l => l.replace(/\t/g, "").trim())).filter(s => s.length);
+  const state = {header:null, headerRaw:null, hsep:null};  // Kopfzeile gilt auch nach Leerzeilen weiter
   for(const seg of segments){
     const kv = seg.filter(isKv).length;
-    if(kv >= 2 && kv >= seg.length * 0.5) out.push(...parseBlock(seg));
-    else out.push(...parseRows(seg));
+    if(kv >= 2 && kv >= seg.length * 0.5) out.push(...parseBlock(seg.map(l => l.trim())));
+    else out.push(...parseRows(seg, state));
   }
   return out.filter(o => o.name || o.firma || o.email || o.telefon);
 }
@@ -1598,7 +1659,10 @@ $("#importGo").addEventListener("click", () => {
   let top = col.length ? Math.min(...col.map(l => l.order||0)) : 0;
   for(let i = added.length - 1; i >= 0; i--) added[i].order = --top;
   db.leads.push(...added);
-  added.forEach(l => Object.keys(l.extra).forEach(k => { if(!db.settings.fields.includes(k)) db.settings.fields.push(k); }));
+  const used = new Set(added.flatMap(l => Object.keys(l.extra)));
+  [...(importTab === "paste" ? lastFieldOrder : []), ...used].forEach(k => {
+    if(used.has(k) && !db.settings.fields.includes(k)) db.settings.fields.push(k);
+  });
   save(); render();
   pasteArea.value = ""; $("#pasteSource").value = ""; parsed = []; $("#previewWrap").innerHTML = "";
   $$("#singleForm [name]").forEach(el => el.value = "");
@@ -1681,10 +1745,13 @@ $("#sImportFile").addEventListener("change", async e => {
     if(merge){
       const ids = new Set(db.leads.map(l => l.id));
       d.leads.forEach(l => { if(!ids.has(l.id)) db.leads.push(l); });
+      ((d.settings || {}).fields || []).forEach(k => { if(!db.settings.fields.includes(k)) db.settings.fields.push(k); });
+      db = normalize(db);
     }else{
       if(db.leads.length && !confirm("Alle " + db.leads.length + " vorhandenen Leads werden ersetzt. Fortfahren?")) return;
       db.leads = d.leads;
       db.settings = Object.assign(defaultDb().settings, d.settings || {});
+      db = normalize(db);
     }
     save(); render(); fillSettings();
     toast("Sicherung eingespielt");
