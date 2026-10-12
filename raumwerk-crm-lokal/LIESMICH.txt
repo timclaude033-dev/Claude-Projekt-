@@ -1,0 +1,34 @@
+raumwerk CRM – lokale Version
+=============================
+
+Was Sie brauchen
+  Python 3 (kostenlos): https://www.python.org/downloads/
+  Unter Windows bei der Installation „Add python.exe to PATH“ anhaken.
+  Sonst nichts – keine Zusatzpakete, kein Konto, keine Kosten.
+
+Starten
+  Mac:      Doppelklick auf „raumwerk CRM starten.command“
+            (beim ersten Mal: Rechtsklick → Öffnen → Öffnen)
+  Windows:  Doppelklick auf „raumwerk CRM starten.bat“
+  Oder im Terminal in diesem Ordner:  python3 raumwerk_crm.py
+
+  Der Browser öffnet sich automatisch mit dem CRM.
+  Das schwarze Fenster offen lassen, solange Sie arbeiten.
+  Beenden: Fenster schließen oder Strg + C.
+
+Wo die Leads liegen
+  Im Ordner „raumwerk-daten“ neben dem Skript:
+    leads.json      die aktuellen Daten
+    sicherungen/    eine automatische Sicherung pro Tag (die letzten 60 Tage)
+
+  Den ganzen Ordner können Sie z. B. in iCloud Drive, OneDrive oder
+  Dropbox legen – dann sind die Leads zusätzlich gesichert.
+  Wichtig: nur auf einem Computer gleichzeitig öffnen.
+
+Leads aus der Online-Version übernehmen
+  Online-Version → Einstellungen → „Sicherung herunterladen“.
+  Lokale Version → Einstellungen → „Sicherung einspielen“.
+
+Datenschutz
+  Das CRM ist nur auf diesem Computer erreichbar, nicht im Netzwerk
+  und nicht im Internet. Nur die Schriften werden von Google Fonts geladen.

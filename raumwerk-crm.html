@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<!--RW_SERVER-->
 <style>
 :root{
   --bg:#F4F1EA;
@@ -485,7 +486,7 @@ E-Mail: weber@wohnbau.de"></textarea>
       <div class="section">
         <span class="label">03 / Daten</span>
         <h2 class="h-serif">Ihre Leads. <span class="it">Sicher aufbewahrt.</span></h2>
-        <p class="lead-text">Alle Daten liegen nur in diesem Browser auf diesem Gerät – ohne Server, ohne Kosten. Laden Sie regelmäßig eine Sicherung herunter. Damit lassen sich die Leads auch auf ein anderes Gerät übertragen.</p>
+        <p class="lead-text" id="sDataText">Alle Daten liegen nur in diesem Browser auf diesem Gerät – ohne Server, ohne Kosten. Laden Sie regelmäßig eine Sicherung herunter. Damit lassen sich die Leads auch auf ein anderes Gerät übertragen.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
           <button type="button" class="btn btn-primary btn-sm" id="sExport">Sicherung herunterladen</button>
           <label class="btn btn-line btn-sm" for="sImportFile" style="cursor:pointer">Sicherung einspielen</label>
@@ -580,27 +581,92 @@ function defaultDb(){
     subject:DEFAULT_SUBJECT, body:DEFAULT_BODY, mode:"auto", account:"0", sender:"", lastBackup:null
   }};
 }
-let db = load();
+// Lokaler Modus: Das Python-Skript liefert die Seite aus und speichert in eine Datei.
+const SERVER = !!window.RW_SERVER;
+function normalize(d){
+  const base = defaultDb();
+  d = (d && typeof d === "object") ? d : {};
+  d.version = 1;
+  d.settings = Object.assign(base.settings, d.settings || {});
+  d.leads = Array.isArray(d.leads) ? d.leads : [];
+  return d;
+}
+let db = SERVER ? defaultDb() : load();
+let loaded = !SERVER;
 function load(){
   try{
     const raw = localStorage.getItem(KEY);
-    if(raw){
-      const d = JSON.parse(raw);
-      const base = defaultDb();
-      d.settings = Object.assign(base.settings, d.settings || {});
-      d.leads = Array.isArray(d.leads) ? d.leads : [];
-      return d;
-    }
+    if(raw) return normalize(JSON.parse(raw));
   }catch(e){ console.warn(e); }
   return defaultDb();
 }
 let storageOk = true;
+let rev = 0, dirty = false, pushing = false, pushTimer = null, retryTimer = null;
 function save(){
+  if(!loaded) return;          // nie leere Daten über die Datei schreiben
+  if(SERVER){
+    dirty = true;
+    clearTimeout(pushTimer);
+    pushTimer = setTimeout(push, 250);
+    return;
+  }
   try{ localStorage.setItem(KEY, JSON.stringify(db)); storageOk = true; }
   catch(e){
     if(storageOk) toast("Diese Ansicht kann nicht dauerhaft speichern – bitte die Seite direkt im Browser öffnen.");
     storageOk = false;
   }
+}
+function push(keepalive){
+  if(!dirty || (pushing && !keepalive)) return;
+  const force = pushing;        // Seite wird geschlossen, während noch gespeichert wird
+  pushing = true; dirty = false;
+  clearTimeout(retryTimer);
+  return fetch("/api/daten", {
+    method:"POST", keepalive:!!keepalive,
+    headers:{"Content-Type":"application/json", "X-Raumwerk":"1"},
+    body:JSON.stringify({rev, force, data:db})
+  }).then(r => {
+    if(r.status === 409){
+      // Ein anderes Fenster hat inzwischen gespeichert: beide Stände zusammenführen
+      return fetch("/api/daten", {cache:"no-store"}).then(x => x.json()).then(j => {
+        db = mergeDb(normalize(j.data), db); rev = j.rev; dirty = true; storageOk = true;
+        render(); if(openId) renderDetail();
+        toast("Änderungen aus einem anderen Fenster übernommen.");
+      });
+    }
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    return r.json().then(j => { rev = j.rev; storageOk = true; });
+  }).catch(() => {
+    dirty = true;
+    if(storageOk) toast("Speichern fehlgeschlagen – läuft das Python-Fenster noch? Neuer Versuch läuft.");
+    storageOk = false;
+    retryTimer = setTimeout(push, 4000);
+  }).finally(() => {
+    pushing = false;
+    if(dirty && storageOk) push();
+  });
+}
+function mergeDb(server, local){
+  const gone = new Set([...(server.deleted||[]), ...(local.deleted||[])]);
+  const map = new Map();
+  server.leads.forEach(l => { if(!gone.has(l.id)) map.set(l.id, l); });
+  local.leads.forEach(l => {
+    if(gone.has(l.id)) return;
+    const o = map.get(l.id);
+    if(!o){ map.set(l.id, l); return; }
+    const newer = (l.updated||"") >= (o.updated||"") ? l : o, older = newer === l ? o : l;
+    const ids = new Set((newer.notes||[]).map(n => n.id));
+    const notes = [...(newer.notes||[]), ...(older.notes||[]).filter(n => !ids.has(n.id))]
+      .filter(n => !gone.has(n.id)).sort((a,b) => a.ts < b.ts ? 1 : a.ts > b.ts ? -1 : 0);
+    map.set(l.id, Object.assign({}, newer, {notes}));
+  });
+  return Object.assign({}, local, {leads:[...map.values()], deleted:[...gone].slice(-2000)});
+}
+function forget(id){ db.deleted = (db.deleted || []).concat(id).slice(-2000); }
+function fetchData(){
+  return fetch("/api/daten", {cache:"no-store"})
+    .then(r => { if(!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(j => { db = normalize(j.data); rev = j.rev; loaded = true; render(); });
 }
 const byId = id => db.leads.find(l => l.id === id);
 
@@ -1040,6 +1106,7 @@ $("#dTimeline").addEventListener("click", e => {
   const n = (l.notes||[]).find(x => x.id === b.dataset.del);
   if(n && !n.sys && !confirm("Diese Notiz löschen?")) return;
   l.notes = (l.notes||[]).filter(n => n.id !== b.dataset.del);
+  forget(b.dataset.del);
   save(); renderDetail(); render();
 });
 
@@ -1065,11 +1132,13 @@ $("#dDelete").addEventListener("click", () => {
   if(!confirm("„" + displayName(l) + "“ wirklich löschen?")) return;
   lastDeleted = {lead:l, index:db.leads.indexOf(l)};
   db.leads = db.leads.filter(x => x !== l);
+  forget(l.id);
   save();
   closeOverlay($("#detailOverlay"));
   toast("Lead gelöscht", "Rückgängig", () => {
     if(!lastDeleted) return;
     db.leads.splice(lastDeleted.index, 0, lastDeleted.lead);
+    db.deleted = (db.deleted || []).filter(x => x !== lastDeleted.lead.id);
     lastDeleted = null; save(); render();
   });
 });
@@ -1354,6 +1423,7 @@ function fillSettings(){
   $("#sSender").value = s.sender || "";
   $("#sAccount").value = s.account || "0";
   $("#sChips").innerHTML = PLACEHOLDERS.map(p => `<button type="button" class="chip" data-ph="${p}">{{${p}}}</button>`).join("");
+  if(SERVER) $("#sDataText").textContent = "Alle Leads werden auf diesem Computer in der Datei „" + (window.RW_DATAFILE || "leads.json") + "“ gespeichert – ohne Cloud, ohne Kosten. Das Skript legt zusätzlich jeden Tag automatisch eine Sicherung an. Eine heruntergeladene Sicherung eignet sich, um die Leads auf ein anderes Gerät zu übertragen.";
   $("#sLastBackup").textContent = s.lastBackup ? "Letzte Sicherung: " + fmtDate(s.lastBackup) : "Noch keine Sicherung heruntergeladen.";
   renderMailPreview();
 }
@@ -1421,6 +1491,7 @@ $("#sWipe").addEventListener("click", () => {
   if(!db.leads.length) return;
   if(!confirm("Wirklich alle " + db.leads.length + " Leads löschen? Das lässt sich nicht rückgängig machen.")) return;
   if(!confirm("Letzte Bestätigung: alle Leads löschen?")) return;
+  db.leads.forEach(l => forget(l.id));
   db.leads = []; save(); render(); toast("Alle Leads gelöscht");
 });
 
@@ -1438,9 +1509,21 @@ function toast(html, actionLabel, action){
   toastTimer = setTimeout(() => t.classList.remove("show"), actionLabel ? 6000 : 2600);
 }
 
-window.addEventListener("storage", e => { if(e.key === KEY){ db = load(); render(); } });
-
-render();
+if(SERVER){
+  fetchData().catch(() => rwShowError("Die Daten konnten nicht geladen werden. Läuft das Python-Fenster noch?"));
+  // Beim Zurückkehren in den Tab Änderungen aus anderen Fenstern übernehmen
+  document.addEventListener("visibilitychange", () => {
+    if(document.visibilityState === "visible" && loaded && !dirty && !pushing && !drag && !$(".overlay.open"))
+      fetch("/api/daten", {cache:"no-store"}).then(r => r.json()).then(j => {
+        if(j.rev !== rev && !dirty){ db = normalize(j.data); rev = j.rev; render(); }
+      }).catch(() => {});
+    if(document.visibilityState === "hidden" && dirty) push(true);
+  });
+  window.addEventListener("pagehide", () => { if(dirty) push(true); });
+}else{
+  window.addEventListener("storage", e => { if(e.key === KEY){ db = load(); render(); } });
+  render();
+}
 })();
 </script>
 </body>
