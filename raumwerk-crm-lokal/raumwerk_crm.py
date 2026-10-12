@@ -233,6 +233,21 @@ body.dragging, body.dragging *{cursor:grabbing!important}
 .fact{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line-sage);color:var(--ink);text-decoration:none;background:var(--surface)}
 .fact:hover{border-color:var(--ink)}
 .fact.off{opacity:.35;pointer-events:none}
+.extra{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:16px 20px 12px}
+.extra-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.extra-head .add-field{margin:0}
+.extra-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:0 26px;margin-top:4px}
+.extra-grid .field{border-bottom-color:var(--line)}
+.extra-empty{margin:8px 0 2px;color:var(--faint);font-size:13.5px}
+.extra .field:last-child{border-bottom-color:var(--line)}
+.field textarea{width:100%;border:0;background:transparent;outline:0;padding:3px 0;font-size:15px;color:var(--ink);resize:vertical;line-height:1.5;font-family:inherit}
+.field textarea:focus{box-shadow:0 1px 0 var(--ink)}
+.fact-sm{width:26px;height:26px;color:var(--faint);border-color:transparent;background:transparent;opacity:.6}
+.fact-sm svg.i{width:13px;height:13px}
+.field:hover .fact-sm,.fact-sm:focus{opacity:1}
+.fact-sm:hover{color:var(--accent-warm);border-color:var(--line-sage)}
+.add-field{margin-top:14px;color:var(--sage);font-size:13.5px;font-weight:500}
+.add-field:hover{color:var(--ink)}
 .side-foot{margin-top:auto;padding-top:22px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12.5px;color:var(--faint)}
 .danger{color:var(--accent-warm);font-size:13px}
 .danger:hover{text-decoration:underline}
@@ -276,6 +291,7 @@ body.dragging, body.dragging *{cursor:grabbing!important}
 }
 .paste:focus,.input:focus,.area:focus{border-color:var(--ink)}
 .hint{font-size:13px;color:var(--faint);margin-top:8px}
+.file-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:12px}
 .preview{width:100%;border-collapse:collapse;margin-top:22px;font-size:13.5px}
 .preview th{text-align:left;font-weight:500;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:0 10px 10px 0;border-bottom:1px solid var(--line-sage)}
 .preview td{padding:10px 10px 10px 0;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:anywhere}
@@ -410,6 +426,7 @@ select.input{-webkit-appearance:none;appearance:none}
           <span class="label">Verlauf &amp; Notizen</span>
           <h2 class="main-title">Was ist passiert, <span class="it">was kommt als Nächstes.</span></h2>
         </div>
+        <section class="extra" id="dExtra"></section>
         <div class="quick" id="dQuick"></div>
         <div class="compose">
           <textarea id="dNote" placeholder="Notiz schreiben – z. B. „Rückruf Donnerstag, interessiert an Roomtour für Neubauprojekt.“"></textarea>
@@ -447,6 +464,14 @@ Name: Jonas Weber
 Firma: Weber Wohnbau
 Telefon: 089 123456
 E-Mail: weber@wohnbau.de"></textarea>
+        <div class="file-row">
+          <label class="btn btn-line btn-sm" for="leadFile" style="cursor:pointer">
+            <svg class="i" viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5L12 4l4.5 4.5M5 15v4h14v-4"/></svg>
+            Datei wählen
+          </label>
+          <span class="hint" id="leadFileHint" style="margin:0">Excel (.xlsx), Word (.docx), CSV oder Text – der Inhalt erscheint oben zur Kontrolle.</span>
+          <input type="file" id="leadFile" accept=".xlsx,.docx,.csv,.tsv,.txt,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
+        </div>
         <div class="grid2" style="margin-top:16px">
           <label class="fl"><span class="label">Quelle (optional)</span><input class="input" id="pasteSource" placeholder="z. B. Liste Oktober"></label>
         </div>
@@ -620,7 +645,7 @@ const ICON = {
 /* ================= Speicher ================= */
 function defaultDb(){
   return {version:1, leads:[], settings:{
-    subject:DEFAULT_SUBJECT, body:DEFAULT_BODY, mode:"auto", account:"0", sender:"", lastBackup:null
+    subject:DEFAULT_SUBJECT, body:DEFAULT_BODY, mode:"auto", account:"0", sender:"", lastBackup:null, fields:[]
   }};
 }
 // Lokaler Modus: Das Python-Skript liefert die Seite aus und speichert in eine Datei.
@@ -631,6 +656,9 @@ function normalize(d){
   d.version = 1;
   d.settings = Object.assign(base.settings, d.settings || {});
   d.leads = Array.isArray(d.leads) ? d.leads : [];
+  if(!Array.isArray(d.settings.fields)) d.settings.fields = [];
+  // Felder, die nur an Leads hängen, in die Liste aufnehmen
+  d.leads.forEach(l => Object.keys(l.extra || {}).forEach(k => { if(!d.settings.fields.includes(k)) d.settings.fields.push(k); }));
   return d;
 }
 let db = SERVER ? defaultDb() : load();
@@ -671,7 +699,7 @@ function push(keepalive){
     if(r.status === 409){
       // Ein anderes Fenster hat inzwischen gespeichert: beide Stände zusammenführen
       return fetch("/api/daten", {cache:"no-store"}).then(x => x.json()).then(j => {
-        db = mergeDb(normalize(j.data), db); rev = j.rev; dirty = true; storageOk = true;
+        db = normalize(mergeDb(normalize(j.data), db)); rev = j.rev; dirty = true; storageOk = true;
         render(); if(openId) renderDetail();
         toast("Änderungen aus einem anderen Fenster übernommen.");
       });
@@ -817,7 +845,7 @@ let query = "";
 
 function matches(l){
   if(!query) return true;
-  const hay = [l.name,l.firma,l.email,l.telefon,l.ort,l.quelle,l.website,...(l.notes||[]).map(n=>n.text)].join(" ").toLowerCase();
+  const hay = [l.name,l.firma,l.email,l.telefon,l.ort,l.quelle,l.website,...Object.values(l.extra||{}),...(l.notes||[]).map(n=>n.text)].join(" ").toLowerCase();
   return query.split(/\s+/).every(q => hay.includes(q));
 }
 
@@ -1081,6 +1109,7 @@ function renderDetail(full){
       if(f.act === "web") act = `<a class="fact" data-fact="web" target="_blank" rel="noopener" title="Website öffnen">${ICON.web}</a>`;
       return `<label class="field"><span class="label">${esc(f.label)}</span>${input}${act}</label>`;
     }).join("");
+    $("#dExtra").innerHTML = extraFieldsHtml(l);
     $("#dNote").value = "";
   }
   updateFieldActions(l);
@@ -1101,6 +1130,24 @@ function renderDetail(full){
     </li>`).join("") : `<li class="tl-empty">Noch keine Notizen. Der erste Eintrag steht oben.</li>`;
 }
 
+function extraFieldsHtml(l){
+  const fields = db.settings.fields || [];
+  const rows = fields.map(k => {
+    const v = (l.extra || {})[k] || "";
+    const long = v.length > 60 || v.includes("\n");
+    const input = long
+      ? `<textarea data-x="${esc(k)}" rows="${Math.min(6, Math.ceil(v.length / 38) + 1)}" placeholder="–">${esc(v)}</textarea>`
+      : `<input data-x="${esc(k)}" type="text" value="${esc(v)}" placeholder="–">`;
+    return `<label class="field"><span class="label">${esc(k)}</span>${input}<button type="button" class="fact fact-sm" data-xdel="${esc(k)}" title="Feld „${esc(k)}“ entfernen">${ICON.x}</button></label>`;
+  }).join("");
+  return `<div class="extra-head"><span class="label">Angaben zum Lead</span><button type="button" class="add-field" data-xadd>+ Feld hinzufügen</button></div>` +
+    (fields.length ? `<div class="extra-grid">${rows}</div>` : `<p class="extra-empty">Zusätzliche Spalten aus Ihren Listen – etwa Objektart oder Anzahl Objekte – erscheinen hier automatisch.</p>`);
+}
+function setExtra(l, k, v){
+  l.extra = l.extra || {};
+  if(v) l.extra[k] = v; else delete l.extra[k];
+}
+
 function updateFieldActions(l){
   const tel = $("[data-fact='tel']"), mail = $("[data-fact='mail']"), web = $("[data-fact='web']");
   if(tel){ tel.href = l.telefon ? telHref(l.telefon) : "#"; tel.classList.toggle("off", !l.telefon); }
@@ -1109,10 +1156,11 @@ function updateFieldActions(l){
 }
 
 let saveTimer = null;
-$("#dFields").addEventListener("input", e => {
-  const k = e.target.dataset.k; if(!k) return;
+["#dFields", "#dExtra"].forEach(sel => $(sel).addEventListener("input", e => {
+  const k = e.target.dataset.k, x = e.target.dataset.x; if(!k && !x) return;
   const l = byId(openId); if(!l) return;
-  l[k] = e.target.value.trim();
+  if(x) setExtra(l, x, e.target.value.trim());
+  else l[k] = e.target.value.trim();
   touch(l);
   $("#dName").textContent = displayName(l);
   $("#dFirm").textContent = l.name ? (l.firma || "") : "";
@@ -1120,12 +1168,35 @@ $("#dFields").addEventListener("input", e => {
   $("#dSaved").textContent = "Wird gespeichert …";
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => { save(); $("#dSaved").textContent = "Gespeichert"; }, 350);
-});
-$("#dFields").addEventListener("change", e => { if(e.target.dataset.k){ save(); $("#dSaved").textContent = "Gespeichert"; } });
-$("#dFields").addEventListener("click", e => {
+}));
+["#dFields", "#dExtra"].forEach(sel => $(sel).addEventListener("change", e => { if(e.target.dataset.k || e.target.dataset.x){ save(); $("#dSaved").textContent = "Gespeichert"; } }));
+["#dFields", "#dExtra"].forEach(sel => $(sel).addEventListener("click", e => {
   const b = e.target.closest("[data-fact='mail']");
-  if(b){ e.preventDefault(); const l = byId(openId); if(l) openMail(l); }
-});
+  if(b){ e.preventDefault(); const l = byId(openId); if(l) openMail(l); return; }
+  const del = e.target.closest("[data-xdel]");
+  if(del){
+    e.preventDefault();
+    const k = del.dataset.xdel;
+    const used = db.leads.filter(x => (x.extra || {})[k]).length;
+    if(!confirm("Feld „" + k + "“ bei allen Leads entfernen?" + (used ? "\n\nEs ist bei " + used + " Lead" + (used > 1 ? "s" : "") + " ausgefüllt – diese Angaben gehen verloren." : ""))) return;
+    flushDetail();
+    db.settings.fields = db.settings.fields.filter(f => f !== k);
+    db.leads.forEach(x => { if(x.extra && k in x.extra){ delete x.extra[k]; touch(x); } });
+    save(); renderDetail(true); render();
+    return;
+  }
+  if(e.target.closest("[data-xadd]")){
+    e.preventDefault();
+    const name = (prompt("Name des neuen Feldes (z. B. „Objektart“ oder „Anzahl Objekte“):") || "").trim();
+    if(!name) return;
+    if(FIELDS.some(f => f.label.toLowerCase() === name.toLowerCase()) || db.settings.fields.some(f => f.toLowerCase() === name.toLowerCase())){
+      toast("Dieses Feld gibt es schon."); return;
+    }
+    flushDetail();
+    db.settings.fields.push(name); save(); renderDetail(true);
+    const inp = $$("#dExtra [data-x]").find(i => i.dataset.x === name); if(inp) inp.focus();
+  }
+}));
 function flushDetail(){ if(saveTimer){ clearTimeout(saveTimer); saveTimer = null; save(); } }
 
 stageSel.addEventListener("change", () => {
@@ -1209,6 +1280,10 @@ function keyOf(h){
   for(const [k, rx] of KEYMAP) if(rx.test(t)) return k;
   return null;
 }
+function cleanLabel(h){
+  h = String(h || "").replace(/^"|"$/g, "").replace(/\s+/g, " ").replace(/:$/, "").trim();
+  return h ? h[0].toUpperCase() + h.slice(1) : h;
+}
 function finalize(o){
   if(!o.name && (o.vorname || o.nachname)) o.name = [o.vorname, o.nachname].filter(Boolean).join(" ");
   delete o.vorname; delete o.nachname;
@@ -1265,10 +1340,14 @@ function parseBlock(lines){
   for(const line of lines){
     const idx = line.indexOf(":");
     const k = idx > 0 && isKv(line) ? keyOf(line.slice(0, idx)) : null;
+    const gm = !k && line.match(/^([A-Za-zÄÖÜäöüß][A-Za-zÄÖÜäöüß0-9 .\-\/()#&]{1,39})\s*:\s*(.+)$/);
     if(k){
       const v = line.slice(idx + 1).trim();
       if(cur[k] && k !== "notiz") push();
       cur[k] = k === "notiz" && cur.notiz ? cur.notiz + " " + v : v;
+    }else if(gm && !/^https?$/i.test(gm[1].trim())){
+      cur.extra = cur.extra || {};
+      cur.extra[cleanLabel(gm[1])] = gm[2].trim();
     }else{
       // Zeile ohne Schlüssel: E-Mail / Telefon erkennen, sonst Notiz
       const c = classifyCells([line]);
@@ -1300,19 +1379,22 @@ function parseFree(r){
 }
 function parseRows(rows){
   const out = [];
-  let header = null, hsep = null;
+  let header = null, headerRaw = null, hsep = null;
   rows.forEach((r, i) => {
     const sep = sepOf(r);
     if(sep){
-      const keys = splitLine(r, sep).map(keyOf);
-      if(keys.filter(Boolean).length >= 2 && !RX_MAIL.test(r)){ header = keys; hsep = sep; return; }
+      const raw = splitLine(r, sep).map(c => c.trim());
+      const keys = raw.map(keyOf);
+      if(keys.filter(Boolean).length >= 2 && !RX_MAIL.test(r)){ header = keys; headerRaw = raw; hsep = sep; return; }
     }
     if(header && sep === hsep){
       const o = {}, extra = [];
       splitLine(r, sep).forEach((c, j) => {
         c = c.trim(); if(!c) return;
         const k = header[j];
-        if(k) o[k] = o[k] ? o[k] + " " + c : c; else extra.push(c);
+        if(k) o[k] = o[k] ? o[k] + " " + c : c;
+        else if(headerRaw[j]) { o.extra = o.extra || {}; o.extra[cleanLabel(headerRaw[j])] = c; }
+        else extra.push(c);
       });
       if(extra.length) o.notiz = [o.notiz, ...extra].filter(Boolean).join(" · ");
       out.push(finalize(o));
@@ -1350,7 +1432,8 @@ function newLead(o, source){
   const l = {
     id:uid(), created:t, updated:t, stage:"neu", order:0, attempts:0,
     anrede:o.anrede||"", name:o.name||"", firma:o.firma||"", telefon:o.telefon||"", email:o.email||"",
-    ort:o.ort||"", website:o.website||"", quelle:o.quelle || source || "", wiedervorlage:"", notes:[]
+    ort:o.ort||"", website:o.website||"", quelle:o.quelle || source || "", wiedervorlage:"", notes:[],
+    extra:Object.assign({}, o.extra || {})
   };
   if(o.notiz) l.notes.push({id:uid(), ts:t, text:o.notiz, sys:false});
   return l;
@@ -1367,24 +1450,139 @@ function renderPreview(){
     const k = (p.o.email||"").toLowerCase() || normPhone(p.o.telefon);
     if(k && seen.has(k)) p.dupList = true;
     if(k) seen.add(k);
-    if(p.dup || p.dupList) p.on = false;
+    p.noContact = !(p.o.telefon || p.o.email || p.o.website);
+    if(p.dup || p.dupList || p.noContact) p.on = false;
   });
   const wrap = $("#previewWrap");
   if(!parsed.length){
     wrap.innerHTML = pasteArea.value.trim() ? `<p class="hint">Noch kein Lead erkannt – bitte pro Zeile mindestens Name, Telefon oder E-Mail.</p>` : "";
   }else{
     wrap.innerHTML = `<table class="preview"><thead><tr>
-      <th style="width:28px"></th><th>Name</th><th>Firma</th><th>Telefon</th><th>E-Mail</th><th class="opt">Ort</th><th class="opt">Notiz</th></tr></thead><tbody>
-      ${parsed.map((p,i) => `<tr class="${p.dup||p.dupList ? "dup" : ""}">
+      <th style="width:28px"></th><th>Name</th><th>Firma</th><th>Telefon</th><th>E-Mail</th><th class="opt">Ort</th><th class="opt">Notiz &amp; Felder</th></tr></thead><tbody>
+      ${parsed.map((p,i) => `<tr class="${p.dup||p.dupList||p.noContact ? "dup" : ""}">
         <td><input type="checkbox" data-i="${i}" ${p.on ? "checked" : ""}></td>
-        <td>${esc((p.o.anrede ? p.o.anrede + " " : "") + (p.o.name||"–"))}${p.dup ? `<span class="dup-tag">schon vorhanden: ${esc(displayName(p.dup))}</span>` : p.dupList ? `<span class="dup-tag">doppelt in der Liste</span>` : ""}</td>
+        <td>${esc((p.o.anrede ? p.o.anrede + " " : "") + (p.o.name||"–"))}${p.dup ? `<span class="dup-tag">schon vorhanden: ${esc(displayName(p.dup))}</span>` : p.dupList ? `<span class="dup-tag">doppelt in der Liste</span>` : p.noContact ? `<span class="dup-tag">ohne Telefon/E-Mail – abgewählt</span>` : ""}</td>
         <td>${esc(p.o.firma||"–")}</td><td>${esc(p.o.telefon||"–")}</td><td>${esc(p.o.email||"–")}</td>
-        <td class="opt">${esc(p.o.ort||"–")}</td><td class="opt">${esc(p.o.notiz||"")}</td></tr>`).join("")}
+        <td class="opt">${esc(p.o.ort||"–")}</td><td class="opt">${esc(p.o.notiz||"")}${p.o.extra && Object.keys(p.o.extra).length ? `<span class="dup-tag" style="color:var(--sage)">+ ${Object.keys(p.o.extra).map(esc).join(", ")}</span>` : ""}</td></tr>`).join("")}
       </tbody></table>`;
   }
   updateImportBtn();
 }
 pasteArea.addEventListener("input", renderPreview);
+
+/* ---- Dateien lesen: .xlsx / .docx (ZIP mit XML), .csv / .txt ---- */
+async function unzip(buf){
+  const dv = new DataView(buf), u8 = new Uint8Array(buf), files = {};
+  let eocd = -1;
+  for(let i = u8.length - 22; i >= Math.max(0, u8.length - 66000); i--) if(dv.getUint32(i, true) === 0x06054b50){ eocd = i; break; }
+  if(eocd < 0) throw new Error("Keine gültige Office-Datei");
+  let p = dv.getUint32(eocd + 16, true);
+  const n = dv.getUint16(eocd + 10, true);
+  const dec = new TextDecoder();
+  for(let i = 0; i < n; i++){
+    if(dv.getUint32(p, true) !== 0x02014b50) break;
+    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true);
+    const nlen = dv.getUint16(p + 28, true), xlen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true);
+    const off = dv.getUint32(p + 42, true);
+    const name = dec.decode(u8.subarray(p + 46, p + 46 + nlen));
+    files[name] = {method, csize, off};
+    p += 46 + nlen + xlen + clen;
+  }
+  return async name => {
+    const f = files[name]; if(!f) return null;
+    const start = f.off + 30 + dv.getUint16(f.off + 26, true) + dv.getUint16(f.off + 28, true);
+    const data = u8.subarray(start, start + f.csize);
+    if(f.method === 0) return dec.decode(data);
+    if(typeof DecompressionStream === "undefined") throw new Error("Dieser Browser kann keine Office-Dateien entpacken – bitte Inhalt kopieren und einfügen.");
+    const stream = new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    return await new Response(stream).text();
+  };
+}
+const xml = t => new DOMParser().parseFromString(t, "application/xml");
+const byTag = (node, tag) => Array.from(node.getElementsByTagName("*")).filter(e => e.localName === tag);
+function colIndex(ref){
+  const m = /^([A-Z]+)/.exec(ref || ""); if(!m) return -1;
+  let n = 0; for(const ch of m[1]) n = n * 26 + ch.charCodeAt(0) - 64; return n - 1;
+}
+function cellText(v){ return String(v ?? "").replace(/[\t\r\n]+/g, " ").trim(); }
+async function xlsxToText(buf){
+  const get = await unzip(buf);
+  const shared = [];
+  const ss = await get("xl/sharedStrings.xml");
+  if(ss) byTag(xml(ss), "si").forEach(si => shared.push(byTag(si, "t").map(t => t.textContent).join("")));
+  // erstes Tabellenblatt laut Arbeitsmappe
+  let sheet = "xl/worksheets/sheet1.xml";
+  try{
+    const wb = xml(await get("xl/workbook.xml")), rels = xml(await get("xl/_rels/workbook.xml.rels"));
+    const first = byTag(wb, "sheet")[0];
+    const rid = first && (first.getAttribute("r:id") || first.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "id"));
+    const rel = byTag(rels, "Relationship").find(r => r.getAttribute("Id") === rid);
+    if(rel){ const t = rel.getAttribute("Target").replace(/^\/?(xl\/)?/, ""); sheet = "xl/" + t; }
+  }catch(_){}
+  const sx = await get(sheet);
+  if(!sx) throw new Error("Tabellenblatt nicht gefunden");
+  const lines = [];
+  byTag(xml(sx), "row").forEach(row => {
+    const cells = [];
+    byTag(row, "c").forEach((c, i) => {
+      const idx = c.getAttribute("r") ? colIndex(c.getAttribute("r")) : i;
+      const t = c.getAttribute("t");
+      const vEl = byTag(c, "v")[0];
+      let v = "";
+      if(t === "s") v = shared[+(vEl ? vEl.textContent : -1)] ?? "";
+      else if(t === "inlineStr") v = byTag(c, "t").map(x => x.textContent).join("");
+      else v = vEl ? vEl.textContent : "";
+      cells[idx] = cellText(v);
+    });
+    const line = Array.from(cells, x => x || "").join("\t");
+    if(line.replace(/\t/g, "").trim()) lines.push(line);
+  });
+  return lines.join("\n");
+}
+async function docxToText(buf){
+  const get = await unzip(buf);
+  const doc = xml(await get("word/document.xml"));
+  const body = byTag(doc, "body")[0];
+  const out = [];
+  const para = p => byTag(p, "t").map(t => t.textContent).join("").trim();
+  for(const node of Array.from(body ? body.children : [])){
+    if(node.localName === "tbl"){
+      out.push("");
+      byTag(node, "tr").forEach(tr => {
+        const cells = Array.from(tr.children).filter(c => c.localName === "tc").map(tc => cellText(byTag(tc, "p").map(para).filter(Boolean).join(" ")));
+        if(cells.join("").trim()) out.push(cells.join("\t"));
+      });
+      out.push("");
+    }else if(node.localName === "p"){
+      out.push(para(node));
+    }
+  }
+  return out.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+}
+$("#leadFile").addEventListener("change", async e => {
+  const f = e.target.files[0]; e.target.value = ""; if(!f) return;
+  const hint = $("#leadFileHint");
+  hint.textContent = "Lese „" + f.name + "“ …";
+  try{
+    const name = f.name.toLowerCase();
+    let text;
+    if(name.endsWith(".xlsx")) text = await xlsxToText(await f.arrayBuffer());
+    else if(name.endsWith(".docx")) text = await docxToText(await f.arrayBuffer());
+    else if(name.endsWith(".xls") || name.endsWith(".doc") || name.endsWith(".pdf") || name.endsWith(".numbers") || name.endsWith(".pages"))
+      throw new Error("Dieses Format geht leider nicht. Bitte als .xlsx, .docx oder .csv speichern – oder den Inhalt kopieren und oben einfügen.");
+    else{
+      const buf = await f.arrayBuffer();
+      try{ text = new TextDecoder("utf-8", {fatal:true}).decode(buf); }
+      catch(_){ text = new TextDecoder("windows-1252").decode(buf); }
+      text = text.replace(/^\ufeff/, "");
+    }
+    pasteArea.value = text;
+    renderPreview();
+    hint.textContent = "„" + f.name + "“ geladen – " + parsed.length + " Lead" + (parsed.length === 1 ? "" : "s") + " erkannt. Bitte unten prüfen.";
+  }catch(err){
+    hint.textContent = err.message || "Die Datei konnte nicht gelesen werden.";
+  }
+});
 $("#previewWrap").addEventListener("change", e => {
   const i = e.target.dataset.i; if(i == null) return;
   parsed[+i].on = e.target.checked; updateImportBtn();
@@ -1401,8 +1599,11 @@ function updateImportBtn(){
     const n = parsed.filter(p => p.on).length;
     btn.disabled = !n;
     btn.textContent = n === 1 ? "1 Lead übernehmen" : n ? n + " Leads übernehmen" : "Leads übernehmen";
-    const dups = parsed.filter(p => p.dup || p.dupList).length;
-    $("#importHint").textContent = dups ? dups + " mögliche Dublette" + (dups>1?"n":"") + " abgewählt – bei Bedarf anhaken." : "Neue Leads landen oben in „Neuer Lead“.";
+    const dups = parsed.filter(p => p.dup || p.dupList).length, nc = parsed.filter(p => p.noContact && !p.dup && !p.dupList).length;
+    const parts = [];
+    if(dups) parts.push(dups + " mögliche Dublette" + (dups>1?"n":""));
+    if(nc) parts.push(nc + " Zeile" + (nc>1?"n":"") + " ohne Kontaktdaten");
+    $("#importHint").textContent = parts.length ? parts.join(" und ") + " abgewählt – bei Bedarf anhaken." : "Neue Leads landen oben in „Neuer Lead“.";
   }else{
     const o = singleData();
     btn.disabled = !(o.name || o.firma);
@@ -1439,6 +1640,7 @@ $("#importGo").addEventListener("click", () => {
   let top = col.length ? Math.min(...col.map(l => l.order||0)) : 0;
   for(let i = added.length - 1; i >= 0; i--) added[i].order = --top;
   db.leads.push(...added);
+  added.forEach(l => Object.keys(l.extra).forEach(k => { if(!db.settings.fields.includes(k)) db.settings.fields.push(k); }));
   save(); render();
   pasteArea.value = ""; $("#pasteSource").value = ""; parsed = []; $("#previewWrap").innerHTML = "";
   $$("#singleForm [name]").forEach(el => el.value = "");
@@ -1504,10 +1706,11 @@ $("#sExport").addEventListener("click", () => {
   fillSettings();
 });
 $("#sCsv").addEventListener("click", () => {
-  const cols = ["Phase","Anrede","Name","Firma","Telefon","E-Mail","Ort","Website","Quelle","Wiedervorlage","Anrufversuche","Angelegt","Letzte Notiz"];
+  const xf = db.settings.fields || [];
+  const cols = ["Phase","Anrede","Name","Firma","Telefon","E-Mail","Ort","Website","Quelle","Wiedervorlage","Anrufversuche","Angelegt","Letzte Notiz", ...xf];
   const q = v => '"' + String(v ?? "").replace(/"/g,'""') + '"';
   const rows = db.leads.map(l => [STAGE_NAME[l.stage], l.anrede, l.name, l.firma, l.telefon, l.email, l.ort, l.website, l.quelle,
-    l.wiedervorlage, l.attempts||0, fmtDate(l.created,false), ((l.notes||[]).find(n=>!n.sys)||{}).text || ""].map(q).join(";"));
+    l.wiedervorlage, l.attempts||0, fmtDate(l.created,false), ((l.notes||[]).find(n=>!n.sys)||{}).text || "", ...xf.map(k => (l.extra||{})[k] || "")].map(q).join(";"));
   download("raumwerk-leads-" + todayStr() + ".csv", "﻿" + [cols.map(q).join(";"), ...rows].join("\n"), "text/csv");
 });
 $("#sImportFile").addEventListener("change", async e => {
