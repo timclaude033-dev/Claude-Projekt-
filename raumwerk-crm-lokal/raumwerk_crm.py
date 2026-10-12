@@ -36,6 +36,7 @@ from datetime import date, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 APP_NAME = "raumwerk CRM"
+VERSION = "2026-10-12b"
 STANDARD_PORT = 8765
 MAX_SICHERUNGEN = 60
 MAX_GROESSE = 50 * 1024 * 1024  # 50 MB pro Speichervorgang
@@ -564,6 +565,7 @@ E-Mail: weber@wohnbau.de"></textarea>
           <input type="file" id="sImportFile" accept=".json,application/json" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
         </div>
         <p class="hint" id="sLastBackup"></p>
+        <p class="hint" id="sVersion"></p>
         <div style="margin-top:22px">
           <button type="button" class="danger" id="sWipe">Alle Leads löschen</button>
         </div>
@@ -927,6 +929,7 @@ function renderStats(){
     (due ? `<span class="due"><b>${due}</b> Wiedervorlage fällig</span>` : "");
 }
 
+if(SERVER && window.RW_VERSION) $(".brand .label").textContent = "Leads · V " + window.RW_VERSION;
 $("#search").addEventListener("input", e => { query = e.target.value.trim().toLowerCase(); render(); });
 
 /* ================= Ziehen & Ablegen (Maus + Touch) ================= */
@@ -1732,6 +1735,7 @@ function fillSettings(){
   $("#sAccount").value = s.account || "0";
   $("#sChips").innerHTML = PLACEHOLDERS.map(p => `<button type="button" class="chip" data-ph="${p}">{{${p}}}</button>`).join("");
   if(SERVER) $("#sDataText").textContent = "Alle Leads werden auf diesem Computer in der Datei „" + (window.RW_DATAFILE || "leads.json") + "“ gespeichert – ohne Cloud, ohne Kosten. Das Skript legt zusätzlich jeden Tag automatisch eine Sicherung an. Eine heruntergeladene Sicherung eignet sich, um die Leads auf ein anderes Gerät zu übertragen.";
+  $("#sVersion").textContent = SERVER ? "Version " + (window.RW_VERSION || "–") + " · lokal" : "Online-Version";
   $("#sLastBackup").textContent = s.lastBackup ? "Letzte Sicherung: " + fmtDate(s.lastBackup) : "Noch keine Sicherung heruntergeladen.";
   renderMailPreview();
 }
@@ -1921,7 +1925,8 @@ def baue_handler(speicher, port):
     erlaubte_hosts = {"127.0.0.1:{}".format(port), "localhost:{}".format(port)}
     seite = HTML.replace(
         "<!--RW_SERVER-->",
-        "<script>window.RW_SERVER=true;window.RW_DATAFILE={};</script>".format(json.dumps(speicher.datei)),
+        "<script>window.RW_SERVER=true;window.RW_DATAFILE={};window.RW_VERSION={};</script>".format(
+            json.dumps(speicher.datei), json.dumps(VERSION)),
     ).encode("utf-8")
 
     class Handler(BaseHTTPRequestHandler):
@@ -1956,7 +1961,7 @@ def baue_handler(speicher, port):
             if pfad == "/api/daten":
                 return self._senden(200, speicher.lesen())
             if pfad == "/api/ping":
-                return self._senden(200, {"app": APP_NAME})
+                return self._senden(200, {"app": APP_NAME, "version": VERSION, "daten": speicher.datei})
             if pfad == "/favicon.ico":
                 return self._senden(204, b"", "image/x-icon")
             return self._senden(404, {"fehler": "nicht gefunden"})
@@ -1966,6 +1971,11 @@ def baue_handler(speicher, port):
             # fremde Webseiten können so nichts in die Datei schreiben.
             if not self._host_ok() or self.headers.get("X-Raumwerk") != "1":
                 return self._senden(403, {"fehler": "nicht erlaubt"})
+            if self.path.split("?", 1)[0] == "/api/beenden":
+                # Eine neuere Version übernimmt: diesen Server sauber beenden
+                self._senden(200, {"ok": True})
+                threading.Thread(target=self.server.shutdown, daemon=True).start()
+                return
             if self.path.split("?", 1)[0] != "/api/daten":
                 return self._senden(404, {"fehler": "nicht gefunden"})
             try:
@@ -1995,11 +2005,27 @@ def baue_handler(speicher, port):
 
 
 def laeuft_schon(port):
+    """Antwort des bereits laufenden CRM (dict) oder None."""
     try:
         with urllib.request.urlopen("http://127.0.0.1:{}/api/ping".format(port), timeout=1) as r:
-            return json.loads(r.read().decode("utf-8")).get("app") == APP_NAME
+            info = json.loads(r.read().decode("utf-8"))
+            return info if info.get("app") == APP_NAME else None
+    except Exception:
+        return None
+
+
+def alten_beenden(port):
+    try:
+        req = urllib.request.Request("http://127.0.0.1:{}/api/beenden".format(port), data=b"{}", method="POST",
+                                     headers={"X-Raumwerk": "1", "Content-Type": "application/json"})
+        urllib.request.urlopen(req, timeout=2).read()
     except Exception:
         return False
+    for _ in range(30):
+        time.sleep(0.2)
+        if not laeuft_schon(port):
+            return True
+    return False
 
 
 def port_frei(port):
@@ -2032,12 +2058,23 @@ def main():
     args = parser.parse_args()
 
     port = args.port
-    if laeuft_schon(port):
+    laufend = laeuft_schon(port)
+    if laufend and laufend.get("version") == VERSION:
         url = "http://127.0.0.1:{}/".format(port)
         print("{} läuft bereits – öffne {}".format(APP_NAME, url))
         if not args.kein_browser:
             webbrowser.open(url)
         return
+    if laufend:
+        # Eine andere (ältere) Version läuft noch und würde sonst weiter angezeigt.
+        if not (laufend.get("version") and alten_beenden(port)):
+            print()
+            print("  ACHTUNG: Es läuft noch eine ältere Version des raumwerk CRM.")
+            print("  Bitte alle schwarzen raumwerk-Fenster schließen")
+            print("  (oder den Computer neu starten) und dann erneut starten.")
+            print()
+            sys.exit(1)
+        print("  Ältere Version beendet – starte die neue.")
     # Falls der Port von etwas anderem belegt ist, den nächsten freien nehmen.
     # Hinweis: Die Leads liegen in der Datei, nicht im Browser – der Port ist egal.
     while not port_frei(port):
@@ -2052,7 +2089,7 @@ def main():
 
     anzahl = len((speicher.daten or {}).get("leads", []))
     print()
-    print("  raumwerk CRM läuft.")
+    print("  raumwerk CRM läuft.  (Version {})".format(VERSION))
     print("  Im Browser:  {}".format(url))
     print("  Daten:       {}  ({} Leads)".format(speicher.datei, anzahl))
     print()

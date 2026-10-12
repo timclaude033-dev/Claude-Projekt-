@@ -522,6 +522,7 @@ E-Mail: weber@wohnbau.de"></textarea>
           <input type="file" id="sImportFile" accept=".json,application/json" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none">
         </div>
         <p class="hint" id="sLastBackup"></p>
+        <p class="hint" id="sVersion"></p>
         <div style="margin-top:22px">
           <button type="button" class="danger" id="sWipe">Alle Leads löschen</button>
         </div>
@@ -885,6 +886,7 @@ function renderStats(){
     (due ? `<span class="due"><b>${due}</b> Wiedervorlage fällig</span>` : "");
 }
 
+if(SERVER && window.RW_VERSION) $(".brand .label").textContent = "Leads · V " + window.RW_VERSION;
 $("#search").addEventListener("input", e => { query = e.target.value.trim().toLowerCase(); render(); });
 
 /* ================= Ziehen & Ablegen (Maus + Touch) ================= */
@@ -1690,6 +1692,7 @@ function fillSettings(){
   $("#sAccount").value = s.account || "0";
   $("#sChips").innerHTML = PLACEHOLDERS.map(p => `<button type="button" class="chip" data-ph="${p}">{{${p}}}</button>`).join("");
   if(SERVER) $("#sDataText").textContent = "Alle Leads werden auf diesem Computer in der Datei „" + (window.RW_DATAFILE || "leads.json") + "“ gespeichert – ohne Cloud, ohne Kosten. Das Skript legt zusätzlich jeden Tag automatisch eine Sicherung an. Eine heruntergeladene Sicherung eignet sich, um die Leads auf ein anderes Gerät zu übertragen.";
+  $("#sVersion").textContent = SERVER ? "Version " + (window.RW_VERSION || "–") + " · lokal" : "Online-Version";
   $("#sLastBackup").textContent = s.lastBackup ? "Letzte Sicherung: " + fmtDate(s.lastBackup) : "Noch keine Sicherung heruntergeladen.";
   renderMailPreview();
 }
