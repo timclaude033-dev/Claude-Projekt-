@@ -2,7 +2,8 @@ raumwerk CRM – lokale Version
 =============================
 
 Was Sie brauchen
-  Python 3 (kostenlos): https://www.python.org/downloads/
+  Python 3 (kostenlos). Windows: im Microsoft Store nach „Python 3“ suchen.
+  Mac: https://www.python.org/downloads/
   Unter Windows bei der Installation „Add python.exe to PATH“ anhaken.
   Sonst nichts – keine Zusatzpakete, kein Konto, keine Kosten.
 
