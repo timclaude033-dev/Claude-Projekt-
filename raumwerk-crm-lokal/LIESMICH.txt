@@ -17,6 +17,19 @@ Starten
   Das schwarze Fenster offen lassen, solange Sie arbeiten.
   Beenden: Fenster schließen oder Strg + C.
 
+Auf dem Handy öffnen
+  Am Computer statt der normalen Startdatei doppelklicken:
+    Windows:  „raumwerk CRM starten (Handy).bat“
+    Mac:      „raumwerk CRM starten (Handy).command“
+  Fragt Windows nach dem Netzwerkzugriff: „Private Netzwerke“ erlauben.
+  Im CRM am Computer unter Einstellungen → 04 / Handy den QR-Code mit dem
+  Handy scannen. Das Handy muss im gleichen WLAN sein, der Computer muss laufen.
+  Alle Änderungen vom Handy landen direkt in leads.json auf dem Computer.
+
+  Der Link im QR-Code enthält einen persönlichen Zugangsschlüssel – nicht
+  weitergeben. Neuer Schlüssel: raumwerk-daten/handy-zugang.txt löschen und
+  neu starten (danach den QR-Code erneut scannen).
+
 Wo die Leads liegen
   Im Ordner „raumwerk-daten“ neben dem Skript:
     leads.json      die aktuellen Daten
@@ -31,5 +44,7 @@ Leads aus der Online-Version übernehmen
   Lokale Version → Einstellungen → „Sicherung einspielen“.
 
 Datenschutz
-  Das CRM ist nur auf diesem Computer erreichbar, nicht im Netzwerk
-  und nicht im Internet. Nur die Schriften werden von Google Fonts geladen.
+  Mit der normalen Startdatei ist das CRM nur auf diesem Computer erreichbar.
+  Mit der Handy-Startdatei zusätzlich im eigenen WLAN – aber nur mit dem
+  Zugangsschlüssel. Aus dem Internet ist es nie erreichbar.
+  Nur die Schriften werden von Google Fonts geladen.
