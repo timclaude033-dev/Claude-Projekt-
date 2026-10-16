@@ -251,6 +251,17 @@ body.dragging, body.dragging *{cursor:grabbing!important}
 }
 .paste:focus,.input:focus,.area:focus{border-color:var(--ink)}
 .hint{font-size:13px;color:var(--faint);margin-top:8px}
+.compose-sheet{max-width:860px}
+.tpl-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:14px}
+.tpl{display:flex;flex-direction:column;gap:3px;text-align:left;border:1px solid var(--line-sage);border-radius:var(--radius);background:var(--surface);padding:12px 14px}
+.tpl:hover{border-color:var(--ink-soft)}
+.tpl.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.tpl b{font-weight:500}
+.tpl small{color:var(--muted);font-size:12.5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.move-check{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink-soft);cursor:pointer}
+.move-check input{accent-color:var(--ink);width:16px;height:16px}
+.tpl-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.tpl-bar .fl{flex:1;min-width:180px}
 .file-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:12px}
 .preview{width:100%;border-collapse:collapse;margin-top:22px;font-size:13.5px}
 .preview th{text-align:left;font-weight:500;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:0 10px 10px 0;border-bottom:1px solid var(--line-sage)}
@@ -402,6 +413,29 @@ select.input{-webkit-appearance:none;appearance:none}
   </section>
 </div>
 
+<!-- E-Mail schreiben -->
+<div class="overlay" id="composeOverlay">
+  <section class="panel sheet compose-sheet" role="dialog" aria-modal="true" aria-label="E-Mail schreiben">
+    <div class="panel-head">
+      <span class="label" id="cTo">E-Mail schreiben</span>
+      <button type="button" class="close" data-close aria-label="Schließen"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="sheet-body">
+      <h2 class="h-serif">Welche Nachricht <span class="it">soll es sein?</span></h2>
+      <div class="tpl-list" id="cList"></div>
+      <div class="grid2" id="cInputs" style="margin-top:18px"></div>
+      <div style="margin-top:18px">
+        <span class="label">Vorschau</span>
+        <div class="mail-preview" id="cPreview" style="margin-top:8px"></div>
+      </div>
+    </div>
+    <div class="sheet-foot">
+      <label class="move-check" id="cMoveWrap"><input type="checkbox" id="cMove" checked> <span id="cMoveText"></span></label>
+      <button type="button" class="btn btn-primary" id="cGo">In Gmail öffnen <svg class="i arr" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></button>
+    </div>
+  </section>
+</div>
+
 <!-- Leads einfügen -->
 <div class="overlay" id="importOverlay">
   <section class="panel sheet" role="dialog" aria-modal="true" aria-label="Leads einfügen">
@@ -472,21 +506,28 @@ E-Mail: weber@wohnbau.de"></textarea>
     </div>
     <div class="sheet-body">
       <div class="section">
-        <span class="label">01 / E-Mail-Vorlage</span>
-        <h2 class="h-serif">Die erste Nachricht. <span class="it">Persönlich vorbereitet.</span></h2>
-        <p class="lead-text">Diese Vorlage öffnet sich fertig ausgefüllt in Gmail. Platzhalter werden mit den Angaben des Leads ersetzt – vor dem Senden kann alles noch angepasst werden.</p>
-        <div class="grid2">
+        <span class="label">01 / E-Mail-Vorlagen</span>
+        <h2 class="h-serif">Jede Nachricht. <span class="it">Persönlich vorbereitet.</span></h2>
+        <p class="lead-text">Beim Klick auf „E-Mail schreiben“ wählen Sie eine dieser Vorlagen. Sie öffnet sich fertig ausgefüllt in Gmail – vor dem Senden kann alles noch angepasst werden.</p>
+        <div class="tpl-bar">
+          <label class="fl"><span class="label">Vorlage</span><select class="input" id="sTplSel"></select></label>
+          <button type="button" class="btn btn-line btn-sm" id="sTplAdd">+ Neue Vorlage</button>
+          <button type="button" class="btn btn-line btn-sm" id="sTplDel">Vorlage löschen</button>
+        </div>
+        <div class="grid2" style="margin-top:16px">
+          <label class="fl"><span class="label">Name der Vorlage</span><input class="input" id="sTplName"></label>
+          <label class="fl"><span class="label">Danach verschieben nach</span><select class="input" id="sTplStage"></select></label>
           <label class="fl span2"><span class="label">Betreff</span><input class="input" id="sSubject"></label>
           <label class="fl span2"><span class="label">Text</span><textarea class="area" id="sBody"></textarea></label>
         </div>
         <div class="chips" id="sChips"></div>
-        <p class="hint">Antippen fügt den Platzhalter an der Cursor-Position ein. <code>{{begruessung}}</code> wird zu „Guten Tag Herr Weber“, „Guten Tag Frau Weber“ oder „Guten Tag“, je nach Angaben.</p>
+        <p class="hint">Antippen fügt den Platzhalter an der Cursor-Position ein. <code>{{begruessung}}</code> wird zu „Guten Tag Herr Weber“, „Guten Tag Frau Weber“ oder „Guten Tag“. <code>{{datum}}</code>, <code>{{uhrzeit}}</code> und <code>{{link}}</code> fragt das CRM beim Schreiben ab.</p>
         <div style="margin-top:18px">
           <span class="label">Vorschau</span>
           <div class="mail-preview" id="sPreview" style="margin-top:8px"></div>
         </div>
         <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
-          <button type="button" class="btn btn-line btn-sm" id="sResetTpl">Testvorlage wiederherstellen</button>
+          <button type="button" class="btn btn-line btn-sm" id="sResetTpl">Diese Vorlage zurücksetzen</button>
         </div>
       </div>
 
@@ -502,6 +543,8 @@ E-Mail: weber@wohnbau.de"></textarea>
         </div>
         <div class="grid2" style="margin-top:18px">
           <label class="fl"><span class="label">Ihr Name (für {{absender}})</span><input class="input" id="sSender" placeholder="Vor- und Nachname"></label>
+          <label class="fl"><span class="label">Ihre Telefonnummer (für {{absender_telefon}})</span><input class="input" id="sSenderPhone" type="tel" placeholder="z. B. +49 171 1234567"></label>
+          <label class="fl"><span class="label">Link zum Beispielvideo (für {{video}})</span><input class="input" id="sVideo" type="url" placeholder="YouTube-, Vimeo- oder Drive-Link" autocapitalize="off"></label>
           <label class="fl"><span class="label">Gmail-Konto im Browser</span>
             <select class="input" id="sAccount">
               <option value="0">Erstes angemeldetes Konto</option>
@@ -584,7 +627,65 @@ Herzliche Grüße
 raumwerk
 ws-strategy.de`;
 
-const PLACEHOLDERS = ["begruessung","vorname","nachname","name","firma","ort","absender"];
+const TPL_TERMIN_SUBJECT = "Terminbestätigung: unser Gespräch am {{datum}}";
+const TPL_TERMIN_BODY =
+`{{begruessung}},
+
+vielen Dank für das angenehme Gespräch. Hiermit bestätige ich Ihnen gern unseren Termin:
+
+Datum: {{datum}}
+Uhrzeit: {{uhrzeit}} Uhr
+Ort: Online-Meeting
+Link zum Meeting: {{link}}
+
+Im Gespräch zeige ich Ihnen, wie aus Ihren vorhandenen Objektfotos ruhige, hochwertige Immobilienvideos entstehen – und wie das konkret bei einem Ihrer aktuellen Objekte aussehen könnte. Wenn Sie möchten, wählen Sie dafür vorab gern ein Objekt aus.
+
+Sollte Ihnen der Termin doch nicht passen, antworten Sie einfach kurz auf diese E-Mail – wir finden gern einen neuen.
+
+Ich freue mich auf unser Gespräch.
+
+Herzliche Grüße
+{{absender}}
+{{absender_telefon}}
+
+raumwerk
+ws-strategy.de`;
+
+const TPL_CALL_SUBJECT = "Wie besprochen: raumwerk und ein Beispielvideo";
+const TPL_CALL_BODY =
+`{{begruessung}},
+
+vielen Dank für das nette Telefonat. Wie versprochen erhalten Sie hier alles Wichtige auf einen Blick.
+
+Was wir machen
+Aus Ihren vorhandenen Objektfotos gestalten wir ruhige, stimmige Immobilienvideos – als geführte Roomtour für Ihre Website, das Exposé und Social Media. Ein neuer Fototermin vor Ort ist dafür nicht nötig.
+
+Auf Wunsch zusätzlich
+– Bildoptimierung: Licht, Farben und Details verfeinern, inklusive Upscaling für eine höhere Auflösung
+– KI-Möblierung: leere Räume stilvoll einrichten, als Bild oder als Roomtour
+
+Ihre Immobilie bleibt dabei immer wiedererkennbar.
+
+So sieht das aus – ein Beispielvideo:
+{{video}}
+
+Wenn Sie möchten, zeige ich Ihnen in einem kurzen Gespräch, wie das bei einem Ihrer aktuellen Objekte aussehen könnte. Antworten Sie einfach auf diese E-Mail oder rufen Sie mich an.
+
+Herzliche Grüße
+{{absender}}
+{{absender_telefon}}
+
+raumwerk
+ws-strategy.de`;
+
+function defaultTemplates(){
+  return [
+    {id:"erstkontakt",   name:"Erstkontakt",        subject:DEFAULT_SUBJECT,    body:DEFAULT_BODY,    stage:"email"},
+    {id:"termin",        name:"Terminbestätigung",  subject:TPL_TERMIN_SUBJECT, body:TPL_TERMIN_BODY, stage:"termin"},
+    {id:"nachtelefonat", name:"Nach dem Telefonat", subject:TPL_CALL_SUBJECT,   body:TPL_CALL_BODY,   stage:"email"}
+  ];
+}
+const PLACEHOLDERS = ["begruessung","vorname","nachname","name","firma","ort","datum","uhrzeit","termin","link","video","absender","absender_telefon"];
 
 const $ = (s, r=document) => r.querySelector(s);
 const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
@@ -607,7 +708,7 @@ const ICON = {
 /* ================= Speicher ================= */
 function defaultDb(){
   return {version:1, leads:[], settings:{
-    subject:DEFAULT_SUBJECT, body:DEFAULT_BODY, mode:"auto", account:"0", sender:"", lastBackup:null, fields:[]
+    subject:DEFAULT_SUBJECT, body:DEFAULT_BODY, mode:"auto", account:"0", sender:"", senderPhone:"", video:"", lastBackup:null, fields:[], templates:null
   }};
 }
 // Lokaler Modus: Das Python-Skript liefert die Seite aus und speichert in eine Datei.
@@ -619,6 +720,12 @@ function normalize(d){
   d.settings = Object.assign(base.settings, d.settings || {});
   d.leads = Array.isArray(d.leads) ? d.leads : [];
   if(!Array.isArray(d.settings.fields)) d.settings.fields = [];
+  if(!Array.isArray(d.settings.templates) || !d.settings.templates.length){
+    // Umstieg von der einzelnen Vorlage: bisherigen Text als „Erstkontakt“ übernehmen
+    d.settings.templates = defaultTemplates();
+    d.settings.templates[0].subject = d.settings.subject || DEFAULT_SUBJECT;
+    d.settings.templates[0].body = d.settings.body || DEFAULT_BODY;
+  }
   // Felder, die nur an Leads hängen, in die Liste aufnehmen
   d.leads.forEach(l => Object.keys(l.extra || {}).forEach(k => { if(!d.settings.fields.includes(k)) d.settings.fields.push(k); }));
   return d;
@@ -760,6 +867,14 @@ function setStage(l, stage, note=true){
 }
 
 /* ================= E-Mail ================= */
+function terminParts(v){
+  if(!v) return {datum:"", uhrzeit:"", termin:""};
+  const d = new Date(v);
+  if(isNaN(d)) return {datum:v, uhrzeit:"", termin:v};
+  const datum = d.toLocaleDateString("de-DE", {weekday:"long", day:"numeric", month:"long", year:"numeric"});
+  const uhrzeit = d.toLocaleTimeString("de-DE", {hour:"2-digit", minute:"2-digit"});
+  return {datum, uhrzeit, termin:datum + " um " + uhrzeit + " Uhr"};
+}
 function fillTemplate(tpl, l){
   const {vor, nach} = splitName(l.name);
   let gruss = "Guten Tag";
@@ -767,8 +882,10 @@ function fillTemplate(tpl, l){
   else if(!l.anrede && vor && nach) gruss = "Guten Tag " + vor + " " + nach;
   const map = {
     begruessung:gruss, vorname:vor, nachname:nach, name:l.name||"", firma:l.firma||"",
-    ort:l.ort||"", absender:db.settings.sender||""
+    ort:l.ort||"", absender:db.settings.sender||"", absender_telefon:db.settings.senderPhone||"",
+    link:l.meetlink||"", video:db.settings.video||""
   };
+  Object.assign(map, terminParts(l.termin));
   return String(tpl||"")
     .replace(/\{\{\s*(\w+)\s*\}\}/g, (m,k) => k in map ? map[k] : m)
     .replace(/[ \t]+\n/g,"\n").replace(/\n{3,}/g,"\n\n").trim();
@@ -796,9 +913,12 @@ function okToContact(l, how){
 function openMail(l){
   if(!l.email){ toast("Für diesen Lead ist keine E-Mail-Adresse hinterlegt."); return; }
   if(!okToContact(l, "mail")) return;
+  openComposer(l);
+}
+function sendMail(l, tpl){
   const s = db.settings;
-  const subject = fillTemplate(s.subject, l);
-  const body = fillTemplate(s.body, l);
+  const subject = fillTemplate(tpl.subject, l);
+  const body = fillTemplate(tpl.body, l);
   const e = encodeURIComponent;
   let mode = s.mode;
   if(mode === "auto") mode = isAppleTouch() ? "app" : "web";
@@ -813,7 +933,7 @@ function openMail(l){
     else location.href = url;
   }
   l.lastMail = now();
-  addHistory(l, "E-Mail in Gmail vorbereitet: „" + subject + "“");
+  addHistory(l, "E-Mail „" + tpl.name + "“ in Gmail vorbereitet: „" + subject + "“");
   touch(l); save(); render();
   if(openId === l.id) renderDetail();
 }
@@ -838,7 +958,7 @@ function cardHtml(l){
   let mail = "";
   if(l.stage === "email"){
     mail = l.email
-      ? `<button type="button" class="card-mail" data-act="mail">In Gmail öffnen ${ICON.arrow}</button>` +
+      ? `<button type="button" class="card-mail" data-act="mail">E-Mail schreiben ${ICON.arrow}</button>` +
         (l.lastMail ? `<div class="card-sent">Zuletzt vorbereitet ${esc(rel(l.lastMail))}</div>` : "")
       : `<button type="button" class="card-mail" disabled>Keine E-Mail hinterlegt</button>`;
   }
@@ -1045,7 +1165,7 @@ $$(".overlay").forEach(o => {
   o.addEventListener("click", e => { if(e.target === o || e.target.closest("[data-close]")) closeOverlay(o); });
 });
 document.addEventListener("keydown", e => {
-  if(e.key === "Escape"){ const o = $(".overlay.open"); if(o) closeOverlay(o); }
+  if(e.key === "Escape"){ const o = $$(".overlay.open").pop(); if(o) closeOverlay(o); }
 });
 
 /* ================= Lead-Detail ================= */
@@ -1059,7 +1179,9 @@ const FIELDS = [
   {k:"ort",     label:"Ort"},
   {k:"website", label:"Website", act:"web"},
   {k:"quelle",  label:"Quelle", ph:"z. B. Liste Oktober"},
-  {k:"wiedervorlage", label:"Wiedervorlage", type:"date"}
+  {k:"wiedervorlage", label:"Wiedervorlage", type:"date"},
+  {k:"termin",  label:"Ersttermin", type:"datetime-local"},
+  {k:"meetlink", label:"Meeting-Link", act:"meet", ph:"z. B. Google-Meet- oder Zoom-Link"}
 ];
 const stageSel = $("#dStage");
 stageSel.innerHTML = STAGES.map(s => `<option value="${s.id}">${esc(STAGE_NAME[s.id])}</option>`).join("");
@@ -1082,16 +1204,21 @@ function renderDetail(full){
       const v = l[f.k] || "";
       const input = f.type === "select"
         ? `<select data-k="${f.k}">${f.opts.map(o => `<option value="${o}" ${o===v?"selected":""}>${o||"–"}</option>`).join("")}</select>`
-        : `<input data-k="${f.k}" type="${f.type||"text"}" value="${esc(v)}" placeholder="${esc(f.ph||"–")}" ${f.type==="email"||f.act==="web"?'autocapitalize="off" autocorrect="off"':""}>`;
+        : `<input data-k="${f.k}" type="${f.type||"text"}" value="${esc(v)}" placeholder="${esc(f.ph||"–")}" ${f.type==="email"||f.act==="web"||f.act==="meet"?'autocapitalize="off" autocorrect="off"':""}>`;
       let act = "";
       if(f.act === "tel") act = `<a class="fact" data-fact="tel" title="Anrufen">${ICON.phone}</a>`;
-      if(f.act === "mail") act = `<button type="button" class="fact" data-fact="mail" title="In Gmail öffnen">${ICON.mail}</button>`;
+      if(f.act === "mail") act = `<button type="button" class="fact" data-fact="mail" title="E-Mail schreiben">${ICON.mail}</button>`;
       if(f.act === "web") act = `<a class="fact" data-fact="web" target="_blank" rel="noopener" title="Website öffnen">${ICON.web}</a>`;
+      if(f.act === "meet") act = `<a class="fact" data-fact="meet" target="_blank" rel="noopener" title="Meeting öffnen">${ICON.web}</a>`;
       return `<label class="field"><span class="label">${esc(f.label)}</span>${input}${act}</label>`;
     }).join("");
     $("#dExtra").innerHTML = extraFieldsHtml(l);
     $("#dNote").value = "";
   }
+  if(!full) ["termin", "meetlink"].forEach(k => {
+    const i = $(`#dFields [data-k="${k}"]`);
+    if(i && document.activeElement !== i && i.value !== (l[k] || "")) i.value = l[k] || "";
+  });
   updateFieldActions(l);
   const w = warnings(l);
   $("#dWarn").classList.toggle("hidden", !w.length);
@@ -1099,7 +1226,7 @@ function renderDetail(full){
 
   const q = [];
   q.push(`<button type="button" class="btn btn-line btn-sm" data-q="noreach">${ICON.retry} Nicht erreicht${l.attempts ? " · " + l.attempts + "×" : ""}</button>`);
-  q.push(`<button type="button" class="btn btn-line btn-sm" data-q="mail" ${l.email ? "" : "disabled style='opacity:.45'"}>${ICON.mail} In Gmail öffnen</button>`);
+  q.push(`<button type="button" class="btn btn-line btn-sm" data-q="mail" ${l.email ? "" : "disabled style='opacity:.45'"}>${ICON.mail} E-Mail schreiben</button>`);
   if(l.stage !== "termin" && l.stage !== "closed") q.push(`<button type="button" class="btn btn-line btn-sm" data-q="termin">${ICON.cal} Ersttermin gebucht</button>`);
   if(l.stage !== "closed") q.push(`<button type="button" class="btn btn-line btn-sm" data-q="closed">${ICON.check} Geclosed</button>`);
   $("#dQuick").innerHTML = q.join("");
@@ -1136,6 +1263,8 @@ function updateFieldActions(l){
   if(tel){ tel.href = l.telefon ? telHref(l.telefon) : "#"; tel.classList.toggle("off", !l.telefon); }
   if(mail) mail.classList.toggle("off", !l.email);
   if(web){ web.href = l.website ? webHref(l.website) : "#"; web.classList.toggle("off", !l.website); }
+  const meet = $("[data-fact='meet']");
+  if(meet){ meet.href = l.meetlink ? webHref(l.meetlink) : "#"; meet.classList.toggle("off", !l.meetlink); }
 }
 
 let saveTimer = null;
@@ -1673,6 +1802,74 @@ $("#importGo").addEventListener("click", () => {
   board.scrollTo({left:0, behavior:"smooth"});
 });
 
+/* ================= E-Mail schreiben ================= */
+let composeLead = null, composeTpl = null;
+const usesTermin = t => /\{\{\s*(datum|uhrzeit|termin)\s*\}\}/.test(t.subject + t.body);
+const usesLink = t => /\{\{\s*link\s*\}\}/.test(t.subject + t.body);
+const usesVideo = t => /\{\{\s*video\s*\}\}/.test(t.subject + t.body);
+function suggestTemplate(l){
+  const T = db.settings.templates;
+  if(l.stage === "termin") return T.find(t => t.id === "termin") || T[0];
+  if(l.attempts || l.stage === "nachhaken") return T.find(t => t.id === "nachtelefonat") || T[0];
+  return T[0];
+}
+function openComposer(l){
+  composeLead = l;
+  composeTpl = suggestTemplate(l);
+  $("#cTo").textContent = "E-Mail an " + displayName(l) + " · " + l.email;
+  renderComposer();
+  openOverlay($("#composeOverlay"));
+}
+function renderComposer(){
+  const l = composeLead, t = composeTpl; if(!l || !t) return;
+  $("#cList").innerHTML = db.settings.templates.map(x => `<button type="button" class="tpl ${x === t ? "on" : ""}" data-tpl="${esc(x.id)}">
+      <b>${esc(x.name)}</b><small>${esc(fillTemplate(x.subject, l))}</small></button>`).join("");
+  const inputs = [];
+  if(usesTermin(t)) inputs.push(`<label class="fl"><span class="label">Datum &amp; Uhrzeit</span><input class="input" type="datetime-local" data-c="termin" value="${esc(l.termin||"")}"></label>`);
+  if(usesLink(t)) inputs.push(`<label class="fl"><span class="label">Meeting-Link</span><input class="input" type="url" data-c="meetlink" value="${esc(l.meetlink||"")}" placeholder="https://meet.google.com/…" autocapitalize="off"></label>`);
+  if(usesVideo(t)) inputs.push(`<label class="fl span2"><span class="label">Link zum Beispielvideo (gilt für alle Leads)</span><input class="input" type="url" data-c="video" value="${esc(db.settings.video||"")}" placeholder="z. B. YouTube-, Vimeo- oder Drive-Link" autocapitalize="off"></label>`);
+  $("#cInputs").innerHTML = inputs.join("");
+  renderComposePreview();
+  const move = t.stage && t.stage !== l.stage && STAGE_NAME[t.stage];
+  $("#cMoveWrap").classList.toggle("hidden", !move);
+  if(move) $("#cMoveText").textContent = "Danach nach „" + STAGE_NAME[t.stage] + "“ verschieben";
+}
+function missingFor(l, t){
+  const m = [];
+  if(usesTermin(t) && !l.termin) m.push("Datum & Uhrzeit");
+  if(usesLink(t) && !l.meetlink) m.push("Meeting-Link");
+  if(usesVideo(t) && !db.settings.video) m.push("Link zum Beispielvideo");
+  return m;
+}
+function renderComposePreview(){
+  const l = composeLead, t = composeTpl;
+  $("#cPreview").innerHTML = `<span class="subj">${esc(fillTemplate(t.subject, l))}</span>${esc(fillTemplate(t.body, l))}`;
+  const miss = missingFor(l, t);
+  $("#cGo").disabled = false;
+  $("#cGo").title = miss.length ? "Fehlt noch: " + miss.join(", ") : "";
+}
+$("#cList").addEventListener("click", e => {
+  const b = e.target.closest("[data-tpl]"); if(!b) return;
+  composeTpl = db.settings.templates.find(x => x.id === b.dataset.tpl) || composeTpl;
+  $("#cMove").checked = true;
+  renderComposer();
+});
+$("#cInputs").addEventListener("input", e => {
+  const k = e.target.dataset.c; if(!k) return;
+  const v = e.target.value.trim();
+  if(k === "video") db.settings.video = v;
+  else { composeLead[k] = v; touch(composeLead); }
+  save(); renderComposePreview();
+});
+$("#cGo").addEventListener("click", () => {
+  const l = composeLead, t = composeTpl; if(!l || !t) return;
+  const miss = missingFor(l, t);
+  if(miss.length && !confirm("Es fehlt noch: " + miss.join(", ") + ".\n\nTrotzdem öffnen? Die Lücke steht dann leer in der Mail.")) return;
+  if(t.stage && t.stage !== l.stage && $("#cMove").checked) setStage(l, t.stage);
+  closeOverlay($("#composeOverlay"));
+  sendMail(l, t);
+});
+
 /* ================= Einstellungen ================= */
 const sSubject = $("#sSubject"), sBody = $("#sBody");
 let lastFocusTpl = sBody;
@@ -1680,13 +1877,29 @@ function sampleLead(){
   return db.leads.find(l => l.stage === "email" && l.email) || db.leads.find(l => l.name) ||
     {anrede:"Herr", name:"Jonas Weber", firma:"Weber Wohnbau GmbH", ort:"München"};
 }
+let editTplId = null;
+const editTpl = () => db.settings.templates.find(t => t.id === editTplId) || db.settings.templates[0];
 function renderMailPreview(){
-  const l = sampleLead();
-  $("#sPreview").innerHTML = `<span class="subj">${esc(fillTemplate(db.settings.subject, l))}</span>${esc(fillTemplate(db.settings.body, l))}`;
+  const l = Object.assign({termin: (() => { const d = new Date(Date.now() + 3 * 864e5); d.setHours(10, 0, 0, 0); return d.toISOString(); })(),
+    meetlink:"https://meet.google.com/abc-defg-hij"}, sampleLead());
+  const t = editTpl();
+  $("#sPreview").innerHTML = `<span class="subj">${esc(fillTemplate(t.subject, l))}</span>${esc(fillTemplate(t.body, l))}`;
+}
+function fillTplEditor(){
+  const T = db.settings.templates, t = editTpl();
+  editTplId = t.id;
+  $("#sTplSel").innerHTML = T.map(x => `<option value="${esc(x.id)}" ${x === t ? "selected" : ""}>${esc(x.name)}</option>`).join("");
+  $("#sTplStage").innerHTML = `<option value="">nicht verschieben</option>` + STAGES.map(st => `<option value="${st.id}" ${t.stage === st.id ? "selected" : ""}>${esc(STAGE_NAME[st.id])}</option>`).join("");
+  $("#sTplName").value = t.name; sSubject.value = t.subject; sBody.value = t.body;
+  $("#sTplDel").disabled = T.length <= 1;
+  $("#sResetTpl").classList.toggle("hidden", !defaultTemplates().some(d => d.id === t.id));
+  renderMailPreview();
 }
 function fillSettings(){
   const s = db.settings;
-  sSubject.value = s.subject; sBody.value = s.body;
+  fillTplEditor();
+  $("#sSenderPhone").value = s.senderPhone || "";
+  $("#sVideo").value = s.video || "";
   $$("#sMode input").forEach(r => r.checked = r.value === s.mode);
   $("#sSender").value = s.sender || "";
   $("#sAccount").value = s.account || "0";
@@ -1699,7 +1912,7 @@ function fillSettings(){
 $("#openSettings").addEventListener("click", () => { fillSettings(); openOverlay($("#settingsOverlay")); });
 [sSubject, sBody].forEach(el => {
   el.addEventListener("focus", () => lastFocusTpl = el);
-  el.addEventListener("input", () => { db.settings.subject = sSubject.value; db.settings.body = sBody.value; save(); renderMailPreview(); });
+  el.addEventListener("input", () => { const t = editTpl(); t.subject = sSubject.value; t.body = sBody.value; save(); renderMailPreview(); });
 });
 $("#sChips").addEventListener("mousedown", e => { if(e.target.closest(".chip")) e.preventDefault(); });
 $("#sChips").addEventListener("click", e => {
@@ -1711,9 +1924,29 @@ $("#sChips").addEventListener("click", e => {
   el.dispatchEvent(new Event("input"));
 });
 $("#sResetTpl").addEventListener("click", () => {
-  if(!confirm("Aktuelle Vorlage durch die Testvorlage ersetzen?")) return;
-  db.settings.subject = DEFAULT_SUBJECT; db.settings.body = DEFAULT_BODY; save(); fillSettings();
+  const t = editTpl(), d = defaultTemplates().find(x => x.id === t.id); if(!d) return;
+  if(!confirm("„" + t.name + "“ auf den ursprünglichen Text zurücksetzen?")) return;
+  Object.assign(t, d); save(); fillTplEditor();
 });
+$("#sTplSel").addEventListener("change", e => { editTplId = e.target.value; fillTplEditor(); });
+$("#sTplName").addEventListener("input", e => {
+  const t = editTpl(); t.name = e.target.value.trim() || "Ohne Namen"; save();
+  const o = $$("#sTplSel option").find(x => x.value === t.id); if(o) o.textContent = t.name;
+});
+$("#sTplStage").addEventListener("change", e => { editTpl().stage = e.target.value; save(); });
+$("#sTplAdd").addEventListener("click", () => {
+  const name = (prompt("Name der neuen Vorlage:") || "").trim(); if(!name) return;
+  const t = {id:uid(), name, subject:"", body:"{{begruessung}},\n\n\n\nHerzliche Grüße\n{{absender}}\n\nraumwerk\nws-strategy.de", stage:""};
+  db.settings.templates.push(t); editTplId = t.id; save(); fillTplEditor(); sSubject.focus();
+});
+$("#sTplDel").addEventListener("click", () => {
+  const T = db.settings.templates; if(T.length <= 1) return;
+  const t = editTpl();
+  if(!confirm("Vorlage „" + t.name + "“ löschen?")) return;
+  db.settings.templates = T.filter(x => x !== t); editTplId = null; save(); fillTplEditor();
+});
+$("#sSenderPhone").addEventListener("input", e => { db.settings.senderPhone = e.target.value.trim(); save(); renderMailPreview(); });
+$("#sVideo").addEventListener("input", e => { db.settings.video = e.target.value.trim(); save(); renderMailPreview(); });
 $("#sMode").addEventListener("change", e => { db.settings.mode = e.target.value; save(); });
 $("#sSender").addEventListener("input", e => { db.settings.sender = e.target.value.trim(); save(); renderMailPreview(); });
 $("#sAccount").addEventListener("change", e => { db.settings.account = e.target.value; save(); });
