@@ -651,8 +651,41 @@ Herzliche Grüße
 raumwerk
 ws-strategy.de`;
 
-const TPL_CALL_SUBJECT = "Wie besprochen: raumwerk und ein Beispielvideo";
+const TPL_CALL_SUBJECT = "Danke für das Gespräch – raumwerk auf einen Blick";
 const TPL_CALL_BODY =
+`{{begruessung}},
+
+vielen Dank für das nette Telefonat. Hier noch einmal alles Wichtige zu raumwerk auf einen Blick.
+
+raumwerk hilft Immobilienmaklern, ihre Objekte so zu präsentieren, wie sie es verdienen: mit Sorgfalt, mit Charakter und mit einem Blick fürs Detail. Wir verbinden moderne KI-Technologie mit einem klaren Gespür für Räume und Atmosphäre. So entstehen Präsentationen, die Interessenten berühren und Ihre Immobilien aus der Masse herausheben – ohne zusätzlichen Aufwand für Sie.
+
+IMMOBILIENVIDEOS – UNSER KERNANGEBOT
+Aus Ihren Objektfotos gestalten wir ein ruhiges, stimmiges Video, eine geführte Roomtour durch die Immobilie. So wird aus einzelnen Bildern ein Rundgang, der die Atmosphäre und Wirkung der Räume spürbar macht. Ihr Objekt fällt auf und bleibt im Gedächtnis. Ein neuer Fototermin vor Ort ist dafür nicht nötig.
+
+BILDOPTIMIERUNG – ALS ERGÄNZUNG
+Wir verfeinern Licht, Farben und Details Ihrer Fotos und erhöhen per Upscaling die Auflösung. Dunkle oder blasse Aufnahmen wirken danach hell, klar und hochwertig. So zeigt sich Ihre Immobilie von ihrer besten Seite.
+
+KI-MÖBLIERUNG – ALS ERGÄNZUNG
+Leere Räume richten wir virtuell und stilvoll ein, als Bild oder als Roomtour. Interessenten sehen so sofort, wie sich die Räume nutzen lassen und wie wohnlich sie wirken können. Gerade leerstehende Objekte gewinnen dadurch deutlich an Ausstrahlung.
+
+ALLES KOMBINIERBAR
+Bildoptimierung und KI-Möblierung lassen sich einzeln buchen oder direkt in Ihr Immobilienvideo einbauen. Alle drei Angebote können Sie frei kombinieren, ganz wie es zu Ihrem Objekt passt.
+
+Ihre Immobilie bleibt dabei immer wiedererkennbar.
+
+So sieht das aus – ein Beispielvideo:
+{{video}}
+
+Bei Interesse rufen Sie mich gern an unter {{absender_telefon}} oder antworten einfach auf diese E-Mail. Gern stelle ich Ihnen raumwerk auch in einem kurzen 10-minütigen Gespräch persönlich vor.
+
+Herzliche Grüße
+{{absender}}
+
+raumwerk
+ws-strategy.de`;
+
+const TPL_CALL_SUBJECT_V1 = "Wie besprochen: raumwerk und ein Beispielvideo";
+const TPL_CALL_BODY_V1 =
 `{{begruessung}},
 
 vielen Dank für das nette Telefonat. Wie versprochen erhalten Sie hier alles Wichtige auf einen Blick.
@@ -726,6 +759,12 @@ function normalize(d){
     d.settings.templates[0].subject = d.settings.subject || DEFAULT_SUBJECT;
     d.settings.templates[0].body = d.settings.body || DEFAULT_BODY;
   }
+  // Unveränderte erste Fassung von „Nach dem Telefonat“ auf den neuen Text heben
+  d.settings.templates.forEach(t => {
+    if(t.id === "nachtelefonat" && t.body === TPL_CALL_BODY_V1 && t.subject === TPL_CALL_SUBJECT_V1){
+      t.subject = TPL_CALL_SUBJECT; t.body = TPL_CALL_BODY;
+    }
+  });
   // Felder, die nur an Leads hängen, in die Liste aufnehmen
   d.leads.forEach(l => Object.keys(l.extra || {}).forEach(k => { if(!d.settings.fields.includes(k)) d.settings.fields.push(k); }));
   return d;
@@ -1807,6 +1846,8 @@ let composeLead = null, composeTpl = null;
 const usesTermin = t => /\{\{\s*(datum|uhrzeit|termin)\s*\}\}/.test(t.subject + t.body);
 const usesLink = t => /\{\{\s*link\s*\}\}/.test(t.subject + t.body);
 const usesVideo = t => /\{\{\s*video\s*\}\}/.test(t.subject + t.body);
+// Nummer mitten im Satz (nicht nur allein in der Signaturzeile)
+const usesPhone = t => /\S[^\n]*\{\{\s*absender_telefon\s*\}\}|\{\{\s*absender_telefon\s*\}\}[^\n]*\S/.test(t.subject + "\n" + t.body);
 function suggestTemplate(l){
   const T = db.settings.templates;
   if(l.stage === "termin") return T.find(t => t.id === "termin") || T[0];
@@ -1827,6 +1868,7 @@ function renderComposer(){
   const inputs = [];
   if(usesTermin(t)) inputs.push(`<label class="fl"><span class="label">Datum &amp; Uhrzeit</span><input class="input" type="datetime-local" data-c="termin" value="${esc(l.termin||"")}"></label>`);
   if(usesLink(t)) inputs.push(`<label class="fl"><span class="label">Meeting-Link</span><input class="input" type="url" data-c="meetlink" value="${esc(l.meetlink||"")}" placeholder="https://meet.google.com/…" autocapitalize="off"></label>`);
+  if(usesPhone(t) && !db.settings.senderPhone) inputs.push(`<label class="fl"><span class="label">Ihre Telefonnummer (gilt für alle Leads)</span><input class="input" type="tel" data-c="senderPhone" value="" placeholder="z. B. +49 171 1234567"></label>`);
   if(usesVideo(t)) inputs.push(`<label class="fl span2"><span class="label">Link zum Beispielvideo (gilt für alle Leads)</span><input class="input" type="url" data-c="video" value="${esc(db.settings.video||"")}" placeholder="z. B. YouTube-, Vimeo- oder Drive-Link" autocapitalize="off"></label>`);
   $("#cInputs").innerHTML = inputs.join("");
   renderComposePreview();
@@ -1839,6 +1881,7 @@ function missingFor(l, t){
   if(usesTermin(t) && !l.termin) m.push("Datum & Uhrzeit");
   if(usesLink(t) && !l.meetlink) m.push("Meeting-Link");
   if(usesVideo(t) && !db.settings.video) m.push("Link zum Beispielvideo");
+  if(usesPhone(t) && !db.settings.senderPhone) m.push("Ihre Telefonnummer");
   return m;
 }
 function renderComposePreview(){
@@ -1857,7 +1900,7 @@ $("#cList").addEventListener("click", e => {
 $("#cInputs").addEventListener("input", e => {
   const k = e.target.dataset.c; if(!k) return;
   const v = e.target.value.trim();
-  if(k === "video") db.settings.video = v;
+  if(k === "video" || k === "senderPhone") db.settings[k] = v;
   else { composeLead[k] = v; touch(composeLead); }
   save(); renderComposePreview();
 });
